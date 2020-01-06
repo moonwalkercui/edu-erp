@@ -1,0 +1,66 @@
+<template>
+    <view class="nav-height"></view>
+    <view class="flex fix_nav_wp">
+        <block wx:for="{{navData}}" wx:key="index">
+            <view class="nav_link {{activeIndex == index ? 'current' : ''}}">
+                <navigator url="{{item.url}}" open-type="{{item.openType}}" hover-class="navigator-hover">
+                    <!-- <block wx:if="{{index == bigIndex}}">
+                    </block> -->
+                    <block>
+                        <icon class="iconfont {{item.ico}}" style="color:{{activeIndex == index ? '#525fe1' : ''}}; font-size:40rpx;margin:1rpx 0;"></icon>
+                    </block>
+                    <view class="nav_name">{{item.name}}</view>
+                </navigator>
+            </view>
+        </block>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class NavBottom extends wepy.component {
+    props = {
+      activeIndex: {
+        type: String,
+        default: '0'
+      },
+      // biggerIndex: {
+      //   type: String,
+      //   default: ''
+      // }
+    }
+    data = {
+      navData: [
+        {
+          name: '返回',
+          ico: 'icon-fanhui',
+          url: '../../pages/me',
+          openType: 'switchTab',
+        }, {
+          name: '货架',
+          ico: 'icon-gouwuche',
+          url: '../../pages/shop/goods',
+          openType: 'redirect',
+        }, {
+          name: '订单',
+          ico: 'icon-ordere',
+          url: '../../pages/shop/orders',
+          openType: 'redirect',
+        }
+      ]
+    }
+    // computed = {
+    //   bigIndex() {
+    //     if (this.biggerIndex) {
+    //       return parseInt(this.biggerIndex)
+    //     } else {
+    //       return parseInt(this.navData.length / 2)
+    //     }
+    //   }
+    // }
+    events = {
+    }
+  }
+</script>
+<style lang="less">
+@import "../../style/shop/bottom-buttons";
+</style>

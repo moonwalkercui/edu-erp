@@ -1,0 +1,155 @@
+<template>
+  <view class="container">
+    <view class="user-box">
+      <image src="{{user.avatar}}"/>
+    </view>
+    <view class="money-box">{{money}}</view>
+    <image src="{{image}}" mode="widthFix" style="width: 100%;" @tap="handleTap"/>
+    <view class="users-box">
+      <view class="help-users">-- 帮Ta助力的朋友们 --</view>
+      <block wx:for="{{users}}" wx:key="index" wx:for-index="index" wx:for-item="user">
+        <view class="users">
+          <image class="item-avatar" src="{{user.avatar || '../images/avatar.png'}}"></image>
+        </view>
+      </block>
+      <view class="users" wx:if="{{users.length == 0}}">暂无记录</view>
+      <view class="help-users">-- 活动规则 --</view>
+      <view class="help-info">在微信里点击右上角的转发按钮发给朋友或群里，若有人点开，则有机会获得随机数量的红包。</view>
+      <view class="help-info">红包仅可用于部分项目的预约抵现，不可提现或转入微信红包等用途，不可申请退款。</view>
+      <view class="help-info">每天领取的红包数量有限制。</view>
+      <view class="help-info">每天每个朋友只可以助力一次。</view>
+      <view class="help-info">在红包有效期内可积累使用，到期后自动作废。</view>
+      <view class="help-info">最终解释权归本方所有。</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import Api from '../common/Api';
+import Tips from '../common/Tips';
+export default class RedPacket extends wepy.page {
+  config = {
+    navigationBarTitleText: '谢谢您的助力，Ta的红包已到账',
+    navigationBarBackgroundColor: '#ffcd5a',
+    navigationBarTextStyle: 'black',
+  };
+  data = {
+    image: '',
+    list: [],
+    users: [],
+    user: {avatar: '../images/avatar.png'},
+    money: 0,
+  };
+  methods = {
+    handleTap() {
+      // wepy.navigateTo({ url: './redpacket' });
+      wepy.switchTab({ url: './home' });
+    }
+  };
+  onShow() {
+    this.handleRequest()
+    wepy.showShareMenu({ withShareTicket: true })
+    var initData = wepy.getStorageSync('initData');
+    this.image = initData.red_packet_img3;
+  }
+  onShareAppMessage(res) {
+    return this.$parent.globalData.shareConfig()
+  }
+  async handleRequest() {
+    var orgInfo =  wepy.getStorageSync('orgInfo');
+    if (orgInfo.red_packet_max > 0 ) {
+      let refid = wepy.getStorageSync('refid');
+      if(refid == false) {
+        wepy.switchTab({ url: './home' }) ;
+        return;
+      }
+      let res = await Api.makeRedPacketByShare({refid})
+      if(res.status == 'error') {
+        Tips.alert(res.msg)
+      } else {
+        this.money = res.data.money;
+        this.user = res.data.user;
+        this.users = res.data.friends;
+        this.$apply();
+        wepy.removeStorageSync('refid');
+      }
+    } else {
+      wepy.switchTab({ url: './home' });
+    }
+  }
+}
+</script>
+
+<style lang="less">
+page {
+  background: #ffcd5a;
+}
+.user-box {
+  height: 140rpx;
+  width: 100%;
+  // background-color: #d92a2a;
+  position: absolute;
+  top: 100rpx;
+  margin-left: 6rpx;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  image{
+     height: 140rpx;
+     width: 140rpx;
+     border-radius: 50%;
+     border: 5rpx solid #fff;
+  }
+}
+.money-box {
+  height: 120rpx;
+  width: 100%;
+  // background-color: #d92a2a;
+  position: absolute;
+  top: 420rpx;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9;
+  font-size: 100rpx;
+  color:#c78a3e;
+}
+.help-users{
+  text-align: center;
+  padding: 10rpx 20rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+.users-box{
+  // flex: 1;
+  background: #fff;
+  padding: 40rpx;
+  text-align: center;
+  color: #666;
+  border-radius: 20rpx;
+  margin: 20rpx 40rpx;
+  margin-bottom: 40rpx;
+  opacity:0.86;
+  .users{
+    height: 60rpx;
+    width: 60rpx;
+    display: inline-block;
+    margin: 5rpx 13rpx;
+    .item-avatar {
+      border-radius: 50%;
+      margin: 10rpx;
+      margin-left: 0;
+      height: 60rpx;
+      width: 60rpx;
+      border: 4rpx dotted #d92a2a;
+    }
+  }
+}
+.help-info{
+  color: #888;
+  font-size: 24rpx;
+}
+</style>

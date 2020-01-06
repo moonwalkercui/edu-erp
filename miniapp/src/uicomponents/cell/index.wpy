@@ -1,0 +1,57 @@
+<style lang="less" src="./index.less"></style>
+<template>
+  <view class="cell-list custom-class {{access ? 'cell-list-access' : ''}}" catchtap="onClick({{item}})">
+    <view class="cell-list-bd">
+      <view wx:if="{{title}}" class="cell-list-text">{{title || ''}}</view>
+      <slot name="title"></slot>
+      <view wx:if="{{subtitle}}" class="cell-list-desc">{{subtitle || ''}}</view>
+    </view>
+    <view class="cell-list-arrow" wx:if="{{arrow}}">{{detail || ''}}</view>
+    <slot name="detail"></slot>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Cell extends wepy.component {
+    props = {
+      title: {
+        type: String,
+        default: ''
+      },
+      detail: {
+        type: String,
+        default: ''
+      },
+      subtitle: {
+        type: String,
+        default: ''
+      },
+      access: {
+        type: Boolean,
+        default: false
+      },
+      arrow: {
+        type: Boolean,
+        default: false
+      },
+      item: {
+        type: Object,
+        default: function () {
+          return {}
+        }
+      }
+    }
+
+    data = {
+    }
+
+    methods = {
+      onClick(item) {
+        this.$emit('item-tap', item)
+      }
+    }
+
+    onLoad () {
+    }
+  }
+</script>

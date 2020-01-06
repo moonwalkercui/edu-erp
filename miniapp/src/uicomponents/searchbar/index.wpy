@@ -1,0 +1,125 @@
+<style lang="less" src="./index.less"></style>
+<template>
+  <view class="{{className}}">
+    <view class="searchbar">
+      <view class="searchbar-form">
+        <view class="searchbar-form__wrap">
+          <iconSearch
+            class="searchbar-form__find"
+            type="search">
+          </iconSearch>
+          <input
+            class="searchbar-form__input"
+            placeholder="{{placeholder}}"
+            maxlength="{{maxlength}}"
+            value="{{value}}"
+            confirm-type="search"
+            @input="_handleInput"
+            @confirm="_handleConfirm"/>
+          <iconClear
+            class="searchbar-form__clear {{value?'searchbar-form__clear--show':''}}"
+            type="closebg"
+            event="_handleClear">
+          </iconClear>
+        </view>
+        <view wx:if="{{rightBtnVisible}}"
+          class="searchbar-form__cancel"
+          @tap="_handleRightTap"
+          >{{rightText}}
+        </view>
+      </view>
+      <view wx:if="{{autoCompleteKeys.length>0}}" class="searchbar-autocomplete">
+        <repeat for="{{autoCompleteKeys}}" item="item">
+          <view
+            data-key="{{item}}"
+            @tap="_handleTapKey">
+            {{item}}
+          </view>
+        </repeat>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import Icon from '../icon/index'
+
+export default class Searchbar extends wepy.component {
+  data = {
+    value: '',
+    autoCompleteKeys: [],
+    rightBtnVisible: true,
+  }
+  props = {
+    maxlength: {
+      type: [Number, String],
+      default: 100,
+    },
+    placeholder: {
+      type: String,
+      default: '输入文字进行搜索'
+    },
+    className: {
+      type: String,
+      default: ''
+    },
+    datasource: {
+      type: Array,
+      default: []
+    },
+    rightText: {
+      type: String,
+      default: '取消'
+    }
+  }
+  components = {
+    iconSearch: Icon,
+    iconClear: Icon,
+  }
+  methods = {
+    _handleInput (e) {
+      this.value = e.detail.value
+      // 模糊匹配
+      if (this.datasource.length > 0) {
+        if (this.value) {
+          this.autoCompleteKeys = this.datasource.filter(item => item.indexOf(this.value) > -1)
+        } else {
+          this.autoCompleteKeys = []
+        }
+      }
+      this.rightBtnVisible = e.detail.value ? false : true
+    },
+    _handleConfirm (e) {
+      const value = this.value || this.placeholder
+      this.search(value)
+    },
+    _handleTapKey (e) {
+      this.search(e.currentTarget.dataset.key)
+    },
+    _handleRightTap () {
+      this.$emit('bindbtntap')
+    }
+  }
+
+  search (value) {
+    this.$emit('bindsearch', value)
+  }
+
+  events = {
+    _handleClear () {
+      this.value = ''
+      this.autoCompleteKeys = []
+      this.rightBtnVisible = true
+      this.$apply()
+      // 调起键盘
+    }
+  }
+
+  onUnload () {
+    setTimeout(() => {
+      this.value = ''
+      this.$apply()
+    }, 1000)
+  }
+}
+</script>

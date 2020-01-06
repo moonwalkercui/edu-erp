@@ -1,0 +1,46 @@
+<template>
+ <view class="panel-normal">
+      <!-- <view class="h">
+        <view class="icon">
+          <image src="../images/icon_time.png" class="icon-img-small"></image>
+        </view>
+        <view class="text">步骤</view>
+      </view> -->
+      <view class="t">
+        <view class="process">
+          <view class="step">
+            <text class="text-light">STEP 1</text> 在线预约
+          </view>
+          <view class="arrow">
+            <image src="../images/arrow_down.png" class="arrow_down"></image>
+          </view>
+          <view class="step">
+            <text class="text-light">STEP 2</text> 获取次数
+          </view>
+          <view class="arrow">
+            <image src="../images/arrow_down.png" class="arrow_down"></image>
+          </view>
+          <view class="step">
+            <text class="text-light">STEP 3</text> 日程签到
+          </view>
+          <view class="arrow">
+            <image src="../images/arrow_down.png" class="arrow_down"></image>
+          </view>
+          <view class="step">
+            <text class="text-light">STEP 4</text> 完 成
+          </view>
+        </view>
+      </view>
+    </view>
+
+</template>
+<script>
+import wepy from 'wepy';
+export default class StepList extends wepy.component {
+  data = {};
+  onLoad() {}
+  methods = {};
+}
+</script>
+<style>
+</style>

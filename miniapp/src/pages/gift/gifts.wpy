@@ -1,0 +1,157 @@
+<template>
+  <view class="container">
+     <view class="fix-top-box" style="{{ fixTop<scrollTop ? fixBoxStyle : staticBoxStyle }}">
+      <tab-scroll @bindChange.user="change"/>
+    </view>
+    <noticeBar text="导员可以给参加签到的人发放小星星。" componentId="noticeBar"></noticeBar>
+    <view class="kai-content" style="min-height: 300rpx;">
+      <repeat for="{{list}}" index="index" item="item" key="switch-{{index}}">
+        <view class="panel-gift">
+          <view class="title">
+            {{item.name}}
+          </view>
+          <view class='list-p'>
+            <view class="p-left">
+              <image style="width:180rpx; height:180rpx;" src="{{item.image}}" lazy-load></image>
+            </view>
+            <view class="p-right">
+              <view> {{item.points}}      <icon class="iconfont icon-xingxingman" style="color:#f40; "></icon></view>
+              <view class="p-info">库存 {{item.storage}}</view>
+              <button class="btn btn-small btn-success" style="padding:0 16rpx; margin-right:0" @tap='handleExchange({{item.id}},{{item.points}})' >兑 换</button>
+            </view>
+          </view>
+        </view>
+      </repeat>
+    </view>
+    <block wx:if="{{list.length == 0}}">
+      <emptyInfo flag="gift"/>
+    </block>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import Api from '../../common/Api';
+import Tips from '../../common/Tips'
+import reachBottom from '../../mixin/reachBottom'
+import fixTop from '../../mixin/fixTop'
+import tab from '../../uicomponents/tab/index'
+import emptyInfo from '../../components/emptyInfo'
+import noticeBar from '../../uicomponents/noticeBar/index';
+export default class Gift extends wepy.page {
+  config = {
+    navigationBarTitleText: '礼品兑换',
+  }
+  mixins = [reachBottom, fixTop]
+  components = {
+    'tab-scroll': tab,
+    emptyInfo,
+    noticeBar,
+  }
+  data = {
+    tab: {
+      list: [],
+      scroll: true,
+      selectedId: '全部',
+      class: 'tab-success'
+    },
+    cates: [],
+  }
+  async onLoad() {
+    this.tab.list = [{id: '全部', title: '全部'}]
+    let tabs = await this.getCategories();
+    this.tab.list = this.tab.list.concat(tabs);
+    this.$apply();
+    const {tab} = this
+    this.$invoke('tab-scroll', 'doInitTabData', tab)
+  }
+  async onShow() {
+    this.list = [];
+    this.handleRequest()
+  }
+  async handleRequest() {
+    let res = await Api.getGifts(this.params)
+    this.list = this.list.concat(res.data.data);
+    this.last_page = res.data.last_page;
+    this.$apply();
+  }
+  async getCategories() {
+    let res = await Api.getGiftCategory()
+    return res.data;
+  }
+
+  methods = {
+    change (res) {
+      this.tab.selectedId = res;
+      this.status = res;
+      this.params.category = res == '全部' ? '' : res;
+      this.list = [];
+      this.handleRequest()
+    },
+    handleExchange(id,point) {
+      if(wepy.$instance.checkSession() == false) return;
+      if(wepy.$instance.checkMobileBinding()) {
+
+        Tips.confirm('兑换确认','确认花费'+point+'个小星星?',async ()=>{
+          let res = await Api.exchangeGift({id})
+          if(res.status == 'success') {
+            this.list = [];
+            Tips.alert(res.msg, ()=>{
+              this.handleRequest()
+            })
+          }
+        })
+      }
+    }
+  }
+  events = {
+  }
+  onReachBottom() {
+    if (this.params.page < this.last_page) {
+      this.params.page = this.params.page + 1
+      this.$apply();
+      this.handleRequest()
+    }
+  }
+}
+</script>
+<style lang="less">
+  @import url('../../less/listPanel');
+  .kai-content{
+    // display: flex;
+    // flex-wrap: wrap;
+    padding: 10rpx;
+    .panel-gift{
+      width: 50%;
+      height: 280rpx;
+      border: 3px solid #f4f4f4;
+      border-radius: 20rpx;
+      background: white;
+      box-sizing: border-box;
+      font-size: 26rpx;
+      overflow: hidden;
+      display: inline-block;
+ 
+      .title{
+       padding: 20rpx;
+       padding-bottom: 0;
+      }
+      .list-p{
+        display: flex;
+        .p-left{
+        padding: 20rpx;
+        }
+        .p-right{
+          flex:1;
+          padding: 20rpx;
+          .p-info{
+            color: #999;
+            font-size: 24rpx;
+            margin: 20rpx 0;
+          }
+        }
+      }
+    }
+  }
+
+
+</style>

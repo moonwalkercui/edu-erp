@@ -1,0 +1,70 @@
+<template>
+  <view class="container">
+    <view style="display: block; text-align:center; width: 100%; height:0rpx;margin-top:50rpx">
+      <view class="notice-avatar">
+        <image class="cousr-item-avatar" src="{{userInfo.avatarUrl || '../images/avatar.png'}}"></image>
+      </view>
+    </view>
+    <view class="couser-info" style="padding-bottom: 30rpx">
+      <view class="couser-top">
+        <view class="notice-title" style="font-weight: bold;padding-top:50px;">
+        </view>
+        <view class="notice-subtitle">
+        我的分享二维码
+        </view>
+      </view>
+      <view class="notice-content-list">
+        <view class="notice-content-li" style="text-align:center;border:none;">
+            <image src="{{imageData}}" style="width: 430rpx;height: 430rpx;"></image>
+          <view style="text-align:center">
+          </view>
+        </view>
+      </view>
+      <view style="width:90%; font-size: 32rpx; font-weight: bold; color:#000; margin: 10rpx auto;">
+        <view style="text-align:center">
+          扫 码 区
+        </view>
+      </view>
+      <view class="tips" style="text-align:center; padding:10rpx; font-wight: 100;">{{info}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import Api from '../common/Api';
+import Auth from '../common/Auth';
+export default class User extends wepy.page {
+  config = {
+    navigationBarTitleText: '扫码签到',
+  };
+  data = {
+    imageData: '',
+    userInfo: {},
+    info: '请扫码'
+  };
+  methods = {
+  };
+
+  async onLoad(options) {
+    if(wepy.$instance.checkMobileBinding()) {
+      var productId = options.product
+      var params = {};
+      if(productId) params.product = productId;
+      
+      this.userInfo = Auth.getUserInfo();
+      let res = await Api.getShareQr(params);
+      if(res.status == 'success') {
+        this.imageData = res.data.qrcode;
+        this.info = res.data.info;
+        this.$apply()
+      }
+    }
+  }
+}
+</script>
+<style lang="less">
+@import '../style/notice.less';
+@import '../style/confirm.less';
+
+</style>

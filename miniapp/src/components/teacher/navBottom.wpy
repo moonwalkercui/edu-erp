@@ -1,0 +1,51 @@
+<template>
+    <view class="nav-height"></view>
+    <view class="flex fix_nav_wp">
+        <block wx:for="{{navData}}" wx:key="index">
+            <view class="nav_link {{activeIndex == index ? 'current' : ''}}">
+              <navigator url="{{item.url}}" open-type="{{item.openType}}" hover-class="navigator-hover" >
+                  <!-- <block wx:if="{{index == bigIndex}}">
+                  </block> -->
+                  <block>
+                      <icon class="iconfont {{item.ico}}" style="color:{{activeIndex == index ? '#525fe1' : ''}}; font-size:40rpx;margin:2rpx 0;"></icon>
+                  </block>
+                  <view class="nav_name">{{item.name}}</view>
+              </navigator>
+            </view>
+        </block>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class NavBottom extends wepy.component {
+    props = {
+      activeIndex: {
+        type: String,
+        default: '0'
+      },
+    }
+    data = {
+      navData: [
+        {
+          name: '返回',
+          ico: 'icon-fanhui',
+          url: '../../pages/me',
+          openType: 'switchTab',
+        }, {
+          name: '签到',
+          ico: 'icon-laoshi',
+          url: '../../pages/teacher/scan',
+          openType: 'redirect',
+        }, {
+          name: '日程',
+          ico: 'icon-liebiao',
+          url: '../../pages/teacher/calendar',
+          openType: 'redirect',
+        },
+      ]
+    }
+  }
+</script>
+<style lang="less">
+@import "../../style/shop/bottom-buttons";
+</style>

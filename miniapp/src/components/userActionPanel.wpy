@@ -1,0 +1,106 @@
+<template>
+  <view class="course-item" @tap="handleTap({{item.username}})" style="width:100%;">
+    <view class="l">
+      <image class="cousr-item-avatar" src="{{item.avatar}}"></image>
+    </view>
+  
+    <view class="m">
+       <view class="title">{{item.name}}</view>
+       <view class="time-price">
+         <text class="time">{{item.phone ? item.phone : '未设置电话'}}</text>
+       </view>
+       <view class="desc">{{wxs.strCut(item.intro, 18) || ""}}</view>
+    </view>
+
+    <view class="r">
+      <view class="item-action disable">介绍</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import wxs from '../wxs/util.wxs'
+
+export default class UserActionPanel extends wepy.component {
+  wxs = { wxs }
+  props = {
+    item: {
+      type: Object,
+      default: {}
+    },
+  };
+  data = {
+  };
+
+  onLoad() {
+  }
+  methods = {
+    handleTap(uname) {
+      wepy.navigateTo({
+        url: 'user?username=' + uname
+      });
+    }
+  };
+}
+</script>
+<style lang="less">
+.course-item {
+  height: 130rpx;
+  display:flex;
+  background-color: #fff;
+  border-radius: 65rpx;
+  margin-bottom: 20rpx;
+  margin-left: 20rpx;
+  margin-right: 20rpx;
+ .l{
+  flex: 0;
+  /* background-color: blue; */
+}
+ .l .cousr-item-avatar{
+  border-radius: 50%;  
+  margin: 10rpx;
+  height: 110rpx;
+  width: 110rpx;
+}
+ .m{
+  padding-left: 26rpx;
+  font-size: 22rpx;
+  flex: 1;
+  line-height: 38rpx;
+}
+ .m .title{
+  font-size: 30rpx;
+  line-height: 50rpx;
+}
+ .m .desc{
+  color: #858585;
+}
+ .m .time-price{
+}
+ .m .time-price .time{
+  color: #525fe1;
+}
+ .m .time-price .price{
+  margin-left: 26rpx
+}
+ .r{
+  flex: 0;
+  font-size: 26rpx;
+  line-height: 80rpx;
+  text-align: center; 
+  /* background-color: #f40; */
+}
+
+ .r .item-action{
+  border: 3rpx solid #787878; 
+  border-radius: 50%;
+  width: 80rpx;
+  height: 80rpx;
+  margin: 25rpx;
+}
+ .r .item-action.disable{
+color: #858585;
+}
+}
+
+</style>

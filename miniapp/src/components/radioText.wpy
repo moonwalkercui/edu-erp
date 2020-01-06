@@ -1,0 +1,62 @@
+<template>
+  <block>
+    <block wx:for="{{list}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+      <view class="spec-list {{selectedIdx == index ? 'active' : ''}}"  @tap="chooseSpec({{index}})">
+        {{item.name}}
+      </view>
+    </block>
+    <block wx:if="{{showEmpty}}">无</block>
+  </block>
+</template>
+<script>
+import wepy from 'wepy';
+import Api from '../common/Api';
+export default class RadioText extends wepy.component {
+  props = {
+    items:{
+      type: Array,
+      default: {}
+    },
+    selectedItem: {
+      type: Object,
+      twoWay:true
+    }
+  };
+  watch = {
+    items (newValue, oldValue) {
+      if(newValue.length == 0) {
+        this.showEmpty = true;
+        this.selectedItem = {}
+      } else {
+        this.showEmpty = false;
+        this.selectedItem = newValue[this.selectedIdx];
+      }
+      this.list = newValue;
+      this.$apply();
+    },
+  }
+  data = {
+    selectedIdx: 0,
+    list: [],
+    showEmpty: true,
+  };
+  onLoad() {
+    this.list = this.items;
+    this.$apply();
+  }
+  methods = {
+    chooseSpec(idx) {
+      this.chooseOne(idx)
+    }
+  };
+  chooseOne(idx) {
+    this.selectedIdx = idx;
+    this.selectedItem = this.items[idx];
+    this.$apply();
+    this.$emit('radio-text-change');
+  }
+}
+</script>
+<style>
+
+</style>

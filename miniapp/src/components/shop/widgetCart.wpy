@@ -1,0 +1,261 @@
+<template>
+  <view class="w_cart" wx:if="{{display}}">
+    <view class="w_top" wx:if="{{showTop}}">
+      <view class="w_title">您选购的商品
+        <view class="w_clear" @tap="handleClear">清空购物车</view>
+      </view>
+      <view class="w_content">
+        <block wx:for="{{items}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+          <view class="w_item">
+            <view class="w_name">
+              {{item.name}}
+            </view>
+            <view class="w_price">
+              ￥{{item.price}}
+            </view>
+            <view class="w_buttons">
+              <view class="child_num">
+                <view
+                  class="button_buy_num button_sub"
+                  wx:if="{{item.num>0}}"
+                  @tap="handleSub({{index}})"
+                >-</view>
+                <text wx:if="{{item.num>0}}">{{item.num}}</text>
+                <view
+                  class="button_buy_num button_plus"
+                  wx:if="{{item.num < item.storage}}"
+                  @tap="handlePlus({{index}})"
+                >+</view>
+                <view class="button_buy_num button_plus diable" wx:else>+</view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+      <image src="../../images/arrow_fill.png" class="w_arrow"></image>
+    </view>
+
+    <view class="w_bottom">
+      <view class="w_total" @tap="togleTopShow">
+        <view class="w_icon"><image src="../../images/icon_cart.png"></image></view>
+        <view class="w_dot">{{items.length}}</view>
+        <text>￥{{totalPrice}}</text>
+
+      </view>
+      <view class="w_pay" @tap="handlePay">去结算</view>
+    </view>
+
+    <view class="w_mark" wx:if="{{showTop}}"></view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class WidgetCart extends wepy.component {
+  props = {
+    items: {
+      type: Array,
+      default: [],
+      twoWay: true
+    },
+    // display: {
+    //   type: Boolean,
+    //   default: false,
+    //   twoWay: true
+    // },
+  };
+  watch = {
+    items(newVal, oldVal) {
+      console.log('cart newval', newVal);
+      if (newVal.length > 0) {
+        this.display = true;
+      } else {
+        this.display = false;
+        this.showTop = false;
+      }
+      this.calculateTotalPrice();
+    }
+  };
+  data = {
+    showTop: false,
+    display: false,
+    totalPrice: 0,
+  };
+  async onLoad() {}
+  calculateTotalPrice() {
+    let total = 0;
+    this.items.forEach(i => {
+      total += i.num * i.price;
+    });
+    this.totalPrice = total%1 === 0 ? parseInt(total) : total.toFixed(2);
+    this.$apply();
+  }
+  methods = {
+    togleTopShow() {
+      this.showTop = !this.showTop;
+      this.$apply();
+    },
+    handleClear(ind) {
+      this.items = [];
+      this.display = false;
+      this.showTop = false;
+      this.$apply();
+    },
+    handlePlus(ind) {
+      this.items[ind].num++;
+      this.$apply();
+    },
+    handleSub(ind) {
+      this.items[ind].num--;
+      this.$apply();
+      if (this.items[ind].num == 0) {
+        this.items.splice(ind, 1);
+        this.$apply();
+      }
+    },
+    handlePay() {
+      if(wepy.$instance.checkSession() == false) return;
+      this.$emit('handle-pay')
+    },
+  };
+
+ 
+}
+</script>
+<style lang="less">
+.w_cart {
+  .w_top {
+    font-size: 30rpx;
+    width: 90%;
+    position: fixed;
+    left: 5%;
+    bottom: 220rpx;
+    z-index: 1002;
+    background: white;
+    border-radius: 15rpx;
+    .w_title {
+      line-height: 65rpx;
+      height: 65rpx;
+      padding: 0 25rpx;
+   
+      .w_clear {
+        float: right;
+        font-size: 28rpx;
+      }
+    }
+    .w_content {
+      max-height: 700rpx;
+      overflow: scroll;
+      .w_item {
+        display: flex;
+        border-top: 1px solid #dedede;
+        .w_name {
+          flex: 5;
+          padding: 15rpx 25rpx;
+          // .w_t {
+            // width: 430rpx;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          // }
+        }
+        .w_price{
+          flex: 2;
+          padding:15rpx 0;
+          white-space: nowrap;
+          text-align: right;
+        }
+        .w_buttons {
+          flex: 3;
+          text-align: right;
+          padding: 15rpx 25rpx;
+        }
+      }
+    }
+  }
+  .w_bottom {
+    font-size: 30rpx;
+    box-shadow:0 0 7rpx #888;
+    opacity:0.95;
+    width: 90%;
+    height: 90rpx;
+    position: fixed;
+    left: 5%;
+    bottom: 110rpx;
+    z-index: 1003;
+
+    background: #666;
+    color: white;
+    border-radius: 20rpx;
+    overflow: hidden;
+    display:flex;
+    .w_total {
+      flex:7;
+      font-size: 40rpx;
+      color: white;
+      height: 90rpx;
+      line-height: 90rpx;
+      padding-left: 30rpx;
+      .w_icon{
+         display: inline-block;
+         width: 70rpx;
+        height: 80rpx;
+        vertical-align: middle;
+        float: left;
+         image{
+           width: 50rpx;
+           height: 50rpx;
+           margin-top: 20rpx;
+           margin-right: 25rpx;
+         }
+         text{
+            line-height: 80rpx;
+         }
+      }
+      .w_dot{
+          background: #fd3a00;
+          color: white;
+          font-size: 20rpx;
+          border-radius: 50%;
+          width: 28rpx;
+          height: 28rpx;
+          line-height: 28rpx;
+          margin: 10rpx 0;
+          text-align: center;
+          float: left;
+          margin-left:-30rpx;
+        }
+    }
+    
+    .w_pay {
+      flex:3;
+      height: 90rpx;
+      line-height: 90rpx;
+      background: #525fe1;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+  }
+}
+.w_mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index: 1001;
+  -moz-opacity: 0.3;
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+}
+.w_arrow{
+  float: left;
+  width: 30rpx;
+  height: 15rpx;
+  margin-left: 50rpx;
+  margin-bottom: -15rpx;
+}
+</style>

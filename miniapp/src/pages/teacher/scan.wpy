@@ -1,0 +1,160 @@
+<template>
+  <view style="background: #f4f4f4; height:100%">
+    <repeat for="{{list}}" index="i" item="item" key="row-{{index}}">
+      <panel border="1rpx 0 1rpx 0">
+        <view class='list-panel'>
+          <view class="panel-right" style="width: 130rpx; text-align:center">
+            <view class="avatar-box">
+              <image src="{{item.member.avatar}}" mode="scaleToFill" lazy-load="true"></image>
+            </view>
+            <view >{{item.status}}</view>
+          </view>
+          <view class="panel-center" style="color: gray">
+            <view class='panel-title'>会员: {{item.member.nick_name}} </view>
+            <view class="panel-title">名称: {{item.product.name}}</view>
+            <view class="panel-title">时间: {{wxs.dateFormat(item.sign_at)}}</view>
+          </view>
+          <view class="panel-right" style="width: 150rpx; text-align:center">
+            <button wx:if="{{item.points == 0}}" class="btn btn-small btn-success" @tap='givePoints({{item.id}})' style='margin-bottom: 0;'>奖励星星</button>
+            <view wx:else >奖励{{item.points}}颗 <icon class="iconfont icon-xingxingman" style="color:#f40;"></icon></view>
+          </view>
+        </view>
+      </panel>
+    </repeat>
+    <block wx:if="{{list.length == 0}}">
+      <emptyInfo flag="signs"/>
+    </block>
+    <!-- <view style="height: 120rpx;"></view>
+    <view class="scan_button_box">
+      <view class="scan_button" @tap="handleScan" style="vertical-align: middle">
+        开始扫码
+      </view>
+    </view> -->
+    <navBottom activeIndex="1"/>
+    <givePoints :visible.sync="showGivePoints" :editId.sync="editId"/>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  import Api from '../../common/Api';
+  import Tips from '../../common/Tips';
+  import fixBottom from '../../components/fixBottom';
+  import scrollRefresh from '../../mixin/scrollRefresh';
+  import panel from '../../uicomponents/panel/index';
+  import navBottom from '../../components/teacher/navBottom';
+  import givePoints from '../../components/teacher/givePoints';
+  import emptyInfo from '../../components/emptyInfo';
+  import wxs from '../../wxs/util.wxs'
+  export default class Scan extends wepy.page {
+    config = {
+      navigationBarTitleText: '扫码',
+    };
+    wxs = { wxs }
+    mixins = [scrollRefresh]
+    components = {panel,fixBottom, navBottom, givePoints, emptyInfo};
+    data = {
+      editId: '',
+      showGivePoints: false,
+      res: '',
+      list: [],
+      last_page: 1,
+      params:{
+        code: '',
+        page: 1,
+      }
+    }
+    onLoad() {
+      this.params.code = wepy.getStorageSync('teacherCode');
+      this.handleRequest()
+    }
+    async handleRequest(params) {
+      let res = await Api.getSignLog(this.params)
+      this.list = this.list.concat(res.data.data);
+      this.last_page = res.data.last_page;
+      this.$apply();
+    }
+    onReachBottom() {
+      if (this.params.page < this.last_page) {
+        this.params.page = this.params.page + 1
+        this.$apply();
+        this.handleRequest()
+      // } else {
+      //   Tips.alert('没有更多了');
+      }
+    }
+    methods = {
+      async handleScan(){
+        let res = await wepy.scanCode({onlyFromCamera: false});
+        if(res.errMsg == 'scanCode:ok'){
+          console.log(res.result)
+          let scanRes = await Api.scan({qrcode: res.result,code: this.params.code});
+          if ( scanRes.status === 'success' ) {
+            Tips.success(scanRes.msg,() => {
+              this.handleRequest()
+            })
+          } else {
+            Tips.alert(scanRes.msg)
+          }
+        }else {
+          Tips.alert('扫码失败')
+        }
+      },
+      async givePoints(id){
+        this.showGivePoints = true;
+        this.editId = id;
+      },
+    }
+    events = {
+      async 'give-points' (value) {
+        console.log({...value})
+        let scanRes = await Api.givePoints({...value, code: this.params.code });
+        if (scanRes.status === 'success' ) {
+          Tips.success(scanRes.msg)
+
+          this.list.forEach(item => {
+            if(item.id == value.id){
+              item.points = value.points
+            }
+          });
+          this.$apply();
+        } else {
+          Tips.alert(scanRes.msg)
+        }
+      }
+    }
+  }
+</script>
+<style lang="less">
+@import url('../../less/listPanel');
+.panel-content{
+  padding: 20rpx 30rpx;
+}
+.panel-text{
+  font-size: 28rpx;
+  line-height: 160%;
+}
+.scan_button_box {
+  width: 100%;
+  height: 90rpx;
+  position: fixed;
+  left: 0;
+  bottom: 120rpx;
+  z-index: 6;
+  .scan_button{
+    background: #525fe1;
+    color: #fff; margin: 20rpx 40rpx; padding: 20rpx; border-radius: 20rpx;
+    font-size: 30rpx;
+    text-align: center;
+    box-shadow:0 0 7rpx #888;
+    opacity:0.9;
+  }
+}
+.panel-right{
+
+  .avatar-box image{
+    border-radius: 50%;
+    width: 100rpx;
+    height: 100rpx;
+  }
+}
+</style>

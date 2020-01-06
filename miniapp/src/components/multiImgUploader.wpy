@@ -1,0 +1,132 @@
+<template>
+<view>
+   <repeat for="{{imgList}}" index="index" item="item" key="row-{{index}}">
+      <view class="img-list flex-list common-bg" style="width:{{imgWidth+'px'}};height:{{imgWidth+'px'}};background-image:url({{item}});background-size:{{imgWidth+'px'}} {{imgWidth+'px'}};"
+            catchtap="previewImg({{imgList}}, {{item}})">
+        <text class="kai-iconfont kai-icon-close delete-file" catchtap="removeImg({{index}})"></text>
+      </view>
+    </repeat>
+    <uploader :imgWidth.sync="imgWidth" :total="maxLength" region="ECN" :imgList.sync="imgList" :test="test"></uploader>
+</view>
+</template>
+<script>
+import wepy from 'wepy';
+import uploader from '../uicomponents/uploader/index';
+import Api from '../common/Api';
+import Tips from '../common/Tips';
+export default class MultiImgUploader extends wepy.component {
+  props = {
+    imgList: {
+      type: Array,
+      default: [],
+      twoWay: true,
+    },
+    maxLength: {
+      type: Number,
+      default: 3,
+    },
+    config:{
+      type: Object,
+      default: {},
+      twoWay: true,
+    }
+  };
+
+  components = {uploader};
+  data = {
+    imgWidth: 90,
+    domain: '',
+    uptokenURL: 'normal/uploader',
+    test: true,
+  }
+  async onLoad(options) {
+    this.domain = Api.baseUrl;
+    let that = this
+    wepy.getSystemInfo({
+      success: function(res) {
+        const windowWidth = ~~res.windowWidth
+        console.log('windowWidth',windowWidth)
+        that.imgWidth = (windowWidth - 20 - 30) / 4  // 两个外边距 和三个内边距
+        that.$apply()
+      }
+    })
+  }
+  methods = {
+    // 图片预览
+    previewImg (list, cur) {
+      var that = this
+      let urls = []
+      for (let i = 0, len = list.length; i < len; i++) {
+        urls.push(list[i])
+      }
+      wepy.previewImage({
+        current: cur, // 当前显示图片的http链接
+        urls: urls, // 需要预览的图片http链接列表
+        success: function (res) {
+          that.$apply()
+        },
+        fail: function (res) {
+          console.log(res)
+        },
+        complete: function (res) {
+          console.log(res)
+        }
+      })
+    },
+    // 删除图片
+    removeImg (idx) {
+      this.imgList.splice(idx, 1)
+      this.$apply()
+    }
+  }
+  events = {
+    // 上传图片
+    'refresh-img-list': async (data, test) => {
+ 
+      let res = await Api.uploadFile(data, 'file',this.config)
+      if (res.status == 'success') {
+        this.imgList.push(res.url)
+        this.$apply()
+        this.$emit('uploaded-image-urls', this.imgList);
+      } else {
+        Tips.alert(res.msg);
+      }
+      // if (test) {
+      // } else {
+      //   this.imgList.push({url: data.imageURL})
+      // }
+      // this.$apply()
+    }
+  }
+}
+</script>
+<style lang="less">
+   /*file*/
+  .panel-upload{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20rpx 20rpx 0 20rpx;
+    .img-list {
+      width: 80px;
+      height: 80px;
+      display: inline-block;
+      margin: 0 10px 10px 0;
+      position: relative;
+      .delete-file {
+        position:absolute;
+        top:-7px;
+        right:-5px;
+        z-index:99;
+        background:#fff;
+        border-radius:8px;
+        font-size:16px;
+        border:1px solid #fff;
+        width:16px;
+        height:16px;
+      }
+    }
+    .flex-list:nth-child(4n) {
+      margin-right: 0;
+    }
+  }
+</style>

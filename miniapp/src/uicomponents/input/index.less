@@ -1,0 +1,159 @@
+@import "../../less/font.less";
+
+.field-cell {
+  position: relative;
+  padding: 24rpx 30rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  line-height: 1.4em;
+  font-size: 28rpx
+}
+
+.field-cell::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  transform: scale(.5);
+  transform-origin: 0 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: 0 solid #e5e5e5;
+  border-bottom-width: 1px;
+  left: 30rpx;
+  right: 0
+}
+
+.field-cell__icon {
+  margin-right: 5px
+}
+
+.field-cell__bd {
+  flex: 1
+}
+
+.field-cell__text {
+  line-height: 48rpx;
+  font-size: 28rpx
+}
+
+.field-cell__desc {
+  line-height: 1.2em;
+  font-size: 24rpx;
+  color: #666
+}
+
+.field-cell__ft {
+  position: relative;
+  text-align: right;
+  color: #666
+}
+
+.field-cell__no-pading {
+  padding: 0
+}
+
+.field-cell__no-pading .field-cell__bd_padding {
+  padding: 24rpx 0 24rpx 30rpx
+}
+
+.field-cell__no-pading .field-cell__bd_padding .form-input {
+  height: 52rpx
+}
+
+.field-cell__no-pading .field-cell__ft_padding {
+  padding: 24rpx 30rpx 24rpx 0
+}
+
+.field-cell__last-child::after, .cell:last-child::after {
+  display: none
+}
+
+.field-cell__access .field-cell__ft {
+  padding-right: 26rpx
+}
+
+.field-cell__access .field-cell__ft::after {
+  position: absolute;
+  top: 50%;
+  right: 4rpx;
+  content: " ";
+  display: inline-block;
+  height: 12rpx;
+  width: 12rpx;
+  border-width: 4rpx 4rpx 0 0;
+  border-color: #c8c8c8;
+  border-style: solid;
+  transform: translateY(-50%) matrix(.71, .71, -.71, .71, 0, 0)
+}
+
+.field-cell__switch {
+  padding-top: 12rpx;
+  padding-bottom: 12rpx
+}
+
+.field {
+  padding: 14rpx 30rpx;
+  color: #333
+}
+
+// .field-wrapped {
+//   margin: 0 30rpx;
+//   display: flex;
+//   flex-direction: row;
+//   background-color: #fff
+// }
+
+// .field-wrapped::after {
+//   left: 0;
+//   border-width: 1px;
+//   border-radius: 4px
+// }
+
+// .field-wrapped + .field-wrapped {
+//   margin-top: 10px
+// }
+
+.field-error {
+  color: #f40
+}
+
+// .field-wrapped.field-error::after {
+//   border-color: #f40
+// }
+
+.field-title {
+  color: #333;
+  min-width: 130rpx;
+  padding-right: 20rpx
+}
+
+.field-input {
+  flex: 1;
+  line-height: 1.6em;
+  padding: 8rpx 0;
+  min-height: 44rpx;
+  height: auto;
+  font-size: 28rpx
+}
+
+.field-placeholder {
+  font-size: 28rpx
+}
+
+.field-input__right {
+  text-align: right;
+}
+
+.clear-content{
+  background-color: transparent;
+  padding: 0 6rpx;
+  .clear-btn {
+    color: #ccc;
+    font-size: 40rpx;
+    line-height: 1.6em;
+  }
+}

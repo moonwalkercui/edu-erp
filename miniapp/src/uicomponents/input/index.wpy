@@ -1,0 +1,114 @@
+<style lang="less" src="./index.less"></style>
+<template>
+  <view class="field-cell field {{ !showError ? 'field-error' : '' }}">
+    <view
+      wx:if="{{ config.label }}"
+      class="field-cell__hd field-title">{{ config.label }}</view>
+    <textarea
+      wx:if="{{ config.type === 'textarea' }}"
+      auto-height
+      value="{{ config.value }}"
+      placeholder="{{ config.placeholder }}"
+      disabled="{{config.disabled}}"
+      focus="{{config.focus}}"
+      class="field-input field-cell__bd {{ config.right ? 'field-input__right' : '' }}"
+      placeholder-class="field-placeholder"
+      bindinput="_handleFieldChange"
+      bindfocus="_handleFieldFocus"
+      bindblur="_handleFieldBlur"
+      data-component-id="{{ config.componentId || '' }}"></textarea>
+    <input
+      wx:else
+      type="{{ config.inputType || 'text' }}"
+      value="{{ config.value }}"
+      placeholder="{{ config.placeholder }}"
+      disabled="{{config.disabled}}"
+      focus="{{config.focus}}"
+      class="field-input field-cell__bd {{ config.right ? 'field-input__right' : '' }}"
+      placeholder-class="field-placeholder"
+      adjust-position="{{config.adjust}}"
+      bindinput="_handleFieldChange"
+      bindfocus="_handleFieldFocus"
+      bindblur="_handleFieldBlur"
+      data-component-id="{{ config.componentId || '' }}"/>
+      <view wx:if="{{ config.clear && showClose }}" class="clear-content" catchtap="_handleClear">
+        <text class="kai-iconfont kai-icon-closebg clear-btn"></text>
+      </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Input extends wepy.component {
+    props = {
+      config: {
+        type: Object,
+        coerce (c) {
+          const obj = {
+            error: Boolean(c.error) && true,
+            clear: Boolean(c.clear) && true,
+            adjust: Boolean(c.adjust) && true,
+            value: c.value || '',
+            label: c.label || '',
+            componentId: c.componentId || '',
+            inputType: c.inputType || 'text',
+            type: c.type || '',
+            placeholder: c.placeholder || '',
+            disabled: Boolean(c.disabled) && true,
+            focus: Boolean(c.focus) && true,
+            right: Boolean(c.right) && true,
+            // maxlength: c.maxlength || 9999,
+            filter: c.filter || ''
+          }
+          return obj
+        }
+      }
+    }
+
+    components = {}
+
+    data = {
+      showClose: false,
+      showError: true
+    }
+
+    methods = {
+      _handleClear () {
+        this.config.value = ' '
+        setTimeout(() => {
+          this.config.value = ''
+          this.showClose = false
+          this.$apply()
+        }, 10)
+        this.$emit('onInput', '')
+      },
+      _handleFieldChange (e) {
+        const value = e.detail.value
+        const {config} = this
+        if (config.clear) {
+          this.showClose = value.length > 0
+        }
+        this.$emit('onInput', value)
+      },
+      _handleFieldFocus (e) {
+        // console.log(77777)
+      },
+      _handleFieldBlur (e) {
+        const value = e.detail.value
+        const {config} = this
+        if (config.filter) {
+          this.showError = config.filter.test(value)
+        }
+        this.$emit('onBlur', value)
+      }
+    }
+
+    onLoad () {
+      const {config} = this
+      if (config.clear) {
+        this.showClose = config.value.length > 0
+        this.$apply()
+      }
+    }
+  }
+</script>

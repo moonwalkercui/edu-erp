@@ -1,0 +1,94 @@
+<template>
+  <popup :show.sync="visible" position="right">
+     <block slot="popContainer">
+      <view class="popup__content_side">
+        <view class="top">
+          <view class="t">
+            筛 选
+          </view>
+        </view>
+        <view class="main">
+          <view class="left" style="flex:1">
+            <view class="left-cate">
+              <typeAndProperty/>
+            </view>
+          </view>
+          <view class="right" style="flex:1">
+            <view class="title" style="text-align:left; padding: 20rpx">门店</view>
+            <checkList :items.sync="divisions" :checkedItems.sync="checkedItems"/>
+          </view>
+        </view>
+        <view class="bottom">
+          <view @tap="handleHide"
+            style="flex:1; background: #999; color: #fff; font-size:30rpx;"
+          >取消筛选</view>
+          <view @tap="handleRequest"
+            style="flex:1; background: #525fe1; color: #fff; font-size:30rpx;"
+          >筛 选</view>
+        </view>
+      </view>
+      </block>
+    </popup>
+</template>
+<script>
+import wepy from 'wepy';
+import typeAndProperty from '../components/typeAndProperty'
+import checkList from '../components/checkList'
+import Api from '../common/Api'
+import popup from '../uicomponents/popup/index'
+import icon from '../uicomponents/icon/index'
+export default class Popup extends wepy.component {
+  components = {popup, checkList, typeAndProperty};
+   props = {
+    visible: {
+      type: Boolean,
+      default: false,
+      twoWay: true,
+    }
+  };
+  data = {
+    checkedItems: [],
+    divisions: [],
+    properties: [],
+  };
+  async onLoad() {
+    this.getDivisions();
+  }
+  async getDivisions() {
+    let dvs = await Api.getDivisions({});
+    this.divisions = dvs.data;
+    this.$apply();
+  }
+  events = {
+    'change-property-value': (val) => {
+      this.properties = val;
+      this.$apply();
+    },
+  };
+  methods = {
+    handleHide() {
+      this.$emit('request-by-product', {
+        division: [],
+        properties: [],
+      })
+      this.hideMask();
+    },
+    handleRequest() {
+      this.$emit('request-by-product', {
+        division: this.checkedItems,
+        properties: this.properties,
+      })
+      this.hideMask();
+    }
+  };
+  hideMask() {
+    this.visible = false;
+    this.$apply();
+  }
+}
+</script>
+<style>
+  .popup-container {
+    width: 80%;
+  }
+</style>

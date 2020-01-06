@@ -1,0 +1,90 @@
+<template>
+<view>
+    <view class="fix-top-box" style="{{ fixTop<scrollTop ? fixBoxStyle : staticBoxStyle }}">
+      <tab-scroll @bindChange.user="change"/>
+    </view>
+    <view class="kai-content">
+       <repeat for="{{list}}" index="index" item="item" key="switch-{{index}}">
+          <panel>
+              <view class='list-panel'>
+                <view class="panel-left">
+                  <image class="child_image" src="{{item.gift.image}}"></image>
+                </view>
+                <view class="panel-center">
+                  <view class="panel-title">{{item.gift.name}}</view>
+                  <view class="panel-info" style="margin:5rpx 0;">{{item.created_at}}</view>
+                  <view class="panel-info">{{item.stage}}</view>
+                </view>
+                <view class="panel-right" style="text-align: right;">- {{item.gift.points}}     <icon class="iconfont icon-xingxingman" style="color:#f40;"></icon></view>
+              </view>
+          </panel>
+        </repeat>
+      <block wx:if="{{list.length == 0}}">
+        <emptyInfo flag="order"/>
+      </block>
+  </view>
+</view>
+</template>
+<script>
+import wepy from 'wepy'
+import Api from '../../common/Api'
+import tab from '../../uicomponents/tab/index'
+import panel from '../../uicomponents/panel/index'
+import Tips from '../../common/Tips'
+import reachBottom from '../../mixin/reachBottom'
+import fixTop from '../../mixin/fixTop'
+import emptyInfo from '../../components/emptyInfo'
+export default class Orders extends wepy.page {
+  config = {
+    navigationBarTitleText: '兑换记录',
+  };
+  components = {
+    'tab-scroll': tab,
+    panel: panel,
+    emptyInfo,
+  }
+  mixins = [reachBottom, fixTop]
+  data = {
+    tab2: {
+      list: [{id: '全部', title: '全部'}, {id: '申请中', title: '申请中'}, {id: '已兑换', title: '已兑换'}, {id: '已取消', title: '已取消'}],
+      scroll: false,
+      selectedId: '全部',
+      class: 'tab-success'
+    },
+  }
+  methods = {
+    change (res) {
+      this.tab2.selectedId = res
+      this.params.stage = res == '全部' ? '' : res;
+      this.list = [];
+      this.params.page = 1;
+      this.handleRequest()
+    },
+  }
+  onLoad () {
+    const {tab2} = this
+    this.$invoke('tab-scroll', 'doInitTabData', tab2)
+    this.handleRequest()
+  }
+  async handleRequest() {
+    let res = await Api.getGiftOrders(this.params)
+    this.list = this.list.concat(res.data.data);
+    this.last_page = res.data.last_page;
+    this.$apply();
+  }
+  onReachBottom() {
+    if (this.params.page < this.last_page) {
+      this.params.page = this.params.page + 1
+      this.$apply();
+      this.handleRequest()
+    }
+  }
+}
+</script>
+<style lang="less">
+  @import url('../../less/listPanel');
+  .panel-buttons{
+    padding: 10rpx 30rpx;
+    text-align: right;
+  }
+</style>

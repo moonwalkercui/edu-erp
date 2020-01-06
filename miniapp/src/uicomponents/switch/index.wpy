@@ -1,0 +1,79 @@
+<style lang="less" src="./index.less"></style>
+<template>
+  <view
+    class="switch switch-{{ switchItem.checked ? 'on' : 'off' }} {{ switchItem.disabled ? 'swtich-disabled' : '' }} {{switchItem.className}} switch-{{switchItem.type || 'success'}}"
+    data-checked="{{ switchItem.checked }}"
+    data-sync="{{ switchItem.sync }}"
+    data-loading="{{switchItem.loading}}"
+    data-disabled="{{ switchItem.disabled }}"
+    data-component-id="{{ switchItem.componentId }}"
+    bindtap="_handleSwitchChange"
+  >
+    <view class="switch-circle {{switchItem.loading ? 'loading-circle': ''}}">
+      <loading-type wx:if="{{ switchItem.loading }}" type="circle" class="black"/>
+    </view>
+    <view class="switch-bg"></view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Loading from '../loading/index'
+
+  export default class Switch extends wepy.component {
+    props = {
+      switchItem: {
+        type: [Object, String],
+        twoWay: true,
+        coerce (v) {
+          // console.log(v)
+          const obj = {
+            checked: Boolean(v.checked) || false,
+            disabled: v.disabled || false,
+            size: v.size || 'small',
+            className: v.className || '',
+            componentId: v.componentId || '',
+            loading: v.loading || false,
+            sync: v.sync || false,
+            type: v.type || 'success'
+          }
+          // console.log(obj)
+          return obj
+        }
+      }
+    }
+
+    watch = {
+      switchItem (v) {
+        const obj = {
+          checked: Boolean(v.checked) || false,
+          disabled: v.disabled || false,
+          size: v.size || 'small',
+          className: v.className || '',
+          componentId: v.componentId || '',
+          loading: v.loading || false,
+          sync: v.sync || false,
+          type: v.type || 'success'
+        }
+        this.switchItem = obj
+      }
+    }
+
+    components = {
+      'loading-type': Loading
+    }
+
+    methods = {
+      _handleSwitchChange (e) {
+        const dataset = e.currentTarget.dataset
+        if (!dataset.disabled) {
+          const checked = !dataset.checked
+          const newObj = Object.assign({}, dataset, {checked: checked})
+          delete newObj.comIndex
+          delete newObj.disabled
+          this.$emit('onChange', newObj)
+        }
+      }
+    }
+  }
+</script>

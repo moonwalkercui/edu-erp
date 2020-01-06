@@ -1,0 +1,43 @@
+<template>
+  <view class="product-item">
+    <view class="m" @tap="handleTap({{item.id}})">
+      <view class="title"><text class="text-emphasized" wx:if="{{item.type == '一对一'}}">一对一</text> {{item.name}}</view>
+      <view class="desc"> 
+         <icon class="iconfont icon-fenxiangzhuanqian" style="color:#f40;" wx:if="{{item.red_packet_max > 0}}"></icon>
+         {{wxs.strCut(item.slogan, 20)}}</view>
+      <view class="desc"><text wx:if="{{item.start_at}}">{{item.start_at}} ~ {{item.end_at}}</text>
+        <block wx:for="{{item.specs}}" wx:key="ind" wx:for-index="ind" wx:for-item="spec">
+          <text> · {{spec.name}} </text>
+        </block>
+      </view>
+      <view class="time-price">
+        <view class="l">
+          <block wx:for="{{item.users}}" wx:key="index" wx:for-index="index" wx:for-item="user">
+          <image class="item-avatar" src="{{user.avatar || '../images/avatar.png'}}"></image>
+          </block>
+        </view>
+        <view class="r"> ￥<text class="price">{{wxs.fixNumber(item.specs[0].price)}}</text></view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import wxs from '../wxs/util.wxs';
+export default class ProductItem extends wepy.component {
+  wxs = { wxs };
+  props = ['item'];
+  data = {};
+  onLoad() {}
+  methods = {
+    handleTap(id) {
+      wepy.navigateTo({
+        url: './product?id=' + id
+      });
+    }
+  };
+}
+</script>
+<style lang="less">
+  @import '../style/product_item.less';
+</style>

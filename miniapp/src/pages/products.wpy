@@ -1,0 +1,108 @@
+<template>
+  <view class="container">
+    <searchBar rightText="筛选" />
+    <view class="fix-top-box" style="{{ fixTop<scrollTop ? fixBoxStyle : staticBoxStyle }}">
+      <filterProducts/>
+    </view>
+    <!-- <imageAdv flag="coursesmiddle"/> -->
+    <view class="list-box mt" style="margin-bottom: 40rpx;">
+      <repeat for="{{list}}" key="index" index="index" item="item">
+        <productItem :item="item"></productItem>
+      </repeat>
+      <block wx:if="{{list.length == 0}}">
+        <emptyInfo flag="product"/>
+      </block>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  import productItem from '../components/productItem'
+  import filterProducts from '../components/filterProducts'
+  import Api from '../common/Api'
+  import reachBottom from '../mixin/reachBottom'
+  import fixTop from '../mixin/fixTop'
+  import emptyInfo from '../components/emptyInfo';
+  import searchBar from '../components/searchBarProduct';
+  export default class Products extends wepy.page {
+    config = {
+      navigationBarTitleText: '列 表',
+    };
+    components = {
+      productItem,
+      filterProducts,
+      emptyInfo,
+      searchBar,
+    }; // maskDivisionSelector,imageAdv
+    data = {
+      noticeIcon: true,
+      longText: '暂无消息',
+      maskRegionVisible: false,
+      showFiex: false,
+      popupImgItem: '',
+    };
+    mixins = [reachBottom, fixTop];
+    events = {
+      'change-active-tab': (cateId) => {
+        this.list = [];
+        this.params.search_cate = cateId;
+        // this.$apply();
+        this.handleRequest();
+      },
+      'show-area-mask': () => {
+        this.maskRegionVisible = true;
+      },
+      'show-all': () => {
+        this.params = {
+          page: 1
+        };
+        this.list = [];
+        // this.$apply();
+        this.handleRequest();
+      },
+      'request-by-product': (val) => {
+        this.list = [];
+        this.params.division = val.division.join(',');
+        this.params.properties = val.properties.join(',');
+        this.handleRequest()
+        // this.params.division = '';
+        // this.params.properties = '';
+        // this.$apply();
+      },
+      'handle-search': (val) => {
+        this.list = [];
+        this.params.search_name = val;
+        this.handleRequest()
+        this.params.search_name = '';
+        this.$apply();
+      },
+      // 'request-by-division': (val) => {
+      //   // console.log('get-by-division',val)
+      //   this.params.division = val.join(',')
+      //   // if (val) this.handleRequest({division: val.join(',')})
+      //   this.list = [];
+      //   this.$apply();
+      //   this.handleRequest()
+      // },
+    };
+    async onLoad(options) {
+      wepy.showShareMenu({
+          withShareTicket: true
+      })
+      this.handleRequest()
+    }
+    onShareAppMessage(res) {
+      return this.$parent.globalData.shareConfig()
+    }
+    async handleRequest() {
+      let res = await Api.getProducts(this.params);
+      this.list = this.list.concat(res.data.data);
+      this.last_page = res.data.last_page;
+      this.$apply();
+    }
+  }
+</script>
+
+<style lang="less">
+  @import '../style/public.less';
+</style>

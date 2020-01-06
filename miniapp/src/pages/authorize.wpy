@@ -1,0 +1,92 @@
+<template>
+  <view class="bg"><image src="../images/lg_bg.jpg" mode="widthFix"/></view>
+  <view class="authorize-contianer" wx:if="{{showAuthButton}}">
+    <image class="authorize-icon" src="../images/logo.png" />
+    <view class="auth-item" style="font-size:40rpx">微信授权登录</view>
+    <view class="auth-item" style="font-size:30rpx">授权登录后可以获得更多服务内容</view>
+
+    <form bindsubmit="formSubmit" report-submit="true">
+      <view class="auth-item" style="font-size:30rpx">
+        本小程序服务条款在“我的-关于”中查看
+      </view>
+      <view class="btn-authorize">
+        <button style="background:#525fe1" wx:if="{{canIUse}}" formType="submit" type="primary" open-type="getUserInfo" withCredentials="true" lang="zh_CN" bindgetuserinfo="bindGetUserInfo">现在登录</button>
+        <view wx:else>微信版本过低无法完成获取,请升级.</view>
+      </view>
+    </form>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import Auth from '../common/Auth'
+  import Api from '../common/Api'
+  import Tips from '../common/Tips'
+  export default class Authorize extends wepy.page {
+    components = {};
+    config = {
+      "navigationBarTitleText": "授权登录",
+      "navigationBarBackgroundColor": "#ffffff",
+      "navigationBarTextStyle": "black",
+    }
+    data = {
+      showAuthButton: true,
+      canIUse: wepy.canIUse('button.open-type.getUserInfo'),
+      formIds: []
+    }
+    async onLoad(query) {
+    }
+    async bindGetUserInfo(e) {
+      if (e.detail.errMsg === 'getUserInfo:ok') {
+        wepy.setStorageSync('userInfo', e.detail.userInfo)
+        await Auth.login(e.detail.userInfo);
+        Api.collectFormIds(this.formIds)
+      } else {
+        Tips.error('未获取到用户信息请重试')
+      }
+    }
+    methods = {
+      formSubmit: function (e) {
+        if(e.detail.formId) this.formIds.push(e.detail.formId)
+      }
+    };
+  }
+</script>
+<style lang="less">
+  page {
+    height: 100%;
+    background: #86e3ff;
+  }
+  .authorize-icon {
+    width: 400rpx;
+    height: 400rpx;
+    display: block;
+    margin: 100rpx auto;
+    border-radius: 50%;
+    &.little {
+      width: 200rpx;
+      height: 200rpx;
+      margin-top: -150rpx;
+      margin-bottom: 30rpx;
+    }
+  }
+  .authorize-contianer {
+    text-align: center;
+    padding-top: 100rpx;
+    .auth-item {
+      padding: 5rpx 0;
+    }
+    .btn-authorize {
+      margin: 100rpx 50rpx;
+    }
+  }
+  .bg{
+    width: 100%;
+    position: absolute;
+    top:0;
+    left: 0;
+    z-index: -100;
+    image{
+      width: 100%;
+    }
+  }
+</style>

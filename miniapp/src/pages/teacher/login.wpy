@@ -1,0 +1,130 @@
+<template>
+   <view class="">
+    <view class="avatar-box">
+      <view class="avatar-view"><image src="{{teacher.avatar}}" mode="aspectFit"></image></view>
+      <view>{{teacher.name}}</view>
+    </view>
+    <view class="input-wrap">
+      <input-name :config.sync="name" @onInput.user="bindInputUname" ></input-name>
+      <input-password :config="pwd" @onInput.user="bindInputPassword"></input-password>
+       <cell>
+        <view slot="title">
+          <view class="title-new" style="color: #333">自动登录</view>
+        </view>
+        <view slot="detail" style="min-width:80%; flex:0">
+          <Switch :switchItem.sync="switchItem" @onChange.user="changeSwitch"/>
+        </view>
+      </cell>
+    </view>
+    <view style="margin: 40rpx 20rpx;text-align:center;">
+      <button class="btn btn-large btn-success" @tap="handleLogin">登 录</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import Api from '../../common/Api'
+import Tips from '../../common/Tips'
+import input from '../../uicomponents/input/index';
+import cell from '../../uicomponents/cell/index';
+import Switch from '../../uicomponents/switch/index';
+export default class extends wepy.page {
+  config = {
+    navigationBarTitleText: '导员基地',
+  };
+  components = {
+    'input-name' : input,
+    'input-password' : input,
+    cell,
+    Switch,
+  };
+  data = {
+    name: {
+      label: '账 号',
+      value: '',
+      placeholder: '请输入账号'
+    },
+    pwd: {
+      label: '密 码',
+      inputType: 'password',
+      placeholder: '请输入密码'
+    },
+    formData: {
+      uname: '',
+      password: '',
+    },
+    loading: false,
+    teacher: {
+      name: '导员基地',
+      avatar: '../../images/avatar.png',
+    },
+    switchItem: {
+      checked: false,
+      disabled: false,
+      componentId: 'switch'
+    },
+  };
+  onLoad() {
+    if(wepy.$instance.checkMobileBinding()) {
+      if(wepy.getStorageSync('teacherRemember') && wepy.getStorageSync('teacherCode')) {
+        wepy.redirectTo({url: './scan'})
+      }
+      if(wepy.getStorageSync('teacherRemember')) {
+        this.switchItem.checked = true;
+      }
+      let storeageInfo = wepy.getStorageSync('teacherInfo')
+      if (storeageInfo) {
+        this.teacher = storeageInfo
+        this.formData.uname = storeageInfo.uname
+        this.name.value = storeageInfo.uname
+      }
+      this.$apply()
+    }
+  }
+  methods = {
+    changeSwitch (e) {
+      this.switchItem.checked = e.checked
+      wepy.setStorageSync('teacherRemember', e.checked)
+    },
+    handleLogin() {
+      if (!this.formData.uname || !this.formData.password) {
+        Tips.alert('请先输入账号和密码！')
+      } else {
+        Api.teacherLogin(this.formData)
+        this.loading = true;
+        this.$apply();
+      }
+    },
+    handleRigister() {
+      this.$navigate('register')
+    },
+    bindInputUname(e) {
+      this.formData.uname = e
+      this.$apply();
+    },
+    bindInputPassword(e) {
+      this.formData.password = e
+      this.$apply();
+    }
+  }
+}
+</script>
+<style>
+.avatar-box {
+  width: 100%; 
+  margin: 50rpx auto;
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+.avatar-view {
+  width:200rpx;height:200rpx; border-radius:50%; overflow:hidden;  margin: 50rpx auto;
+}
+.avatar-view image{
+  width:200rpx;height:200rpx; 
+ 
+}
+    .input-wrap{
+        padding: 10rpx;
+        background-color: white;
+    }
+</style>

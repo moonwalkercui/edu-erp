@@ -1,0 +1,26 @@
+.page-box{
+	display: inline-block;
+}
+.page-contain{
+	text-align: center;
+	font-size: 0px;	
+}
+.page-contain a{
+	font-size: 14px;
+	display: inline-block;
+	margin:5px 2px;
+	text-decoration: none;
+	color:#efefef;
+	background: rgba(0,0,0,.6);
+	width:28px;
+	height:28px;
+	line-height: 28px;
+	border-radius:3px;
+}
+.page-contain a.active{
+	background:#efefef;
+	color:#000;
+}
+.page-contain a:active{
+	background:#000;
+}

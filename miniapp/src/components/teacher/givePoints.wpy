@@ -1,0 +1,117 @@
+<template>
+  <popup :show.sync="visible" position="bottom">
+    <block slot="popContainer">
+      <view class="pop-inner">
+        <view class="stars">
+          <block wx:for="{{list}}" wx:for-index="index" wx:key="index">
+            <view class="star {{item.value === value ? 'active':''}}" @tap="choose({{item.value}})">
+                <view class="i"><icon class="iconfont icon-xingxingman" style="color:#f40;"></icon></view>
+                <view class="t">{{item.name}}</view>
+            </view>
+          </block>
+        </view>
+        <button class="btn margin-top20 pop-button-active" catchtap="give">奖励小星星</button>
+        <button class="btn" catchtap="close">取消</button>
+      </view>
+    </block>
+  </popup>
+</template>
+<script>
+import wepy from 'wepy';
+import popup from '../../uicomponents/popup/index';
+import Api from '../../common/Api';
+import Tips from '../../common/Tips';
+export default class givePoints extends wepy.component {
+  components = { popup };
+  props = {
+    visible: {
+      type: Boolean,
+      default: false,
+      twoWay: true,
+    },
+    editId: {
+      default: '',
+    }
+  };
+  data = {
+    value: 0,
+    list: [
+      { name: '1颗', value: 1 },
+      { name: '2颗', value: 2 },
+      { name: '3颗', value: 3 },
+      { name: '4颗', value: 4 },
+      { name: '5颗', value: 5 }
+    ]
+  };
+  methods = {
+    async give() {
+      if(this.value == 0) {
+        Tips.alert('请选择数量');
+        return;
+      }
+      this.visible = false;
+      this.$emit('give-points', {id: this.editId, points: this.value});
+    },
+    close() {
+    
+    },
+    choose(i) {
+      this.value = i
+    },
+  };
+  // events = {
+  //   pop: function (i, op) {
+  //     console.log(i, op)
+  //   }
+  // }
+}
+</script>
+<style lang="less">
+.stars {
+  display: flex;
+  .star {
+    flex: 1;
+    text-align: center;
+    padding: 30rpx;
+    border: 4rpx solid #f4f4f4;
+    border-radius: 20rpx;
+    margin:5rpx;
+    &.active{
+      border: 4rpx solid #525fe1;
+    }
+    .i{
+      margin-bottom: 20rpx;
+    }
+    .t {
+      font-size: 26rpx;
+    }
+  }
+}
+.pop-inner {
+  padding: 40px 20px;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+}
+.pop-text {
+  font-size: 16px;
+  text-align: center;
+  line-height: 28px;
+}
+.pop-center {
+  width: 240px;
+  height: 300px;
+}
+.pop-right {
+  width: 200px;
+}
+.pop-left {
+  width: 200px;
+}
+.margin-top20 {
+  margin-top: 20px;
+}
+.pop-button-active {
+  background: #525fe1;
+  color: white;
+}
+</style>

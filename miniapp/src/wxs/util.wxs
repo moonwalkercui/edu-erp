@@ -1,0 +1,113 @@
+module.exports = {
+  // 格式化数字,留2个小数
+  fixNumber: function(num) {
+    return num%1 === 0 ? parseInt(num) : parseFloat(num).toFixed(2);
+  },
+  nullFormat: function(val, replace = '无') {
+    return (val === null || val === '') ? replace : val;
+  },
+  strCut: function(str,num) {
+    return (str && str.length > num) ? str.substring(0,num) + '...' : str;
+  },
+  // 时间格式化，去掉秒
+  timeFormat: function(time) {
+    return time.substring(0,5)
+  },
+  // 判断是否可以退款 超过24小时的单子无法退款
+  canRefund: function(item) {
+    var time = getDate();
+    time.setTime(time.getTime() - 24*60*60*1000); // 24小时前
+    orderTime = getDate(item.paid_at);
+//    console.log(time);
+//    console.log(orderTime);
+//    console.log(item.status, orderTime > time);
+//    console.log(orderTime > time);
+    return item.status == '已付款' && orderTime > time
+  },
+  // format 格式： "yyyy-MM-dd hh:mm:ss D"
+  dateFormat: function(d, format = 'yyyy/MM/dd hh:mm') {
+    if (d === null) {
+      return ''
+    }
+    var date = getDate(d), today = getDate(), display = '', regStr = '', hidenYear = false
+
+    if (getRegExp('(D+)').test(format)) {
+      var week = ['日', '一', '二', '三', '四', '五', '六']
+      var day = week[date.getDay()]
+      format = format.replace(getRegExp('(D+)'), function(m) {
+        return m.length === 1 ? day : '周' + day
+      })
+    }
+    if (getDate(getDate().setDate(getDate().getDate())).toLocaleDateString() === date.toLocaleDateString()) {
+      display = '今天'
+    } else if (getDate(getDate().setDate(getDate().getDate() - 1)).toLocaleDateString() === date.toLocaleDateString()) {
+      display = '昨天'
+    } else if (getDate(getDate().setDate(getDate().getDate() + 1)).toLocaleDateString() === date.toLocaleDateString()) {
+      display = '明天'
+    } else {
+      display = ''
+    }
+    if (getRegExp('(y+)').test(format)) {
+      if (date.getFullYear() === today.getFullYear()) {
+        hidenYear = true
+      }
+      if (display || hidenYear) {
+        format = format.replace(getRegExp('(y+)[/-]?'), '')
+      } else {
+        format = format.replace(getRegExp('(y+)'), function(m) {
+          return date.getFullYear().toString().substring(4 - m.length)
+        })
+      }
+    }
+    if (getRegExp('(M+)').test(format)) {
+      if (display) {
+        format = format.replace(getRegExp('(M+)[/-]?'), '')
+      } else {
+        format = format.replace(getRegExp('(M+)'), function(m) {
+          var f = (date.getMonth() + 1).toString()
+          return m.length === 1 ? f : ('00' + f).substring(f.length)
+        })
+      }
+    }
+    if (getRegExp('(d+)').test(format)) {
+      if (display) {
+        regStr = '([-/]?d+)'
+      } else {
+        regStr = '(d+)'
+      }
+      format = format.replace(getRegExp(regStr), function(m) {
+        var f = date.getDate().toString()
+        return display ? display : m.length === 1 ? f : ('00' + f).substring(f.length)
+      })
+    }
+    if (getRegExp('(h+)').test(format)) {
+      format = format.replace(getRegExp('(h+)'), function(m) {
+        var f = date.getHours().toString()
+        return m.length === 1 ? f : ('00' + f).substring(f.length)
+      })
+    }
+    if (getRegExp('(m+)').test(format)) {
+      format = format.replace(getRegExp('(m+)'), function(m) {
+        var f = date.getMinutes().toString()
+        return m.length === 1 ? f : ('00' + f).substring(f.length)
+      })
+    }
+    if (getRegExp('(s+)').test(format)) {
+      format = format.replace(getRegExp('(s+)'), function(m) {
+        var f = date.getSeconds().toString()
+        return m.length === 1 ? f : ('00' + f).substring(f.length)
+      })
+    }
+    return format
+  },
+  // 检查时间是否过期，true 是没过期 false 是过期
+  checkDateTimeExpire: function(dateTime) {
+    var nowTime = getDate();
+    var checkDate = getDate(dateTime);  
+    // console.log('dateTime',dateTime)
+    // console.log('nowtime',nowTime)
+    // console.log('checkDate',checkDate)
+    console.log('nowTime > checkDate', nowTime > checkDate)
+    return nowTime > checkDate
+  }
+}

@@ -1,0 +1,37 @@
+<style lang="less" src="./index.less"></style>
+<template>
+  <text class="kai-iconfont kai-icon-{{type}}" catchtap="iconTap" data-event="{{event}}"></text>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Icon extends wepy.component {
+    props = {
+      type: {
+        type: String,
+        twoWay: true,
+        default: ''
+      },
+      event: {
+        type: String,
+        twoWay: true,
+        default: ''
+      }
+    }
+
+    data = {
+    }
+
+    methods = {
+      iconTap (e) {
+        const dataset = e.currentTarget.dataset
+        const event = dataset.event || ''
+        if (event) {
+          this.$emit(event)
+        }
+      }
+    }
+
+    onLoad () {
+    }
+  }
+</script>

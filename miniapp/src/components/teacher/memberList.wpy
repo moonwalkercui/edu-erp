@@ -1,0 +1,147 @@
+<template>
+  <popup :show.sync="visible" position="right" :maskHide="maskHide">
+    <block slot="popContainer">
+      <view class="pop-inner">
+        <scroll-view scroll-y style="height: {{windowHeight}}px;">
+          <view wx:if="{{list.length == 0}}" style="padding-top: 400rpx;text-align: center;font-size: 28rpx; color:gray;">无学员</view>
+          <view class="members" wx:else>
+            <block wx:for="{{list}}" wx:for-index="index" wx:key="index">
+              <view class="member {{item.value === value ? 'active':''}}" @tap="makeCall({{item.mobile}})">
+                  <view class="i"><image src="{{item.avatar}}"></image></view>
+                  <view class="t">
+                    <view >{{item.nick_name}} </view>
+                    <view style="color:gray;font-size:24rpx;">{{item.name||''}}</view>
+                    <view style="color:gray;font-size:24rpx;">{{item.mobile||''}}</view>
+                  </view>
+                  <view style="font-size:24rpx; width: 160rpx;"> 
+                    <view>剩{{item.remaining_quantity}}次</view>
+                    <button class="btn btn-small btn-success" wx:if="{{item.sign_at == '' && item.remaining_quantity > 0 }}" @tap.stop='handleAllograph({{item.member_id}})' style='margin:10rpx 0 0 0; padding: 0 16rpx;'>点名签到</button>
+                  </view>
+              </view>
+            </block>
+          </view>
+        </scroll-view>
+      </view>
+    </block>
+  </popup>
+</template>
+<script>
+import wepy from 'wepy';
+import popup from '../../uicomponents/popup/index';
+import Api from '../../common/Api';
+import Tips from '../../common/Tips';
+export default class MemberList extends wepy.component {
+  components = { popup };
+  props = {
+    visible: {
+      type: Boolean,
+      default: false,
+      twoWay: true,
+    },
+    showId: {
+      default: 0,
+    }
+  };
+  watch = {
+    async showId(newValue, oldValue)  {
+      this.handleRequst(newValue)
+    }
+  }
+  async handleRequst(courseId) {
+    this.courseId = courseId
+    let res = await Api.getMembers({course: courseId});
+    this.list = res.data;
+    this.$apply();
+  }
+  data = {
+    windowHeight: wepy.getStorageSync('systemInfo').windowHeight,
+    maskHide: true,
+    value: 0,
+    list: [],
+    courseId: ''
+  };
+  methods = {
+    close() {
+      this.visible = false;
+    },
+    makeCall(phone) {
+      if (phone)
+        Tips.confirm(`确认拨号?` , phone , () => {
+          wepy.makePhoneCall({
+            phoneNumber: phone
+          })
+        })
+    },
+    handleAllograph(member_id) {
+      this.$emit('handleAllograph',{member: member_id, course: this.courseId})
+    }
+  };
+  events = {
+    membersListRefresh() {
+      this.handleRequst(this.courseId)
+    }
+  };
+}
+</script>
+<style lang="less">
+.members {
+  display: flex;
+  flex-direction: column;
+  .member {
+    flex: 1;
+    text-align: center;
+    padding: 15rpx;
+    margin: 10rpx 0;
+    border: 4rpx solid #f4f4f4;
+    border-radius: 15rpx;
+    margin:5rpx;
+    display: flex;
+    align-items:center;
+    &.active{
+      border: 4rpx solid #525fe1;
+    }
+    .i{
+      width: 110rpx;
+      margin-right: 20rpx;;
+      image{
+        width: 90rpx;
+        height: 90rpx;
+        border-radius: 50%;
+      }
+    }
+    .t {
+      font-size: 26rpx;
+      flex: 1;
+      text-align: left;
+      line-height: 140%;
+    }
+  }
+}
+.pop-inner {
+  padding: 0 10px;
+  box-sizing: border-box;
+  width: 600rpx;
+}
+.pop-text {
+  font-size: 16px;
+  text-align: center;
+  line-height: 28px;
+}
+.pop-center {
+  width: 240px;
+  height: 300px;
+}
+.pop-right {
+  width: 200px;
+}
+.pop-left {
+  width: 200px;
+}
+.margin-top20 {
+  margin-top: 20px;
+}
+.pop-button-active {
+  background: #525fe1;
+  color: white;
+}
+</style>

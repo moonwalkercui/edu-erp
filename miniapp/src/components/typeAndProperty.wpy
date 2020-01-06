@@ -1,0 +1,71 @@
+<template>
+  <view>
+    <repeat for="{{items}}" key="index" index="index" item="item">
+        <view class="title" style="text-align:left; padding: 20rpx">{{item.name}}</view>
+        <view class="list">
+          <repeat for="{{item.properties}}" key="tindex" index="tindex" item="titem">
+          <view class="check-list">
+              <view style="background: {{titem.checked? '#bbb' : '#fff'}}; color: {{titem.checked? '#fff': 'black'}}; border-radius: 20rpx; padding: 10rpx 30rpx;"
+                @tap="handleTap( {{titem}} , {{tindex}}, {{index}})"
+              >{{titem.name}}</view>
+              </view>
+          </repeat>
+      </view>
+      </repeat>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import Api from '../common/Api'
+export default class CheckListInline extends wepy.component {
+  props = {
+    // cates: {
+    //   type: Array,
+    //   default: []
+    // },
+    // checkedItems: {
+    //   type: Array,
+    //   default: [],
+    //   twoWay: true
+    // }
+  };
+  data = {
+    items:[],
+    checkedItems: []
+  };
+  
+  async onLoad () {
+    let list = await Api.getTypeAndProperties();
+    let types = list.data;
+    types.forEach((i,index )=> {
+       i.properties.forEach((t,key) => {
+          if (this.checkedItems.indexOf(t.id) > -1) {
+            types[index].properties[key].checked = true;
+          } else {
+            types[index].properties[key].checked = false;
+          }
+      })
+    })
+    this.items = types
+    this.$apply()
+  }
+  methods = {
+    handleTap(titem, key, index) {
+      this.items[index].properties[key].checked = !this.items[index].properties[key].checked;
+      if (this.items[index].properties[key].checked) {
+        this.checkedItems.push(titem.id);
+      } else {
+        var i = this.checkedItems.indexOf(titem.id);
+        if (i > -1) {
+          this.checkedItems.splice(i, 1);
+        }
+      }
+      this.$apply();
+      this.$emit('change-property-value',this.checkedItems);
+    },
+  };
+}
+</script>
+<style>
+
+</style>

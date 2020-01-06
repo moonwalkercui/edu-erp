@@ -1,0 +1,72 @@
+<template>
+  <view>
+    <repeat for="{{items}}">
+      <view class="check-list">
+        <view style="background: {{item.checked? '#bbb' : '#fff'}}; color: {{item.checked? '#fff': 'black'}}; border-radius: 20rpx; padding: 10rpx 30rpx;"
+          @tap="handleTap( {{item.id}} ,{{index}})"
+        >{{item.name}}</view>
+      </view>
+    </repeat>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class CheckList extends wepy.component {
+  props = {
+    items: {
+      type: Array,
+      default: [],
+    },
+    checkedItems: {
+      type: Array,
+      default: [],
+      twoWay: true
+    },
+  };
+  data = {
+  };
+  watch = {
+    items(newValue, oldValue) {
+      if(newValue.length > 0) {
+        newValue.forEach((i,n) => {
+          if (this.checkedItems.indexOf(i.id) > -1) {
+            this.items[n].checked = true;
+          } else {
+            this.items[n].checked = false;
+          }
+        });
+        this.$apply();
+      }
+    },
+    checkedItems(newValue, oldValue) {
+      if(newValue.length == 0) {
+        this.items.forEach((i,n) => {
+            this.items[n].checked = false;
+        });
+      }
+    },
+  };
+  onLoad() {
+  }
+  methods = {
+    handleTap(val, index) {
+      this.items[index].checked = !this.items[index].checked;
+      if (this.items[index].checked) {
+        this.checkedItems.push(val);
+      } else {
+        var i = this.checkedItems.indexOf(val);
+        if (i > -1) {
+          this.checkedItems.splice(i, 1);
+        }
+      }
+      this.$apply();
+      // this.$emit('change-checked-value',this.checkedItems);
+    },
+  };
+}
+</script>
+<style>
+.check-list {
+  margin: 20rpx;
+}
+</style>

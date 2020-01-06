@@ -1,0 +1,106 @@
+<template>
+  <popup :show.sync="visible" position="center" :maskHide.sync="maskHide">
+    <block slot="popContainer">
+      <view class="pop-inner pop-center" wx:if="{{visible}}">
+        <image class="authorize-icon little" src="../images/logo.png"/>
+        <view class="pop-text text-gray">欢迎使用小猿管家 请输入组织代码</view>
+        <view style="background-color: #fff; margin-top: 30rpx;">
+          <input placeholder="" bindinput="bindinput" style="text-align:center; padding:10rpx; font-size: 30rpx; color:#666; border: 1px solid #eee" />
+        </view>
+        <button class="btn btn-success margin-top20" catchtap="submitOrgcode">切换组织</button>
+      </view>
+      <view class="pop-inner pop-center" wx:else>
+        <image class="authorize-icon little" src="../images/logo.png"/>
+        <view class="pop-text text-gray">欢迎使用小猿管家 </view>
+        <button class="btn btn-success margin-top20" catchtap="goHome">进入首页</button>
+      </view>
+    </block>
+  </popup>
+</template>
+<script>
+  import wepy from 'wepy'
+  import Auth from '../common/Auth'
+  import Api from '../common/Api'
+  import Tips from '../common/Tips'
+  import popup from '../uicomponents/popup/index'
+  export default class Authorize extends wepy.page {
+    components = {
+      popup
+    };
+    config = {
+      "navigationBarTitleText": "切换组织",
+      "navigationBarBackgroundColor": "#ffffff",
+      "navigationBarTextStyle": "black",
+    }
+    data = {
+      scene: {},
+      path: '',
+      visible: true,
+      maskHide: false,
+      orgcode: '',
+    }
+    onLoad(query) {
+    }
+    methods = {
+      goHome() {
+        wepy.switchTab({ url: './home' });
+      },
+      async submitOrgcode() {
+        if (this.orgcode == false) {
+          Tips.alert('请输入组织编号')
+        } else {
+          let res = await Api.checkOrgcodeExist({
+            prefix: this.orgcode
+          })
+          if (res.status == 'success') {
+            wepy.setStorageSync('orgcode', this.orgcode);
+            this.checkOrgcode();
+            this.visible = false;
+          } else {
+            Tips.alert(res.msg || "输入错误")
+          }
+        }
+      },
+      bindinput(event) {
+        this.orgcode = event.detail.value;
+      },
+    };
+  }
+</script>
+<style lang="less">
+  page {
+    height: 100%;
+  }
+  .authorize-icon {
+    width: 400rpx;
+    height: 400rpx;
+    display: block;
+    margin: 100rpx auto;
+    border-radius: 50%;
+    &.little {
+      width: 200rpx;
+      height: 200rpx;
+      margin-top: -150rpx;
+      margin-bottom: 30rpx;
+    }
+  }
+  .popup-container {
+    width: 80%;
+  }
+  .pop-inner {
+    padding: 50rpx 40rpx;
+    box-sizing: border-box;
+  }
+  .pop-text {
+    font-size: 28rpx;
+    text-align: center;
+    line-height: 150%;
+  }
+  .pop-center {
+    width: 100%;
+  }
+  .margin-top20 {
+    margin-top: 20px;
+  }
+  
+</style>

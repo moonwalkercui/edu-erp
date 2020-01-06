@@ -1,0 +1,218 @@
+<template>
+  <view class="container">
+
+    <block wx:if="{{byWx}}">
+      <view style="margin: 40rpx 20rpx;text-align:center;">
+        <button class="btn btn-large btn-success" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">
+          绑定本微信手机号
+        </button>
+      </view>
+     
+    </block>
+    <block wx:else>
+      <view class="padding-10 font-12">填写手机号并验证</view>
+      <view style="background-color: #fff;">
+        <input-mob :config="mob" @onBlur.user="handleMobBlur"></input-mob>
+        <image src="{{captchaUrl}}" class="captcha" @tap="getCaptcha" style="float:right;"></image>
+        <input-captcha :config="captcha" @onBlur.user="handleCaptCodeInput"></input-captcha>
+      </view>
+      <view style="margin: 40rpx 20rpx;text-align:center;">
+        <button class="btn" @tap="handleSend" style="font-size: 28rpx;" disabled="{{sendDisabled}}" wx:if="{{sendBtnVisible}}">{{sendText}}</button>
+      </view>
+      <view class="padding-10 font-12">短信验证码</view>
+      <view style="background-color: #fff;">
+        <input-smscode :config="code" @onBlur.user="handleSmsCodeInput"></input-smscode>
+      </view>
+      <view style="margin: 40rpx 20rpx;text-align:center;">
+        <button class="btn btn-large btn-success" @tap="handleSubmit">立即绑定</button>
+      </view>
+    </block>
+
+    <view style="margin: 40rpx 20rpx;text-align:center;">
+      <button class="btn btn-large" @tap="handleByOther">
+        {{chooseBtnText}}
+      </button>
+    </view>
+  
+    <view class="text-info">
+      提示: 手机号绑定后不可变更，请选择获取绑定方式.
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import input from '../uicomponents/input/index';
+import Api from '../common/Api';
+import Tips from '../common/Tips';
+// import cell from '../uicomponents/cell/index';
+export default class BindMob extends wepy.page {
+  config = {
+    navigationBarTitleText: '请绑定手机号',
+  };
+  data = {
+    byWx: true,
+    chooseBtnText: '使用其他方式',
+    captchaUrl: '',
+    sendText: '发送短信',
+    sendDisabled: false,
+    sendBtnVisible: true,
+    randomCaptCode: '',
+    mobile: '',
+    captCode: '',
+    smsCode: '',
+    mob: {
+      value: '',
+      maxlength: 11,
+      filter: /^(\+?0?86?)?1[3456789]\d{9}$/,
+      placeholder: '输入手机号'
+    },
+    captcha: {
+      error: true,
+      placeholder: '输入图形验证码'
+    },
+    code: {
+      adjust: true,
+      placeholder: '输入短信验证码',
+    },
+  }
+  components = {
+    'input-mob': input,
+    'input-captcha': input,
+    'input-smscode': input,
+    // cell: cell,
+  }
+  onShow() {
+    this.reqCaptcha();
+  }
+  reqCaptcha() {
+    this.sendBtnVisible = true;
+    this.randomCaptCode = Math.random();
+    this.captchaUrl = Api.captcha(this.randomCaptCode);
+    this.$apply();
+  }
+  handleBindRes(res) {
+    if(res.status == 'success') {
+      if(res.data.token) wepy.setStorageSync('token', res.data.token)
+      var tip = '绑定成功!';
+      if(res.data.profile) {
+        tip = "该手机号已注册过，已还原数据"
+        wepy.setStorageSync('profile', res.data.profile)
+      }
+      Tips.alert(tip, () => {
+        var flashUrl = wepy.getStorageSync('flashUrl');
+        if(flashUrl) {
+          wepy.redirectTo({ url: flashUrl }); // 注意此处不能有四个tab的页。
+        } else {
+          wepy.switchTab({ url: 'me' });
+        }
+      });
+    }
+  }
+  methods = {
+    handleByOther() {
+      this.byWx = !this.byWx;
+      this.chooseBtnText = this.byWx ? '使用其他方式' : '使用微信手机号';
+    },
+    async getPhoneNumber(e) {
+      let res = await Api.getPhoneNumber(e.detail);
+      if (e.detail.errMsg === 'getPhoneNumber:ok') {
+        let encryptedData = e.detail.encryptedData
+        let iv = e.detail.iv
+        let res = await Api.bindPhoneNumber({encryptedData, iv})
+        this.handleBindRes(res);
+      } else {
+        Tips.alert('用户取消无法获取')
+      }
+    },
+    async handleSend (e) {
+      let res = await Api.sendsmsode({
+        mobile: this.mobile,
+        code: this.randomCaptCode + '',
+        captcha: this.captCode,
+      });
+      // console.log('resend',res)
+      if(res.status == 'success') {
+        this.sendBtnVisible = false;
+        var t = 60;
+        this.sendText = t + '秒后重发'
+        this.sendDisabled = true;
+        this.$apply();
+        var s = setInterval(()=>{
+          t--;
+          if(t == 0) {
+            clearInterval(s);
+            this.sendText = '重发短信'
+            this.sendDisabled = false;
+          } else {
+            this.sendText = t + '秒后重发'
+          }
+          this.$apply();
+        }, 1000);
+
+      } else {
+        this.sendBtnVisible = true;
+        this.reqCaptcha();
+      }
+      // return;
+      // console.log('resend')
+    },
+    async handleSubmit() {
+      let res = await Api.bindmobile({
+        mobile: this.mobile,
+        code: this.smsCode + '',
+      });
+      console.log(res)
+      this.handleBindRes(res);
+      // if(res.status == 'success') {
+      //   if(res.data.token) wepy.setStorageSync('token', res.data.token)
+      //   var tip = '绑定成功!';
+      //   if(res.data.profile) {
+      //     tip = "该手机号已注册过，已还原数据"
+      //     wepy.setStorageSync('profile', res.data.profile)
+      //   }
+      //   Tips.alert(tip, () => {
+      //     wepy.switchTab({ url: 'me' });
+      //   });
+      // }
+    },
+    getCaptcha (e) {
+      this.reqCaptcha()
+    },
+    handleMobBlur (e) {
+      this.mobile = e;
+    },
+    handleCaptCodeInput (e) {
+      this.captCode = e;
+    },
+    handleSmsCodeInput (e) {
+      this.smsCode = e;
+    },
+  }
+}
+</script>
+
+<style lang="less">
+.text-info{
+  text-align: center;
+  font-size: 24rpx;
+  color: #666;
+  margin: 30rpx;
+}
+  .no-title__content {
+    .field-wrapped {
+      margin: 0;
+    }
+  }
+  .wrap {
+    input {
+      border: 1px solid #ccc;
+    }
+  }
+  .captcha {
+    width: 240rpx;
+    height: 80rpx;
+    margin-top: 6rpx;
+    margin-right: 6rpx;
+  }
+</style>

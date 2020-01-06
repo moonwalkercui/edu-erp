@@ -1,0 +1,157 @@
+<style lang="less">
+  @import url('../less/listPanel');
+  .panel-c {
+    background: #fff; margin: 20rpx; padding: 20rpx 10rpx; border-radius: 20rpx;
+  }
+</style>
+<template>
+  <view style="background: #f4f4f4; height:100%">
+    <view class="panel-c">
+      <calendar :hasIconList.sync="hasIconList" :hasSubIconList.sync="hasSubIconList"></calendar>
+    </view>
+    <block wx:for="{{list}}" wx:key="{{index}}">
+      <panel>
+        <view slot="title" class="title">
+          #{{item.sn}} <text style="color:gray">{{item.date}}</text>
+          <text style="float:right">{{item.status}}</text>
+        </view>
+        <view class='list-panel'>
+          <view class="panel-right" style="font-size: 40rpx; width: 100rpx;">{{wxs.timeFormat(item.start_at)}}</view>
+          <view class="panel-center">
+            <view class="panel-title">{{item.product.name}}</view>
+            <view class="panel-info">导员: {{item.user_name}}</view>
+          </view>
+          <view class="panel-right"  style="width: 170rpx;">
+            <!-- <button class="btn btn-small" @tap='showMemberList({{item.id}})' style='margin-bottom: 0;'>同学列表</button> -->
+           
+            <block wx:if="{{item.date <= today && item.signed_count == 0}}">
+              <button class="btn btn-small btn-success" @tap='handleSign({{item.sn}},{{item.date}})' style='margin-bottom: 10rpx;'>立即签到</button>
+            </block>
+            <block wx:if="{{item.signed_count == 1}}">
+              <button class="btn btn-small" style='margin-bottom: 10rpx;' disabled >已经签到</button>
+            </block>
+         
+            <button class="btn btn-small" @tap='showHomework({{item.id}})' style='margin-top: 0;margin-bottom: 0;' wx:if="{{item.homework_count > 0}}">查看作业</button>
+            <button class="btn btn-small" style='margin-top: 0;margin-bottom: 0;' disabled wx:else>暂无作业</button>
+          </view>
+        </view>
+      </panel>
+    </block>
+    <block wx:if="{{list.length == 0}}">
+      <emptyInfo flag="calendar"/>
+    </block>
+    <!-- <memberList :visible.sync="showMembers" :showId.sync="showId"/> -->
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import calendar from '../components/calendar';
+import Api from '../common/Api';
+import Tips from '../common/Tips';
+import panel from '../uicomponents/panel/index';
+import emptyInfo from '../components/emptyInfo';
+// import memberList from '../components/teacher/memberList';
+import wxs from '../wxs/util.wxs'
+export default class Calendar extends wepy.page {
+  wxs = { wxs }
+  components = { calendar, panel, emptyInfo } // memberList
+  config = {
+    navigationBarTitleText: '我的日程',
+    'enablePullDownRefresh': true
+  }
+  data = {
+    // showMembers: false,
+    // showId: false,
+    list: [],
+    hasIconList: [],
+    hasSubIconList: [],
+    selectedDay: '',
+    today:'',
+  }
+  computed = {
+    params () {
+      return {
+        page: '',
+        day: this.selectedDay,
+      }
+    }
+  }
+  onLoad() {
+    if (wepy.$instance.checkSession()) {
+      wepy.showShareMenu({
+          withShareTicket: true
+      })
+      this.refresh()
+    }
+  }
+  onShareAppMessage(res) {
+    return this.$parent.globalData.shareConfig()
+  }
+  onPullDownRefresh() {
+    this.refresh()
+  }
+  async refresh() {
+    let res = await Api.getCourseDays()
+    this.hasIconList = res.data.day;
+    this.hasSubIconList = res.data.signed;
+    let todayDate = new Date()
+    let todayStr = todayDate.getFullYear() + '-' + this.setDouble(todayDate.getMonth() + 1) + '-' + this.setDouble(todayDate.getDate())
+    this.loadCourses(todayStr)
+    this.today = todayStr
+    this.$apply();
+    this.$broadcast('startRenderCalendar') // 通知日历组件可以开始渲染
+  }
+  methods = {
+    // showMemberList(id) {
+    //   this.showMembers = true;
+    //   this.showId = id;
+    // },
+    showHomework(id) {
+      wepy.navigateTo({ url: `./homework?id=${id}` });
+    },
+    handleSign(sn, date) {
+      Tips.confirm('确认签到?','签到会核销次数', async() => {
+        let res = await Api.handleSign({sn: sn});
+        if(res.status == 'success') {
+          // this.loadCourses(date)
+          this.refresh()
+        }
+      })
+    },
+  }
+  events = {
+    calChangeCurrentMonth: function(date, e) {       // 日历当前时间改变回调
+      console.log('changeMonth', date)
+    },
+    calChangeSelectedDay: function(date, e) {        // 点击日历选择天回调
+      // console.log('changeselectedday', date)
+      this.loadCourses(date)
+    }
+  }
+  loadCourses(date) {
+    this.selectedDay = date
+    this.hasIconList.forEach(async (item) => {
+      if (item === date) {
+        let res = await Api.getCourseSignByDay({
+          day: item,
+        })
+        this.list = res.data
+        this.$apply()
+      } else {
+        this.list = []
+      }
+    })
+    this.$apply()
+  }
+  setDouble(value) { // 设置月或日两位数格式
+    if (value) {
+      value = value.toString()
+      if (value.length === 2) {
+        return value
+      } else {
+        return '0' + value
+      }
+    }
+  }
+}
+</script>

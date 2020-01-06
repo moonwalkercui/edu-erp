@@ -1,0 +1,40 @@
+<template>
+  <view class="container" style=" padding-top:20rpx;">
+    <view class="list-box">
+      <repeat for="{{list}}" key="index" index="index" item="item">
+        <userActionPanel :item.sync="item"/>
+      </repeat>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import userActionPanel from '../components/userActionPanel'
+import Api from '../common/Api';
+export default class Users extends wepy.page {
+  config = {
+    navigationBarTitleText: '导员列表',
+  };
+  components = {userActionPanel};
+  data = {
+    list: []
+  };
+  onLoad() {
+    this.handleRequest()
+  }
+  async handleRequest(params) {
+    let res = await Api.getUsers(params)
+    this.list = res.data;
+    this.$apply();
+  }
+  methods = {
+  };
+  events = {
+  };
+}
+</script>
+
+<style lang="less">
+  @import '../style/public.less';
+</style>

@@ -1,0 +1,122 @@
+/* 改变主题色变量 */
+// 颜色定义
+$primary-color: #525fe1;
+$nice-black: #303133;
+$nice-gray: #f5f6f8;
+
+$nice-green: #67C23A;
+$nice-blue: #525fe1;
+//$light-blue: $nice-blue + #111;
+$light-blue:  lighten( $nice-blue, 10% );
+$dark-blue: darken($nice-blue,10%);
+
+$--color-primary: $primary-color !default;
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+@import "~element-ui/packages/theme-chalk/src/index";
+
+.el-dialog__body {
+  padding-top: 20px;
+}
+.el-table th, .el-table td, .el-table--medium th, .el-table--medium td {
+  padding: 5px 0;
+}
+.el-dialog .el-dialog__header {
+  padding-bottom: 5px;
+}
+.el-range-editor--small .el-range-input{
+  width: 80px;
+}
+.el-range-editor--small.el-input__inner{
+  width: 250px;
+}
+.row-bg {
+  padding: 5px;
+  background-color: #f9fafc;
+}
+.action-box {
+  margin: 0 10px;
+}
+.action-column{
+  text-align: right;
+}
+.dialog-form {
+  width: 700px;
+}
+.dialog-form-item {
+  width: 400px;
+}
+.el-breadcrumb__inner, .el-breadcrumb__inner a {
+  font-size: small;
+}
+.page-line {
+  margin-bottom: 25px;
+}
+.page-form {
+  width: 95%;
+  min-width: 600px;
+}
+.page-form-large {
+  width: 95%;
+}
+@media only screen and (min-width: 1400px) {
+  .page-form{
+    width: 80%;
+  }
+}
+.el-tabs .el-tabs__header.is-top {
+  margin: 0 0 10px;
+}
+.tip-text{
+  font-size: small;
+  color: #909399;
+  margin-left: 30px;
+}
+.money-text{
+  color: #FF6600;
+}
+//.money-text:before{
+//  content:"￥";
+//}
+.el-table tr.is-stop {
+  background: #f4f4f5;
+}
+.el-table tr.is-finish {
+  background: #f0f9eb;
+}
+.el-table tr.is-warning {
+  background: #fef0f0;
+}
+.el-table button {
+  padding: 0px;
+  line-height: 23px;
+}
+.el-menu{
+  border: none;
+}
+.el-menu.el-menu-top .el-menu-item{
+  height: 50px!important;
+  line-height: 50px!important;
+}
+.el-menu--vertical .el-menu .el-menu-item.is-active{
+  background-color: $primary-color!important;
+}
+.nav-box .el-button{
+  padding: 8px 20px;
+}
+.j-tabs .el-tabs__item.is-active{
+  font-weight: bold;
+  font-size: 110%;
+}
+.j-tabs .el-tabs__item{
+  padding: 0 10px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 1em;
+  color: #909399;
+}
+.j-tabs .el-tabs__nav-next, .j-tabs .el-tabs__nav-prev{
+  height: 35px;
+  line-height: 35px;
+}

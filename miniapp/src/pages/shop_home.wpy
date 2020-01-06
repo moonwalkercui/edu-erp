@@ -1,0 +1,76 @@
+<template>
+  <view class="container">
+    <sortAreaAndAll/>
+    <view class="list-box">
+      <repeat for="{{list}}" key="index" index="index" item="item">
+          <imagePanel :item.sync="item">
+            <view slot="content">
+              <text>{{item.title}}</text>
+            </view>
+          </imagePanel>
+      </repeat>
+    </view>
+
+    <maskDivisionSelector/>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import imagePanel from '../components/imagePanel'
+import sortAreaAndAll from '../components/sortAreaAndAll'
+import maskDivisionSelector from '../components/maskDivisionSelector'
+
+export default class Clubs extends wepy.page {
+  config = {
+    navigationBarTitleText: '俱乐部',
+
+
+  };
+  components = {imagePanel, sortAreaAndAll, maskDivisionSelector};
+  data = {
+    list: [
+      {id:100,title: 'ok1', image: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok5', image: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'},
+      {id:100,title: 'ok1', image: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+      {id:100,title: 'ok2', image: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg'},
+    ]
+
+  };
+  computed = {};
+
+  methods = {
+   
+  };
+  events = {
+    'show-area-mask': () => {
+      console.log('handlePopupArea')
+      wepy.$instance.handleShowMask('.J_PopupArea', this.$wxpage)
+    },
+  };
+
+  onLoad() {
+
+  }
+
+}
+</script>
+
+<style lang="less">
+  @import '../style/public.less';
+
+
+</style>

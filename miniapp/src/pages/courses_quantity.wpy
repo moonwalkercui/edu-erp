@@ -1,0 +1,60 @@
+<template>
+  <view class="container" style="padding-top:20rpx">
+
+    <block wx:for="{{list}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+      <view class="nav-item" @tap="showProduct({{item.product.id}})">
+        <view class="l" style="padding-left: 50rpx;">
+          <view class="title text-light" style="font-size:40rpx;">{{item.remaining_quantity}}</view>
+        </view>
+        <view class="m">
+          <view class="desc">名称: <text style='color: black'>{{item.product.name}}</text></view>
+          <view class="desc">总次数: {{item.total_quantity}}</view>
+          <view class="desc">有效期: {{item.product.expired_at || '无'}}</view>
+        </view>
+      </view>
+    </block>
+    <block wx:if="{{list.length == 0}}">
+      <emptyInfo flag="coursequntity"/>
+    </block>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  import Api from '../common/Api';
+  import emptyInfo from '../components/emptyInfo';
+  import reachBottom from '../mixin/reachBottom'
+  export default class Orders extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的剩余次数',
+      enablePullDownRefresh: true
+    };
+    components = {
+      emptyInfo
+    };
+    data = {
+      showTabStatus: '全部',
+    };
+    mixins = [reachBottom]; // 页面里必须有一个handleRequest方法进行再次查询
+    onLoad() {
+      this.handleRequest()
+    }
+    methods = {
+      showProduct(id) {
+        wepy.navigateTo({
+          url: './product?id=' + id
+        });
+      },
+    };
+    async handleRequest() {
+      let res = await Api.getMyCourses(this.params)
+      this.list = this.list.concat(res.data.data);
+      this.last_page = res.data.last_page;
+      this.$apply();
+    }
+    events = {};
+  }
+</script>
+<style lang="less">
+  @import '../style/public.less';
+  @import '../style/panel.less';
+</style>

@@ -1,0 +1,102 @@
+a 链接跳转实现分页效果
+
+		page({
+			box:'d1',//存放分页的容器
+			href:'www.scopeman.cn/detail.html?page=',//跳转连接
+			page:8,//当前页码 
+			count:15,//总页数
+			num:5,//页面展示的页码个数
+		})
+	
+Ajax 实现分页效果
+
+		page({
+			box:'d2',//存放分页的容器
+			count:32,//总页数
+			num:8,//页面展示的页码个数
+			step:6,//每次更新页码个数
+			callBack:function(i){
+				//点击页码的按钮发生回调函数一般都是操作ajax
+			}
+		})
+		
+注意：num 要比step要大于等于2
+		（例如:num：8；那么step只能小于等于6）
+
+	
+可根据您的需求自定义样式：
+
+		div class='page-contain'//最外层容器
+			a href="" class='page-pre'>/a//上箭头
+			div class='page-box'>//页码器
+				a href="">/a//页码
+				.......
+			/div
+			a href="" class='page-next'/a//下箭头
+		/div
+		//根据上面的dom结构和class 我们很方便制定我需求的样式
+		//激活状态下我们对应的页码会添加active的class
+
+页面中js:
+
+<script>
+    page({
+        box:'d1',//存放分页的容器
+        href:'#?page=',//跳转连接
+        page:10,//当前页码 
+        count:30,//总页数
+        num:5,//页面展示的页码个数
+    })
+    document.getElementById('on').addEventListener('click',function(){
+        var n = Number(document.getElementById('n').value);
+        var m = Number(document.getElementById('m').value);
+        var id = Number(document.getElementById('id').value);
+        if(m<id){alert('当前页不能大于总页数')}
+        else{
+            page({
+                box:'d1',//存放分页的容器
+                href:'#?page=',//跳转连接
+                page:id,//当前页码 
+                count:m,//总页数
+                num:n,//页面展示的页码个数
+            })
+        }
+    })
+    page({
+        box:'d2',//存放分页的容器
+        count:20,//总页数
+        num:9,//页面展示的页码个数
+        step:6,//每次更新页码个数
+        callBack:function(i){
+            console.log(i);
+            //点击页码的按钮发生回调函数一般都是操作ajax
+        },
+        pre:function(p){
+            alert(p)
+        },
+        next:function(p){
+            alert(p)
+        }
+    })
+    page({
+        box:'dd',//存放分页的容器
+        count:20,//总页数
+        num:6,//页面展示的页码个数
+        step:4,//每次更新页码个数
+        callBack:function(i){
+            console.log(i);
+            //点击页码的按钮发生回调函数一般都是操作ajax
+        }
+    })
+    page({
+        box:'dt',//存放分页的容器
+        count:22,//总页数
+        num:5,//页面展示的页码个数
+        step:3,//每次更新页码个数
+        callBack:function(i){
+            console.log(i);
+            //点击页码的按钮发生回调函数一般都是操作ajax
+        }
+    })
+</script>
+	

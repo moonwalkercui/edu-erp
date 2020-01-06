@@ -1,0 +1,70 @@
+<template>
+  <view class="container">
+    <swiperAdv flag="divisions"/>
+    <sortAreaAndAll/>
+    <view class="list-box" style="margin-bottom:15rpx;">
+      <imageDivisionPanel :items.sync="divisions"/>
+    </view>
+    <maskRegionSelector :visible.sync = "maskRegionVisible"/>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import imageDivisionPanel from '../components/imageDivisionPanel'
+import sortAreaAndAll from '../components/sortAreaAndAll'
+import maskRegionSelector from '../components/maskRegionSelector'
+import swiperAdv from '../components/swiperAdv'
+import Api from '../common/Api'
+
+export default class Stores extends wepy.page {
+  config = {
+    navigationBarTitleText: '音乐沙龙',
+  };
+  components = {swiperAdv, imageDivisionPanel, sortAreaAndAll, maskRegionSelector};
+  data = {
+    maskRegionVisible: false,
+    divisions: [],
+    params: {}
+  };
+  computed = {};
+
+  methods = {
+   
+  };
+  events = {
+    'show-area-mask': () => {
+      this.maskRegionVisible = true;
+      // this.$apply();
+    },
+    'request-by-area': (val) => {
+      console.log('request-by-area',val)
+      this.params.region = val;
+      this.$apply();
+      this.handleRequest();
+    },
+    'show-all': () => {
+      this.params = {};
+      this.$apply();
+      this.handleRequest();
+    },
+    'emit-request': () => {
+      this.handleRequest();
+    },
+  };
+  onLoad() {
+    this.handleRequest();
+  }
+  async handleRequest(){
+    let list = await Api.getDivisions(this.params);
+    this.divisions = list.data;
+    this.$apply()
+  }
+}
+</script>
+
+<style lang="less">
+  @import '../style/public.less';
+  
+  
+</style>

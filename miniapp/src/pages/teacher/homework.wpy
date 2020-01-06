@@ -1,0 +1,107 @@
+<template>
+  <view>
+    <panel>
+      <view slot="title" class="title">作业内容</view>
+      <view class="caption-box">
+        <textarea class="textarea-hw" value="{{formData.caption}}" bindinput="bindTextAreaBlur" auto-height auto-focus placeholder="请输入" />
+      </view>
+    </panel>
+
+    <panel>
+      <view slot="title" class="title">附图</view>
+      <view class="panel-upload">
+        <multiImgUploader :imgList.sync="imgList" :config="uploadConfig" />
+      </view>
+    </panel>
+    <panel>
+      <view slot="title" class="title">备注</view>
+      <view class="caption-box">
+        <textarea class="textarea-hw" value="{{formData.remark}}" bindinput="inputRemark" auto-height placeholder="备注说明" />
+      </view>
+    </panel>
+
+     <fixBottom>
+      <block slot="content">
+        <view class="nav_btm heighlignt flex1" @tap="handleSubmit">保 存</view>
+      </block>
+    </fixBottom>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  import Api from '../../common/Api';
+  import Tips from '../../common/Tips';
+  import fixBottom from '../../components/fixBottom';
+  import multiImgUploader from '../../components/multiImgUploader';
+  import panel from '../../uicomponents/panel/index';
+  export default class Homework extends wepy.page {
+    config = {
+      navigationBarTitleText: '布置作业',
+    };
+    components = {panel,fixBottom,multiImgUploader};
+    data = {
+      imgList:[],
+      formData: {
+        code: '',
+        id:'',
+        caption: '',
+        images: [],
+        remark:'',
+      },
+      uploadConfig: {action:'uploadImg'},
+    }
+    async onLoad(options) {
+      this.formData.code = wepy.getStorageSync('teacherCode');
+      this.formData.id = options.id;
+      let res = await Api.getHomework({course:options.id});
+      if (res.data) {
+        let imgs = [];
+        if(res.data.image1) imgs.push(res.data.image1);
+        if(res.data.image2) imgs.push(res.data.image2);
+        if(res.data.image3) imgs.push(res.data.image3);
+  
+        this.imgList = imgs;
+        this.formData.caption = res.data.caption;
+        this.formData.images = imgs;
+        this.formData.remark = res.data.remark;
+        this.$apply();
+      }
+    }
+    methods = {
+      bindTextAreaBlur(e) {
+        this.formData.caption = e.detail.value;
+      },
+      async handleSubmit() {
+        let res = await Api.saveHomework(this.formData);
+        if (res.status == 'success') {
+          Tips.success(res.msg);
+          wepy.navigateBack({
+            delta: 1
+          });
+        }
+      },
+      inputRemark(e){
+        this.formData.remark = e.detail.value;
+      }
+    }
+    events = {
+    // 上传图片
+    'uploaded-image-urls': (urls) => {
+      // console.log('上传结果',urls)
+      this.formData.images = urls;
+      this.$apply();
+    }
+  }
+  }
+</script>
+<style lang="less">
+ .caption-box{
+    padding: 20rpx;
+  }
+  .textarea-hw{
+    width: 100%;
+    min-height: 300rpx;
+
+  }
+ 
+</style>

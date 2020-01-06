@@ -1,0 +1,286 @@
+<template>
+  <view class="container">
+    <view class="notice-box">
+      <view class="notice-text-title">
+        <view class="t">{{info.name}}</view>
+        <view class="c">{{info.slogan}}</view>
+        <!-- <view class="c">课时数 <text style="color:#f40; font-weight: bold;">{{courses_quantity}}</text></view> -->
+      </view>
+      <view class="notice-list">
+        <view class="notice-li">
+          <view class="l">选择规格:</view>
+          <view class="r">
+            <radioText :items.sync="specs" :selectedItem.sync="selectedItem" />
+          </view>
+        </view>
+        <view class="notice-li">
+          <view class="l">次 数</view>
+          <view class="r">{{courses_quantity}}</view>
+        </view>
+        <view class="notice-li">
+          <view class="l">价 格</view>
+          <view class="r">￥ {{selectedItem.price}}</view>
+        </view>
+        <!-- <view class="notice-li">
+          <view class="l">使用代金券</view>
+          <view class="r">
+            <radioText2 :items.sync="vouchers" :selectedItem.sync="selectedVoucher" />
+          </view>
+        </view> -->
+        <view class="notice-li">
+          <view class="l">
+            <switch-rp :switchItem.sync="switchItemRp" @onChange.user="changeSwitchRp" /> {{red_packet_text}} (余额:{{red_packet_member}})
+          </view>
+          <view class="r">
+            - {{red_packet}}
+          </view>
+        </view>
+        <view class="notice-li">
+          <view class="l">
+            <switch :switchItem.sync="switchItem" @onChange.user="changeSwitch" /> {{payTypeText}}
+          </view>
+          <view class="r">
+          </view>
+        </view>
+        <!-- <view class="notice-li">
+                  <view class="l">使用余额:</view>
+                  <view class="r">可用:￥{{balance}} / 付后:￥{{balanceResidue}} </view>
+                </view> -->
+      </view>
+      <view class="notice-text-title">
+        <view class="t">还需支付
+          <text style="font-size: 40rpx; ">￥ {{total}}</text>
+        </view>
+        <view class="c" style="font-size: 24rpx;">温鑫提示</view>
+        <view class="c" style="font-size: 24rpx;">非微信支付的预约, 需到线下付款才可预定成功.</view>
+        <view class="c" style="font-size: 24rpx;">支付后24小时内可申请退款; 暂不支持红包抵值部分的退款.</view>
+        <view class="c" style="font-size: 24rpx;">最终解释权归{{orgName}}所有.</view>
+      </view>
+    </view>
+    <fixBottom>
+      <block slot="content">
+        <view class="nav_btm heighligntsub flex1" @tap="handleSubmit">{{contirmText}}</view>
+      </block>
+    </fixBottom>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import fixBottom from '../components/fixBottom';
+  import radioText from '../components/radioText';
+  import wxs from '../wxs/util.wxs';
+  import Api from '../common/Api';
+  import Tips from '../common/Tips';
+  import Switch from '../uicomponents/switch/index';
+  export default class ProductConfirm extends wepy.page {
+    wxs = {
+      wxs
+    };
+    config = {
+      navigationBarTitleText: '预约确认',
+      navigationBarBackgroundColor: 'white',
+      navigationBarTextStyle: 'black'
+    };
+    components = {
+      fixBottom,
+      radioText,
+      radioText2: radioText,
+      // Switch,
+      switch: Switch,
+      'switch-rp': Switch
+    };
+    data = {
+      info: {},
+      specs: [],
+      vouchers: [],
+      selectedItem: {},
+      selectedVoucher: {},
+      total: 0.0,
+      contirmText: '',
+      payType: '',
+      payTypeText: '',
+      orgName: '',
+      courses_quantity: 0,
+      red_packet: 0,
+      red_packet_member: 0,
+      red_packet_text: "使用红包",
+      // balance: 0.0,
+      // balanceResidue: 0.0,
+      switchItem: {
+        checked: true,
+        disabled: false,
+        type: 'success',
+      },
+      switchItemRp: {
+        checked: true,
+        disabled: false,
+        type: 'success',
+      },
+    };
+    onLoad(options) {
+      this.handleRequest(options.id);
+    }
+    onShow() {
+      let orgInfo = wepy.getStorageSync('orgInfo')
+      this.orgName = orgInfo.org_name ? orgInfo.org_name : '我方'
+      if (orgInfo.wxpay == 1) {
+        this.changePayType(true)
+        this.payTypeText = '微信支付'
+      } else {
+        this.changePayType(false)
+        this.payTypeText = '微信支付(未启用)'
+        this.switchItem.checked = false
+        this.switchItem.disabled = true
+      }
+      this.$apply()
+    }
+    watch = {
+      selectedItem(newValue, oldValue) {
+        // this.getVouchers({
+        //   used: 0,
+        //   catch_price: newValue.price
+        // });
+
+        // console.log('newValue', newValue)
+        this.courses_quantity = newValue.courses_quantity
+        this.calculateTotal();
+        // this.$apply()
+      },
+      // selectedVoucher(newValue, oldValue) {
+      //   this.calculateTotal();
+      // }
+    };
+    calculateTotal() {
+      // let res = 0;
+      // if (this.selectedItem.price) {
+        // res = this.selectedItem.price;
+        // if (typeof this.selectedVoucher.price != 'undefined') {
+        //   res =
+        //     parseFloat(this.selectedItem.price) -
+        //     parseFloat(this.selectedVoucher.price);
+        // }
+      // }
+      // console.log('this.selectedItem.price', this.selectedItem.price)
+      this.total = parseFloat(parseFloat(this.selectedItem.price) - (this.switchItemRp.checked ? parseFloat(this.red_packet) : 0)).toFixed(2);
+      this.$apply();
+      // 以下是使用余额支付逻辑
+      // let balance = parseFloat(this.balance)
+      // let total = res - balance < 0 ? 0 : res - balance;
+      // let balanceResidue = balance > res  ?  balance - res : 0;
+      // this.total = parseFloat(total).toFixed(2);
+      // this.balanceResidue = parseFloat(balanceResidue).toFixed(2);
+      // this.$apply();
+    }
+    async handleRequest(id) {
+      // let res = await Api.getProfile();
+      // this.balance = res.data.balance;
+      let res = await Api.getMemberCenterInfo();
+      this.red_packet = res.data.red_packet;
+      this.red_packet_member = res.data.red_packet;
+
+      let list = await Api.getProduct({
+        id: id
+      });
+      this.info = list.data;
+      this.specs = list.data.specs;
+      this.courses_quantity = this.specs[0].courses_quantity
+      
+      if(this.info.red_packet_max == 0) {
+        this.switchItemRp.disabled = true;
+        this.red_packet = 0;
+        this.red_packet_text = "本品不可用红包";
+      }
+      if(this.info.red_packet_max > 0 && this.info.red_packet_max < this.red_packet )
+        this.red_packet = this.info.red_packet_max;
+   
+      this.$apply();
+      // this.getVouchers({
+      //   used: 0,
+      //   catch_price: this.specs[0].price
+      // });
+  
+    }
+    async getVouchers(params) {
+      let vouchers = await Api.getVouchers(params);
+      this.vouchers = vouchers.data;
+      // this.$apply();
+      this.calculateTotal();
+    }
+    changePayType(is_wxpay) {
+      if (is_wxpay) {
+        this.contirmText = '确认并支付'
+        this.payType = 'wxpay'
+      } else {
+        this.contirmText = '确认并预约'
+        this.payType = 'offline'
+      }
+      // this.$apply()
+    }
+    methods = {
+      changeSwitchRp(e) {
+        this.switchItemRp.checked = e.checked
+        this.calculateTotal();
+      },
+      changeSwitch(e) {
+        this.switchItem.checked = e.checked
+        this.changePayType(e.checked)
+      },
+      async handleSubmit(e) {
+        let make_res = await Api.makeOrderByProduct({
+          spec_id: this.selectedItem.id,
+          // voucher_id: this.selectedVoucher.id,
+          // balance: this.balance - this.balanceResidue,
+          money: this.total,
+          pay_type: this.payType,
+          red_packet: this.switchItemRp.checked ? this.red_packet : 0,
+        });
+        if (this.payType == 'wxpay') {
+          if (make_res.status == 'success') {
+            let res = await Api.wxPay(make_res.data.pay_info);
+            // console.log('支付结果',res)
+            if (res.errMsg == 'requestPayment:ok') {
+              wepy.redirectTo({
+                url: './notice_paid'
+              });
+            } else {
+              Tips.alert('未支付');
+            }
+            // console.log(make_res.data);
+            // if (make_res.data.ready == 'OK' ){
+            //     let money = make_res.data.pay_money
+            //     let pay_sn = make_res.data.pay_sn
+            // }
+            // Tips.alert('订单已生成。支付须对接正式域名');
+            //  wepy.redirectTo({ url: './notice_paid' });
+            return
+          }
+        } else {
+          if (make_res.status == 'success') {
+            Tips.confirm('预约已提交', '请到线下进行付款。', () => {
+              wepy.redirectTo({
+                url: './orders'
+              });
+            }, () => {
+              wepy.switchTab({
+                url: './home'
+              });
+            }, '我的预约', '新预约')
+          }
+          return
+        }
+        Tips.alert('订单提交出错')
+      }
+    };
+    // events = {
+    //   'radio-text-change': (val) => {
+    //     this.calculateTotal()
+    //   },
+    // }
+  }
+</script>
+
+<style lang="less">
+  @import '../style/public.less';
+  @import '../style/notice.less';
+</style>

@@ -1,0 +1,63 @@
+<template>
+  <view class="panel-zone">
+    <view class="avat">
+      <image src="{{item.avatar || '../images/avatar.png' }}" mode="widthFix" lazy-load="true"></image>
+    </view>
+    <view class="cont">
+      <!-- <view class="title">{{item.nickname}}</view> -->
+      <view class="content"><text>{{item.content}}</text></view>
+      <view class="images">
+        <view class="{{item.images.length == 1 ? 'single-image' :  'image'}}" wx:for="{{item.images}}" wx:key="index" wx:for-index="index" wx:for-item="img" @tap="previewImage({{item.images}},{{index}})">
+          <image src="{{img}}" lazy-load="true" mode="aspectFill" wx:if="{{item.images.length > 1}}"></image>
+          <image src="{{img}}" lazy-load="true" mode="widthFix" wx:else></image>
+        </view>
+      </view>
+      <view class="action">
+        <text class="time">{{wxs.dateFormat(item.edit_time)}}</text>
+        <view class="like" @tap="handleLike({{item.id}})">
+          <icon class="iconfont icon-xihuan-xianxing"></icon> 赞 {{item.logs_count}}
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import Api from '../common/Api';
+import Tips from '../common/Tips';
+import wxs from '../wxs/util.wxs'
+export default class ProductItem extends wepy.component {
+  wxs = { wxs }
+  props = {
+    item: {
+      type: Object,
+      twoWay: true,
+    }
+  };
+  data = {
+  };
+  methods = {
+    previewImage(images, index) {
+      // console.log(index)
+      // console.log(images[index])
+      // console.log(images)
+      wepy.previewImage({
+        urls: images,
+        current: images[index], // 当前显示图片的http链接
+      });
+    },
+    async handleLike(id) {
+      if(wepy.$instance.checkSession() == false) return;
+      var res = await Api.zoneLike({id});
+      console.log(res)
+      Tips.alert(res.msg);
+      this.item.logs_count = res.data;
+      this.$apply();
+    }
+  };
+}
+</script>
+<style lang="less">
+  @import '../style/public.less';
+  @import '../style/panel.less';
+</style>

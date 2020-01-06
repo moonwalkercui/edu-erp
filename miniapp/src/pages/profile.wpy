@@ -1,0 +1,219 @@
+<template>
+  <view class="container">
+    <cellgroup custom-class="single-cellgroup">
+      <block>
+        <!-- <block wx:if="{{showGetMobButton}}">
+          <cell0 arrow="{{ true }}">
+            <view slot="title">
+              <view class="title-new" style="color: #333">绑定手机</view>
+            </view>
+            <view slot="detail" style="min-width:80%; flex:0">
+                <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" 
+                class="btn btn-small" style="margin-bottom:0; color:#525fe1;">获取微信手机号</button>
+            </view>
+          </cell0>
+        </block>
+        <block wx:else>
+          <input-mobile :config.sync="mobile" @onInput.user="onInputMobile"></input-mobile>
+        </block> -->
+        <!-- <cell0 arrow="{{ true }}">
+          <view slot="title">
+            <view class="title-new" style="color: #333">手机号码</view>
+          </view>
+          <view slot="detail" style="min-width:80%; flex:0">
+            <button class="btn btn-small" style="margin-bottom:0; color:#525fe1;" @tap="showBindPage">{{mobile}}</button>
+          </view>
+        </cell0> -->
+        <input-mobile :config.sync="mobile"></input-mobile>
+        <input-name :config.sync="name" @onInput.user="onInputName"></input-name>
+        <input-height :config.sync="height" @onInput.user="onInputHeight"></input-height>
+        <cell1 arrow="{{ true }}">
+          <view slot="title">
+            <view class="title-new" style="color: #333">生 日</view>
+          </view>
+          <view slot="detail" style="min-width:80%; flex:0">
+            <picker mode="date" @change="pickBirthday" value="{{formData.birthday}}">
+              <view class="picker"> {{formData.birthday}} </view>
+            </picker>
+          </view>
+        </cell1>
+        <cell2 arrow="{{ true }}">
+          <view slot="title">
+            <view class="title-new" style="color: #333">性 别</view>
+          </view>
+          <view slot="detail" style="min-width:80%; flex:0">
+            <picker @change="pickGender" value="{{gIndex}}" range="{{genders}}">
+              <view class="picker"> {{genders[gIndex]}} </view>
+            </picker>
+          </view>
+        </cell2>
+        <cell3 arrow="{{ true }}">
+          <view slot="title">
+            <view class="title-new" style="color: #333">职 业</view>
+          </view>
+          <view slot="detail" style="min-width:80%; flex:0">
+            <picker @change="pickOccupation" value="{{oIndex}}" range="{{occupations}}">
+              <view class="picker"> {{occupations[oIndex]}} </view>
+            </picker>
+          </view>
+        </cell3>
+      </block>
+    </cellgroup>
+    <fixBottom>
+      <block slot="content">
+        <view class="nav_btm heighlignt flex1" @tap="handleSubmit">保 存</view>
+      </block>
+    </fixBottom>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import fixBottom from '../components/fixBottom';
+  import Api from '../common/Api';
+  import Tips from '../common/Tips'
+  import input from '../uicomponents/input/index';
+  import cell from '../uicomponents/cell/index';
+  import cellGroup from '../uicomponents/cell-group/index';
+  export default class Profile extends wepy.page {
+    config = {
+      navigationBarTitleText: '编辑个人资料',
+    };
+    components = {
+      fixBottom,
+      'input-mobile': input,
+      'input-name': input,
+      'input-height': input,
+      cell0: cell,
+      cell1: cell,
+      cell2: cell,
+      cell3: cell,
+      cellgroup: cellGroup,
+    };
+    data = {
+      // showGetMobButton: false,
+      mobile: {
+        label: '手机号',
+        value: '',
+        disabled: true,
+      },
+      name: {
+        label: '姓 名',
+        value: '',
+        placeholder: '请输入姓名'
+      },
+      height: {
+        label: '身高(cm)',
+        value: '',
+        inputType: 'number',
+        placeholder: '请输入身高'
+      },
+      gIndex: 0,
+      genders: ['男', '女'],
+      oIndex: 0,
+      occupations: ['学生', '管理人员', '公司职员', '自由职业', '其他'],
+      formData: {
+        // mobile: '',
+        gender: '',
+        occupation: '',
+        height: '',
+        birthday: '',
+      },
+    };
+    methods = {
+      // async getPhoneNumber(e) {
+      //   let res = await Api.getPhoneNumber(e.detail);
+      //   if (e.detail.errMsg === 'getPhoneNumber:ok') {
+      //     let encryptedData = e.detail.encryptedData
+      //     let iv = e.detail.iv
+      //     let res = await Api.getPhoneNumber({encryptedData, iv})
+      //     if (res.data.mobile) {
+      //       // this.formData.mobile = res.data.mobile
+      //       this.mobile.value = res.data.mobile
+      //       this.mobile.disabled = true
+      //     } else {
+      //       this.mobile.disabled = false
+      //     }
+      //     this.showGetMobButton = false
+      //     this.$apply()
+      //   } else {
+      //     Tips.alert('用户取消无法获取')
+      //   }
+      // },
+      showBindPage() {
+        wepy.redirectTo({ url: 'bind_mob' });
+      },
+      tapRecharge(e) {
+        console.log(e)
+      },
+      onInputName(e) {
+        this.formData.name = e;
+        this.$apply();
+      },
+      onInputMobile(e) {
+        this.formData.mobile = e;
+        this.$apply();
+      },
+      onInputHeight(e) {
+        this.formData.height = e;
+        this.$apply();
+      },
+      pickGender(e) {
+        this.formData.gender = this.genders[e.detail.value];
+        this.gIndex = e.detail.value;
+        this.$apply();
+      },
+      pickBirthday(e) {
+        this.formData.birthday = e.detail.value
+        this.$apply();
+      },
+      pickOccupation(e) {
+        this.formData.occupation = this.occupations[e.detail.value];
+        this.oIndex = e.detail.value;
+        this.$apply();
+      },
+      async handleSubmit() {
+        // console.log(this.formData)
+        let res = await Api.editProfile(this.formData);
+        if (res.status === 'success') {
+          Tips.alert(res.msg,()=> {
+            wepy.switchTab({url: `./me`})
+          })
+        }
+      }
+    };
+    async onLoad() {
+      // if(true) {
+      if(wepy.$instance.checkMobileBinding()) {
+        let res = await Api.getProfile();
+        for (var i = 0; i < res.data.occupation.length; i++) {
+          if (this.occupations[i] == res.data.occupation)
+            this.oIndex = i
+        }
+        if (res.data.gender == '女') this.gIndex = 1
+        else this.gIndex = 0
+        this.formData = {
+          name: res.data.name,
+          // mobile: res.data.mobile,
+          gender: res.data.gender,
+          occupation: res.data.occupation,
+          height: res.data.height,
+          birthday: res.data.birthday,
+        }
+        this.mobile.value = res.data.mobile ? '已绑定' + res.data.mobile : '未绑定';
+        // this.mobile.value = res.data.mobile;
+        this.name.value = res.data.name;
+        this.height.value = res.data.height;
+        // this.showGetMobButton = res.data.mobile ? false : true;
+        // this.mobile = res.data.mobile ? '已绑定' + res.data.mobile : '未绑定';
+        this.$apply();
+      }
+    }
+  }
+</script>
+<style lang="less">
+  .input-wrap {
+    padding: 10rpx;
+    background-color: white;
+  }
+</style>

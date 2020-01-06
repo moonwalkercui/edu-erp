@@ -1,0 +1,392 @@
+<template>
+  <swiperAdv flag="goods" height="110rpx"/>
+  <view class="cate" style="height:{{contentHeight}}rpx; overflow:hidden">
+    <scroll-view class="cate_left"  scroll-y scroll-with-animation="true" style="height:{{contentHeight}}rpx;width: {{leftWidth}}rpx;white-space:nowrap;">
+      <view class="name {{item.active? 'active':''}}" wx:for="{{cateList}}" wx:key="item" @tap="changeCate" data-id="{{item.id}}" @tap="changeCate({{index}})">
+        {{item.name}}
+      </view>
+    </scroll-view>
+    <scroll-view class="cate_right" scroll-y scroll-with-animation="true" style="height:{{contentHeight}}rpx;width:{{windowWidth * px2rpx - leftWidth}}rpx" scroll-into-view="{{toView}}" bindscroll="handleBindScroll">
+          <block wx:for="{{cateList}}" wx:for-item="cate" wx:key="ind" wx:for-index="ind">
+            <view class="cates" id="cate{{ind}}">
+              <view class="cates_name"  style="height: {{cateBoxHeight}}rpx">{{cate.name}}</view>
+              <view class="children">
+                <view class="children_item" wx:for="{{cate.goods}}" wx:for-item="item" wx:key="index" style="height: {{goodsBoxHeight}}rpx">
+                  <view class="child_image"><image class="child_image" src="{{item.image}}" lazy-load></image></view>
+                  <view class="child_name">{{item.name}}</view>
+                  <view class="child_price_num">
+                    <view class="child_price">￥{{wxs.fixNumber(item.price)}}</view>
+                    <view class="child_num">
+                      <view class='button_buy_num button_sub' wx:if="{{item.num>0}}" @tap="handleSub({{item.id}})">-</view>
+                      <text wx:if="{{item.num>0}}">{{item.num}}</text> 
+                      <view class='button_buy_num button_plus' wx:if="{{item.num < item.storage}}" @tap="handlePlus({{item.id}})">+</view>
+                      <view class='button_buy_num button_plus diable' wx:else>+</view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </block>
+    </scroll-view>
+    <widgetCart :items.sync="cart"/>
+    <navBottom activeIndex="1"/>
+      <!--抛物线小球的实现 注意引入bezierBall 和 点击时执行 touchOnGoods-->
+    <view class="good_box" hidden="{{hide_good_box}}"  style="left: {{bus_x}}px; top: {{bus_y}}px;"></view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import Api from '../../common/Api';
+import Tips from '../../common/Tips'
+import widgetCart from '../../components/shop/widgetCart'
+import navBottom from '../../components/shop/navBottom'
+import bezierBall from '../../mixin/bezierBall'
+import swiperAdv from '../../components/swiperAdv'
+import wxs from '../../wxs/util.wxs';
+export default class Goods extends wepy.page {
+  config = {
+    navigationBarTitleText: '分类',
+  }
+  mixins = [bezierBall]
+  wxs = { wxs }
+
+  components = { widgetCart, navBottom, swiperAdv}
+  data = {
+    // 滚动定位
+    toView: '',
+    cateBoxHeight: 60,
+    goodsBoxHeight: 350,
+    cateBoxPosition: [], // 每个分类商品高度
+    doingFlag: 0,  // 点击左侧和右侧滚动有冲突
+
+    px2rpx: 1,
+    // showWidget: false,
+    leftWidth: 160,  // rpx
+    contentHeight: 0,
+    windowWidth: 0, // px
+    windowHeight: 0, // px
+    cateList: [],
+    cateAndGoods: [],
+    goodsList: [],
+    cart: [],
+  }
+  watch = {
+    cart(newVal,oldVal) {
+      console.log('goods newval cart', newVal)
+      if (newVal.length > 0) {
+        newVal.forEach(c => {
+          this.goodsList.forEach(g => {
+            if (c.id == g.id) {
+              g.num = c.num
+            }
+          });
+        });
+      } else {
+        this.goodsList.forEach(g => {
+          g.num = 0
+        });
+      }
+      this.$apply();
+    } 
+  }
+  async getChildCate(rootCateCode) {
+  }
+  async getRootCateTopLevel() {
+  }
+  onLoad() {
+    const systemInfo = wepy.getSystemInfoSync()
+    // console.log(systemInfo);
+    this.windowHeight = systemInfo.windowHeight; // 单位px
+    this.windowWidth = systemInfo.windowWidth;
+    let rate = 750 / systemInfo.windowWidth // px转化为rpx的比例, px乘以这个比例就是rpx, rpx除以这个比例就是px
+    this.px2rpx = rate
+    this.contentHeight = systemInfo.windowHeight * rate - 215; // 减去底部的高度
+
+    /* 抛物线 */
+    this.busPos = {
+        x: 45,//购物车的位置
+        y: systemInfo.windowHeight - 56
+    }
+    this.goodsH = systemInfo.windowHeight - 245 - 48
+    this.handleRequest()
+  }
+   async handleRequest(params) {
+    let res = await Api.getGoods(params)
+
+    let cateList = [];
+    let goodsList = [];
+    let position = 0;
+    for(let i=0; i< res.data.length ; i++ ) {
+      let cate = res.data[i]
+      let temp = []
+      let num = 0;
+      if (cate.goods.length > 0){
+        for(let j=0; j< cate.goods.length ; j++ ) {
+            let goods = {
+              id: cate.goods[j].id,
+              name: cate.goods[j].name,
+              storage: cate.goods[j].storage,
+              price: cate.goods[j].price,
+              // image: cate.goods[j].image,
+              image: cate.goods[j].image,
+              num: 0,
+            }
+            goodsList.push(goods)
+            temp.push(goods)
+            num = j
+        }
+      }
+      let goodsRow = num > 0 ? Math.ceil((num + 1) / 2) : 0 // 商品的行数
+
+      // console.log(goodsRow)
+      
+      cateList.push({
+        id: cate.id,
+        name: cate.name,
+        active: i==0 ? true : false,
+        positionY: position,
+        goods: temp
+      })
+      position += (goodsRow * this.goodsBoxHeight + this.cateBoxHeight) / this.px2rpx 
+    }
+
+    this.cateList = cateList;
+    this.goodsList = goodsList;
+    this.$apply();
+  }
+  onShow() {
+    this.toView = 'cate0'
+    this.$apply()
+  }
+  // fromleft解决左侧和右侧滑动index冲突
+  changeShowingCate(index){
+    this.doingFlag = 1
+    this.cateList.forEach((i,n)=> {
+      if(n == index) {
+        i.active = true
+      } else {
+        i.active = false
+      }
+    });
+    // this.$apply()
+    setTimeout(() => {
+      this.doingFlag = 0
+      // this.$apply();
+    }, 500);
+    
+  }
+  methods = {
+    handleBindScroll(e) {
+      // 传入滚动的值，去让右侧的类型也跟着变动
+        console.log('this.doingFlag',this.doingFlag)
+      if (this.doingFlag == 0) {
+        let scrollTop = e.detail.scrollTop
+        let totalLength = this.cateList.length
+        for (let j = 0; j < totalLength; j++) {
+          // 找符合的分类位置索引
+          if ((scrollTop >= this.cateList[j].positionY ) && (j < (totalLength - 1) && scrollTop < this.cateList[j+1].positionY)) {
+            // console.log('j',j)
+            this.changeShowingCate(j)
+            console.log('viewr', j)
+            break;
+          }
+        }
+      }
+   
+    },
+    changeCate(index) {
+      console.log('viewl', index)
+      this.toView = 'cate'+index
+      this.changeShowingCate(index)
+    },
+    handlePlus(id,e) {
+      let existInCart = false;
+      if (this.cart.length > 0) {
+        for(let i=0; i< this.cart.length ; i++ ) {
+          if (this.cart[i]['id'] == id && this.cart[i]['num'] < this.cart[i]['storage']) {
+            existInCart = true;
+            this.cart[i]['num'] ++;
+            break;
+          }
+        }
+      }
+      if (existInCart == false) {
+        for(let j=0; j< this.goodsList.length ; j++ ) {
+          if (this.goodsList[j]['id'] == id ) {
+            this.goodsList[j]['num'] = 1;
+            this.cart.push(this.goodsList[j]);
+            break;
+          }
+        }
+      }
+      // this.$apply();
+      this.touchOnGoods(e);
+    },
+    handleSub(id) {
+      
+      let existInCart = false;
+
+      if (this.cart.length > 0) {
+        this.cart.forEach((c,ind) => {
+          if (c.id == id) {
+            c.num --;
+            if (c.num == 0) {
+              this.cart.splice(ind,1)
+            } else {
+              existInCart = true;
+            }
+          }
+        });
+      }
+      this.$apply()
+      console.log('this.cart.length', this.cart.length)
+    },
+    onShareAppMessage: function (res) {
+      if (res.from === 'button') {
+        // 来自页面内转发按钮
+        console.log(res.target)
+      }
+      return {
+        title: this.detail.name,
+        path: '../../pages/shop/goods',
+        success: function(res) {
+          // 转发成功
+        },
+        fail: function(res) {
+          // 转发失败
+        }
+      }
+    }
+  }
+  events = {
+    'handle-pay': () => {
+      let postData = [];
+      for (let index = 0; index < this.cart.length; index++) {
+        postData.push({
+          id: this.cart[index].id,
+          num: this.cart[index].num,
+        })
+      }
+      postData = JSON.stringify(postData)
+      wepy.navigateTo({
+        url: `./confirm?info=${postData}`
+      });
+    },
+  }
+
+}
+
+</script>
+<style lang="less">
+@import "../../style/shop/base";
+@import "../../style/shop/style";
+@import "../../style/shop/button-plussub";
+.image-ad{
+  height: 110rpx;
+  image{
+    width: 100%;
+    height: 110rpx;
+  }
+}
+.search_read_only .search_content {
+  width: 100%;
+}
+
+.cate {
+  display: flex;
+  .cate_left {
+    .name {
+      width: 95%;
+      text-align: center;
+      height: 80rpx;
+      line-height: 80rpx;
+      font-size: 28rpx;
+      color: #666;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+    }
+    .active {
+      border-right: 2px solid #dcdcdc;
+      background: #fff;
+      color: @colorHeightlight;
+      border-radius: 0 40% 40% 0;
+    }
+  }
+  .cate_right {
+    background: #fff;
+    display: flex;
+    .title {
+      font-size: 30rpx;
+      color: #333;
+      margin-left: 25rpx;
+    }
+    .cates_name{
+      font-size: 26rpx;
+      background: #f5f5f5;
+      padding: 10rpx 20rpx;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    .children {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0rpx;
+      .child_image image {
+        width: 100px;
+        height: 100px;
+      }
+      .child_image.big image {
+        width: 150px;
+        height: 150px;
+      }
+      .child_name {
+        font-size: 26rpx;
+        color: #666;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-align: left;
+        line-height: 200%;
+      }
+    }
+   
+    .child_price_num{
+      display: flex;
+      align-items: center;
+      
+      .child_price{
+        font-size: 24rpx;
+        flex: 2;
+        text-align: left;
+        color: #f40;
+      }
+      
+    }
+    .children_item {
+      text-align: center;
+      overflow: hidden;
+      flex-wrap: wrap;
+      width: 50%;
+      border: 1px solid #f5f5f5;
+      box-sizing: border-box;
+      padding: 20rpx;
+      margin: 0 -1px -1px 0;
+    }
+  }
+}
+/*抛物线动画*/
+.good_box{
+  width: 10px;
+  height: 10px;
+  position: fixed;
+  border-radius: 50%;
+  overflow: hidden;
+  left: 50%;
+  top: 50%;
+  z-index: +99;
+  background:#fd3a00;
+}
+</style>

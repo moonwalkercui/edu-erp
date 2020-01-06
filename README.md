@@ -3,39 +3,48 @@
 #### 介绍
 小猿管家培训教育行业ERP系统，包括api端，管理端，小程序端，暂未开发其他端，如有需要自行开发。
 支持多组织管理，每个组织有分校，可以为每个组织分配二级域名访问。
-wepy开发的小程序端，学员使用。
+
+#### 介绍和地址
+http://www.vhuojia.com/
+
+#### 技术栈
+wepy开发的小程序端，学员使用
 vue+elementui开发的管理端
-php+mysql开发的api端
+laravel开发的api端
 
-#### 软件架构
-软件架构说明
+#### 目录说明
+
+1.  api_server 为api端
+2.  frontend 为管理端（前端）
+3.  miniapp 为小程序端 wepy开发
+
+##### api端配置
+
+使用laravel开发，使用前 `composer install`
+apikey请自行生成
+
+sql:
+需要建立两个数据库表：组织表和总表common
+组织表为每个组织的数据，以后新建组织可以以组织编号为表名进行创建，可以另行设计规则。
+总表为总管理表，用于组织层面的管理。
+配置文件位置在`api_server/.env` 和 `api_server/config/database.php`, 逻辑很简单
+
+##### vuejs管理端配置域名
+
+编辑 frontend/src/common/Api.js里的:
+```
+...
+    return 'https://域名/' + prefix + '/'; // prefix是组织编号  
+...
+    static serviceDomain = 'https://域名/';
+```
+##### 小程序配置
+
+编辑 miniapp/src/utils/global.js里的:
 
 
-#### 安装教程
+#### 作者
+冷风崔 QQ 541720500 
+sql文件联系作者免费获取
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 码云特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+#### 感谢您的捐赠:) 

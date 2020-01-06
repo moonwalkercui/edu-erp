@@ -1,0 +1,72 @@
+<template>
+  <view class="nav-height"></view>
+  <view class="fix_nav_wp">
+    <slot name="content">默认底部</slot>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class FixBottom extends wepy.component {
+  methods = {};
+}
+</script>
+<style lang="less">
+
+@import '../style/variable.less';
+.nav-height {
+  height: 90rpx;
+}
+.fix_nav_wp {
+  display: -webkit-flex;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 90rpx;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background: @colorPanelBg;
+  color: @colorTextPrimary;
+  z-index: 5;
+ .nav_btm {
+    height: 100%;
+    text-align: center;
+    line-height: 90rpx;
+    font-size: @fontSizeLarge;
+    border-radius: 0;
+  }
+  .nav_btm.disabled {
+    background: #8a8a8a;
+  }
+  .nav_btm.heighlignt {
+    background: @colorHeightlight;
+    color: white;
+  }
+  .nav_btm.heighligntsub {
+    background: @colorHeightlightsub;
+    color: white;
+  }
+  .nav_btm.heighligntsub2 {
+    background: @colorHeightlightsub2;
+    color: white;
+  }
+  .nav_btm.sub-btn {
+    text-align: center;
+    color: #666;
+    icon{
+      color: @colorHeightlight;
+      display: block;
+      font-size: 32rpx;
+      line-height: 38rpx;
+    }
+    text{
+      display: block;
+      font-size: 24rpx;
+      line-height: 35rpx;
+    }
+  }
+}
+
+// .fix_nav_wp .nav_btm .icon{width:42rpx; height:42rpx; margin: 7rpx;color: #999;}
+</style>
