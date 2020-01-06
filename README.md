@@ -8,9 +8,9 @@
 http://www.vhuojia.com/
 
 #### 技术栈
-wepy开发的小程序端，学员使用
-vue+elementui开发的管理端
-laravel开发的api端
+1.  wepy开发的小程序端，学员使用
+2.  vue+elementui开发的管理端
+3.  laravel开发的api端
 
 #### 目录说明
 
