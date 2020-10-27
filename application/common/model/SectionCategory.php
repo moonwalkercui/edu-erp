@@ -1,0 +1,1 @@
+<?phpnamespace app\common\model;class SectionCategory extends BaseModel{    protected $table = 'section_category';    static function getListTree()    {        $list = self::select()->toArray();        return list_to_html($list);    }}

@@ -1,0 +1,50 @@
+<form class="ui icon input" id="search-video">
+    <input type="text" name="title" placeholder="搜索...">
+    <i class="inverted circular search link icon" onclick="$('#search-video').submit()"></i>
+</form>
+<table class="ui celled striped small definition table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>标题</th>
+        <th>上传者</th>
+        <th>时间</th>
+        <th>选择</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="list" id="v"}
+    <tr>
+        <td>{$v.id}</td>
+        <td>{$v.title}</td>
+        <td>{$v.editor}</td>
+        <td>{$v.add_time}</td>
+        <td>
+            <a class="ui small label" href="javascript:;" onclick="pickVideo('{$v.id}')">使用</a>
+        </td>
+    </tr>
+    {/volist}
+    {if condition="count($list) == 0"}
+    <tr><td colspan="4" style="text-align: center">暂无数据</td></tr>
+    {/if}
+    </tbody>
+</table>
+<div style="margin: 10px 0px;">
+    <div class="ui tiny label popuper" data-content="信息总数" data-variation="mini">
+        <i class="list icon"></i> {$list->total()}
+    </div>
+    <div style="float:right;" class="pager">
+        {$list|raw}
+    </div>
+</div>
+<script>
+    function pickVideo(id) {
+        ajaxRequest('{$action}', {choose_id: id}, function (res) {
+            layer.msg(res.msg, {icon: 1, time: 1000}, function (res) {
+                var index = parent.layer.getFrameIndex(window.name);
+                layer.close(index);
+                parent.location.reload();
+            });
+        }, 'POST');
+    }
+</script>

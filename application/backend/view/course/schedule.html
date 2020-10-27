@@ -1,0 +1,168 @@
+{extend name="layout/base"/}
+{block name="content"}
+<div class="page-content">
+    <div class="ui tiny message">
+        排课可以批量生成课程；周循环数是值每隔多少周循环一次。
+    </div>
+    <table style="display: none">
+        <tr id="example">
+            <td>
+                <select name="clazz[]" class="ui tiny dropdown ">
+                    <option value="">请选择</option>
+                    {volist name="data.clazz" id="v"}
+                    <option value="{$v.id}">{$v.name}</option>
+                    {/volist}
+                </select>
+            </td>
+            <td>
+                <select name="staff[]" class="ui tiny dropdown ">
+                    <option value="">请选择</option>
+                    {volist name="data.staff" id="v"}
+                    <option value="{$v.id}">{$v.name}</option>
+                    {/volist}
+                </select>
+            </td>
+            <td>
+                <select name="assistant[]" class="ui tiny dropdown ">
+                    <option value="">请选择</option>
+                    {volist name="data.staff" id="v"}
+                    <option value="{$v.id}">{$v.name}</option>
+                    {/volist}
+                </select>
+            </td>
+            <td>
+                <select name="times[]" class="ui tiny dropdown ">
+                    <option value="">请选择</option>
+                    {volist name="data.times" id="v"}
+                    <option value="{$v.id}">{$v.name}</option>
+                    {/volist}
+                </select>
+            </td>
+            <td>
+                <select name="weekday[_flag][]" multiple="multiple" class="ui tiny dropdowner">
+                    <option value="">请选择</option>
+                    <option value="1">一</option>
+                    <option value="2">二</option>
+                    <option value="3">三</option>
+                    <option value="4">四</option>
+                    <option value="5">五</option>
+                    <option value="6">六</option>
+                    <option value="7">日</option>
+                </select>
+            </td>
+            <td>
+                <input placeholder="开始日期" name="start[]" class="ui mini input datepicker" autocomplete="off" style="padding: 4px; margin-bottom: 5px;"/>
+                <input placeholder="结束日期" name="end[]" class="ui mini input datepicker" autocomplete="off" style="padding: 4px;"/>
+            </td>
+            <td>
+                <input name="interval[]" value="1"/>
+            </td>
+        </tr>
+    </table>
+    <!--<div class="ui checkbox">-->
+        <!--<input type="checkbox" name="weekday[_flag][]" class="hidden" value="1">-->
+        <!--<label>一</label>-->
+    <!--</div>-->
+    <!--<div class="ui checkbox">-->
+        <!--<input type="checkbox" name="weekday[_flag][]" class="hidden" value="2">-->
+        <!--<label>二</label>-->
+    <!--</div>-->
+    <!--<div class="ui checkbox">-->
+        <!--<input type="checkbox" name="weekday[_flag][]" class="hidden" value="3">-->
+        <!--<label>三</label>-->
+    <!--</div>-->
+    <!--<div class="ui checkbox">-->
+        <!--<input type="checkbox" name="weekday[_flag][]" class="hidden" value="4">-->
+        <!--<label>四</label>-->
+    <!--</div>-->
+    <!--<div class="ui checkbox">-->
+        <!--<input type="checkbox" name="weekday[_flag][]" class="hidden" value="5">-->
+        <!--<label>五</label>-->
+    <!--</div>-->
+    <!--<div class="ui checkbox">-->
+        <!--<input type="checkbox" name="weekday[_flag][]" class="hidden" value="6">-->
+        <!--<label>六</label>-->
+    <!--</div>-->
+    <!--<div class="ui checkbox">-->
+        <!--<input type="checkbox" name="weekday[_flag][]" class="hidden" value="7">-->
+        <!--<label>日</label>-->
+    <!--</div>-->
+    <div style="padding-top: 30px;">
+        <form id="schedule-form" class="ui small form">
+            <table class="ui small very basic table">
+                <thead>
+                <tr>
+                    <th>班 级</th>
+                    <th>老 师</th>
+                    <th>助 教</th>
+                    <th>课 次</th>
+                    <th>星 期</th>
+                    <th width="140">起始日期</th>
+                    <th width="90">周循环数</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="item-list">
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="7" class="center aligned">
+                        <button type="button" class="ui tiny button" style="width: 150px;" onclick="addItem()">添 加</button>
+                        <button type="button" class="ui teal tiny button" style="width: 150px;" onclick="handleSubmit()">生 成</button>
+                    </th>
+                </tr>
+                </tfoot>
+            </table>
+
+        </form>
+    </div>
+
+</div>
+{/block}
+{block name="script"}
+<script>
+
+    $(function(){
+        $('#item-list').on('click','.remove-item', function(){
+           $(this).parents('tr').remove();
+        });
+        addItem();
+    });
+    function addItem() {
+        var html = $('#example').html();
+
+        var key = $('#item-list').children().length;
+        html = html.replace(/_flag/g, key)
+
+        $('#item-list').append(`<tr>`+html+`<td><a href="javascript:;" class="remove-item"><i class="times circle icon"></i></a></td></tr>`);
+        $('.dropdowner').dropdown();
+        $('.checkbox').checkbox();
+        $('.datepicker').datetimepicker({
+            lang:'ch',
+            timepicker:false,
+            format:'Y-m-d',
+        });
+    }
+
+    function handleSubmit() {
+        var params = $('#schedule-form').serialize();
+        ajaxRequest('{:url("schedule")}', params, function (res) {
+            if(res.code === 1) {
+                layer.open({
+                    content: res.msg
+                    ,btn: ['关闭']
+                    ,yes: function(index){
+                        // closeCurrentWin();
+                        // parent.location.reload();
+                        parent.location.href = '{:url("getList")}'
+                    }
+                });
+            }
+        }, 'POST');
+    }
+    // esc关闭窗口
+    myKeyBoard.esc(function () {
+        closeCurrentWin();
+    });
+</script>
+{/block}

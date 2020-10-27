@@ -1,0 +1,1 @@
+<?phpnamespace app\common\model;use think\Db;class PayoutType extends BaseModel{    protected $table = 'payout_type';}

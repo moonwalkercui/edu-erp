@@ -1,0 +1,1 @@
+<?phpnamespace app\common\model;class Vod extends BaseModel{    protected $table = 'vod';}

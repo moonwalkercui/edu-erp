@@ -1,0 +1,86 @@
+{extend name="layout/base"/}
+{block name="content"}
+<style>
+    .page-content img{
+        max-width: 700px;
+    }
+</style>
+<button class="ui teal tiny button" style="position: fixed; top: 20px; right: 20px;" id="print-btn">打 印</button>
+<div class="page-content" id="print-box" style="max-width: 1000px; margin: 0 auto;">
+    <h3 style="display: block;text-align: center">{$test.title}</h3>
+    {assign name="num" value="1" /}
+    {volist name="list" id="part" key="k"}
+    <!--<div class="ui horizontal divider" style="margin: 30px;">第{$k}部分</div>-->
+    <h4>第{$k}部分 {$part.part|raw}</h4>
+
+    {volist name="part.group" id="group" key="k1"}
+    {notempty name="group.group_body"}
+    <p><b>{$num++}、综合题</b></p>{$group.group_body|raw}
+    {else/}
+    <b style="float:left;">{$num++}、</b>
+    {/notempty}
+    {volist name="group.question" id="q" key="k2"}
+    <div class="ui mini form">
+        <div class="grouped fields">
+            <label class="question-item" style="font-size: 120%;">
+                {notempty name="group.group_body"}
+                <span style="float:left;">({$k2})、</span>
+                {/notempty}
+                {$q.body|raw}</label>
+            {switch q.type}
+            {case 1}
+            {volist name="q.opt" id="o" key="k3"}
+            <div class="field">
+                <div class="ui checkbox">
+                    <input type="checkbox" name="example2" readonly>
+                    <label style="width: 1450%"><span style="float:left;">{$o.sort_num}、</span>{$o.body|raw}</label>
+                </div>
+            </div>
+            {/volist}
+            {/case}
+            {case 2}
+            <div class="field">
+                <input type="text" name="" placeholder="请输入答案">
+            </div>
+            {/case}
+            {case 3}
+            <div class="field">
+                <div class="ui radio checkbox">
+                    <input type="radio" name="example2" readonly>
+                    <label>正确</label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui radio checkbox">
+                    <input type="radio" name="example2" readonly>
+                    <label>错误</label>
+                </div>
+            </div>
+            {/case}
+            {case 4}
+            <div class="field">
+                <textarea rows="5"></textarea>
+            </div>
+            {/case}
+            {/switch}
+        </div>
+    </div>
+    <!--<p>正确答案： {$q.answer}</p>-->
+    <!--<p>解析： {$q.explain|raw}</p>-->
+    {/volist}
+    <div style="border-bottom: 1px dotted #eee; margin: 20px 0;"></div>
+    {/volist}
+    {/volist}
+
+</div>
+{/block}
+{block name='script'}
+{load href="__PLUG__/jquery.PrintArea.js"/}
+<script>
+    $(function(){
+        $("#print-btn").click(function () {
+            $("#print-box").printArea();
+        });
+    })
+</script>
+{/block}

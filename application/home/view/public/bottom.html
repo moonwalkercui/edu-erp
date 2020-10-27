@@ -1,0 +1,54 @@
+<footer>
+    <div class="blank15">
+    </div>
+    <div class="blank15">
+    </div>
+    <div class="wrap clean">
+        <div class="left fl">
+            <div class="title wow fadeInUp">
+                {:db_config('org_name')}——{:db_config('home_course_best')}
+            </div>
+            <div class="hotline wow fadeInUp">
+                {:db_config('hotline')}
+            </div>
+            <div class="address wow fadeInUp">
+                地点&nbsp;&nbsp;&nbsp; {:db_config('org_address')}
+                <a href="http://www.beian.miit.gov.cn/"​ target="_blank">
+                    {:db_config('icp')}
+                </a>
+            </div>
+        </div>
+        <div class="follow fr fz0">
+            <div class="title relative text-center wow fadeInUp">
+                    <span class="relative">
+                        关注
+                    </span>
+            </div>
+            <div class="text-center">
+                <div class="item text-center inline-block wow fadeInUp relative" style="margin: 0 10px;">
+                    <a href="javascript:;"​ class="ico block trans wechat" rel="nofollow">
+                        <img src="__IMG__/m-wechat.png" style="width: 70%;"/>
+                    </a>
+                    公众号
+                    <div class="qrcode absolute trans">
+                        <img src="{:db_config('wx_qr')}" alt="" width="200" />
+                    </div>
+                </div>
+                <div class="item text-center inline-block wow fadeInUp relative" style="margin: 0 10px;">
+                    <a href="javascript:;"​ class="ico block trans qq" rel="nofollow">
+                        <img src="__IMG__/m-wechat.png" style="width: 70%;"/>
+                    </a>
+                    小助手
+                    <div class="qrcode absolute trans">
+                        <img src="{:db_config('wx_qr1')}" alt="" width="200" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="blank20">
+    </div>
+    <div class="blank15">
+    </div>
+
+</footer>

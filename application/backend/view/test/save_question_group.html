@@ -1,0 +1,120 @@
+{extend name="layout/base"/}
+{block name="content"}
+{load href="__BKD__/js/dataLoader.js"/}
+<div class="page-content">
+    <div style="padding-top: 30px;">
+        <form class="ui tiny form" id="group-q-form">
+            <div class="inline field">
+                <label class="form-label"><span style="color:red;">*</span> 题干内容</label>
+                <div class="form-input" style="display: inline-block">
+                    <textarea name="group_body" class="option-editor" rows="4">{$data.body}</textarea>
+                </div>
+            </div>
+            <div class="inline field">
+                <label class="form-label"><span style="color:red;">*</span> 问题列表 </label>
+                <div class="form-label-right">
+                    <table class="ui small unstackable table">
+                        <thead>
+                        <tr>
+                            <th width="60">序号</th>
+                            <th>标题</th>
+                            <th class="right aligned">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="question-list">
+                        {volist name="data.question" id="v"}
+                        <tr data-id="{$v.id}">
+                            <td class="handler"><span class="sn">{$key+1}</span></td>
+                            <td>{$v.body|raw}</td>
+                            <td class="right aligned">
+                                <a style="cursor: pointer" data-title="修改试题" data-url="{:url('test/saveQuestion',['group_id'=> $data['id']])}" onclick="openBigWin(this,'{$v.id}')">修改</a>
+                                <a style="cursor: pointer" class="del-question" data-id="{$v.id}">删除</a>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-no-label">
+                    <!--<a class="ui tiny orange label" data-title="添加试题" data-url="{:url('test/saveQuestion',['group_id'=> $data['id']])}" onclick="openBigWin(this,'')">添加试题</a>-->
+                    <a class="ui tiny orange label" onclick="selectQuestion()">添加试题</a>
+                </div>
+            </div>
+            <input type="hidden" name="group_id" value="{$data.id}">
+            <div style="text-align: center; margin: 30px;">
+                <button type="button" onclick="doSubmit()" class="ui teal tiny button" style="width: 150px;">
+                    保 存
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{/block}
+{block name="script"}
+{load href="__PLUG__/tinymce/tinymce.min.js"/}
+{load href="__BKD__/js/questionEdit.js"/}
+{load href="__PLUG__/sortable/Sortable.min.js"/}
+<script>
+    var el = document.getElementById('question-list');
+    var sortable = Sortable.create(el,{
+        animation: 150,
+        store: {
+            set: function (sortable) {
+                var order = sortable.toArray();
+                refreshQuestionSn();
+                handleSortQuestion(order.join('|'))
+            }
+        },
+    });
+
+    function doSubmit() {
+        tinyMCE.triggerSave();
+        doFormSubmit('#group-q-form', '{:url("saveQuestionGroup")}');
+    }
+
+    function selectQuestion() {
+        tinyMCE.triggerSave();
+        var params = $('#group-q-form').serialize() + "&type=1"
+        ajaxRequest('{:url("saveQuestionGroup")}', params, function (res) {
+            if(res.result === 'success') {
+                popupPage("选择试题","{:url('test/saveQuestion',['group_id'=> $data['id']])}",'90%','90%');
+            }
+        }, 'POST');
+    }
+
+    $(function () {
+
+        // 问题列表操作
+        $('#question-list').on('click', '.del-question', function(){
+            var id = $(this).data('id');
+            handleDelQuestion(id)
+        });
+
+        $('#question-list tr:first .up-question').hide();
+        $('#question-list tr:last .down-question').hide();
+    });
+
+    function handleDelQuestion(id) {
+        delQuestion({id: id}, function(data) {
+            location.reload()
+        })
+    }
+    function handleSortQuestion(sortValus) {
+        sortQuestion({ids: sortValus})
+    }
+
+    // 更新编号
+    function refreshQuestionSn()
+    {
+        $('td.handler span.sn').each(function(i,n){
+            $(this).text(i+1);
+        });
+    }
+
+    // esc关闭窗口
+    myKeyBoard.esc(function () {
+        parent.layer.close(parent.layer.getFrameIndex(window.name));
+    });
+</script>
+{/block}

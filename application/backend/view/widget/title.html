@@ -1,0 +1,19 @@
+{notempty name="data.title"}
+<div class="page-title">
+    <h3 class="ui header"> {$data.title}</h3>
+    <div class="page-title-right">
+        {notempty name="data.mbuttons"}
+        <div class="tiny ui right floated buttons">
+            {volist name="data.mbuttons" id="mbt"}
+            {if isset($mbt.permission_id)==false || (isset($mbt.permission_id) && hasPermission($mbt.permission_id))}
+            <button type="text" class=" ui {$mbt.class_name??'teal'} button "
+                    data-title="{$mbt.title}" data-url="{$mbt.url??''}" onclick="{$mbt.onclick??'openWin'}(this, '', '{$mbt.height??''}')">
+                {if condition="isset($mbt.icon)"}<span class="{$mbt.icon}"></span>{/if}
+                {$mbt.title}</button>
+            {/if}
+            {/volist}
+        </div>
+        {/notempty}
+    </div>
+</div>
+{/notempty}

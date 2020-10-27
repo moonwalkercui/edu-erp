@@ -1,0 +1,175 @@
+{extend name="layout/base"/}
+{block name="content"}
+{load href="__BKD__/js/dataLoader.js"/}
+<style>
+    .input-score{
+        padding: 4px 6px!important;
+        width: 70px!important;
+        text-align: center;
+        font-size: 110%;
+    }
+    #total-score{
+        line-height: 29px;
+        color: green;
+    }
+</style>
+<div class="page-content">
+    <div >
+        <form class="ui tiny form" id="test-form">
+            {volist name="data" id="part" key="k"}
+            <div class="ui horizontal divider" style="font-size: 14px; color:grey;">
+                第{$k}部分
+                <i class="times circle icon" style="cursor: pointer;" data-title="移除该部分" data-url="{:url('deleteTestPart')}" onclick="delOne(this, '{$part.id}')"></i>
+            </div>
+            <div class="inline field">
+                <label class="form-label">部分说明</label>
+                <div class="form-input " style="display: inline-block">
+                    <textarea name="content" data-id="{$part.id}" rows="2">{$part.content}</textarea>
+                </div>
+            </div>
+            <div class="inline field">
+                <label class="form-label">设置试题</label>
+                <div class="form-input " style="display: inline-block">
+                    <a class="ui tiny orange label" data-title="添加试题" data-url="{:url('test/questionList',['act'=> 'mselect'])}" onclick="selectQuestionWin(this,'{$part.id}','{$part.test_id}')">添加试题</a>
+                </div>
+                <div class="form-no-label ">
+                    <table class="ui small unstackable table">
+                        <thead>
+                        <tr>
+                            <th width="50">序号</th>
+                            <th width="70">题型</th>
+                            <th>摘要</th>
+                            <th width="70">设置分数</th>
+                            <th class="right aligned collapsing">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="question-list" data-part="{$part.id}">
+                        {volist name="part.test_question" id="v"}
+                        <tr data-id="{$v.id}">
+                            <td class="handler positive"><i class="arrows alternate vertical icon"></i> <span class="sn">{$key+1}</span></td>
+                            <td>{$v.question.type_name}</td>
+                            <td>{$v.question.group_id? "[综合题".$v.question.group_id."]" : ''} {$v.question.title}</td>
+                            <td><input type="number" class="input-score" data-id="{$v.id}" value="{$v.score}"/></td>
+                            <td class="right aligned">
+                                <a style="cursor: pointer" data-title="移除试题" data-url="{:url('deleteTestQuestion')}" onclick="delOne(this, '{$v.id}')">移除</a>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {/volist}
+
+            <div class="ui horizontal divider" style="font-size: 14px; color:grey;">
+                <a class="ui small  label" data-title="添加部分" data-url="{:url('addTestPart',['test_id'=>$test['id']])}" onclick="openWin(this, '')">添加部分</a>
+            </div>
+
+            <div class="inline field">
+                <label class="form-label">总 分</label> <b id="total-score">0</b>
+            </div>
+            <div style="text-align: center; margin: 30px;">
+                <button type="button" onclick="doSubmit()" class="ui teal tiny button" style="width: 150px;">
+                    保存试卷
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{/block}
+{block name="script"}
+{load href="__PLUG__/tinymce/tinymce.min.js"/}
+{load href="__BKD__/js/questionEdit.js"/}
+{load href="__PLUG__/sortable/Sortable.min.js"/}
+<script>
+    // 拖拽排序
+    var els = document.getElementsByClassName('question-list');
+    for (var i = 0; i < els.length; i++) {
+        Sortable.create(els[i],{
+            handle: ".handler",
+            animation: 150,
+            group: 'shared',
+            multiDrag: true,
+            selectedClass: 'positive',
+            store: {
+                set: function (sortable) {
+                    var part_id = sortable.el.getAttribute("data-part");
+                    var order = sortable.toArray();
+                    // console.log(order.join('|'))
+                    ajaxRequest(Apis.sortTestQuestions, {value: order.join('|'), part_id: part_id}, function(){
+                        location.reload();
+                    });
+                }
+            },
+        });
+    }
+
+    var editingPartId = null;
+    function selectQuestionWin(obj, partId){
+        editingPartId = partId;
+        openBigWin(obj,'')
+    }
+
+    function doSubmit() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+        location.href = '{:url("getList")}'
+        // var data= $('#test-form').serializeArray();
+        // console.log(data);
+        // alert(data);
+        // tinyMCE.triggerSave();
+        // doFormSubmit('#test-form', '{:url("saveTest")}', 'post');
+    }
+    $(function () {
+        // 分数修改
+        $('.question-list').on('change', '.input-score', function(){
+            ajaxRequest(Apis.updateTestQuestionsScore, {id: $(this).data('id'), score: $(this).val()}, function(){
+                calTotalScore();
+            });
+        });
+        // 内容修改
+        $('textarea[name="content"]').on('change', function(){
+            var val = $(this).val();
+            ajaxRequest(Apis.updateTestPart, {type:'content',value:val, id: $(this).data('id')}, function(res){
+                if(res.code == 0) layer.msg(res.msg)
+            });
+        });
+        calTotalScore();
+    });
+
+    function calTotalScore() {
+        var total = 0;
+        $('.input-score').each(function(i,n){
+            if($(n).val() == '') {
+                total += 0;
+            } else {
+                total += parseInt($(n).val());
+            }
+        })
+        $('#total-score').text(total);
+    }
+
+    function handleMultiSelect (ids) {
+        if(editingPartId == null) {
+            layer.msg('缺少标记');
+            return;
+        }
+
+        if(ids.length > 0) {
+            ajaxRequest(Apis.updateTestQuestions, {ids: ids, part_id: editingPartId}, function(res) {
+                if(res.result == 'success'){
+                    window.location.reload();
+                }
+                editingPartId = null;
+            });
+        } else {
+            layer.msg('未选择试题')
+        }
+    }
+    // esc关闭窗口
+    myKeyBoard.esc(function () {
+        parent.layer.close(parent.layer.getFrameIndex(window.name));
+    });
+</script>
+{/block}

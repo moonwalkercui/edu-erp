@@ -1,0 +1,111 @@
+{extend name="layout/base" /}
+{block name="content"}
+
+<div class="ui equal width left aligned padded grid stackable">
+    <div class="row">
+        {volist name="count" id="v"}
+        <div class="sixteen wide tablet four wide computer column">
+            <div class="ui left aligned segment">
+                <div class="ui horizontal statistic">
+                    <div class="value counter">
+                        {$v}
+                    </div>
+                    <div class="label">
+                        {$key}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/volist}
+    </div>
+    <div class="row">
+        <div class="sixteen wide tablet twelve wide computer column">
+            <div class="ui segment">
+                <h5 class="ui dividing header">
+                    本周课表
+                </h5>
+                <table class="ui celled compact small very basic table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        {volist name='week_days' id="d"}
+                        <th style="width: 13%">周
+                            {switch name='key'}
+                            {case value="1"}一{/case}
+                            {case value="2"}二{/case}
+                            {case value="3"}三{/case}
+                            {case value="4"}四{/case}
+                            {case value="5"}五{/case}
+                            {case value="6"}六{/case}
+                            {case value="7"}日{/case}
+                            {/switch}<br>
+                            <span style="font-weight: normal"><?php echo date('m-d', strtotime($d));?></span>
+                        </th>
+                        {/volist}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $times as $times_id=>$t_name }
+                    <tr>
+                        <td>{$t_name}</td>
+                        {volist name='week_days' id="d"}
+                        <td>
+                            {if isset($data[$times_id][$d])}
+                            {foreach $data[$times_id][$d] as $vo }
+                            {$vo.staff.name} {$vo.assistant?', '. $vo.assistant.name:''}
+                            ({$vo.clazz.name})
+                            {$vo.section_id?=$vo.section.title}
+                            <br>
+                            {/foreach}
+                            {/if}
+                        </td>
+                        {/volist}
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="sixteen wide tablet four wide computer column">
+            <div class="ui segment">
+                <h5 class="ui dividing header">
+                    审批提醒
+                </h5>
+                <div class="ui middle aligned relaxed list">
+                    {volist name="alarm" id="v"}
+                    <div class="item">
+                        <div class="right floated content">
+                            <a href="{$v.url}" class="ui teal basic label">{$v.num}</a>
+                        </div>
+                        <div class="content">
+                            {$v.title}
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+            </div>
+
+            <div class="ui segment">
+                <h4>服务器信息</h4>
+                <ul class="list-group list-group-flush">
+                    {volist name="serverInfo" id="v"}
+                    <li class="list-group-item">{$key} : {$v}</li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="sixteen wide tablet eight wide computer column">
+        </div>
+        <div class="sixteen wide tablet eight wide computer column">
+        </div>
+    </div>
+</div>
+<script>
+    var countColors = ['orange', 'green', 'teal', 'purple', 'pink', 'red'];
+    $('.statistic').each(function(i){
+        $(this).addClass(countColors[i]);
+    });
+</script>
+{/block}

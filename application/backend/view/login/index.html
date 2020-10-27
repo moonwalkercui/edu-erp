@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+{include file="layout/header" /}
+<body>
+
+<!--<div class="ui container" style="padding-top:10%">-->
+<!--    <div class="ui grid center aligned">-->
+<!--        <div class="row">-->
+<!--            <div class="sixteen wide tablet six wide computer column">-->
+<!--                <div class="ui left aligned segment">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<div class="ui tiny modal" id="login-box">
+    <div class="header">宏之博教务管理系统</div>
+    <div class="content">
+        <form id="form1" class="ui form" method="post" action="{:url('backend/login/login')}">
+            <h1 class="ui header center aligned">
+                <!--<img src="img/logo.png" alt="LOGO" class="ui small image">-->
+                <div class="content">欢迎登录</div>
+            </h1>
+            <div class="field">
+                <label> 登录账号: </label>
+                <div class="ui fluid icon input">
+                    <input name="account" id="u_name" type="text" autocomplete="on" style="width:100%!important;min-width:100%;width:100%;">
+                    <i class="icon mail outline"></i>
+                </div>
+            </div>
+            <div class="field">
+                <label> 登录密码: </label>
+                <div class="ui fluid icon input">
+                    <input name="password" id="u_pass" type="password" autocomplete="off" style="width:100%!important;min-width:100%;width:100%;">
+                    <i class="icon key"></i>
+                </div>
+            </div>
+            <!--<div class="field">-->
+            <!--<label> 验证码: </label>-->
+            <!--<div class="ui fluid icon input">-->
+            <!--<div class="ui action input">-->
+            <!--<input name="cpcode" type="text" placeholder="" style="width: 50%">-->
+            <!--<div class="ui right button" style="padding:0; overflow: hidden; border:1px solid #dcdcdc;">-->
+            <!--<img src="{:captcha_src()}" alt="captcha" id="captcha"/>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="field">
+                <button class="ui teal right labeled animated fade icon button fluid" type="submit">
+                    <div class="visible content">登 录</div>
+                    <div class="hidden content">欢迎使用</div>
+                    <i class="icon sign in"></i>
+                </button>
+                <!--<a class="ui blue right labeled icon button fluid" href="index.html">-->
+                <!--Sign Up-->
+                <!--<i class="icon spy"></i>-->
+                <!--</a>-->
+            </div>
+        </form>
+    </div>
+    <!--<div class="actions">-->
+        <!--<a class="ui tiny button" href="/" target="_blank">访问首页</a>-->
+    <!--</div>-->
+</div>
+
+
+<script>
+    var colors = ["#F25F5C", "#247BA0", "#8e44ad", "#ED6A5A", "#32936F", "#2c3e50", "#E83F6F", "#32936F", "#2E294E"];
+    var rand = Math.floor(Math.random() * colors.length);
+    $('body').css("background-color", colors[rand]);
+</script>
+
+<script language="javascript">
+
+    // $('#captcha').click(function(){
+    //     $(this).attr("src", "{:captcha_src()}?"+Math.random());
+    // });
+    $(function(){
+        // $('#captcha').trigger('click');
+        $('#login-box')
+            .modal('setting', 'transition', 'scale')
+            .modal('setting', 'closable', false).modal('show');
+    });
+
+
+    layer.open({
+        type: 1 //此处以iframe举例
+        ,title: '说明'
+        ,area: ['390px', '220px']
+        ,shade: 0
+        ,offset:  'rb'
+        ,content: '<div style="padding: 30px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">' +
+            '本系统使用THINKPHP5最新版本开发，UI框架用的是SemanticUI，公众号用的是uniapp+vue，php版本是7.2，数据库版本是5.6+；' +
+            '购买本系统提供源代码和部署说明' +
+            '</div>'
+    });
+</script>
+{include file="layout/footer" /}
+</body>
+</html>

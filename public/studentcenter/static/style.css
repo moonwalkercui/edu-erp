@@ -1,0 +1,26 @@
+.no-bg {
+	background: none !important;
+}
+
+.width-100 {
+	width: 100%;
+}
+
+.flex1 {
+	flex: 1;
+}
+.flex2 {
+	flex: 2;
+}
+
+.money-font {
+	font-family: "Sans-serif" ;
+	font-weight: 500;
+}
+.cu-input {
+	border: 1px solid #F37B1D;
+	border-radius: 4px;
+}
+.inline-block{
+	display: inline-block;
+}

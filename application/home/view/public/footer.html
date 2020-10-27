@@ -1,0 +1,113 @@
+<div id="follow">
+    <div id="openHotline" class="item relative hide992" row="2">
+        <a href="tel:{:db_config('hotline')}" class="ico orange block absolute" title="服务热线{:db_config('hotline')}" rel="nofollow">
+            <img src="__IMG__/m-phone.png" style="width: 70%;"/>
+        </a>
+    </div>
+
+    <div class="item relative show992 trans">
+        <a href="tel:{:db_config('hotline')}" class="ico blue block trans phone" rel="nofollow">
+            <img src="__IMG__/m-phone.png" style="width: 70%;"/>
+        </a>
+    </div>
+    <div class="item relative trans">
+        <a href="http://p.qiao.baidu.com/cps/chat?siteId=13891233&amp;userId=19522184" onclick="window.open(this.href, '', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=no,scrollbars=no,dependent=no,width=750,height=600'); return false;" class="ico red block trans sina" title="客服"
+           target="_blank" rel="nofollow">
+            <img src="__IMG__/hl.png" style="width: 70%;"/>
+        </a>
+    </div>
+    <div id="openQrcode" class="item relative trans">
+        <a href="javascript:;" class="ico green block trans wechat" title="关注微信"
+           onclick="OptQrcode();OptOnline(0)" rel="nofollow">
+            <img src="__IMG__/m-wechat.png" style="width: 70%;"/>
+        </a>
+        <div id="wechat-qrcode">
+            <img src="{:db_config('wx_qr1')}" alt="" width="200" />
+        </div>
+    </div>
+    <div class="item relative">
+        <a href="javascript:;" class="ico block trans totop show totop" title="回到顶部"
+           onclick="toTop();" rel="nofollow">
+            <img src="__IMG__/jts.png" style="width: 70%;"/>
+        </a>
+    </div>
+</div>
+
+<!--<style>-->
+<!--    /* 主要css样式*/-->
+<!--    .main-im{position:fixed;right:10px;top:240px;z-index:100;width:110px;height:272px;}-->
+<!--    .main-im .im_main{background:#F9FAFB;border:1px solid #dddddd;border-radius:10px;background:#F9FAFB;display:none;}-->
+<!--    .main-im .close-im{position:absolute;right:2px;top:-12px;z-index:100;width:24px;height:24px;}-->
+<!--    .main-im .close-im a{display:block;width:24px;height:24px;background:url('/close_im.png') no-repeat left top;}-->
+<!--    .main-im .close-im a:hover{text-decoration:none;}-->
+<!--    .main-im .open-im{cursor:pointer;margin-left:68px;width:40px;height:133px;background:url('/open_im.png') no-repeat left top;}-->
+<!--</style>-->
+
+<!--<div class="main-im">-->
+<!--    <div id="open_im" class="open-im">&nbsp;</div>-->
+<!--    <div class="im_main" id="im_main">-->
+<!--        <div id="close_im" class="close-im"><a href="javascript:void(0);" title="点击关闭">&nbsp;</a></div>-->
+<!--        <a href="http://p.qiao.baidu.com/cps/chat?siteId=13891233&amp;userId=19522184" onclick="window.open(this.href, '', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=no,scrollbars=no,dependent=no,width=750,height=600'); return false;">-->
+<!--            <img src="http://xinyangedu.com:80/pages/view/images/float-right-chat.png">-->
+<!--        </a>-->
+<!--        <div class="im-footer" style="position:relative">-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<script>-->
+<!--    $(function(){-->
+<!--        $('#close_im').click(function(){-->
+<!--            $('#main-im').css("height","0");-->
+<!--            $('#im_main').fadeOut();-->
+<!--            setTimeout(function(){-->
+<!--                $('#open_im').show();-->
+<!--            },1000);-->
+<!--        });-->
+<!--        $('#open_im').hover(function(e){-->
+<!--            $('#main-im').css("height","272");-->
+<!--            $('#im_main').fadeIn();-->
+<!--            $(this).hide();-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+{load href="__HOME__/js/website.js"/}
+
+<script src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+<script>
+    var WxShareHandler = function (title, desc, imageUrl) {
+        var currentUrl = window.location.href.split('#')[0];
+        desc = desc == '' ? currentUrl :  desc ;
+        $.ajax({
+            type: "POST",
+            url: '/wxconfig.html?url=' + currentUrl,
+            success: function(res){
+                // console.log(res)
+                wx.config({
+                    debug: false,
+                    appId: res.appid,
+                    timestamp: res.timestamp,
+                    nonceStr: res.noncestr,
+                    signature: res.signature,
+                    jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData', ]
+                });
+                var shareData = {
+                    title: title,
+                    desc: desc,
+                    link: currentUrl,
+                    imgUrl: imageUrl,
+                    success: function () {
+                        console.log('设置成功')
+                    }
+                };
+                // console.log('shareData', shareData)
+                wx.ready(function () {
+                    wx.updateAppMessageShareData(shareData);
+                    wx.updateTimelineShareData(shareData);
+                });
+            }
+        });
+    };
+</script>
+
+</body>
+</html>

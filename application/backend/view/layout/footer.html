@@ -1,0 +1,26 @@
+
+<script>
+    $(function () {
+        if( $('.datetimepicker').length > 0) {
+            $('.datetimepicker').datetimepicker({
+                lang:'ch',
+                formatDate:'Y-m-d',
+                formatTime:'H:i:s',
+            });
+        }
+        if( $('.datepicker').length > 0) {
+            $('.datepicker').datetimepicker({
+                lang:'ch',
+                timepicker:false,
+                format:'Y-m-d',
+            });
+        }
+        if( $('.timerpicker').length > 0) {
+            $('.timerpicker').datetimepicker({
+                datepicker:false,
+                format:'H:i',
+                step:5
+            });
+        }
+    });
+</script>

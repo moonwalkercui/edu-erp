@@ -1,0 +1,92 @@
+
+/*搜索框头部*/
+.zy_search_top{ background-color: #f2b300; padding:1.8% 0; position: relative; z-index: 1001; }
+.zy_search_top .one{ width: 17%; display: inline-block; vertical-align: middle; margin-left: 2%; }
+.zy_search_top .one img{ display: block; margin:0 auto; width:100%;}
+.zy_search_top .box{ background-color: #fff; border-radius: 100px; padding:1%; overflow: hidden; 
+	display: inline-block; vertical-align: middle; width: 58.5%; margin-left: 2%;
+}
+.zy_search_top .box span{ display: inline-block; vertical-align: middle; width: 10%; margin-left: 1%;}
+.zy_search_top .box span img{ display: block; margin:0 auto; width: 70%; }
+.zy_search_top .box input{font-size: .26rem; line-height:170%; color: #666; width: 80%; vertical-align: middle; background-color: #fff;}
+
+.zy_search_top .r{ width: 16%; position: absolute; right: 2%; top:15%; text-align: right; line-height: 170%;padding:1% 0; font-size: .26rem;}
+.zy_search_top .r img{ width: .22rem; display: inline-block; vertical-align: middle; margin-right: 7%; margin-top: -3px; }
+.zy_search_top .r a{font-size: .26rem; color: #fff; display: inline-block; vertical-align: middle; max-width: 1.04rem;
+	white-space: nowrap;overflow: hidden;
+}
+.zy_search_top .r a span{ width: .52rem;overflow: hidden;display: block; }
+
+/*搜索框*/
+.zy_search_bomb_box{
+	max-width: 100%;
+	width: 100%;
+}
+.zy_search_bomb_box form {display: inline-block; vertical-align: middle; width: 90%;}
+.zy_search_bomb_box form div span{ display: inline-block; vertical-align: middle; width: 10%; margin-left: 1%;}
+.zy_search_bomb_box form div span img{ display: block; margin:0 auto; width: 70%; }
+.zy_search_bomb_box form button{ background-color: #f5f5f5; font-size: .26rem;  vertical-align: middle; color: #666; margin-left: 1%;}
+
+/*头部标题*/
+.zy_title_top{background-color: #f2b300; padding:3.4% 0; overflow: hidden; }
+.zy_title_top .one{float: left; width: 18%; color: #fff; font-size: .26rem; margin-left: 2%; line-height: .38rem;}
+.zy_title_top .one img{ width: .2rem; margin:0 auto;display: inline-block; vertical-align: middle;}
+.zy_title_top .one span{display: inline-block;vertical-align: middle; margin-left: 3px;}
+.zy_title_top h1{ float: left; text-align: center; font-size: .34rem; 
+	line-height: .38rem;  width: 60%; margin:0 auto; white-space: nowrap; overflow: hidden; color: #fff;
+}
+
+.zy_title_top .r{ width: 18%; margin-right: 2%;}
+.zy_title_top .r a{ display: block;text-align: right; line-height: .38rem; height: .38rem;overflow: hidden; color: #fff; font-size: .26rem;}
+.zy_title_top .r a img{ width: .38rem;}
+
+/*内容标题*/
+.zy_title_con{ padding:2% 0; }
+.zy_title_con h2 span{position: relative; color: #f2b300; font-size: .28rem; line-height: .3rem; }
+.zy_title_con h2 span i{position: absolute; left: 0; bottom: -.1rem; width: 100%; height: 2px; background-color: #f2b300;}
+
+.zy_title_con_01{ padding:4% 2%; background: url(../images/line_botm.jpg) no-repeat center bottom;background-size: 100% 3px;}
+.zy_title_con_01 h2 span{color: #f2b300; font-size: .28rem; line-height: .3rem;}
+
+/*滑动页面头部浮动公共css*/
+.scroll_fix{
+	position:fixed;
+	left:0;
+	top:0;
+	width: 100%;
+	z-index: 999;
+}
+/*占位框*/
+.top_zhanwei_box{ background-color: #fff;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,47 @@
+{extend name="layout/base"/}
+{block name="content"}
+<script>
+    function handleSelect(media_id) {
+        parent.handleSelected(media_id)
+    }
+</script>
+<div class="page-title" style="background: #fcfcfc">
+    <div style="font-size: .8em;">该素材来自于微信公众平台; 请<a href="https://mp.weixin.qq.com/" target="_blank">登录微信公众平台</a>的素材管理栏目，进行内容上传并刷新此处。</div>
+    <table class="ui  unstackable table">
+        <tbody>
+        {volist name="data.item" id="v"}
+        <tr>
+            <td width="80">
+                <image src="{$v.content.news_item[0]['thumb_url']}" width="100"/>
+            </td>
+            <td>{$v.content.news_item[0]['title']}</td>
+            <td class="right aligned collapsing">
+                <a class="ui small green label" onclick="handleSelect('{$v.media_id}')">选择</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    {if $pre_page!=0 and $next_page!=0}
+    <table class="ui unstackable table">
+        <tr>
+            <td>
+                {neq name="pre_page" value="0"}
+                <a class="ui small label" href="{:url('loadMedia',['page'=>$pre_page])}">上一页</a>
+                {/neq}
+            </td>
+            <td class="right aligned collapsing">
+                {neq name="next_page" value="0"}
+                <a class="ui small label" href="{:url('loadMedia',['page'=>$next_page])}">下一页</a>
+                {/neq}
+            </td>
+        </tr>
+    </table>
+    {/if}
+</div>
+
+</div>
+{/block}
+{script}
+
+{/script}

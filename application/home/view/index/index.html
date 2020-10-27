@@ -1,0 +1,260 @@
+{include file="public/header"/}
+
+<div id="header-blank">
+</div>
+<div id="body" class="trans">
+    <div id="banner" class="relative hide992">
+        <div class="bd over">
+            <div class="bar relative fz0 nowrap">
+                {volist name=":get_ad_list('pc_banner')" id="v"}
+                <div class="item relative inline-block text-center fz0 over item-1">
+                    <img src="{$v.image}" alt="" class="max-w100">
+                    <a class="absolute" href="{$v.url}">
+                    </a>
+                </div>
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <div id="small-banner" class="relative show992">
+        <div class="bd over">
+            <div class="bar relative fz0 nowrap">
+            </div>
+        </div>
+    </div>
+    <div class="blank25">
+    </div>
+    <div id="products" class="index">
+        <div class="index-title text-center wow fadeInUp">
+            线上课程
+        </div>
+        <div class="index-brief text-center wow fadeInUp">
+            {:db_config('home_course_best')}
+        </div>
+        <div class="category-list text-center fz0 hide992 wow fadeInUp">
+            {volist name=":get_category_list()" id="v"}
+            <a href="/?cid={$v.zy_currency_category_id}#products" class="item inline-block trans"  rel="nofollow">
+                {$v.title}
+            </a>
+            {/volist}
+        </div>
+        <div class="category-list text-center show992 ">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    课程分类
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        {volist name=":get_category_list()" id="v"}
+                        <a href="/?cid={$v.zy_currency_category_id}#products" rel="nofollow">
+                            {$v.title}
+                        </a>
+                        {/volist}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="products-bg trans">
+            <div class="wrap">
+                <div id="products-box" class="over">
+                    <div class="products-list relative fz0 trans">
+                        {volist name=":get_course_list(6, $cate_id)" id="v"}
+                        <div class="item inline-block absolute wow fadeInUp" status="on">
+                            <div class="main trans">
+                                <div class="cover scale relative">
+                                    <img src="__HOME__/picture/notebook.png" class="trans scale-img max-w100">
+                                    <a class="img absolute text-center fz0"
+                                       href="{eq name='v.type' value='1'}__WXURL__/course/{$v.id}.html{else/}__WXURL__/live/{$v.id}.html{/eq}" target="_blank">
+                                        <div class="trans scale-img relative" style="z-index: 100;width: 76.923%;margin: 0 auto;">
+                                            <img src="{eq name='v.type' value='1'}__IMG__/db.png{else/}__IMG__/zb.png{/eq}"
+                                                 class="trans scale-img max-w100" style="position: absolute; top:0; left: 0;width: 40px;">
+                                        </div>
+                                        <img src="{:get_attach($v['cover'])}" alt="{$v.video_title}" class="trans scale-img">
+                                    </a>
+                                </div>
+                                <div class="info clean">
+                                    <div>
+                                        <div class="name">
+                                            {$v.video_title}
+                                        </div>
+                                        <div class="category">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info clean">
+                                    <div class="right fr" style="color: #999; font-size: 110%;line-height: 24px; "> {$v.video_order_count}人购买 </div>
+                                    <div class="left fl" style="color: #ff6600; font-size: 120%; "> {$v.t_price==0?'免费':'￥'.$v.t_price} </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/volist}
+
+                    </div>
+                    <div class="box-button text-center fz0 wow fadeInUp">
+                        <!--<a href="#"​ class="prev button inline-block trans" rel="nofollow"><i class="fa fa-chevron-left trans middle"></i></a>-->
+                        <a href="/course.html" class="more-list inline-block trans">
+                            <i class="trans middle relative">
+                            </i>
+                        </a>
+                        <!--<a href="#"​ class="next button inline-block trans" rel="nofollow"><i class="fa fa-chevron-right trans middle"></i></a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="blank15">
+    </div>
+    <div class="blank15">
+    </div>
+    <div class="index-cooperation wrap">
+        <div class="index-title text-center wow fadeInUp">
+            往期学员
+        </div>
+        <div class="index-brief text-center wow fadeInUp">
+            {:db_config('home_student_remark')}
+        </div>
+        <div class="blank20">
+        </div>
+        <div class="bgf3">
+            <div id="instance" class="wrap clean">
+                <div class="instance-list clean">
+                    {volist name=":get_student_list(4)" id="v"}
+                    <div class='item border-box over wow fadeInUp {$key%2==0? "fl" : "fr"}'>
+                        <div class="relative clean">
+                            <div class="cover fl relative">
+                                <img src="__HOME__/picture/notebook.png" class="trans max-w100" ondragstart="return false;">
+                                <div class="img absolute text-center fz0">
+                                    <a href="/studentinfo/{$v.id}.html"><img src="{$v.photo}" class="trans" ondragstart="return false;"></a>
+                                </div>
+                            </div>
+                            <div class="info fl">
+                                <div class="clean">
+                                    <div class="logo fl text-center over fz0">
+                                        <img src="{$v.avatar}" class="middle max-w100 inline-block">
+                                        <span class="middle-span">
+                                            </span>
+                                    </div>
+                                    <div class="title fl">
+                                        <div class="name">
+                                            {$v.name}
+                                        </div>
+                                        <div class="date">
+                                            {$v.study_time}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="brief over">
+                                    {$v.intro|raw|htmlspecialchars_decode}
+                                </div>
+                                <a href="/studentinfo/{$v.id}.html" class="view block text-center" rel="nofollow">
+                                    详情
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+                <div class="text-center">
+                    <div class="try-button-box wrap fz0">
+                        <a href="/student.html" class="button inline-block text-center trans wow fadeInUp">
+                            更多学员
+                        </a>
+                    </div>
+                </div>
+                <div class="blank20">
+                </div>
+                <div class="blank20">
+                </div>
+                <div class="blank20">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="blank25">
+    </div>
+    <div class="blank25">
+    </div>
+
+    <div class="index-tutorial">
+        <div class="index-title text-center wow fadeInUp">
+            动 态
+        </div>
+        <div class="index-brief text-center wow fadeInUp">
+            你需要的都在这里
+        </div>
+        <div class="blank20">
+        </div>
+        <div class="blank20">
+        </div>
+        <div class="max-wrap clean relative wow fadeInUp">
+            <div class="img fl hide1300">
+                <a title="">
+                    <img src="__HOME__/picture/3da6124a3d.jpg" alt="" class="max-w100 block">
+                </a>
+            </div>
+            <div class="tutorial-support absolute">
+                <div class="table">
+                    <div class="table-cell middle">
+                        <div class="button  text-center" style="width: 99%">
+                            {volist name=":get_nav_list_by_pid(19)" id="v"}
+                            {neq name='key' value='0'}<div class="line inline-block middle" style="margin: 0 3%;"></div>{/neq}
+                            <a href="{$v.url}"​ class="file ico trans inline-block middle">{$v.name}</a>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tutorial-list clean wrap">
+            {volist name=":get_news_list(4)" id="v"}
+            <div class="item wow fadeInUp {$key%2==0? 'fl' : 'fr'}">
+                <div class="date fl">
+                    <div class="year">
+                        {$v.edit_time|strtotime|date='Y'}
+                    </div>
+                    <div class="day">
+                        {$v.edit_time|strtotime|date='m-d'}
+                    </div>
+                </div>
+                <div class="info fl">
+                    <div class="name text-over">
+                        <a href="/newsinfo/{$v.id}.html" class="trans">
+                            {$v.title}
+                        </a>
+                    </div>
+                    <div class="brief over">
+                        {$v.summary|raw|htmlspecialchars_decode}
+                    </div>
+                </div>
+            </div>
+            {/volist}
+        </div>
+        <div class="blank20">
+        </div>
+        <div class="blank20">
+        </div>
+        <div class="blank25">
+        </div>
+        <div class="text-center">
+            <div class="try-button-box wrap fz0">
+                <a href="http://p.qiao.baidu.com/cps/chat?siteId=13891233&amp;userId=19522184" onclick="window.open(this.href, '', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=no,scrollbars=no,dependent=no,width=750,height=600'); return false;" class="button inline-block text-center trans wow fadeInUp">
+                    7x24在线客服
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="blank25">
+    </div>
+    <div class="blank25">
+    </div>
+    <div class="blank25">
+    </div>
+    <div class="blank25">
+    </div>
+    {include file="public/bottom"/}
+</div>
+{include file="public/footer"/}

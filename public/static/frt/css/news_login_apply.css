@@ -1,0 +1,184 @@
+
+/*登录*/
+.zy_login_box{ height: 100%; background-color: #fff; }
+.zy_login_box .zy_title_top{position: relative;}
+.zy_login_box .zy_title_top>a{ color: #999; font-size: .24rem; line-height: .24rem;
+	display: inline-block; position: absolute; width: 1rem; right: 2%; top: 50%; margin-top: -.12rem;
+}
+
+.zy_login_box .login_box .logo{ margin:10% 0 8%;  text-align: center; }
+.zy_login_box .login_box .logo img{ width: 40%; }
+.login_box .login_style{ text-align: center; margin-bottom: 7% !important;}
+.login_box .login_style span{ display: inline-block; color: #333; font-size:.24rem; padding:.6em 1em; 
+	border-radius: 3px; background-color: #ddd; margin:0 3%;
+}
+.login_box .login_style .cur{ color: #fff; background-color: #f2b300; }
+.zy_login_box .login_box form{ width: 90%; margin:0 auto; }
+.zy_login_box .login_box form div{ margin-bottom: 8%; }
+.zy_login_box .login_box form div label{ border-bottom: #ddd solid 1px; display: block; padding:2% 0;}
+.zy_login_box .login_box form div a{ display: inline-block; vertical-align: middle; width:.3rem; height: .3rem; margin:0 .14rem 0 0;}
+.zy_login_box .login_box form div a img{ width: 100%; height: 100%;display:block; }
+.zy_login_box .login_box form div input{ width: 80%; font-size: .24rem; color: #666; line-height: 200%; vertical-align: middle;}
+.zy_login_box .login_box form h2{ font-size: .22rem; color: #999; margin-top: 8%; }
+.zy_login_box .login_box form h2 label input{ vertical-align: middle;}
+.zy_login_box .login_box form h2>a{ float: right; color: #999; }
+.zy_login_box .login_box form .zy_login_btn{margin-top: 4%;}
+
+.zy_login_btn { width: 100%;background-color: #f2b300;color: #fff;border-radius: 3px;
+    font-size: .28rem;line-height: .72rem;
+}
+
+/*注册*/
+.zy_login_box .zhuce_con {margin-top:8%;}
+.zy_login_box .zhuce_con form h2 label a{color: #f2b300;}
+.zy_login_box .zhuce_con form h2{ margin-bottom: 3%; }
+.zy_login_box .zhuce_box form div{ margin-bottom: 6%; }
+.zy_login_box .zhuce_con form div.yzm{overflow: visible; position: relative;}
+.zy_login_box .zhuce_con form div.yzm label{}
+.zy_login_box .zhuce_con form div.yzm label input{ width: 50%; }
+.yzm_btn{ width: 36%; background-color: #f2b300; color:#fff; border-radius: 3px;
+	text-align: center; font-size: .22rem;line-height: 120%; padding: 3.2% 0; position: absolute; right: 0; bottom:3px;
+}
+.zy_login_box .zhuce_con form h2{margin:6% 0;}
+.zy_login_box .zhuce_con form .zy_login_btn{margin-top: 0;}
+
+.zy_login_box .zhuce_con .zhuce_msg{ display: none; }
+.zy_login_box .footer_box { margin-top: 10%; }
+
+/*密码找回*/
+.zy_login_box .mima_box .zhuce_con form .zy_login_btn {
+    margin-top: 4%;
+}
+
+/*商家入驻*/
+.sjrz_top_box .zy_title_top .r dd{ text-align: center; padding: .22rem 0; }
+.sjrz_top_box .zy_title_top .r dd a{ font-size: .24rem; }
+
+.zy_banner_ersh ul li img{display: block; width: 100%;}
+.zy_banner_ersh .zy_sp{ bottom: 4px; }
+.zy_banner_ersh .zy_sp span{ background-color: #fff; opacity: .5; }
+.zy_banner_ersh .zy_sp .swiper-pagination-bullet-active{ opacity: 1;background-color: #f2b300; }
+
+.ersh_login{overflow: hidden; padding: 2%; line-height: 240%; box-shadow: 0 1px 3px #bbb; position: relative;}
+.ersh_login p{ color: #666; font-size: .24rem; float: left; max-width: 46%; white-space: nowrap; overflow: hidden; line-height: .5rem;}
+.ersh_login h2{float: right; width: 52%; text-align: right; margin-top: -.4%;}
+.zy_apply_index .ersh_login h2 a{display: inline-block; font-size: .22rem; width: 46%; text-align: center; 
+	border: #f2b300 solid 1px; color: #f2b300; margin-right: 3%; border-radius: .08rem;line-height: .5rem;
+}
+.ersh_login h2 a:last-child{margin-right: 0; border-color: #f2b300; background-color: #f2b300; color:#fff;}
+
+.ruzlc ul.one{white-space: nowrap;overflow: hidden; margin: 7% 0 5%;}
+.ruzlc ul.one li{display: inline-block; vertical-align: middle; line-height: .36rem;}
+.ruzlc ul.one li img{vertical-align: middle;width: .36rem;height:.36rem;margin-right:.08rem;}
+.ruzlc ul.one li a{display: inline-block; vertical-align: middle; font-size:.22rem; color: #666;}
+.ruzlc ul.one li em{display: inline-block; vertical-align: middle; width: .16rem;height:.16rem; margin:0 .1rem;
+	background: url(../images/common_img/right_jt.png) no-repeat center center;background-size:auto 100%; 
+}
+.ruzlc ul.one li:last-child em{display: none;}
+
+.zy_apply_index .ersh_tab .zy_title_con{padding:4% 2%; padding-bottom: 5%;}
+.zy_apply_index .ersh_tab .hd{ height:.6rem; line-height:.6rem; padding:0 2%; font-size: .24rem; background:#f5f5f5; 
+	border-bottom:1px solid #f2b300; position:relative;  
+}
+.ersh_tab .hd ul{ position:absolute; height:.62rem; top:0; overflow:hidden;  }
+.ersh_tab .hd ul li{ float:left; padding:0 .2rem; color:#666; border:1px solid rgba(0,0,0,0); }
+.ersh_tab .hd ul .on{ border:1px solid #f2b300; border-bottom-color:#fff; background:#fff; color:#333; }
+.ersh_tab .hd ul .on a{ display:block; /* 修复Android 4.0.x 默认浏览器当前样色无效果bug */  }
+.zy_apply_index .ersh_tab .bd >div{ background-color: #fff; padding: 1%; font-size: .22rem; color: #666;}
+.zy_apply_index .ersh_tab .bd >div *{line-height: 180%; margin-bottom:3%;}
+
+/*我要入驻*/
+.zy_apply_step ul{padding: 4% 0 6%;}
+.zy_apply_step ul li{ display: inline-block; text-align: center; vertical-align: center; }
+.zy_apply_step ul li i{ display: inline-block; width: .5rem; height: 1px; background-color: #bbb; margin-bottom: -.12rem; }
+.zy_apply_step ul li h2{ display: inline-block; vertical-align: middle; }
+.zy_apply_step ul li a{display: block; font-size: .24rem; color: #999; line-height: 110%;}
+.zy_apply_step ul li span{ display: block; border:#bbb solid 1px; background-color: #fff; color: #999; font-size: .20rem; 
+	border-radius: .08rem; padding: .1rem .15rem; line-height: 110%; margin-top: .06rem;
+}
+.zy_apply_step ul li.cur i{ background-color: #f2b300; }
+.zy_apply_step ul li.cur a{color: #f2b300;}
+.zy_apply_step ul li.cur span{ background-color: #f2b300; color: #fff; border-color: #f2b300; }
+.zy_apply_step ul li.cur50{opacity: .5;}
+
+.zy_apply_box .zy_title_con{ text-align: center; padding:4% 0; border-bottom: #f2b300 solid 2px;}
+.zy_apply_box .zy_title_con span{ font-size: .3rem; }
+.zy_apply_box .txt{ padding: 2%; border-bottom: #ddd solid 1px; color: #666; margin-top: 2%;
+	font-size: .22rem; line-height: 180%; height: 7rem; overflow: auto;
+}
+.zy_apply_box .txt *{margin:3% 0;}
+.zy_apply_box form {text-align: center;}
+.zy_apply_box form .one{ text-align: center; margin-top: 6%; }
+.zy_apply_box form .one label{ font-size: .22rem; color: #666; }
+.zy_apply_box form .one label input{ vertical-align: middle; }
+.zy_apply_box form .zy_login_btn{ width: 72%; border-radius: 3px; margin: 6% 0 8%; font-size: .26rem;}
+
+.zy_apply_bigbox .footer_box{ padding-bottom: 7%; }
+
+/*公司信息认证*/
+.apply_style>div{padding:3% 2%; border-bottom: #f2b300 solid 2px;}
+.apply_style>div h2{ font-size: .22rem; color: #999; line-height: 160%; }
+.apply_style>div h2 a{color: #f00;}
+
+.zy_apply_gsxxrz .xxrz_con form >div{ padding:5% 2%; border-bottom: #f2b300 solid 2px;}
+.zy_apply_gsxxrz .xxrz_con form >div h2{font-size: .26rem; color: #f2b300; margin:1% 0 5%;
+	border-left: #f2b300 3px solid; line-height: 110%; padding-left: .3em;
+}
+.zy_apply_gsxxrz .xxrz_con form >div h3{margin-top: 4%;}
+.zy_apply_gsxxrz .xxrz_con form >div h3 p{ color: #666; font-size: .24rem; margin:2% 0; }
+.zy_apply_gsxxrz .xxrz_con form >div h3 p a{ color: red; font-size: 12px; vertical-align: middle; }
+.zy_apply_gsxxrz .xxrz_con form >div h3 input{ width: 96%; padding:0 2%; border:#ddd solid 1px; font-size: .24rem; 
+	line-height: 240%; color: #666; background-color: #fafafa;
+}
+.zy_apply_gsxxrz .xxrz_con form >div h3 input:focus{border-color: #f2b300;}
+
+.zy_apply_gsxxrz .xxrz_con form >div h3 .area select{ border: #ddd solid 1px; font-size: .24rem; line-height: 220%; padding:0 1%;
+	 background: url(../images/common_img/xsj_down_1.png) no-repeat center right .1rem #fafafa; background-size: .14rem; padding-right: 5%; color: #666;
+}
+.zy_apply_gsxxrz .xxrz_con form >div h3.bd_none input{ border: 0; line-height: 100%;padding: 0; background-color: #fff;}
+.zy_apply_gsxxrz .xxrz_con form >div h3 span{ display: block; margin-top: 2%;}
+.zy_apply_gsxxrz .xxrz_con form >div h3 span img{display: block; width: 60%;}
+.zy_apply_gsxxrz .xxrz_con form >div.bttom_btn{border:0; text-align: center;}
+.zy_apply_gsxxrz .xxrz_con form >div.bttom_btn .zy_login_btn{ width: 47%; font-size: .26rem; margin:2% 2% 2% 0;}
+.zy_apply_gsxxrz .xxrz_con form >div.bttom_btn .zy_login_btn:last-child{ margin:2% 0 2% 2%; }
+
+.zy_apply_gsxxrz .qiye form >div h3 span{ color: #999; font-size: .22rem;}
+.zy_apply_gsxxrz .qiye form >div h2 p{ color: #999; font-size: .22rem; margin-top: 2%; }
+.zy_apply_gsxxrz .qiye form >div h3 textarea{ width: 96%; padding:1% 2%; line-height: 150%; border:#ddd solid 1px; 
+	background-color: #fafafa; height: 1.5rem; 
+}
+.zy_apply_gsxxrz .qiye form >div h3 textarea:focus{border-color: #f2b300;}
+.zy_apply_gsxxrz .qiye form >div h3.style select{ width: 100%; border: #ddd solid 1px; font-size: .24rem; line-height: 220%; padding:0 1%;
+	color: #666;background: url(../images/common_img/xsj_down_1.png) no-repeat center right .1rem #fafafa; background-size: .14rem;
+}
+
+/*zy_apply_wait*/
+.zy_apply_wait{min-height: 4.5rem; padding-top:24%;}
+.zy_apply_wait h2{ text-align: center; font-size: .24rem; color: #666; line-height: .6rem;}
+.zy_apply_wait h2 i {display: inline-block; vertical-align: middle; width: .6rem; height: .6rem; margin-right: 2%;}
+.zy_apply_wait h2 i img{width: 100%;}
+
+
+/*新闻公告*/
+.zy_newslist_box{ min-height: 6rem; }
+.zy_newslist_box .newslist ul li{ padding:2.5% 2%; border-bottom: #ddd solid 1px;}
+.zy_newslist_box .newslist ul li a{ display: block; overflow: hidden; }
+.zy_newslist_box .newslist ul li a i{float: right; width: 1.95rem; height: 1.3rem;}
+.zy_newslist_box .newslist ul li a img{ width: 100%; display: block;height: 1.3rem; }
+.zy_newslist_box .newslist ul li h2{float: left; width: calc(100% - 1.95rem - 2%);}
+.zy_newslist_box .newslist ul li h2 p{ color: #333; font-size: .26rem; line-height: 130%; height: .66rem;margin-top: 1.5%; overflow: hidden;}
+.zy_newslist_box .newslist ul li h2 span{ color: #999; font-size: .22rem; margin-top: 6%; display: block; }
+
+
+/*新闻详情*/
+.zy_news_xqbox .tit h2{ font-size: .36rem; color: #333; line-height: 130%; margin:2% 0;}
+.zy_news_xqbox .tit span{ display: block; margin-top: 4%; }
+.zy_news_xqbox .tit span a{ color: #999; font-size: .22rem; margin-right: 4%; }
+.zy_news_xqbox .tit span a em{ font-style:normal; }
+.zy_news_xqbox .txt{ font-size: .24rem; color: #666; line-height: 180%; margin:5% 0;}
+.zy_news_xqbox .txt *{ margin:3% 0; }
+.zy_news_xqbox .txt img{display: block; width: 100%;}
+.zy_news_xqbox h3{ margin:5% 0; margin-top: 8%; }
+.zy_news_xqbox h3 p{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin:2.5% 0; }
+.zy_news_xqbox h3 p b{ color: #333; font-size: .24rem; line-height: 120%;}
+.zy_news_xqbox h3 p a{ color: #666; font-size: .24rem; line-height: 120%;}

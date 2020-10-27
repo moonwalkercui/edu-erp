@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>点击地图拾取坐标</title>
+</head>
+<style type="text/css">
+    html,
+    body {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    #container {
+        width: 100%;
+        height: 90%;
+    }
+    #info{
+        position: absolute;
+        left: 20px;
+        top: 20px;
+        font-size: 14px;
+        background: #FFF;
+        width: 120px;
+        padding: 10px;
+        border-radius: 3px;
+        text-align: center;
+    }
+    #submit {
+        text-align: center;
+        padding: 10px;
+    }
+    #btn-submit{
+        font-size: 16px;
+        background: #009c95;
+        border-radius: 5px;
+        padding: 4px 10px;
+        border: 0;
+        color: #fff;
+        cursor: pointer;
+    }
+    .input-latlng {
+        border-radius: 5px;
+        padding: 5px 10px;
+        border: 1px solid #666;
+        width: 90px;
+    }
+</style>
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=L6BBZ-SW3W4-R7FUZ-DK6CP-7AVT6-SLBKD"></script>
+<script>
+    var init = function() {
+        var map = new qq.maps.Map(document.getElementById("container"),{
+            center: new qq.maps.LatLng({$lat?:'44.551335'}, {$lng?:'129.633179'}),
+            zoom: 17
+        });
+        //添加监听事件
+        qq.maps.event.addListener(map, 'click', function(evt) {
+                var lat = evt.latLng.lat.toFixed(6);
+                var lng = evt.latLng.lng.toFixed(6);
+
+                var input_lat = document.getElementById("lat");
+                input_lat.value = lat;
+                var input_lng = document.getElementById("lng");
+                input_lng.value = lng;
+        });
+    }
+</script>
+<body onload="init()">
+<div id="container"></div>
+
+<form id="submit" action="{:url('mapPicker')}" method="post">
+    点击地图拾取坐标：
+    <input class="input-latlng" id="lat" name="lat" value="{$lat??''}"/>
+    <input class="input-latlng" id="lng" name="lng" value="{$lng??''}"/>
+    <button id="btn-submit">保存坐标</button>
+</form>
+</body>
+</html>

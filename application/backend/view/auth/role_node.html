@@ -1,0 +1,55 @@
+{extend name="layout/base" /}
+{block name="content"}
+<form style="margin: 30px 0;">
+    <input type="hidden" name="id" value="{$role.id}">
+    <h4 style="text-align: center" class="ui header">[ {$role.name} ] 的查看和操作权限</h4>
+    <p style="text-align: center;">设定后重新登录生效</p>
+    <table class="ui very basic celled unstackable table">
+        <tbody>
+        {volist name='list' id="v0"}
+        {volist name='v0._child' id="n"}
+        <tr>
+            <td width="100">
+                <h5 class="ui aligned center header">{$n.title}</h5>
+            </td>
+            <td style="line-height: 200%">
+                {volist name="n._child" id="v"}
+                <div class="ui checkbox" style="margin-right: 30px;">
+                    <input type="checkbox" class="hidden" name="node[]" value="{$v.id}"
+                           {in name="v.id" value="$nodes"}checked="checked"{/in} >
+                    <label>{$v.title}</label>
+                </div>
+
+                {volist name="v._child" id="v1"}
+                <div class="ui checkbox" style="margin-right: 30px;">
+                    <input type="checkbox" class="hidden" name="node[]" value="{$v1.id}"
+                           {in name="v1.id" value="$nodes"}checked="checked"{/in} >
+                    <label>{$v1.title}</label>
+                </div>
+                {/volist}
+
+                {/volist}
+            </td>
+        </tr>
+        {/volist}
+        {/volist}
+        </tbody>
+    </table>
+    <div style="text-align: center; margin: 30px;">
+        <button type="button" onclick="doSubmit()" class="ui teal small button" style="width: 150px;">提 交</button>
+    </div>
+</form>
+{/block}
+{block name="script"}
+<script>
+  function doSubmit() {
+    ajaxRequest("{:url('auth/editrolenode')}", $('form').serialize(), function (res) {
+      layer.msg(res.msg, {icon: 1, time: 1000}, function (res) {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+        parent.location.reload();
+      });
+    }, 'POST');
+  }
+</script>
+{/block}

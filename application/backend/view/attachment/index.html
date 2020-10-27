@@ -1,0 +1,236 @@
+<!doctype html>
+<html>
+{include file="layout/header" /}
+<style>
+    .main{ margin: 0;}
+    .main .left{max-width:135px; height:100%;width: 135px;border-right: 1px solid #e5e5e5;border-left: 1px solid #e5e5e5;float: left;}
+    .main .left .left-top{position: fixed;padding: 8px 10px 0;height: 45px;border-bottom: 1px solid #e5e5e5;width: 135px; text-align: center;}
+    .main .left .tabs-left{overflow-y: auto;height: calc(100% - 60px);width:135px;position: fixed;top:50px;border-right: 1px solid #e5e5e5;}
+    .main ::-webkit-scrollbar{width: 3px;height: auto;background-color: #ddd;}
+    .main ::-webkit-scrollbar-thumb {
+        border-radius: 1px;
+        -webkit-box-shadow: inset 0 0 6px rgba(255,255,255,.3);
+        background-color: #333;
+    }
+    .main ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 1px;
+        background: #e5e5e5;
+    }
+    .main .left .list-group li.active a{color: #fff!important;}
+    .main .right{width: calc(100% - 137px);float: right;}
+    .main .right .right-top{position: fixed;background-color: #fff;  z-index: 1000;width: 100%;padding: 7px 10px 0;height: 45px;border-bottom: 1px solid #e5e5e5;}
+    .main .right .imagesbox{width: calc(100% - 139px);height: calc(100% - 100px);position: fixed; top:45px; min-height: 200px;overflow-y: auto;}
+    .main .right .imagesbox .image-item{text-align:center;position: relative;display: inline-block;  width: 112px;height: 132px; overflow: hidden; border: 1px solid #ECECEC;background-color: #F7F6F6;  cursor: default;  margin: 10px 0 0 10px;padding: 5px;}
+    .main .right .imagesbox .image-item img{width: 100px;height: 100px;}
+    .main .right .imagesbox .on{border: 3px dashed #0092DC;padding: 3px;}
+    .main .right .foot-tool{position: fixed;bottom: 0px;width: calc(100% - 117px);background-color:#fff;height: 45px;padding: 7px 10px 0;border-top: 1px solid #e5e5e5;}
+    .main .right .foot-tool .page{padding: 0px 10px;float: right; width: 70%;}
+    .main .right .foot-tool .page ul{width: 100%}
+    /*分页*/
+    .pager {
+        text-align: center;
+    }
+    .pager a {
+        display: inline-block;
+        color: #888;
+        padding: 3px 10px;
+        min-width: 15px;
+        border: 1px solid #E2E2E2;
+        border-radius: 5px;
+    }
+    .pager span {
+        display: inline-block;
+        padding: 3px 10px;
+        min-width: 15px;
+        border: 1px solid #E2E2E2;
+        border-radius: 5px;
+    }
+    .pager span.current {
+        display: inline-block;
+        min-width: 15px;
+    }
+    .pager .pagination li {
+        display: inline-block;
+        margin-right: 5px;
+        text-align: center;
+    }
+    .pager .pagination li.active span {
+        color: #fff;
+        background-color: #00b5ad;
+        border: 1px solid #00b5ad;
+        border-radius: 5px;
+    }
+</style>
+{load href="__PLUG__/easyupload/easy-upload.css"/}
+<body>
+<div class="main" id="app">
+    <div class="left">
+        {if $manager==1}
+        <div class="left-top">
+            <div class="ui icon mini buttons">
+                <button onclick="handlePrompt(this)" data-title="添加分类" data-url="{:url('attachment/handleCreate', ['_m'=>'AttachmentCateModel'])}" class="ui button" data-toggle="tooltip" title="添加分类" >
+                    <i class="plus icon" ></i>
+                </button>
+                <button onclick="handlePrompt(this,'{$pid}')" data-title="编辑当前分类" data-url="{:url('attachment/handleSave', ['_m'=>'AttachmentCateModel'])}" class="ui button" data-toggle="tooltip" title="编辑当前分类" >
+                    <i class="pencil icon" ></i>
+                </button>
+                <button onclick="delOne(this,'{$pid}')" data-title="删除当前分类" data-url="{:url('attachment/handleDel', ['_m'=>'AttachmentCateModel'])}" class="ui button" data-toggle="tooltip" title="删除当前分类" >
+                    <i class="trash alternate outline icon" ></i>
+                </button>
+            </div>
+        </div>
+        {/if}
+        <div class="tabs-left">
+            <div class="ui secondary vertical pointing fluid mini menu">
+                <a class="{eq name='pid' value='0'}active{/eq} item" href="{:Url(($manager ==1 ? 'manage' : 'index'), ['pid' => 0,'type'=>$Request.param.type,'dom_id'=>$Request.param.dom_id])}">
+                    未分类
+                </a>
+                {volist name="$typearray" id="vo" key="k"}
+                    <a class="{eq name='pid' value="$vo['id']"}active{/eq} item " href="{:Url(($manager ==1 ? 'manage' : 'index'),['pid'=>$vo.id,'type'=>$Request.param.type,'dom_id'=>$Request.param.dom_id])}">
+                        {$vo.name}
+                    </a>
+
+                    {volist name="$vo._child" id="voo" key="kk"}
+                        <a class="{eq name='pid' value="$voo['id']"}active{/eq} item " href="{:Url(($manager ==1 ? 'manage' : 'index'),['pid'=>$voo.id,'type'=>$Request.param.type,'dom_id'=>$Request.param.dom_id])}">
+                        {if condition="$kk eq count($vo._child)"} └ {else/}├{/if}{$voo.name}
+                        </a>
+                    {/volist}
+                {/volist}
+
+            </div>
+
+        </div>
+    </div>
+    <div class="right">
+        <div class="right-top">
+            {if $manager==1}<button class="ui mini button" id="move-img">移动到分类</button>{/if}
+            {if $manager==1}<button class="ui mini button" id="delete-img">删除选中文件</button>{/if}
+            <button class="ui mini teal button" id="btn-upfile">上传文件</button>
+        </div>
+        <div class="imagesbox">
+
+            <div id="easyContainer" style="display: none;"></div>
+
+            {volist name="list" id="vo"}
+            <label class="image-item" style="position: relative;">
+
+                <div class="image-delete" data-url="{:Url('delete',array('att_id'=>$vo.att_id))}"></div>
+                {if $vo.att_type=='png'||$vo.att_type=='jpg'||$vo.att_type=='jpeg'||$vo.att_type=='gif'}
+                <img class="pic" src="{$vo.att_dir}" id="{$vo.att_id}" title="{$vo.f_name}"/>
+                {else/}
+                <img class="pic" src="{:get_file_icon($vo.att_type)}" id="{$vo.att_id}" style="width: 85px; height: 85px;" title="{$vo.f_name}"/>
+                <div style="font-size: 11px; left: 0; width: 100px; text-align: center;height: 15px;white-space:nowrap; overflow: hidden">{$vo.f_name}</div>
+                {/if}
+                <input name="select[]" type="{$Request.param.type == 1 ? 'radio' : 'checkbox' }" value="{$vo.att_id}"
+                       class="minimal select-img" data-id="{$vo.att_id}"
+                {if $vo.att_type=='png'||$vo.att_type=='jpg'||$vo.att_type=='jpeg'||$vo.att_type=='gif'}
+                    data-icon="{$vo.att_dir}"
+                {else/}
+                    data-icon="{:get_file_icon($vo.att_type)}"
+                {/if}
+                data-src="{$vo.att_dir}"/>
+            </label>
+            {/volist}
+        </div>
+        <div class="foot-tool">
+            <!--<button class="ui mini button " id="btn-upfile">上传文件</button>-->
+            <!--<button class="ui mini button " id="img_up" data-act='{:url("attachment/upload",["pid" => $pid])}' data-cb="whenUploaded">上传图片</button>-->
+            <!--<button class="ui mini button " id="file_up" data-act='{:url("attachment/uploadFile",["pid" => $pid])}' data-cb="whenUploaded">上传文件</button>-->
+            {neq name="Request.param.type" value='0'}
+            <button class="ui mini teal button" id="handle-select">使用选中的文件</button>
+            {/neq}
+            <div class="page pager">{$list|raw}</div>
+        </div>
+    </div>
+</div>
+{load href="__PLUG__/jk-uploader.js"/}
+{load href="__PLUG__/easyupload/easyUpload.js"/}
+<script>
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    // 使用选中的图片
+    $('#handle-select').click(function(){
+        var selected = getSelectedSrc();
+        parent.handleSelectedImg('{$Request.param.dom_id}', selected[0], selected[1], '{$Request.param.type}');
+        parent.layer.close(index);
+    });
+    function getSelectedIds() {
+        var ids = [];
+        $('.select-img:checked').each(function() {
+            ids.push($(this).data('id'));
+        });
+        return ids;
+    }
+    function getSelectedSrc() {
+        var src = [];
+        var icons = [];
+        $('.select-img:checked').each(function() {
+            src.push($(this).data('src'));
+            icons.push($(this).data('icon'));
+        });
+        return [src, icons];
+    }
+    function whenUploaded(data) {
+        layer.msg(data.msg);
+        setTimeout(function(){
+            location.reload();
+        }, 1600);
+    }
+    // 移动分类
+    $('#move-img').click(function(){
+      popupPage('请选择分类', '{:url("moveImg")}' + '?ids=' + getSelectedIds().join(','), 600, 300);
+    });
+    // 移动分类
+    $('#delete-img').click(function(){
+      ajaxRequest("{:url('deleteImg')}", {ids: getSelectedIds()},function() {
+        location.reload();
+      });
+    });
+    $('#img_up').jkUploader();
+    $('#file_up').jkUploader();
+
+    $('#btn-upfile').click(function(){
+        layer.open({
+            title: '文件上传',
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['600px', '400px'], //宽高
+            shade:false,
+            content: $('#easyContainer'),
+            end: function() {
+                location.reload();
+            }
+        });
+        $('.easy_upload_select').trigger('click');
+    });
+    $('#easyContainer').easyUpload({
+        url: '{:url("attachment/uploadFile",["pid" => $pid])}',// 上传文件地址
+        allowFileTypes: '*.jpg;*.jpeg;*.png;*.gif;*.mp3;*.mp4;*.srt;*.lrc;*.pdf;*.doc;*.docx;*.xls;*.xlsx;*.zip;*.rar;*.ppt;*.pptx',// 允许上传文件类型，格式';*.doc;*.pdf'
+        allowFileSize: 100000,// 允许上传文件大小(KB)
+        selectText: '选择文件',// 选择文件按钮文案
+        multi: true,// 是否允许多文件上传
+        multiNum: 0,// 多文件上传时允许的文件数
+        showNote: true,// 是否展示文件上传说明
+        note: '提示：支持格式为jpg,png,gif,mp3,srt,lrc',//文件上传说明
+        showPreview: true,// 是否显示文件预览
+        fileName: 'file',// 文件filename配置参数
+        formParam: {
+            // token: $.cookie('token_cookie')//不需要验证token时可以去掉
+        },// 文件filename以外的配置参数，格式：{key1:value1,key2:value2}
+        timeout: 30000,// 请求超时时间
+        successFunc: function (res) {
+            console.log('成功回调', res);
+        },// 上传成功回调函数
+        errorFunc: function (res) {
+            console.log('失败回调', res);
+        },// 上传失败回调函数
+        deleteFunc: function (res) {
+            console.log('删除回调', res);
+        }// 删除文件回调函数
+    });
+
+
+</script>
+{load href="__BKD__/js/main.js"/}
+</body>
+</html>

@@ -1,0 +1,23 @@
+{extend name="layout/base" /}
+{block name="content"}
+{:widget('component/form')}
+{/block}
+{block name="script"}
+<script>
+    var popIndex;
+    $(function(){
+       $(':radio[name=type]').change(function(){
+           var val = $(this).val();
+           // console.log(val);
+           if(val == 'media') {
+               popIndex = popupPage("选择素材", "{:url('loadMedia')}", 600, 600)
+           }
+       });
+    });
+    function handleSelected(media_id)
+    {
+        layer.close(popIndex)
+        $('textarea').val(media_id)
+    }
+</script>
+{/block}

@@ -1,0 +1,125 @@
+{extend name="layout/base"/}
+{block name="content"}
+<div class="page-content">
+    <div style="padding-top: 30px;">
+
+        <form class="ui tiny form" id="test-form" action="{:url('saveTest')}" method="post">
+            <div class="inline field">
+                <label class="form-label"><span style="color:red;">*</span> 试卷标题</label>
+                <div class="form-input " style="display: inline-block">
+                    <input name="title" value="{$data.title??''}"/>
+                </div>
+            </div>
+
+            <div class="inline field">
+                <label class="form-label">试卷说明</label>
+                <div class="form-input " style="display: inline-block">
+                    <textarea name="description" rows="4">{$data.description??''}</textarea>
+                </div>
+            </div>
+
+            <div class="inline field">
+                <label class="form-label">设置分类</label>
+                <select name="category_id" class="ui tiny dropdown form-input  dropdowner">
+                    <option value="">请选择</option>
+                    {volist name="category" id="v"}
+                    <option value="{$v.id}" {eq name="data.category_id" value="$v.id"}selected{/eq}>{$v._html}{$v.name}</option>
+                    {/volist}
+                </select>
+            </div>
+
+            <div class="inline field">
+                <label class="form-label">关联课时 </label>
+                <select name="sections[]" multiple="" class="ui tiny form-input dropdowner ">
+                    <option value="">请选择</option>
+                    {volist name="sections" id="v"}
+                    <option value="{$v.id}" {in name="v.id" value="$data.section_ids"}selected{/in}>{$v.title}</option>
+                    {/volist}
+                </select>
+            </div>
+
+            <div class="inline field">
+                <label class="form-label">部分划分</label>
+                <div class="form-input " style="display: inline-block">
+                    <table class="ui small unstackable table">
+                        <thead>
+                        <tr>
+                            <th width="50">序号</th>
+                            <th>标题</th>
+                            <th width="100" >每题分数</th>
+                            <th width="50" class="right aligned">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="part-list">
+                        {volist name="data.part" id="v"}
+                        <tr>
+                            <td class="handler positive"><i class="arrows alternate vertical icon"></i> <span class="sn">{$key+1}</span></td>
+                            <td><input name="parts[]" class="tiny" value="{$v.content}"/></td>
+                            <td><input name="score[]" type="number" class="tiny" value="{$v.score}"/></td>
+                            <td class="right aligned">
+                                <input name="part_ids[]" type="hidden" class="" value="{$v.id}"/>
+                                <a style="cursor: pointer" onclick="removePart(this)">移除</a>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-no-label " style="display: inline-block">
+                <a class="ui tiny orange label" onclick="addPart()">添加部分</a>
+            </div>
+            <input type="hidden" name="id" value="{$data.id??''}">
+            <div style="text-align: center; margin: 30px;">
+                <button type="submit" class="ui teal tiny button" style="width: 150px;">
+                    下一步 组题
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{/block}
+{block name="script"}
+{load href="__PLUG__/sortable/Sortable.min.js"/}
+<script>
+    // 拖拽排序
+    var el = document.getElementById('part-list');
+    Sortable.create(el,{
+        handle: ".handler",
+        animation: 150,
+        store: {
+            set: function (sortable) {
+                refreshSn();
+            }
+        },
+    });
+    function addPart() {
+        $('#part-list').append(`<tr>
+            <td class="handler positive"><i class="arrows alternate vertical icon"></i> <span class="sn"></span></td>
+            <td><input name="parts[]" class="tiny" value=""/></td>
+            <td><input name="score[]" type="number" class="tiny" value="1"/></td>
+            <td class="right aligned">
+                <input name="part_ids[]" type="hidden" class="" value=""/>
+                <a style="cursor: pointer" onclick="removePart(this)">移除</a>
+            </td>
+        </tr>`);
+        refreshSn();
+    }
+    // 更新编号
+    function refreshSn()
+    {
+        $('td.handler span.sn').each(function(i,n){
+            $(this).text(i+1);
+        });
+    }
+    function removePart(obj) {
+        $(obj).parents('tr').remove();
+        refreshSn();
+    }
+    // esc关闭窗口
+    myKeyBoard.esc(function () {
+        parent.layer.close(parent.layer.getFrameIndex(window.name));
+    });
+</script>
+{/block}

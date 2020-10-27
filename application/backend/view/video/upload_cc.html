@@ -1,0 +1,114 @@
+{extend name="layout/base"/}
+{block name="content"}
+<link rel="stylesheet" href="/static/cc/upload/css/bootstrap.css">
+<link rel="stylesheet" href="/static/cc/upload/css/category.css">
+<script>
+    var urlCreateUploadInfo = '{:url("ccCreateUploadInfo")}';
+    var urlCategoryInfo = '{:url("ccCategoryInfo")}';
+</script>
+<div class="wrap">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10 ml17">
+                <div class="upbox">
+                    <form id="fileupload" method="POST" enctype="multipart/form-data">
+                        <div class="row fileupload-buttonbar">
+                            <div class="col-lg-7 mb10">
+					                <span class="btn btn-primary fileinput-button">
+					                    <!--<i class="glyphicon glyphicon-plus"></i>-->
+					                    <!--<span>上传视频</span>-->
+                                        <!--  <input type="file" name="files"> 单选文件 -->
+                                        <!-- 可多选文件 -->
+					                    <input type="file" name="files[]" directory multiple>
+					                </span>
+                                <span class="fileupload-process"></span>
+                                <span> 归集到CC平台的分类:</span>
+                                <div id="subCategorys" style="display:inline-block;position:relative;" class="ui input">
+                                    <input type="hidden" id="uploadCategory" value="0" />
+                                    <input type="text" value="默认分类" title="默认分类" id="selectCategoryInput" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="updiv mt1">
+                            <table class="uptable table table-striped table-hover" style="text-align:center;">
+                                <thead>
+                                <tr>
+                                    <th style="width:300px; text-align: center;">文件名</th>
+                                    <th style="width:80px; text-align: center;">格式</th>
+                                    <th style="width:80px; text-align: center;">分类</th>
+                                    <th style="width:80px; text-align: center;">大小</th>
+                                    <th style="width:200px;text-align: center;">状态</th>
+                                    <th style="width:125px; text-align: center;">操作</th>
+                                    <th style="display:none"></th>
+                                </tr>
+                                </thead>
+                                <tbody class="files"></tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer_push"></div>
+</div>
+<script id="template-upload" type="text/x-tmpl">
+		{% for (var i=0, file; file=o.files[i]; i++) { %}
+		    <tr class="template-upload">
+		        <td style="width:300px;">
+		            <p class="name" style="margin-top: 6px;">{%=file.name%}</p>
+		            <strong class="error text-danger"></strong>
+		        </td>
+                <td>
+                   <p  style="margin-top: 6px;">{%=file.extendName%}</p>
+                </td>
+                <td>
+                   <p  style="margin-top: 6px;" title="{%=file.categoryDesc%}">{%=file.shortCategoryDesc%}</p>
+                </td>
+		        <td style="width:80px;">
+		            <p class="size" style="margin-top: 6px;">处理中...</p>
+		        </td>
+				<td class="progressbar">
+					<div style="margin-top:6px;margin-bottom:4px;margin-left: 20px;width:150px;display:inline-block;" class="progress progress-striped active mb0 tc_rel" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+						<div class="progress-bar progress-bar-success" style="width:0%;"></div>
+						<div style="margin-top: 1px;" class="tc tc_pos upload_percent progress-u">0%</div>
+					</div>
+					<span class="rate" style="vertical-align:super; margin-top:6px; margin-left: 20px;display:inline-block;"></span>
+				</td>
+		        <td style="" class="operate">
+		            {% if (!i && !o.options.autoUpload) { %}
+		                <button class="btn btn-primary btn-xs start" style="margin-top:3px;" disabled>
+		                    <i class="glyphicon glyphicon-upload"></i>
+		                    <span>开始上传</span>
+		                </button>
+		            {% } %}
+		            {% if (!i) { %}
+		                <button class="btn btn-warning btn-xs cancel" style="margin-top:3px;">
+		                    <i class="glyphicon glyphicon-ban-circle"></i>
+		                    <span>取消</span>
+		                </button>
+		            {% } %}
+					{% if (!i) { %}
+		                <button class="btn btn-primary btn-xs" id="pause" style="margin-top:3px;" disabled>
+		                    <i class="glyphicon glyphicon-ban-circle"></i>
+		                    <span>暂停</span>
+		                </button>
+		            {% } %}
+					{% if (!i) { %}
+		                <button class="btn btn-primary btn-xs" id="resume" style="display:none; margin-top:3px;">
+		                    <i class="glyphicon glyphicon-upload"></i>
+		                    <span>续传</span>
+		                </button>
+		            {% } %}
+		        </td>
+				<td width="0%" style="display:none">
+		            <input id="isPause" value="false">
+		        </td>
+		    </tr>
+		{% } %}
+</script>
+<script src="/static/cc/upload/js/categoryLayer.js"></script>
+<script src="/static/cc/upload/js/tmpl.min.js"></script>
+<script src="/static/cc/upload/js/cch5upload.js"></script>
+<script src="/static/cc/upload/js/index.js"></script>
+{/block}

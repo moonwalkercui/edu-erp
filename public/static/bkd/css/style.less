@@ -1,0 +1,380 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 100%;
+  height: 100%;
+}
+
+html, body, .page {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font: 14px 'Helvetica Neue', 'Microsoft YaHei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', Helvetica, Arial, Sans-serif;
+  color: #444;
+}
+
+ul, li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+.form-label{
+  text-align: right; width: 150px!important;vertical-align:top!important; padding-top:6px;
+}
+.header-top {
+  height: 50px;
+  //overflow: hidden;
+  box-shadow:0 1px 2px 0 rgba(34,36,38,.15);
+  /* background:#3498DB; */
+  .menu.my-menu {
+    border-radius: 0;
+    border: 0;
+    .item.active {
+      font-weight: bold;
+    }
+  }
+}
+.header-top .menu.my-menu, .header-top .menu .item {
+  height: 50px;
+  line-height: 22px;
+}
+
+/*main*/
+.main {
+  width: 100%;
+  height: calc(100% - 50px);
+}
+
+/*左边菜单*/
+.page-left {
+  width: 170px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, .1);
+  float: left;
+  position: relative;
+  transition: all .3s;
+}
+
+.page-left.mini-left {
+  width: 60px;
+}
+
+/*右边*/
+.page-right {
+  margin-left: 170px;
+  height: 100%;
+  transition: all .3s;
+}
+
+.page-right.mini-right {
+  margin-left: 60px;
+}
+
+.right-content {
+  width: 100%;
+  height: calc(100% - 40px);
+  font-size: 0;
+}
+
+.right-content #frm {
+  border: none;
+  width: 100%;
+  height: 100%;
+  margin-top: 4px;
+}
+
+.crumbs-nav {
+  padding: 10px;
+}
+
+.page-content {
+  //margin: 10px;
+  padding: 10px;
+}
+.page-title {
+  margin-left: 10px;
+  min-height: 37px;
+  clear: both;
+  h3 {
+    float:left;
+    line-height: 37px!important;
+  }
+  .page-title-right{
+    float:right;
+  }
+}
+
+.data-table tr:hover{
+  background-color: #fff8db!important;
+}
+
+.form-input{
+  width: 70%!important;
+}
+.w60 {
+  width: 60%!important;
+}
+
+/*修改原来ui*/
+.ui.tiny.button{
+  padding: .71em 1.2em;
+}
+.ui.dimmer{
+  background-color: rgba(0,0,0,.25)!important;
+}
+/*脚*/
+.right-footer {
+  font-size: 12px;
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  background: #f8f8f8;
+  color: #666;
+  border-top: 1px solid #ebebeb;
+}
+
+/*美化layer*/
+
+.layui-layer{
+  &.layui-layer-iframe.layui-layer-border, &.layui-layer-dialog, &.layui-layer-page.layui-layer-prompt{
+    border-radius: 8px;
+    overflow: hidden;
+  }
+}
+/*分页*/
+.pager {
+  text-align: center;
+  a {
+    display: inline-block;
+    color: #888;
+    padding: 3px 10px;
+    min-width: 15px;
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+  }
+
+  span {
+    display: inline-block;
+    padding: 3px 10px;
+    min-width: 15px;
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+  }
+
+  span.current {
+    display: inline-block;
+    min-width: 15px;
+  }
+
+  .pagination li {
+    display: inline-block;
+    margin-right: 5px;
+    text-align: center;
+  }
+
+  .pagination li.active span {
+    color: #fff;
+    background-color: #00b5ad;
+    border: 1px solid #00b5ad;
+    border-radius: 5px;
+  }
+}
+
+// 滚动背景
+::-webkit-scrollbar {
+  width: .5rem;
+  height: .5rem;
+  // background-image: linear-gradient(135deg, #1DE9B6 0%, rgba(8, 196, 219, 0.50) 72%, rgba(0, 182, 234, 0.30) 100%);
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 0;
+}
+
+// 滚动条
+::-webkit-scrollbar-thumb {
+  background: #6b7075;
+  transition: all .2s;
+  border-radius: .5rem;
+
+  &:hover {
+    background-color: rgba(95, 95, 95, .7);
+  }
+}
+
+/* 左侧导航 */
+.nav {
+  width: 100%;
+  height: 100%;
+  background: #263238;
+  transition: all .3s;
+  overflow: auto
+}
+
+.nav a {
+  display: block;
+  overflow: hidden;
+  padding-left: 20px;
+  line-height: 46px;
+  max-height: 46px;
+  color: #ABB1B7;
+  transition: all .3s;
+}
+
+.nav a span {
+  margin-left: 16px;
+}
+
+.nav-item {
+  position: relative;
+  transition: all .3s;
+}
+
+.nav-item.nav-show {
+  border-bottom: none;
+}
+
+.nav-item ul {
+  display: none;
+  background: rgba(0, 0, 0, .1);
+}
+
+.nav-item.nav-show ul {
+  display: block;
+}
+
+.nav-item > a:before {
+  content: "";
+  position: absolute;
+  left: 0px;
+  width: 2px;
+  height: 46px;
+  background: #34A0CE;
+  opacity: 0;
+  transition: all .3s;
+}
+
+.nav .nav-icon {
+  font-size: 20px;
+  position: absolute;
+  margin-left: -1px;
+}
+
+.nav-more {
+  float: right;
+  margin-right: 20px;
+  font-size: 12px;
+  transition: transform .3s;
+}
+
+/* 此处为导航右侧箭头 如果自定义iconfont 也需要替换*/
+.nav-show .nav-more {
+  transform: rotate(90deg);
+}
+.nav-show .label{
+  background-color: #f2711c;
+  float:right;
+  margin: 20px 10px 0 10px;
+  color: white;
+  font-size: 12px;
+  padding: 0 4px;
+  border-radius: 16px;
+  height: 16px;
+  line-height: 16px;
+}
+.nav-show, .nav-item > a:hover {
+  color: #FFF;
+  background: rgba(0, 0, 0, .1);
+}
+
+.nav-show > a:before, .nav-item > a:hover:before {
+  opacity: 1;
+}
+
+.nav-item li:hover a, .nav-item li a.active {
+  color: #FFF;
+  background: rgba(0, 0, 0, .1);
+}
+
+.nav-mini.nav {
+  width: 60px;
+}
+
+.nav-mini.nav .nav-item > a span {
+  display: none;
+}
+
+.nav-mini.nav .nav-more {
+  margin-right: -20px;
+}
+
+.nav-mini.nav .nav-item ul {
+  position: absolute;
+  top: 0px;
+  left: 60px;
+  width: 180px;
+  z-index: 99;
+  background: #3C474C;
+  overflow: hidden;
+}
+
+.nav-mini.nav .nav-item:hover {
+  background: rgba(255, 255, 255, .1);
+}
+
+.nav-mini.nav .nav-item:hover .nav-item a {
+  color: #FFF;
+}
+
+.nav-mini.nav .nav-item:hover a:before {
+  opacity: 1;
+}
+
+.nav-mini.nav .nav-item:hover ul {
+  display: block;
+}
+
+/* 左侧导航 end */
+// 上传按钮
+.upload-item {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  li {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+    line-height: 3;
+    margin:1px;
+    list-style: none;
+    text-align: center;
+    border-radius: 4px;
+    position: relative;
+    border: 1px solid #ececff;
+    cursor: pointer;
+    vertical-align: middle;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.form-no-label{
+  margin-left: 165px; margin-top: 5px;width: 70%;
+}
+.form-label-right{
+  display: inline-block; width: 70%;
+}

@@ -1,0 +1,11 @@
+/.idea
+/.vscode
+*.log
+.env
+.DS_Store
+node_modules
+/.ptp-sync
+/public/uploads/
+/runtime
+/.git
+database.php

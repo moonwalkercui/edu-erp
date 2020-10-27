@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<!DOCTYPE html>
+<html lang="en" style="font-size: 54.8px;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title??'员工端'}</title>
+    <link rel="stylesheet" type="text/css" href="/static/mob/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/static/mob/css/calendar.css">
+    <!-- vant样式文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.10/lib/index.css"/>
+    <script>
+        const URL_STAFF_CENTER = '{:url("index/index")}';
+        const URL_CALENDAR = '{:url("attendance/calender")}';
+        const URL_SIGN_DAYS = '{:url("attendance/signList")}';
+        const URL_SIGN_DO = '{:url("attendance/signDo")}';
+        const LOGIN_SUBMIT = '/staff/login';
+        // const JS_SDK_CONFIG = '{:url("wxJsSdkConfig")}';
+    </script>
+</head>
+<body>
+{block name="content"}{/block}
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vant@2.10/lib/vant.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script>Vue.config.productionTip = false</script>
+{block name="script"}{/block}
+</body>
+</html>

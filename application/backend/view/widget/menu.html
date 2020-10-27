@@ -1,0 +1,35 @@
+{volist name="menus" id="m"}
+<li class="nav-item nav-show">
+    <a href="javascript:;"><i class="{$m.icon??'home'} icon"></i><span>{$m.title}</span>
+        <i class="chevron right icon nav-more" style="line-height: 100%;margin-top: 16px;margin-right:10px;"></i></a>
+    <ul>
+        {volist name="m._child" id="c"}
+        {if hasPermission($c.id)}
+        <li>
+            <a href="{:url('backend/'.$c['url'])}" target="frm">
+                <span>{$c.title}</span>
+                {gt name="c.label_num" value="0"}<span class="label">{$c.label_num}</span>{/gt}
+            </a>
+        </li>
+        {/if}
+        {/volist}
+    </ul>
+</li>
+{/volist}
+<script>
+    $(function () {
+        $('.nav-item>a').on('click', function () {
+            if (!$('.nav').hasClass('nav-mini')) {
+                if ($(this).next().css('display') == "none") {
+                    $(this).next('ul').slideDown(300);
+                    $(this).parent('li').addClass('nav-show');
+                } else {
+                    $(this).next('ul').slideUp(300);
+                    setTimeout(() => {
+                        $(this).parent('li').removeClass('nav-show');
+                    }, 300);
+                }
+            }
+        });
+    })
+</script>

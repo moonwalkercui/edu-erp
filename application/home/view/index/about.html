@@ -1,0 +1,201 @@
+{include file="public/header"/}
+{assign name="data" value=":get_article(27)"}
+<style>
+    .team-content,
+    .team-item,
+    .team-wrap {
+        transition: all .4s ease-in-out
+    }
+
+    .team-item {
+        position: relative;
+        border-radius: .1875rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .1);
+        margin: 0 0 30px;
+    }
+
+    .team-item img,
+    .team-wrap {
+        border-radius: .1875rem;
+        width: 100%
+    }
+
+    .team-wrap {
+        background: rgba(34, 34, 34, .6);
+        position: absolute;
+        top: 0;
+        overflow: hidden;
+        height: 100%;
+        opacity: 0
+    }
+
+    .team-content {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        padding: 20px;
+        transform: translateY(-10px)
+    }
+
+    .team-name {
+        font-size: .8125rem;
+        margin-bottom: 2px
+    }
+
+    .team-role {
+        font-size: .75rem;
+        opacity: .6
+    }
+
+    .team-name,
+    .team-role {
+        color: #fff
+    }
+
+    .team-content-social {
+        text-align: center;
+        list-style: none;
+        padding: 20px;
+        margin: 0;
+        transform: translateY(-10px);
+        position: absolute;
+        right: 0
+    }
+
+    .team-content-social li {
+        margin-bottom: 5px
+    }
+
+    .team-content-social li a {
+        color: #fff
+    }
+
+    .team-content-social li a:hover {
+        opacity: .6
+    }
+
+    .team-item:hover {
+        transform: translateY(-3px)
+    }
+
+    .team-item:hover .team-wrap {
+        opacity: 1
+    }
+
+    .team-item:hover .team-content,
+    .team-item:hover .team-content-social {
+        transform: translateY(0)
+    }
+
+</style>
+
+<div id="header-blank" class="show992">
+</div>
+<div id="body" class="trans">
+    <div id="banner" class="relative hide992">
+        <div class="bd over">
+            <div class="bar relative fz0 nowrap">
+                {volist name=":get_ad_list('about_banner')" id="v"}
+                <div class="item relative inline-block text-center fz0 over item-0">
+                    <img src="{$v.image}" alt="" class="max-w100">
+                </div>
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <div id="small-banner" class="relative show992">
+        <div class="bd over">
+            <div class="bar relative fz0 nowrap">
+            </div>
+        </div>
+    </div>
+    <div id="about" class="wrap">
+        <div class="clean">
+            <div class="item fr fz0 text-center wow fadeInUp">
+                <img src="__HOME__/picture/db39253b5d.jpg" alt="" class="max-w100">
+            </div>
+            <div class="item about-brief fl border-box wow fadeInUp">
+                <div class="about-title text-center">
+                    <div class="title-0">
+                        WHO ARE WE
+                    </div>
+                    <div class="title-1">
+                        <span>
+                            {$data.title}
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    {$data.content|raw|htmlspecialchars_decode}
+                </div>
+            </div>
+        </div>
+        <div class="clean relative">
+            <div class="item fl fz0 text-center wow fadeInUp">
+                <img src="__HOME__/picture/18beffa957.jpg" alt="" class="max-w100">
+            </div>
+            <div class="item number text-center absolute wow fadeInUp">
+                <div class="i fl">
+                    <div id="down-0" class="n" data-start="0" data-end="13" data-duration="1">
+                        13
+                    </div>
+                    专注高品质英语教学13年
+                </div>
+                <div class="i fl">
+                    <div id="down-1" class="n" data-start="0" data-end="60" data-duration="1"
+                         data-suffix="+">
+                        60+
+                    </div>
+                    精品讲师团队
+                </div>
+                <div class="i fl">
+                    <div id="down-2" class="n" data-start="0" data-end="20000" data-duration="1"
+                         data-suffix="+">
+                        20000+
+                    </div>
+                    培养优质学员
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="team" class="wrap">
+        <div class="about-title text-center">
+            <div class="title-0 wow fadeInUp">
+                TEACHING TEAM
+            </div>
+            <div class="title-1 wow fadeInUp">
+                <span>
+                    教学团队
+                </span>
+            </div>
+        </div>
+        <div class="clean" style="max-width: 1280px; margin: 10px auto">
+            {volist name=":get_teacher_list()" id="v"}
+            <a href="/teacher/{$v.id}.html" style="width: 19%; min-width: 10em; display: inline-block; padding: 10px; box-sizing: border-box;">
+                <div class="team-item">
+                    <div class="team-image"><img class="lazy" src="{$v.avatar}" alt="顾瑶华老师" style="">
+                        <div class="team-wrap">
+                            <div class="team-content">
+                                <h6 class="team-name" style="font-size: 1.2em">{$v.name}</h6>
+                                <div class="team-role" style="font-size: 1em">
+                                    <span>{$v.intro|raw|htmlspecialchars_decode}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {/volist}
+        </div>
+    </div>
+    <div class="blank20">
+    </div>
+    <div class="blank20">
+    </div>
+    <div class="blank20">
+    </div>
+    <div class="blank20">
+    </div>
+    {include file="public/bottom"/}
+</div>
+{include file="public/footer"/}

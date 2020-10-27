@@ -1,0 +1,1 @@
+<?phpnamespace app\common\model;use think\Db;class KnowledgeCategory extends BaseModel{    protected $table = 'knowledge_category';}

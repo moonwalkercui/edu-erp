@@ -1,0 +1,172 @@
+<div id="data-table">
+<table class="ui small striped unstackable table data-table dbclick">
+    <thead>
+    <tr>
+        {if isset($data.select_type) && $data.select_type == 2}
+        <th width="30">
+            <div class="ui checkbox">
+                <input type="checkbox" id="select-all">
+            </div>
+        </th>
+        {/if}
+        {volist name="data.thead" id="th"}
+
+        {if condition="is_array($th) && count($th) == 2"}
+        {if isset($th[1]['style'])}
+        <th style="{$th[1]['style']}">
+            {else/}<th>
+        {/if}
+        {if isset($th[1]['sort'])}
+        <!--<a href="<?php echo $page_url . '?sort_by=' . $th[1]['sort']. '&sort_type='.( isset(request()->param()['sort_type']) && request()->param()['sort_type']=='asc'?'desc':'asc'); ?>">-->
+        <a href="###" onclick="handleSortReq('{$th[1]['sort']}','{$th[1]["sort_type"]??'desc'}')">
+            {/if}
+            {$th[0]}
+            {if isset($th[1]['sort'])}<img src="/static/bkd/img/u-d.png" alt="" style="height: 12px;"/></a>{/if}
+    </th>
+        {else/}
+        <th>{$th}</th>
+        {/if}
+        {/volist}
+        {notempty name="data.buttons"}<th></th>{/notempty}
+        {if isset($data.select_type) && $data.select_type == 1}
+        <th width="70">单选</th>
+        {/if}
+    </tr>
+    </thead>
+    {volist name='data.collection' id="row"}
+    <tr id="tr{$row.id}">
+        {if isset($data.select_type) && $data.select_type == 2}
+            <td>
+                <div class="ui checkbox">
+                    <input type="checkbox" name="selectOne[]" class="select-one" value="{$row.id}">
+                </div>
+            </td>
+        {/if}
+        {volist name="data.fields" id="f"}
+        <td class="">
+
+            {php}
+            if (is_callable($f)) {
+            echo $f($row);
+            } else {
+            echo $row[$f];
+            }
+            {/php}
+        </td>
+        {/volist}
+        {notempty name="data.buttons"}
+        <td class="right aligned collapsing" style="white-space:nowrap;">
+            {volist name="data.buttons" id="bt"}
+            {if isset($bt.permission_id)==false || (isset($bt.permission_id) && hasPermission($bt.permission_id))}
+            <a class="ui small {$bt.class_name ?? ''} label" data-title="{$bt.title}" data-url="{$bt.url}"
+               onclick="{$bt.onclick??'openWin'}(this, '{$row.id}', '{$bt.height??''}', '{$bt.width??''}')">
+                {notempty name="bt.icon"}<i class="{$bt.icon}"></i>{/notempty}
+                {$bt.title}
+            </a>
+            {/if}
+            {/volist}
+        </td>
+        {/notempty}
+        {if isset($data.select_type) && $data.select_type == 1}
+        <td><a class="ui small green label" onclick="handleSingleSelect({$row.id})">选中</a></td>
+        {/if}
+    </tr>
+    {/volist}
+    {if condition="count($data.collection) == 0"}
+    <tr><td colspan="{:count($data.thead)}" style="text-align: center">暂无数据</td></tr>
+    {/if}
+</table>
+</div>
+
+{if condition="$data.collection instanceof \think\paginator\driver\Bootstrap"}
+<div style="margin: 10px 0px;">
+    {if isset($data.select_type) && $data.select_type == 2}
+    {empty name="data.select_actions"}
+    <a class="ui small real label" onclick="handleMultiSelect()">选好了</a>
+    {else/}
+    {volist name="data.select_actions" id="sa"}
+    <a class="ui small {$sa.class_name ?? ''} real label" data-title="{$sa.title}" data-url="{$sa.url}"
+       onclick="{$sa.onclick??'openWin'}(this, 'select-one', '{$sa.height??''}', '{$sa.width??''}')">
+        {notempty name="sa.icon"}<i class="{$sa.icon}"></i>{/notempty}
+        {$sa.title}
+    </a>
+    {/volist}
+    {/empty}
+    {/if}
+    <div class="ui tiny label popuper" data-content="信息总数" data-variation="mini">
+        <i class="list icon"></i> {$data.collection->total()}
+    </div>
+    <div style="float:right;" class="pager">
+        {$data.collection|raw}
+    </div>
+</div>
+{/if}
+
+{load href="__PLUG__/jquery.PrintArea.js"/}
+<script>
+    $(function(){
+        $('#select-all').change(function(){
+            if($(this).prop('checked')){
+                $('.checkbox').checkbox('set checked');
+            } else {
+                $('.checkbox').checkbox('set unchecked');
+            }
+        });
+
+        $('table.dbclick').on('dblclick', 'tr', function(){
+            console.log($(this).find('a.ui.label').eq(0).trigger('click'))
+        })
+    })
+    function handleMultiSelect() {
+        var ids = [];
+        $('.select-one').each(function(){
+            if($(this).prop('checked')){
+                ids.push($(this).val())
+            }
+        });
+        if(ids.length == 0) {
+            layer.msg('请先选择');
+            return;
+        }
+        closeCurrentWin();
+        parent.handleMultiSelect(ids); // 父级需要有个接收的函数
+    }
+    function handleSingleSelect(id) {
+        if(id == false) {
+            layer.msg('请先选择');
+            return;
+        }
+        closeCurrentWin();
+        parent.handleSingleSelect(id); // 父级需要有个接收的函数
+    }
+    function handleSortReq(sort_field, df_sort_type) {
+
+        var href = window.location.href
+        var params = JsUtils.getUrlQueryStr()
+        // console.log(params)
+        var sort_type = params.sort_type ? (params.sort_type == 'asc' ? 'desc' : 'asc') : df_sort_type;
+
+        params.sort_by = sort_field;
+        params.sort_type = sort_type;
+
+        var arr = href.split("?");
+        var newHref = arr[0] + "?";
+
+        var temp = [];
+        for(var p in params) {
+            temp.push(p + "=" + params[p])
+        }
+        newHref += temp.join("&");
+        console.log(newHref);
+        window.location.href = newHref;
+    }
+
+    // esc关闭窗口
+    myKeyBoard.esc(function () {
+        parent.layer.close(parent.layer.getFrameIndex(window.name));
+    });
+
+    function handlePrint(id) {
+        $("#data-table").printArea();
+    }
+</script>

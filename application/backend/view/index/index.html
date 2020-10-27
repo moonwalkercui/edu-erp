@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+{include file="layout/header" /}
+<body>
+<div class="page" >
+    {include file="layout/top" /}
+    <div class="main">
+        <div class="page-left">
+            <div class="nav">
+                <ul>
+                    {:widget('component/menu',['pid' => $menu_pid])}
+                </ul>
+            </div>
+        </div>
+        <div class="page-right">
+            <div class="right-content">
+                {notempty name='Request.param.url'}
+                <iframe class="frm" id="frm" name="frm" src="{:url('backend/'.$Request.param.url)}"></iframe>
+                {else/}
+                <iframe class="frm" id="frm" name="frm" src="{:url('index/dashboard')}"></iframe>
+                {/notempty}
+            </div>
+            <div class="right-footer">
+                 &copy;版权所有&nbsp;&nbsp; <span style="color: red">优惠热线 15666323771（同微信）</span>
+            </div>
+        </div>
+    </div>
+</div>
+{load href="__BKD__/js/main.js"/}
+</body>
+</html>

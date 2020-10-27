@@ -1,0 +1,95 @@
+{include file="public/header"/}
+<div id="header-blank" class="show992">
+</div>
+<div id="body" class="trans">
+    <div id="banner" class="relative hide992">
+        <div class="bd over">
+            <div class="bar relative fz0 nowrap">
+                {volist name=":get_ad_list('course_banner')" id="v"}
+                <div class="item relative inline-block text-center fz0 over item-0">
+                    <img src="{$v.image}" alt="" class="max-w100">
+                </div>
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <div id="products">
+        <div class="category-list text-center fz0 hide992 wow fadeInUp">
+            {volist name=":get_category_list()" id="v"}
+            <a href="/course/{$v.zy_currency_category_id}.html" class="item inline-block trans {eq name='cate_id' value='$v.zy_currency_category_id'}on{/eq}"  rel="nofollow">
+                {$v.title}
+            </a>
+            {/volist}
+        </div>
+        <div class="category-list text-center show992">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    课程分类
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        {volist name=":get_category_list()" id="v"}
+                        <a href="/course/{$v.zy_currency_category_id}.html"​ rel="nofollow">
+                            {$v.title}
+                        </a>
+                        {/volist}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="products-bg trans" style="padding-bottom: 0;">
+            <div class="wrap">
+                <div id="products-box" >
+                    <div class="products-list relative fz0 ">
+                        {volist name=":get_course_list(200, $cate_id)" id="v"}
+                        <div class='item inline-block relative wow fadeInUp' style="margin-right: 1.5%;">
+                            <div class="main ">
+                                <div class="cover scale relative">
+                                    <img src="__HOME__/picture/notebook.png" class="trans scale-img max-w100">
+                                    <a class="img absolute text-center fz0"
+                                       href="{eq name='v.type' value='1'}__WXURL__/course/{$v.id}.html{else/}__WXURL__/live/{$v.id}.html{/eq}" target="_blank">
+                                        <div class="trans scale-img relative" style="z-index: 100;width: 76.923%;margin: 0 auto;">
+                                            <img src="{eq name='v.type' value='1'}__IMG__/db.png{else/}__IMG__/zb.png{/eq}"
+                                                 class="trans scale-img max-w100" style="position: absolute; top:0; left: 0;width: 40px;">
+                                        </div>
+                                        <img src="{:get_attach($v['cover'])}" alt="{$v.video_title}" class="trans scale-img">
+                                    </a>
+                                </div>
+
+                                <div class="info clean">
+                                    <div>
+                                        <div class="name">
+                                            {$v.video_title}
+                                        </div>
+                                        <div class="category">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info clean">
+                                    <div class="right fr" style="color: #999; font-size: 110%;line-height: 24px; "> {$v.video_order_count}人购买 </div>
+                                    <div class="left fl" style="color: #ff6600; font-size: 120%; "> {$v.t_price==0?'免费':'￥'.$v.t_price} </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/volist}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <div class="try-button-box wrap fz0">
+            <a href="http://p.qiao.baidu.com/cps/chat?siteId=13891233&amp;userId=19522184" onclick="window.open(this.href, '', 'resizable=yes,status=no,location=no,toolbar=no,menubar=no,fullscreen=no,scrollbars=no,dependent=no,width=750,height=600'); return false;" class="button inline-block text-center trans wow fadeInUp">
+                7x24在线客服
+            </a>
+        </div>
+    </div>
+    <div class="blank15">
+    </div>
+    {include file="public/bottom"/}
+</div>
+{include file="public/footer"/}

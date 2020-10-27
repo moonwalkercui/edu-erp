@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+{include file="layout/header" /}
+<body>
+
+<div class="ui container" style="padding-top:10%">
+    <div class="ui grid padded center aligned">
+        <div class="row">
+            <div class="sixteen wide tablet six wide computer column">
+                <?php switch ($code) {?>
+                <?php case 1:?>
+                <i class="huge green check circle outline icon"></i>
+                <?php break;?>
+                <?php case 0:?>
+                <i class="huge orange info circle icon"></i>
+                <?php break;?>
+                <?php } ?>
+                <div style="margin: 20px auto;">
+                    <h2 class="ui header center aligned"><?php echo(strip_tags($msg));?></h2>
+                </div>
+                <h5 class="ui horizontal divider header"  style="color:#ccc;">
+                    <?php switch ($code) { case 1: echo 'SUCCESS';break; case 0: echo 'ERROR';break;} ?>
+                </h5>
+                <div class="ui center aligned">
+                    <a href="<?php echo($url);?>"
+                       <?php if($url =="/backend/login/loginform.html") echo "target='_parent'"; ?>
+                       class="ui tiny teal animated fade basic button" tabindex="0" id="href">
+                        <div class="visible content">点击返回</div>
+                        <!--<div class="visible content">正在跳转 - <b id="wait"><?php echo($wait);?></b></div>-->
+                        <div class="hidden content">跳 转</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="layout/footer" /}
+<script type="text/javascript">
+  (function(){
+    var wait = document.getElementById('wait'),
+      href = document.getElementById('href').href;
+    var interval = setInterval(function(){
+      var time = --wait.innerHTML;
+      if(time <= 0) {
+      <?php if($url =="/backend/login/loginform.html") echo "window.parent.location.href = href;"; ?>
+      <?php else echo "location.href = href;"; ?>
+        clearInterval(interval);
+      };
+    }, 1000);
+  })();
+</script>
+</body>
+</html>

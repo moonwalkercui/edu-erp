@@ -1,56 +1,60 @@
-# 小猿管家培训教育行业ERP系统
-#### 注意：本系统目前测试服务器被占用暂时不开启测试。代码功能不受影响。
+# 宏之博教务系统（原小猿管家培训教育行业ERP系统）
 
-#### 研发的新版宏之博教务系统（非本仓库代码项目），欢迎大家咨询
+### 介绍
+宏之博教务系统主要针对教育培训行业，有三个部分组成：教务系统、公众号端和官方网站，是一套整合了教育行业的课程课时管理、排课管理、课表管理、试卷管理打印、老师请假请款、微信打卡考勤、学员管理、权限管理等。
+包括pc端和公众号端，暂未开发其他端，如有需要自行开发或联系我们进行二开，`二开价格公道哦~`
+
+### 测试地址
 测试地址：http://erp.hzb-it.com/s.html  账号 cui  密码 111111
+产品介绍地址：http://www.hzb-it.com/eduerp.html
 THINKPHP 官方服务市场地址：https://market.topthink.com/product/226
 
-#### 介绍
-小猿管家培训教育行业ERP系统，包括api端，管理端，小程序端，暂未开发其他端，如有需要自行开发。
-支持多组织管理，每个组织有分校，可以为每个组织分配二级域名访问。
-
-#### 介绍和地址
-http://www.vhuojia.com/
-
-#### 技术栈
-1.  wepy开发的小程序端，学员使用
-2.  vue+elementui开发的管理端
-3.  laravel开发的api端
-
-#### 目录说明
-
-1.  api_server 为api端
-2.  frontend 为管理端（前端）
-3.  miniapp 为小程序端 wepy开发
-
-##### api端配置
-
-使用laravel开发，使用前 `composer install`
-apikey请自行生成
-
-sql:
-需要建立两个数据库表：组织表和总表common
-组织表为每个组织的数据，以后新建组织可以以组织编号为表名进行创建，可以另行设计规则。
-总表为总管理表，用于组织层面的管理。
-配置文件位置在`api_server/.env` 和 `api_server/config/database.php`, 逻辑很简单
-
-##### vuejs管理端配置域名
-
-编辑 frontend/src/common/Api.js里的:
-```
-...
-    return 'https://域名/' + prefix + '/'; // prefix是组织编号  
-...
-    static serviceDomain = 'https://域名/';
-```
-##### 小程序配置
-
-编辑 miniapp/src/utils/global.js里的:
 
 
-#### 作者
+### 安装配置方法
+
+系统要求：php7.2、mysql 5.6+，框架是TP5.2最新版。TP6.0版本近期更新
+公众号前端是vue（uniapp开发）
+
+### 项目目录
+
+根据tp的定义application里是模块
+api是定义通用接口的
+backend是管理端
+common是通用模块，不对外访问
+home是官网的
+staff是老师前端数据接口
+student是学生前端数据接口
+
+### 配置参数
+
+微信公众号：文件路径\application\common\service\WxService.php 里的 $config
+阿里短信：配置在config 表里的sms_开头的
+腾讯云点播： 文件路径\application\common\service\TencentCloud.php 里的 $config
+
+### 微信公众号底部菜单设置
+
+后台可以发布底部菜单。另外请自行配置一下微信公众号里的服务器配置等。
+微信响应地址：http://您的域名/wx
+
+微信公众号接口处理控制器地址：\application\api\controller\Wx.php，
+其中access方法是处理底部菜单链接地址请求的。因为需要获取用户的微信信息，所以需要走这个方法。
+底部菜单的链接前缀：http://您的域名/wxauth.html?state=标记， 
+标记是自定义的，用上面access方法处理跳转，跳转后自动登录和注册
+
+微信主要逻辑在 \application\common\service\WxService.php
+
+### 前端文件
+
+在根目录 uniapp 文件夹里。使用uniapp开发的。
+ staff-center 为教师端
+ student-center 为学生端
+ api接口的路径在 \route 里定义
+ 
+ sql文件在根目录里
+
+### 作者
 冷风崔 QQ 541720500 
-sql文件联系作者免费获取
-或到qq群153801183里自行下载即可
+qq交流群 153801183
 
-#### 感谢您的捐赠:) 
+### 感谢您的捐赠:) 

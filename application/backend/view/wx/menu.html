@@ -1,0 +1,106 @@
+{extend name="layout/base"/}
+{block name="content"}
+{load href="/static/wxmenu/style.css"/}
+<div style="display: flex">
+    <div style="flex: 1;">
+        <div class="page-title">
+            <h3 class="ui header">公众号底部菜单设置</h3>
+            <div class="page-title-right">
+                <div class="tiny ui right floated buttons">
+                    <button class="ui button "
+                            data-title="添加" data-url="{:url('saveMenu')}" onclick="openWin(this, '', '700')">添 加
+                    </button>
+                    <button class="ui green button" onclick="publishToWx()">发布到公众号(测试停用)</button>
+                </div>
+            </div>
+        </div>
+        <table class="ui  unstackable table">
+            <thead>
+            <tr>
+                <th>菜单名称</th>
+                <th>行为</th>
+                <th>内容</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="list" id="v"}
+            <tr class="{$v.parent_id == 0 ? 'list-group' : 'list-group-item'}">
+                <td>{$v._html}{$v.name}</td>
+                <td>{switch name="v.type"}
+                    {case value="text"}文本{/case}
+                    {case value="media"}素材{/case}
+                    {case value="url"}链接{/case}
+                    {/switch}</td>
+                <td style="font-size: .8em;">{$v.value}</td>
+                <td class="right aligned collapsing">
+                    <a class="ui small label" data-title="修改" data-url="{:url('saveMenu')}" onclick="openWin(this, '{$v.id}', '700', '')">改</a>
+                    <a class="ui small label" data-title="删除" data-url="{:url('delMenu')}" onclick="delOne(this, '{$v.id}', '', '')">删</a>
+                </td>
+            </tr>
+            {/volist}
+            {eq name=":count($list)" value="0"}
+            <tr>
+                <td colspan="4">暂未设置</td>
+            </tr>
+            {/eq}
+            </tbody>
+
+        </table>
+        <div class="ui tiny green message">
+            修改完毕后发布后才生效；限于微信的限制，一般发布后半小时才内看到修改的新菜单，也可以取消并重新关注公众号，达到快速查看效果的目的。
+        </div>
+    </div>
+    <div style="width: 320px; margin: 5px 30px;">
+        <h3>效果预览：</h3>
+        <div class="box-phone">
+            <img src="/static/wxmenu/phone.png" alt="" style="width: 100%;"/>
+            <div style="text-align: center; font-size: 12px; color: #999; padding: 10px 0;">微信菜单效果预览 拖动可调整位置</div>
+            <div class="bto  sortable" id="menu-list">
+                {volist name="tree" id="v"}
+                <div class="btn_menu " data-id="{$v.id}" style="cursor: move">
+                    <span>{$v.name}</span>
+                    <b>&times;</b>
+                    {if count($v._child) > 0}
+                    <div href="javascript:void(0)" class="btn_top  sortable" >
+                        {volist name="v._child" id="c"}
+                        <div class="zicaidan " data-id="{$c.id}" style="cursor: move">{$c.name}</div>
+                        {/volist}
+                    </div>
+                    {/if}
+                </div>
+                {/volist}
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+{load href="__PLUG__/sortable/Sortable.min.js"/}
+<script>
+    var nestedSortables = [].slice.call(document.querySelectorAll('.sortable'));
+    for (var i = 0; i < nestedSortables.length; i++) {
+        new Sortable(nestedSortables[i], {
+            animation: 150,
+            swapThreshold: 0.65,
+            store: {
+                set: function (sortable) {
+                    var order = sortable.toArray();
+                    $.post('{:url("menuSort")}',{ids: order}, function(res) {
+                        if(res == 1) location.reload();
+                    })
+                }
+            },
+        });
+    }
+    function publishToWx(){
+        layer.confirm("确认发布到微信公众号？",{btn: ['立即发布', '取消'], title: "提示"}, function(){
+            ajaxRequest('{:url("publishMenu")}',{},function(res){
+                if(res.code == 1) {
+                    layer.alert(res.msg);
+                }
+            })
+        });
+    }
+</script>
+{/block}

@@ -1,0 +1,391 @@
+{extend name="layout/base"/}
+{block name="content"}
+{load href="__BKD__/js/dataLoader.js"/}
+<style>
+    .form-input, .form-no-label{
+        width: 75%!important;
+    }
+    .page-content{
+        padding-top: 0;
+    }
+</style>
+<div class="page-title" style="position: fixed; background: white;z-index: 100;padding: 10px;width: 98%;">
+    <h3 class="ui header"> 编辑课时</h3>
+    <div class="page-title-right">
+        <div class="tiny ui right floated buttons">
+<!--            <button type="button" class="ui button " onclick="editKnowledge()">管理知识点</button>-->
+            <button type="button" class="ui teal button " onclick="doSubmit()">提交保存</button>
+        </div>
+    </div>
+</div>
+<div style="padding-top: 70px;">
+    <form class="ui small form" id="section-form">
+        <div class="inline field">
+            <label for="title" class="form-label">
+                <span style="color:red;">*</span> 课时名称
+            </label>
+            <input type="text" id="title" name="title" placeholder="" value="" class="form-input">
+        </div>
+        <div class="inline field">
+            <label class="form-label">分 类</label>
+            <select name="category_id" class="ui tiny form-input dropdowner">
+                <option value="">请选择</option>
+                {volist name="category" id="v"}
+                <option value="{$key}">{$v}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="inline field">
+            <label for="title" class="form-label">
+                重点词汇
+            </label>
+            <select name="words_imp[]" multiple="" class="ui tiny form-input search selection knowledge-list cate1" >
+                <option value="">请选择</option>
+            </select>
+
+        </div>
+        <div class="inline field">
+            <label for="title" class="form-label">
+                重点句型
+            </label>
+            <select name="sentence_imp[]" multiple="" class="ui tiny form-input search selection knowledge-list cate2">
+                <option value="">请选择</option>
+            </select>
+
+        </div>
+        <div class="inline field">
+            <label for="title" class="form-label">
+                附加词汇
+            </label>
+            <select name="words_att[]" multiple="" class="ui tiny form-input search selection knowledge-list cate1">
+                <option value="">请选择</option>
+            </select>
+        </div>
+        <div class="inline field">
+            <label for="title" class="form-label">
+                附加句型
+            </label>
+            <select name="sentence_att[]" multiple="" class="ui tiny form-input search selection knowledge-list cate2">
+                <option value="">请选择</option>
+            </select>
+        </div>
+        <div class="inline field">
+            <label for="title" class="form-label">
+                发音
+            </label>
+            <select name="pronunciation[]" multiple="" class="ui tiny form-input search selection knowledge-list cate3">
+                <option value="">请选择</option>
+            </select>
+        </div>
+
+        <div class="inline field">
+            <label class="form-label">授课目标 </label>
+            <textarea name="target" class="form-input" rows="4"></textarea>
+        </div>
+
+        <div class="inline field">
+            <label class="form-label">授课流程 </label>
+            <textarea name="layout" class="form-input" rows="4"></textarea>
+        </div>
+
+        <div class="inline field">
+            <label class="form-label">其他说明</label>
+            <textarea name="remark" class="form-input" rows="4"></textarea>
+        </div>
+
+        <div class="inline field">
+            <label class="form-label">随堂测验 </label>
+            <div class="form-label-right">
+                <button class="ui tiny label" type="button" onclick="selectTest()">选择试卷</button>
+            </div>
+            <div class="form-no-label">
+                <table class="ui small selectable unstackable table">
+                    <thead>
+                    <tr>
+                        <th width="10%">序号</th>
+                        <th>标题</th>
+                        <th class="right aligned collapsing">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="test-list"></tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="inline field">
+            <label class="form-label">知识点讲解</label>
+            <div class="form-label-right">
+                <button class="ui tiny label" type="button" onclick="selectH5()">选择讲解</button>
+            </div>
+            <div class="form-no-label">
+                <table class="ui small selectable unstackable table">
+                    <thead>
+                    <tr>
+                        <th width="10%">序号</th>
+                        <th>标题</th>
+                        <th class="right aligned collapsing">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="h5-list"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <input type="hidden" name="id" value="">
+        <!--<div style="text-align: center; margin: 30px;">-->
+            <!--<button type="button" onclick="doSubmit()" class="ui teal small button" style="width: 150px;">提 交-->
+            <!--</button>-->
+        <!--</div>-->
+    </form>
+</div>
+
+{/block}
+{block name="script"}
+<script>
+
+    var editingType;
+    var loadTestIds = [];
+    var loadH5Ids = [];
+    var selectedTags = []; // 知识点的id
+    function getJsonData() {
+        return {$data|raw};
+    }
+    var data = getJsonData();
+    $(function(){
+        //
+        // $('.tags-box.ui.dropdown').dropdown({
+        //     allowAdditions: true
+        // });
+
+        loadKnowledgeList(function(res) {
+            knowledgeHtml(res)
+            if(data) {
+                var v;
+                if(data && data.knWordsImp) {
+                    v = [];
+                    for(var i of data.knWordsImp) {v.push(i + '')}
+                    $('select[name="words_imp[]"]').dropdown("set selected", v);
+                }
+                if(data && data.knSentenceImp) {
+                    v = [];
+                    for(var i of data.knSentenceImp) {v.push(i + '')}
+                    $('select[name="sentence_imp[]"]').dropdown("set selected", v);
+                }
+                if(data && data.knWordsAtt) {
+                    v = [];
+                    for(var i of data.knWordsAtt) {v.push(i + '')}
+                    $('select[name="words_att[]"]').dropdown("set selected", v);
+                }
+                if(data && data.knSentenceAtt) {
+                    v = [];
+                    for(var i of data.knSentenceAtt) {v.push(i + '')}
+                    $('select[name="sentence_att[]"]').dropdown("set selected", v);
+                }
+                if(data && data.pronunciation) {
+                    v = [];
+                    for(var i of data.pronunciation) {v.push(i + '')}
+                    $('select[name="pronunciation[]"]').dropdown("set selected", v);
+                }
+            }
+        });
+        if(data) {
+            $('input[name="id"]').val(data.id)
+            $('input[name="title"]').val(data.title)
+            $('textarea[name="target"]').val(data.target)
+            $('textarea[name="layout"]').val(data.layout)
+            $('textarea[name="remark"]').val(data.remark)
+            $('select[name="category_id"]').dropdown("set selected", data.category_id);
+
+            for(var i of data.test) {
+                loadTestIds.push(i);
+            }
+            for(var h of data.h5) {
+                loadH5Ids.push(h);
+            }
+            loadTestList();
+            loadH5List();
+        }
+
+           // function(){
+           // $('.knowledge-list').each(function(i, n){
+           //     var value = $(n).dropdown("get value");
+           //
+           // });
+
+    });
+
+    // 知识点
+    function editKnowledge(obj) {
+        popupPage("编辑知识点", Apis.editKnowledge, '80%', '80%', function() {
+            loadKnowledgeList(function(res) {
+                knowledgeHtml(res)
+            });
+        });
+    }
+    function knowledgeHtml(res) {
+
+        var cate1 = [];
+        var cate2 = [];
+        var cate3 = [];
+        for(var i of res.data) {
+
+            if(i.category.length > 0) {
+                for (var j of i.category) {
+                    if(j.id == 1) {
+                        cate1.push({
+                            name: i.title,
+                            value: i.id,
+                        });
+                    } else if(j.id == 2) {
+                        cate2.push({
+                            name: i.title,
+                            value: i.id,
+                        });
+                    } else if(j.id == 3) {
+                        cate3.push({
+                            name: i.title,
+                            value: i.id,
+                        });
+                    }
+                }
+            }
+        }
+
+        $('.cate1').dropdown({ allowAdditions: true,  values:cate1, onChange: function(value, text, $selectedItem){ attachH5()}, onRemove(Value, Text, $Choice){attachH5()}});
+        $('.cate2').dropdown({ allowAdditions: true,  values:cate2, onChange: function(value, text, $selectedItem){ attachH5()}, onRemove(Value, Text, $Choice){attachH5()}});
+        $('.cate3').dropdown({ allowAdditions: true,  values:cate3, onChange: function(value, text, $selectedItem){ attachH5()}, onRemove(Value, Text, $Choice){attachH5()}});
+    }
+
+    function attachH5(){
+
+        $('.knowledge-list').each(function(i,n){
+            var value = $(n).dropdown('get value');
+            if(value) {
+                selectedTags = JsUtils.unique(selectedTags.concat(value))
+                // console.log(selectedTags);
+                if(selectedTags.length > 0)
+                    ajaxRequest(Apis.loadH5DataByKnowledgeIds, {ids: selectedTags}, function(res) {
+                        if(res.result == 'success'){
+                            h5Html(res.data)
+                        }
+                    });
+            }
+        });
+
+    }
+
+    // 测试题
+    function selectTest() {
+        editingType = 'test';
+        popupPage("选择试卷", Apis.getTestList, '80%', '80%');
+    }
+
+    function testHtml(res) {
+        var html = '';
+        for (var i in res) {
+            html += `<tr>
+                    <td>` + (parseInt(i)+1) + `</td>
+                    <td><a href="javascript:;" onclick="popupPage('预览试卷', '/backend/test/preview?id=${res[i].id}', '90%', '90%')">${res[i].title}</a></td>
+                    <td class="right aligned">
+                        <a style="cursor: pointer" onclick="removeTest(${i})">移除</a>
+                        <input type="hidden" name="test_ids[]" value="${res[i].id}">
+                    </td>
+                    </tr>`
+        }
+        $('#test-list').html(html)
+    }
+    function removeTest(i) {
+        loadTestIds.splice(i, 1);
+        loadTestList()
+    }
+    function loadTestList() {
+        loadTestIds = JsUtils.unique(loadTestIds);
+        if(loadTestIds.length > 0) {
+            ajaxRequest(Apis.loadTestList, {ids: loadTestIds}, function(res) {
+                if(res.result == 'success'){
+                    testHtml(res.data)
+                }
+            });
+        } else {
+            testHtml([])
+        }
+    }
+
+    // h5
+    function selectH5() {
+        editingType = 'h5';
+        popupPage("编辑知识点", Apis.h5List, '80%', '80%');
+    }
+    function loadH5List() {
+        loadH5Ids = JsUtils.unique(loadH5Ids);
+        if(loadH5Ids.length > 0) {
+            ajaxRequest(Apis.loadH5Data, {ids: loadH5Ids}, function(res) {
+                if(res.result == 'success'){
+                    h5Html(res.data)
+                }
+            });
+        } else {
+            h5Html([])
+        }
+    }
+
+    function h5Html(res) {
+        var h5_exist_ids = [];
+        $('input[name="h5_ids[]"]').each(function(i,n){
+            h5_exist_ids.push($(n).val());
+        });
+        var html = '';
+        for (var i in res) {
+            if (!JsUtils.inArray(res[i].id+'', h5_exist_ids )) {
+                html += `<tr data-id="h5_${res[i].id}">
+                    <td>` + (parseInt(i)+1) + `</td>
+                    <td><a href="javascript:;" onclick="popupPage('预览试卷', '/backend/knowledge/h5Preview?id=${res[i].id}', '90%', '90%')">${res[i].title}</a></td>
+                    <td class="right aligned">
+                        <a style="cursor: pointer" onclick="removeH5(${res[i].id})">移除</a>
+                        <input type="hidden" name="h5_ids[]" value="${res[i].id}">
+                    </td>
+                    </tr>`
+            }
+        }
+        if(html!=='') $('#h5-list').append(html)
+    }
+    function removeH5(id) {
+        $(`tr[data-id="h5_${id}"]`).remove();
+    }
+
+    // 处理弹出层返回结果
+    function handleMultiSelect(ids) {
+        switch (editingType) {
+            case 'test':
+                for(var i of ids) {
+                    loadTestIds.push(i);
+                }
+                loadTestList();
+                break;
+            case 'h5':
+                for(var i of ids) {
+                    loadH5Ids.push(i);
+                }
+                loadH5List();
+                break;
+            default:
+        }
+    }
+    function doSubmit() {
+        // tinyMCE.triggerSave();
+        // console.log($('#section-form').serializeArray());return;
+        ajaxRequest('{:url("saveSection")}', $('#section-form').serialize(), function (res) {
+            layer.msg(res.msg, {icon: 1, time: 800}, function (res) {
+                // var index = parent.layer.getFrameIndex(window.name);
+                // layer.close(index);
+                parent.location.href = "{:url('getList')}";
+            });
+        }, 'POST');
+    }
+
+    myKeyBoard.esc(function () {
+        parent.layer.close(parent.layer.getFrameIndex(window.name));
+    });
+</script>
+{/block}

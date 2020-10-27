@@ -1,0 +1,71 @@
+{include file="public/header"/}
+<div id="header-blank" class="show992">
+</div>
+<div id="body" class="trans">
+    <div id="banner" class="relative hide992">
+        <div class="bd over">
+            <div class="bar relative fz0 nowrap">
+                {volist name=":get_ad_list('news_banner')" id="v"}
+                <div class="item relative inline-block text-center fz0 over item-0">
+                    <img src="{$v.image}" alt="" class="max-w100">
+                </div>
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <div id="small-banner" class="relative show992">
+        <div class="bd over">
+            <div class="bar relative fz0 nowrap">
+            </div>
+        </div>
+    </div>
+    <div id="tutorial">
+        <div class="tutorial-support">
+            <div class="wrap clean">
+                {volist name=":get_nav_list_by_pid(19)" id="v"}
+                <div class="line fl middle"></div>
+                <a href="/news/{$v.id}.html"​ class="file ico trans fl middle wow fadeInUp">{$v.name}</a>
+                {/volist}
+            </div>
+        </div>
+        <div class="wrap">
+            <div class="tutorial-list clean">
+                {volist name="list" id="v"}
+                <div class='item wow fadeInUp {$key%2==0? "fl" : "fr"}'>
+                    <div class="date fl">
+                        <div class="year">
+                            {$v.edit_time|strtotime|date='Y'}
+                        </div>
+                        <div class="day">
+                            {$v.edit_time|strtotime|date='m-d'}
+                        </div>
+                    </div>
+                    <div class="info fl">
+                        <div class="name text-over">
+                            <a href="/newsinfo/{$v.id}.html"​ class="trans">
+                                {$v.title}
+                            </a>
+                        </div>
+                        <div class="brief over">
+                            {$v.summary|raw|htmlspecialchars_decode}
+                        </div>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            <div id="turn_page" class="wow fadeInUp" first last>
+                {$list|raw}
+            </div>
+        </div>
+        <div class="blank20">
+        </div>
+        <div class="blank20">
+        </div>
+        <div class="blank20">
+        </div>
+        <div class="blank20">
+        </div>
+    </div>
+    {include file="public/bottom"/}
+</div>
+{include file="public/footer"/}
