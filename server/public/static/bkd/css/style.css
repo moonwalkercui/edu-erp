@@ -335,4 +335,7 @@ a {
   display: inline-block;
   width: 70%;
 }
+.ui.dropdown .menu > .item {
+  font-size: 1em;
+}
 /*# sourceMappingURL=style.css.map */
