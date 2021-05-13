@@ -1,7 +1,7 @@
 ### 演示地址
-http://wz.hzb-it.com/s
+http://erp.hzb-it.com/s
 账号 admin
-密码 wangzhen2021
+密码 111111
 
 ### 说明
 
@@ -14,3 +14,7 @@ http://wz.hzb-it.com/s
 进入教师端的方法：公众号底部菜单-教师端（网址为：http://域名/wxauth.html?state=studentcenter）
 
 员工都可以登录管理后端，但是可以给每个员工设置角色；每个角色又可以设置多种权限。
+
+## 公众号配置说明
+
+服务器配置URL是：http://域名/wx
