@@ -1,7 +1,7 @@
 ### 演示地址
-http://wz.hzb-it.com/s
+http://erp.hzb-it.com/s
 账号 admin
-密码 wangzhen2021
+密码 111111
 
 ### 说明
 
