@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生中心</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+        }
+        .top-nav {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            padding: 10px;
+
+        }
+        .top-container {
+            margin: 0 auto;
+            max-width: 700px;
+            display: flex;
+            align-items: center;
+        }
+        .top-container .logo {flex:1;}
+        .top-container .act {flex:1; text-align:right; }
+    </style>
+    <script type="text/javascript" src="/static/plug/jquery.min.js"></script>
+</head>
+<body>
+<div class="top-nav">
+    <div class="top-container">
+        <div class="logo">
+            <a href="/"​>
+                <img src="{:db_config('site_logo')}" alt="" style="height: 50px">
+            </a>
+        </div>
+        <div class="act">
+            <a href="/" style="text-decoration: none; color: #0E566C;" ​> 返回首页  </a>
+        </div>
+    </div>
+</div>
+<div class="top-container" id="main-box">
+    <iframe id="iframe" src="/studentcenter/#/" frameborder="0" width="100%" height="100%"></iframe>
+</div>
+<script>
+    $(function(){
+        var mainheight = $(document).height()-100;
+        $(window).resize(function(){
+            // var mainwidth = $("body").width()-187;
+            mainheight = $(document).height()-100;
+            // $("#main-box").width(mainwidth);
+            $("#main-box").height(mainheight);
+        });
+        $('#main-box').height(mainheight);
+    });
+
+</script>
+</body>
+</html>

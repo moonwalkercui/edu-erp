@@ -25,7 +25,6 @@ class Base extends BaseController
         if (true !== $result)
             $this->error($result);
     }
-
 //    public function initialize()
 //    {
 //        $this->assign([

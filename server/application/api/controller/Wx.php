@@ -20,7 +20,7 @@ class Wx extends BaseController
     function entry()
     {
         try {
-            $wx = WxService::receiveEvent(); // 微信服务器配置验证用，只用一次 然后注释掉即可
+            $wx = WxService::receiveEvent();
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return;
@@ -66,34 +66,54 @@ class Wx extends BaseController
                 $this->storeTeacherSession($access['staff_id']);
                 $front_url = request()->domain() . '/staffcenter/#/pages/course/calendar';
                 break;
-            case 'offduty':
+            case 'offduty': // 员工请款
                 $this->storeTeacherSession($access['staff_id']);
-                $front_url = request()->domain() . '/staffcenter/#/pages/offduty/apply'; // 员工请款
+                $front_url = request()->domain() . '/staffcenter/#/pages/offduty/apply';
                 break;
-            case 'payout':
+            case 'payout': // 员工请款
                 $this->storeTeacherSession($access['staff_id']);
-                $front_url = request()->domain() . '/staffcenter/#/pages/payout/apply'; // 员工请款
+                $front_url = request()->domain() . '/staffcenter/#/pages/payout/apply';
                 break;
-            case 'sign':
+            case 'sign':   // 签到 http://域名/wxauth.html?state=sign
                 $this->storeTeacherSession($access['staff_id']);
-                $front_url = request()->domain() . '/staffcenter/#/pages/index/sign';  // 签到菜单路径： http://erp.hzb-it.com/wxauth.html?state=sign
+                $front_url = request()->domain() . '/staffcenter/#/pages/index/sign';
                 break;
-            case 'staffcenter':
+
+            case 'staffcenter':  // 会员中心 http://域名/wxauth.html?state=sign
                 $this->storeTeacherSession($access['staff_id']);
-                $front_url = request()->domain() . '/staffcenter/#/'; // 会员中心菜单路径 http://erp.hzb-it.com/wxauth.html?state=sign
+                $front_url = request()->domain() . '/staffcenter/#/';
                 break;
-            case 'studentcenter':
+
+            case 'studentcenter':  // 学生中心 http://域名/wxauth.html?state=studentcenter
                 $this->storeStudentSession($access['student_id']);
-                $front_url = request()->domain() . '/studentcenter/#/'; // 学生中心 http://erp.hzb-it.com/wxauth.html?state=studentcenter
+                $front_url = request()->domain() . '/studentcenter/#/';
                 break;
+
+            case 'scanlogin': // 学员pc端扫码登录  http://域名/wxauth.html?state=scanlogin
+                $this->handleScanLogin($access['id'], $arr[1]);
+                $this->storeStudentSession($access['student_id']);
+                $front_url = request()->domain() . '/studentcenter/#/';
+                break;
+
+            case 'classSign':  // 签到 http://域名/wxauth.html?state=classSign_88
+                $this->storeStudentSession($access['student_id']);
+                $front_url = request()->domain() . '/studentcenter/#/pages/sign/index?id='.$arr[1];
+                break;
+
             default:
-                $front_url = request()->domain() ;
+                $front_url = request()->domain();
         }
         header('location:' . $front_url);
     }
+
+    private function handleScanLogin($access_id, $login_code)
+    {
+        WxAccess::where('id', $access_id)->update(compact('login_code'));
+    }
+
     private function storeTeacherSession($teacher_id)
     {
-        if($teacher_id) {
+        if ($teacher_id) {
             session("login_id", $teacher_id);
             session("login_name", Staff::where('id', $teacher_id)->value('name'));
         } else {
@@ -101,9 +121,10 @@ class Wx extends BaseController
             session("login_name", null);
         }
     }
+
     private function storeStudentSession($student_id)
     {
-        if($student_id) {
+        if ($student_id) {
             session("student_id", $student_id);
             session("student_name", Student::where('id', $student_id)->value('name'));
         }
@@ -145,8 +166,8 @@ class Wx extends BaseController
             case "CLICK":
                 $key = $wx->getEventClickKey();
                 $keys = explode("_", $key);
-                if(count($keys) == 3) {
-                    if($keys[0] == 'menu' && $keys[1] == 'text') {
+                if (count($keys) == 3) {
+                    if ($keys[0] == 'menu' && $keys[1] == 'text') {
                         $wx->text(WxMenu::getContent($keys[2]))->reply();
                     }
                 }
@@ -161,11 +182,12 @@ class Wx extends BaseController
                 $wx->text("欢迎!")->reply();
         }
     }
+
     // 处理点击事件
     private function handleClick(Receive $wx, $key)
     {
-        Log::notice("微信key: ". $key);
-        Log::notice("全部参数: ". var_export(input('')));
+        Log::notice("微信key: " . $key);
+        Log::notice("全部参数: " . var_export(input('')));
     }
 
     private function helpText()
@@ -175,7 +197,19 @@ class Wx extends BaseController
 //        return \app\common\model\Config::getValue('subscribe_reply');
     }
 
-
+//    function createMenu()
+//    {
+//        $wx = WxService::menu();
+//        $res = $wx->create([
+//            "button" =>
+//                [
+//                    ['type' => 'view', 'name' => '会员卡中心', 'url' => 'http://api..com/wxauth'],
+//                    ['type' => 'view', 'name' => '用卡记录', 'url' => 'http://api..com/vipcenter/index.html#/pages/index/history'],
+//                ]
+//        ]);
+//        dump($res);
+////        array(2) { ["errcode"] => int(0) ["errmsg"] => string(2) "ok"}
+//    }
     // 获取js-sdk参数
     function jsSdkConfig()
     {

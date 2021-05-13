@@ -16,8 +16,6 @@ class Tencent extends Base
     function vodUpload()
     {
         if(request()->isPost()) {
-            return $this->errorJson('演示原因已关闭');
-
             $data = input('');
             $insert['title'] = $data['title'];
             $insert['cover_url'] = $data['videoUrl'];
@@ -35,7 +33,6 @@ class Tencent extends Base
     function vodList()
     {
         if(request()->isPost()) {
-            return $this->errorJson('演示原因已关闭');
             try{
                 echo TencentCloud::vodList(input('page', 1));
             } catch (Exception $e) {
@@ -48,7 +45,6 @@ class Tencent extends Base
     }
     function vodDel()
     {
-        return $this->errorJson('演示原因已关闭');
         $file_id = input('file_id');
         try{
             TencentCloud::vodDelMedia($file_id);

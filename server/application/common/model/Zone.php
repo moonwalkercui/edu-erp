@@ -5,7 +5,6 @@ class Zone extends BaseModel
 {
     use BelongsToStudent,BelongsToClazz;
     protected $table = 'zone';
-
     // 评论
     function comments()
     {
@@ -32,9 +31,9 @@ class Zone extends BaseModel
             }
         });
     }
-    static function addOne($student_id, $task_id, $type, $content, $attach)
+    static function addOne($student_id, $task_id, $content, $attach, $voice)
     {
-        $data = compact('student_id','type','content','attach','task_id');
+        $data = compact('student_id','voice','content','attach','task_id');
         $data['status'] = 1;
         $data['clazz_id'] = Student::where('id', $student_id)->value('clazz_id');
         $data['add_time'] = now();

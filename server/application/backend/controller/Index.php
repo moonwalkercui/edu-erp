@@ -3,11 +3,15 @@
 namespace app\backend\controller;
 
 use app\backend\model\AuthNode;
+use app\backend\model\CourseModel;
 use app\common\model\Attendance;
+use app\common\model\Clazz;
 use app\common\model\Payout;
 use app\common\model\Question;
 use app\common\model\Region;
 use app\common\model\StaffOffduty;
+use app\common\model\Zone;
+use app\common\model\ZoneTask;
 use think\facade\Config;
 
 class Index extends Base
@@ -21,29 +25,6 @@ class Index extends Base
 
     public function dashboard()
     {
-        // 课表
-        // 周里的日期
-        $week_days = getWeekDays();
-        $the_monday = $week_days[1];
-        $the_sunday = $week_days[7];
-
-        $where[] = ['date', 'between', [$the_monday, $the_sunday]];
-        $list = \app\common\model\Course::with('clazz,staff,times,section,assistant')->where($where)->order('times_id')->select();
-        $data = [];
-        $times = [];
-        foreach ($list as $v) {
-            foreach ($week_days as $w) {
-                if ($v->staff && $w == $v->date) {
-                    $data[$v->times_id][$w][] = $v;
-                    $times[$v->times_id] = $v->times->name;
-                }
-            }
-        }
-        $this->assign('times', $times);
-        $this->assign('data', $data);
-        $this->assign('week_days', $week_days);
-        // 课表 end
-
         $serverInfo['系统名称'] = Config::get('base.app_name');
         $serverInfo['系统版本'] = Config::get('base.app_version');
         $serverInfo['服务器时间'] = date('Y年m月d日 H时i分');
@@ -55,9 +36,9 @@ class Index extends Base
         $this->assign('serverInfo', $serverInfo);
         $this->assign('count', [
             '课时数' => \app\common\model\Section::count(),
-            '考试数' => \app\common\model\Test::count(),
-            '试题数' => Question::count(),
-            '职员数' => \app\common\model\Staff::count(),
+            '练习数' => ZoneTask::count(),
+            '点评数' => Zone::where('content', '<>', '')->count(),
+            '学员数' => \app\common\model\Student::count(),
         ]);
 //        $alarm2 = Withdrawal::where('status=0')->count();
 
@@ -132,81 +113,50 @@ class Index extends Base
 //        dump($year_weeks);
     }
 
-    // 定时每分钟的扫描执行任务：http://mlwssc.top/cronjobs/handle_remind
-    public function cronJobs($action)
+    // 定时每分钟的扫描执行任务：
+    public function cronJobs()
     {
-        switch ($action) {
-            case "handle_remind" :
-                echo 'get it';
+        $action = input('act');
+//        switch ($action) {
+//            case "per_day" :
+//                CourseModel::generateTrainingNotice();
+//                break;
+//            default:
+//                exception("非法请求1");
+//        }
 
-                $remind_first = function () {
-                    $limit_sec = 60; // 首次订单接单失败的提醒的秒数
-                    $orders = OrderModel::whereTime('add_time', '<', date('Y-m-d H:i:s', time() - $limit_sec))
-                        ->where('status', 1)
-                        ->where('remind_stage', 0)
-                        ->with('user')
-                        ->select();
-                    if (empty($orders)) return;
-                    // 发送打印通知接单
-                    $ids = [];
-                    foreach ($orders as $order) {
-                        $ids[] = $order->id;
-                        \app\common\model\Order::printerRemindOrderFirst($order);
-                    }
-                    if (empty($ids)) {
-                        \app\common\model\Order::where('id', 'in', $ids)->update(['remind_stage' => 1]);
-                        echo '第1次提醒订单Ids:' . implode(',', $ids);
-                        echo '\n';
-                    }
-                };
-                $remind_second = function () {
-                    $limit_sec = 60 * 3; // 首次订单接单失败的提醒的秒数
-                    $orders = OrderModel::whereTime('add_time', '<', date('Y-m-d H:i:s', time() - $limit_sec))
-                        ->where('status', 1)
-                        ->where('remind_stage', 1)
-                        ->with('user')
-                        ->select();
-                    if (empty($orders)) return;
-                    // 发送打印通知接单
-                    $ids = [];
-                    foreach ($orders as $order) {
-                        $ids[] = $order->id;
-                        \app\common\model\Order::printerRemindOrderSecond($order);
-                    }
-                    if (empty($ids)) {
-                        \app\common\model\Order::where('id', 'in', $ids)->update(['remind_stage' => 2]);
-                        echo '第2次提醒订单Ids:' . implode(',', $ids);
-                        echo '\n';
-                    }
-                };
+    }
 
-                // 不接单自动取消订单
-                $expired_handler = function () {
-                    $sec = sys_config('order_cancel_limit');
-                    $limit_sec = 60 * intval($sec);
-                    if ($limit_sec) {
-                        $order_ids = OrderModel::whereTime('add_time', '<', date('Y-m-d H:i:s', time() - $limit_sec))
-                            ->whereTime('add_time', '>', date('Y-m-d H:i:s', time() - 1200))
-                            ->column('id');
-                        if (empty($order_ids)) return;
-                        OrderModel::where('id', 'in', $order_ids)
-                            ->where('status', 1)
-                            ->update(['status' => -1, 'cancel_time' => now()]);
-                        OrderModel::handleSaleNumber(OrderItems::where('order_id', 'in', $order_ids)->select(), true);
-                        echo '超时取消订单Ids:' . implode(',', $order_ids);
-                        echo '\n';
-                    }
-                };
+    public function importData()
+    {
+        $data = [
 
-                $remind_first();
-                $remind_second();
-                $expired_handler();
+        ];
+        if(empty($data)) return;
 
-                break;
-
-            default:
-                exception("非法请求");
+        $class_names = array_column($data, 'class_name');
+        $insert_class = [];
+        foreach (array_unique($class_names) as $cn) {
+            if (Clazz::where('name', $cn)->find() == null)
+                $insert_class[] = [
+                    'name' => $cn
+                ];
         }
+        if (!empty($insert_class)) Clazz::insertAll($insert_class);
 
+        $insert = [];
+        foreach ($data as $v) {
+            $clazz_id = Clazz::where('name', $v['class_name'])->value('id');
+            if(null == \app\common\model\Student::where('name', $v['name'])->where('clazz_id', $clazz_id)->find()) {
+                $insert[] = [
+                    'clazz_id' => $clazz_id,
+                    'name' => $v['name'],
+                    'gender' => $v['gender'],
+                    'password' => 123456,
+                ];
+            }
+
+        }
+        if (!empty($insert)) \app\common\model\Student::insertAll($insert);
     }
 }

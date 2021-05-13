@@ -12,17 +12,12 @@ class Base extends BaseController
     protected function checkLogin($redirect_back = false)
     {
         if(input('debug') == 1) {
-            session('student_id', 10003);
+            session('student_id', 1);
             session('wx_access_id',15);
         }
-
         if(session('student_id') == false) {
-            if($redirect_back) {
-                session('redirect_back_url2', request()->url());
-            }
             return false;
         }
         return true;
     }
-
 }

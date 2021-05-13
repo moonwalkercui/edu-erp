@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>扫码登录</title>
+    <script type="text/javascript" src="/static/plug/jquery.min.js"></script>
+</head>
+<body>
+
+<div>
+    <div style='text-align: center'>
+        <img src='{$img_data}' style='margin: 20px auto;'>
+        <p>请用微信扫描登录</p>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        setInterval(function(){
+            $.post('#', {code: '{$code}'}, function(res) {
+                if(res.msg == 'OK') {
+                    location.href = '/studentcenter/#/';
+                }
+            })
+        }, 2500);
+    });
+    setTimeout(function(){
+        parent.location.href = '/';
+    }, 300000)
+</script>
+</body>
+</html>

@@ -10,6 +10,7 @@ use app\common\model\ClazzEvent;
 use app\common\model\CourseSchedule;
 use app\common\model\CourseTimes;
 use app\common\model\Grade;
+use app\common\model\ZoneTask;
 
 class Course extends Base
 {
@@ -39,7 +40,7 @@ class Course extends Base
         $this->assign('data', [
             'title' => '课程表',
             'collection' => CourseModel::where($where)->order($order)->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['ID', '班级', '日期', '课次', '授课老师','助教', '课时', '状态'], // '年级',
+            'thead' => ['ID', '班级', '日期', '课次', '授课老师','助教','章节', '状态'], // '课时','年级',
             'select_type' => 2,
             'select_actions' => [
                 ['title' => '批量删除', 'onclick' => 'delMulti', 'url' => url('mulDelCourse'), 'class_name'=>'orange'],
@@ -81,7 +82,7 @@ class Course extends Base
                 ['type' => 'select', 'name' => 'clazz_id', 'options' => Clazz::column('name', 'id'), 'placeholder' => '选择班级'],
                 ['type' => 'select', 'name' => 'staff_id', 'options' => $staffs, 'placeholder' => '选择老师'],
                 ['type' => 'select', 'name' => 'assistant_id', 'options' => $staffs, 'placeholder' => '选择助教'],
-                ['type' => 'select', 'name' => 'section_id', 'options' => \app\common\model\Section::column('title', 'id'), 'placeholder' => '选择课时'],
+                ['type' => 'select', 'name' => 'section_id', 'options' => \app\common\model\Section::column('title', 'id'), 'placeholder' => '选择章节'],
                 ['type' => 'date', 'name' => 'start_date', 'placeholder' => '开始日期'],
                 ['type' => 'date', 'name' => 'end_date', 'placeholder' => '结束日期'],
             ],
@@ -400,7 +401,7 @@ class Course extends Base
                 unset($v['key']);
             }
             $res = \app\common\model\Course::insertAll($items);
-            $res>0 ? $this->success("成功生成{$res}节课, 别忘记课时内容哦") : $this->error('生成失败');
+            $res>0 ? $this->success("成功生成{$res}节课, 别忘记设置授课章节哦") : $this->error('生成失败');
 
         } else {
             $data['clazz'] = Clazz::order('id desc')->field('id,name')->select();

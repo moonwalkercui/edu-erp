@@ -79,7 +79,7 @@ class Index extends Base
         $date = ($d = input('date')) ? $d : date('Y-m-d');
         $where[] = ['date','=', $date ];
 
-        $model = Course::with('clazz,staff,times,section')->where($where);
+        $model = Course::with('clazz,staff,times')->where($where);
 
         if(input('only_me') == 1) {
             $model->where(function ($query) use($staff_id) {

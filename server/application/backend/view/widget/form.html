@@ -53,7 +53,7 @@
         {/volist}
         {/case}
         {case value="select"}
-        <select name="{$item.name}" class="ui small dropdown form-input dropdowner">
+        <select name="{$item.name}" class="ui small dropdown form-input dropdowner search">
             <option value="">请选择</option>
             {volist name="item.options" id="o"}
             <option value="{$key}" {if condition="isset($item.value) && ($key == $item.value)" }selected{/if}>{$o}</option>
@@ -253,7 +253,7 @@
         {/case}
         {case value="editor"}
         <div class="form-input" style="display: inline-block;">
-            <textarea name="{$item.name}" id="editor" >{$item.value}</textarea>
+            <textarea name="{$item.name}" class="editor" >{$item.value}</textarea>
         </div>
         {/case}
         {default /}
@@ -363,9 +363,9 @@
 
     $(function () {
         "use strict";
-        if ($("#editor").length > 0) {
+        if ($("textarea.editor").length > 0) {
             tinymce.init({
-                selector: "textarea#editor",
+                selector: "textarea.editor",
                 menubar: false,
                 statusbar: false,
                 // theme: "modern",
@@ -375,7 +375,7 @@
                 ],
                 language: 'zh_CN',
                 toolbar_items_size: 'small',
-                toolbar: "fullscreen imageUpload | undo redo | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright | fontsizeselect | table media link  | inserttime preview ",
+                toolbar: "imageUpload media preview fullscreen | undo redo | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright | fontsizeselect | table link inserttime ",
                 setup: function (ed) {
                   // 定义按钮，
                     ed.ui.registry.addButton('imageUpload', {
@@ -386,7 +386,19 @@
                           divEditorBtnFunc(ed);
                         }
                   })
-                }
+                },
+                file_picker_callback: function (callback, value, meta) {
+                    editor_file_picker_callback(callback, value, meta);
+                },
+                // video_template_callback: function(data) {
+                //     return '<video width="' + data.width + '" height="' + data.height
+                //         + '"' + (data.poster ? ' style="width:100%" poster="' + data.poster + '"' : '')
+                //         + ' controls="controls">\n' + '<source src="' + data.source1 + '"'
+                //         + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n'
+                //         + (data.source2 ? '<source src="' + data.source2 + '"'
+                //             + (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '')
+                //         + '</video>';
+                // }
             });
         }
     });

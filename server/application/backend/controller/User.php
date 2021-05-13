@@ -178,7 +178,7 @@ class User extends Base
                 'login_num','status'],
             'buttons' => [
                 ['title'=>'修改', 'onclick' => 'openBigWin', 'url'=> url('auth/newadm')],
-//                ['title'=>'改密码','url'=> url('auth/changePw'),'onclick'=>'handlePrompt'],
+                ['title'=>'改密码','url'=> url('auth/changePw'),'onclick'=>'handlePrompt'],
             ],
             'mbuttons' => [
                 ['title'=>'添加账号', 'onclick' => 'openBigWin','url'=> url('auth/newAdm')],

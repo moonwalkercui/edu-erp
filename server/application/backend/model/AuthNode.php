@@ -26,7 +26,7 @@ class AuthNode extends Model {
     }
     public static function getAll()
     {
-        return self::order('sort')->where('is_menu',1)->select(); // ->cache('system_menu') todo
+        return self::order('sort')->where('is_menu = 1')->select(); // ->cache('system_menu') todo
     }
     public static function getNodeTree(){
         $n_list = self::getNodes();

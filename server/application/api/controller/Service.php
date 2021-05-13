@@ -48,7 +48,7 @@ class Service extends BaseController
         $info = $file->move('.' .  $upload_dir);
         if ($info) {
             $url = $upload_dir . DIRECTORY_SEPARATOR . $info->getSaveName();
-            return json(['location' => $url]);
+            return json(['location' => add_image_prefix($url)]);
         } else {
             echo $file->getError();
         }
@@ -60,7 +60,7 @@ class Service extends BaseController
         $info = $file->move('.' .  $upload_dir);
         if ($info) {
             $url = $upload_dir . DIRECTORY_SEPARATOR . $info->getSaveName();
-            return json(['location' => $url]);
+            return json(['location' => add_image_prefix($url) ]);
         } else {
             echo $file->getError();
         }

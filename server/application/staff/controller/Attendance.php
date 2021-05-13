@@ -147,6 +147,7 @@ class Attendance extends Base
         $data = OffdutyType::column('name');
         return $this->dataJson($data);
     }
+
     function offdutyApply()
     {
         if( $this->checkLogin() == false ) return $this->errorJson('未登录',[],2);

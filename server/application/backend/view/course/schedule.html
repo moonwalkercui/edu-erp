@@ -1,6 +1,9 @@
 {extend name="layout/base"/}
 {block name="content"}
-<div class="page-content">
+<div >
+    <div class="page-title">
+        <h3 class="ui header">排 课</h3>
+    </div>
     <div class="ui tiny message">
         排课可以批量生成课程；周循环数是值每隔多少周循环一次。
     </div>
@@ -154,7 +157,7 @@
                     ,yes: function(index){
                         // closeCurrentWin();
                         // parent.location.reload();
-                        parent.location.href = '{:url("getList")}'
+                        location.href = '{:url("getList")}'
                     }
                 });
             }

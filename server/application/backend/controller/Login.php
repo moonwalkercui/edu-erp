@@ -10,6 +10,8 @@ class Login extends Base
 {
     public function loginform()
     {
+
+//        echo md500('wangzhen2021');
         return $this->fetch('index');
     }
 

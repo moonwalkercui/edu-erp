@@ -61,7 +61,7 @@ class Staff extends Base
                 }, 'login_num', 'login_time', 'ip', 'status_text'],
             'buttons' => [
                 ['title' => '修改', 'onclick' => 'openBigWin', 'url' => url('auth/newadm'), 'height' => 600,'permission_id' => 32],
-//                ['title' => '改密码', 'url' => url('auth/changePw') , 'onclick' => 'handlePrompt','permission_id' => 34],
+                ['title' => '改密码', 'url' => url('auth/changePw') , 'onclick' => 'handlePrompt','permission_id' => 34],
                 ['title' => '管辖人员', 'url' =>url('manageStaff'),'permission_id' => 152],
             ],
             'mbuttons' => [

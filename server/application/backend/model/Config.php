@@ -46,6 +46,7 @@ class Config extends \app\common\model\Config
     ];
     public function makeFromData($default_value = [], $label = 'system')
     {
+
         return self::mergeDefaultFormData(self::$maps[$label]['list'], $default_value);
     }
 }

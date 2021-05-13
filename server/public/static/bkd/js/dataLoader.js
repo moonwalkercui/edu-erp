@@ -1,4 +1,4 @@
-const ApiBaseUrl = window.location.protocol +'//'+window.location.host;
+const ApiBaseUrl = 'http://sj.xinyangedu.com';
 const Apis = {
     getKnowledgeList : ApiBaseUrl + '/backend/knowledge/loadData.html',
     editKnowledge : ApiBaseUrl + '/backend/knowledge/getList.html',

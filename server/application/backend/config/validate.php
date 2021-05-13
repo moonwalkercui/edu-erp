@@ -41,7 +41,7 @@ return [
     ],
     'student_saving' => [
         'name|姓名' => 'require',
-        'mobile|手机号' => 'require',
+//        'mobile|手机号' => 'require',
 //        'grade_id|年级' => 'require',
         'clazz_id|班级' => 'require',
     ],
@@ -54,8 +54,13 @@ return [
         'clazz_id|班级' => 'require',
     ],
     'clazz_saving' => [
-        'name|名称' => 'require',
+        'name|名称' => 'require|unique:clazz',
 //        'grade_id|年级' => 'require',
+    ],
+    'clazz_notice' => [
+        'title|标题' => 'require',
+        'clazz_id|班级' => 'require',
+        'content|内容' => 'require',
     ],
     'zone_task_saving' => [
         'content|内容' => 'require',
@@ -124,6 +129,10 @@ return [
     'course_section_saving' => [
         'title|课时名' => 'require',
         'course_id' => 'require',
+    ],
+    'section_saving' => [
+        'title|课时名' => 'require',
+        'remark|课时内容' => 'require',
     ],
     'course_section_vid' => [
         'video_id|视频' => 'require',

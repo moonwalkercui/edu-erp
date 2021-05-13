@@ -36,7 +36,7 @@ class StudentModel extends \app\common\model\Student
                 'type' => 'input',
                 'name' => 'mobile',
                 'label' => '手机号',
-                'require' => true
+//                'require' => true
             ],
 //            [
 //                'type' => 'image',

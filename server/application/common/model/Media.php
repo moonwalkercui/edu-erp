@@ -14,6 +14,10 @@ class Media extends BaseModel
     {
         return $this->belongsTo(Staff::class, 'editor_id');
     }
+    function likes()
+    {
+        return $this->hasMany(MediaLike::class, 'media_id');
+    }
 //    function getVideoUrlAttr($value, $data)
 //    {
 //        return $value ? explode(',', $value) : '';

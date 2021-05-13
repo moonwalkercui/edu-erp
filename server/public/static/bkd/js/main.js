@@ -356,55 +356,106 @@ function editorInit(selecter) {
         // images_upload_base_path: ApiBaseUrl,
         // file_picker_types: 'file image media',
         file_picker_callback: function (callback, value, meta) {
-            //文件分类
-            var filetype = '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
-            //后端接收上传文件的地址
-            var upurl = '/demo/upfile.php';
-            //为不同插件指定文件类型及后端地址
-            switch (meta.filetype) {
-                case 'image':
-                    filetype = '.jpg, .jpeg, .png, .gif';
-                    upurl = '/api/service/editorUpImg';
-                    break;
-                case 'media':
-                    filetype = '.mp3, .mp4';
-                    upurl = '/api/service/editorUpMedia';
-                    break;
-                // case 'file':
-                default:
-            }
-            //模拟出一个input用于添加本地文件
-            var input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', filetype);
-            input.click();
-            input.onchange = function () {
-                var file = this.files[0];
-
-                var xhr, formData;
-                console.log(file.name);
-                xhr = new XMLHttpRequest();
-                xhr.withCredentials = false;
-                xhr.open('POST', upurl);
-                xhr.onload = function () {
-                    var json;
-                    if (xhr.status != 200) {
-                        failure('HTTP Error: ' + xhr.status);
-                        return;
-                    }
-                    json = JSON.parse(xhr.responseText);
-                    if (!json || typeof json.location != 'string') {
-                        failure('Invalid JSON: ' + xhr.responseText);
-                        return;
-                    }
-                    callback(json.location);
-                };
-                formData = new FormData();
-                formData.append('file', file, file.name);
-                xhr.send(formData);
-            }
+            editor_file_picker_callback(callback, value, meta);
+            // //文件分类
+            // var filetype = '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
+            // //后端接收上传文件的地址
+            // var upurl = '/demo/upfile.php';
+            // //为不同插件指定文件类型及后端地址
+            // switch (meta.filetype) {
+            //     case 'image':
+            //         filetype = '.jpg, .jpeg, .png, .gif';
+            //         upurl = '/api/service/editorUpImg';
+            //         break;
+            //     case 'media':
+            //         filetype = '.mp3, .mp4';
+            //         upurl = '/api/service/editorUpMedia';
+            //         break;
+            //     // case 'file':
+            //     default:
+            // }
+            // //模拟出一个input用于添加本地文件
+            // var input = document.createElement('input');
+            // input.setAttribute('type', 'file');
+            // input.setAttribute('accept', filetype);
+            // input.click();
+            // input.onchange = function () {
+            //     var file = this.files[0];
+            //
+            //     var xhr, formData;
+            //     console.log(file.name);
+            //     xhr = new XMLHttpRequest();
+            //     xhr.withCredentials = false;
+            //     xhr.open('POST', upurl);
+            //     xhr.onload = function () {
+            //         var json;
+            //         if (xhr.status != 200) {
+            //             failure('HTTP Error: ' + xhr.status);
+            //             return;
+            //         }
+            //         json = JSON.parse(xhr.responseText);
+            //         if (!json || typeof json.location != 'string') {
+            //             failure('Invalid JSON: ' + xhr.responseText);
+            //             return;
+            //         }
+            //         callback(json.location);
+            //     };
+            //     formData = new FormData();
+            //     formData.append('file', file, file.name);
+            //     xhr.send(formData);
+            // }
         }
     });
+}
+
+function editor_file_picker_callback(callback, value, meta) {
+    //文件分类
+    var filetype = '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
+    //后端接收上传文件的地址
+    var upurl = '/demo/upfile.php';
+    //为不同插件指定文件类型及后端地址
+    switch (meta.filetype) {
+        case 'image':
+            filetype = '.jpg, .jpeg, .png, .gif';
+            upurl = '/api/service/editorUpImg';
+            break;
+        case 'media':
+            filetype = '.mp3, .mp4';
+            upurl = '/api/service/editorUpMedia';
+            break;
+        // case 'file':
+        default:
+    }
+    //模拟出一个input用于添加本地文件
+    var input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', filetype);
+    input.click();
+    input.onchange = function () {
+        var file = this.files[0];
+
+        var xhr, formData;
+        // console.log(file.name);
+        xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        xhr.open('POST', upurl);
+        xhr.onload = function () {
+            var json;
+            if (xhr.status != 200) {
+                failure('HTTP Error: ' + xhr.status);
+                return;
+            }
+            json = JSON.parse(xhr.responseText);
+            if (!json || typeof json.location != 'string') {
+                failure('Invalid JSON: ' + xhr.responseText);
+                return;
+            }
+            callback(json.location);
+        };
+        formData = new FormData();
+        formData.append('file', file, file.name);
+        xhr.send(formData);
+    }
 }
 
 function closeCurrentWin() {

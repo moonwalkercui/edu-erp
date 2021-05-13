@@ -3,12 +3,17 @@
 namespace app\backend\controller;
 
 use app\backend\model\ClazzModel;
+use app\backend\model\ClazzNoticeModel;
+use app\backend\model\ClazzSignModel;
 use app\backend\model\MediaModel;
 use app\backend\model\StudentModel;
 use app\backend\model\ZoneModel;
 use app\backend\model\ZoneTaskModel;
+use app\common\model\Attendance;
 use app\common\model\Clazz;
 use app\common\model\ClazzEvent;
+use app\common\model\ClazzNotice;
+use app\common\model\ClazzSign;
 use app\common\model\Grade;
 use app\common\model\Media;
 use app\common\model\Question;
@@ -68,6 +73,7 @@ class Student extends Base
                 ['title' => '编辑', 'onclick' => 'openBigWin', 'url' => url('saveStudent'),'permission_id' => 159],
                 ['title' => '绑定微信', 'url' => url('bindWechat')],
                 ['title' => '删除', 'onclick' => 'delOne', 'url' => url('deleteStudent'),'permission_id' => 160],
+//                ['title' => '改密码', 'url' => url('changePw') , 'onclick' => 'handlePrompt','permission_id' => 159],
             ],
             'mbuttons' => [
                 ['title' => '添加账号', 'onclick' => 'openBigWin', 'url' => url('saveStudent'),'permission_id' => 159],
@@ -83,6 +89,15 @@ class Student extends Base
         return $this->fetch('public/table_builder');
     }
 
+    public function changePw()
+    {
+        $id = input('post.id');
+        $pw = input('post.value');
+        if(!$pw || strlen($pw) <= 4) $this->error('密码须大于4位');
+        $res = \app\common\model\Student::where('id', $id)->update(['password' => $pw]);
+        if($res) 				$this->success('密码修改成功');
+        else 					$this->error('密码修改失败！');
+    }
     public function saveStudent()
     {
         if (request()->isPost()) {
@@ -123,31 +138,46 @@ class Student extends Base
         $this->assign('data', [
             'title' => '班级列表',
             'collection' => Clazz::where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['ID', '名称', '负责人'], // '年级',
-            'fields' => ['id', 'name',
+            'thead' => ['ID','名称', '开始日期','结束日期','负责人','加入密码'], // '年级',
+            'fields' => ['id','name','start_date', 'end_date',
 //                function ($row) {
 //                    return $row->grade->name ?? '';
 //                },
                 function ($row) {
                     $staffs = \app\common\model\Staff::where('id', 'in', $row['staff_in_charge'])->column('name');
                     echo implode(', ', $staffs);
-                },
+                }, 'password'
             ],
             'buttons' => [
                 ['title' => '编辑', 'onclick' => 'openBigWin', 'url' => url('saveClazz'),'permission_id' => 161],
                 ['title' => '删除', 'onclick' => 'delOne', 'url' => url('deleteClazz'),'permission_id' => 162],
+                ['title' => '签到二维码', 'onclick' => 'openWin', 'url' => url('signQrcode')],
             ],
             'mbuttons' => [
-                ['title' => '添加账号', 'onclick' => 'openBigWin', 'url' => url('saveClazz'),'permission_id' => 161],
+                ['title' => '添加班级', 'onclick' => 'openBigWin', 'url' => url('saveClazz'),'permission_id' => 161],
             ],
         ]);
         return $this->fetch('public/table_builder');
     }
-
+    public function signQrcode()
+    {
+        echo "<img src='" . makeQRcode(SCHEME_DOMAIN . "/wxauth.html?state=classSign_".input('id'), 14) . "' />";
+    }
     public function saveClazz()
     {
         if (request()->isPost()) {
             $data = input('post.');
+
+            if($data['start_date'] == false)   $this->error('缺少开始日期');
+            if($data['end_date'] == false)   $this->error('缺少结束时间');
+            if($data['start_date'] > $data['end_date']) $this->error('起始日期设置错误');
+            if($data['sign_start1'] == false)   $this->error('缺少第1次签到时间');
+            if($data['sign_end1'] == false)   $this->error('缺少第1次签退时间');
+            if($data['sign_end1'] <= $data['sign_start1'] )  $this->error('第1次签到时间设置错误');
+            if(($data['sign_start2'] == false && $data['sign_end2']) || ($data['sign_end2'] == false && $data['sign_start2']) )
+                $this->error('第2次签到时间设置错误');
+            if($data['sign_end2'] < $data['sign_start2'] )  $this->error('第2次签到时间设置错误');
+
             if ($id = input('id')) {
                 $this->modelUpdate(ClazzModel::class, $data, ['id' => $data['id']], 'clazz_saving', '修改班级');
             } else {
@@ -155,10 +185,154 @@ class Student extends Base
                 $this->modelCreate(ClazzModel::class, $data, 'clazz_saving', '添加班级');
             }
         } else {
+
+//           dump( ClazzSign::addOne(1, input('id'), strtotime('2021-05-10 17:01')));
+
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 1:00'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 8:00'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 8:10'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 8:30'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 9:30'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 11:00'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 11:01'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 11:41'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 12:21'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 12:31'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 13:00'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 13:01'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 15:59'));
+//            echo ClazzModel::validateSignTime(input('id'), trtotime('2021-05-10 16:00'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 16:01'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 22:01'));
+//            echo ClazzModel::validateSignTime(input('id'), strtotime('2021-05-10 23:59'));
+
             return $this->fetchFormPageHtml(ClazzModel::class, __FUNCTION__);
         }
     }
 
+    function clazzSign()
+    {
+        $where = [];
+        if (input('name'))
+            $where[] = ['student_id', '=', \app\common\model\Student::where('name', input('name'))->value('id')];
+        if (input('state'))
+            $where[] = ['sign_state', '=', input('state')];
+        if (input('clazz_id'))
+            $where[] = ['clazz_id', '=', input('clazz_id')];
+
+        $this->assign('data', [
+            'title' => '学员签到记录',
+            'collection' => ClazzSign::where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
+            'thead' => ['签到时间','班级','学员','签到状态',''],
+            'fields' => ['sign_time', function ($row) {
+                echo $row->clazz?$row->clazz->name:'';
+            }, function ($row) {
+                echo $row->student?$row->student->name:'';
+            }, function ($row) {
+                echo \app\common\model\Clazz::makeRemark($row['sign_state']);
+            }, 'remark'],
+            'buttons' => [
+                ['title' => '修改', 'onclick' => 'openBigWin', 'url' => url('changeSignState'),'permission_id' => 187],
+            ],
+            'mbuttons' => [
+                ['title' => '补签', 'onclick' => 'openBigWin', 'url' => url('changeSignState'),'permission_id' => 187],
+                ['title' => '导出', 'onclick' => 'openBigWin', 'url' => url('exportSignLog')],
+            ],
+            'searcher' => [
+                ['type' => 'input', 'name' => 'name', 'placeholder' => '姓名'],
+                ['type' => 'select', 'name' => 'clazz_id', 'options' => Clazz::column('name', 'id'), 'placeholder' => '选择班级'],
+                ['type' => 'select', 'name' => 'state', 'options' => Clazz::getStates(), 'placeholder' => '选择状态'],
+            ],
+        ]);
+        return $this->fetch('public/table_builder');
+    }
+    function exportSignLog()
+    {
+        $list = ClazzSign::with('student,clazz')->where('sign_time','>', date('Y-m-d', strtotime('-6months')))->order("id desc")->select();
+        $data = [];
+        foreach ($list as $v) {
+            $data[] = [
+                'staff_name' => $v->student ? $v->student['name'] : '',
+                'clazz_name' => $v->clazz ? $v->clazz['name'] : '',
+                'sign_time' => $v->sign_time,
+                'sign_state' => Clazz::makeRemark( $v->sign_state ),
+                'remark' => $v->remark,
+            ];
+        }
+        C_exportExcel($data, [
+            'sign_time' => '签到时间',
+            'staff_name' => '学生姓名',
+            'clazz_name' => '班级',
+            'sign_state' => '签到状态',
+            'remark' => '备注',
+        ],[20,20,20,20,20]);
+    }
+    public function changeSignState()
+    {
+        if (request()->isPost()) {
+            $data = input('post.');
+            $data['teacher_id'] = session('login_id');
+            $data['sign_stage'] = Clazz::getStageByState($data['sign_state']);
+            if ($id = input('id')) {
+                $this->modelUpdate(ClazzSignModel::class, $data, ['id' => $data['id']], '', '修改学员签到');
+            } else {
+                $data['remark'] = session('login_name') . '补签';
+                $this->modelCreate(ClazzSignModel::class, $data, '', '补签');
+            }
+        } else {
+            return $this->fetchFormPageHtml(ClazzSignModel::class, __FUNCTION__);
+        }
+    }
+
+    function clazzNotice()
+    {
+        $where = [];
+        if (input('title'))
+            $where[] = ['title', 'like', '%'.input('title').'%'];
+
+        if (input('clazz_id'))
+            $where[] = ['clazz_id', '=', input('clazz_id')];
+
+        $this->assign('data', [
+            'title' => '班级公告',
+            'collection' => ClazzNotice::withCount('readLog')->where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
+            'thead' => ['发布时间','班级','标题','发布人','已读人数'],
+            'fields' => ['add_time', function ($row) {
+                echo $row->clazz?$row->clazz->name:'';
+            }, 'title', function ($row) {
+                echo $row->staff?$row->staff->name:'';
+            }, function ($row) {
+                echo $row->read_log_count;
+            }],
+            'buttons' => [
+                ['title' => '修改', 'onclick' => 'openBigWin', 'url' => url('saveClazzNotice')],
+            ],
+            'mbuttons' => [
+                ['title' => '新公告', 'onclick' => 'openBigWin', 'url' => url('saveClazzNotice')],
+            ],
+            'searcher' => [
+                ['type' => 'input', 'name' => 'title', 'placeholder' => '标题'],
+                ['type' => 'select', 'name' => 'clazz_id', 'options' => Clazz::column('name', 'id'), 'placeholder' => '选择班级'],
+            ],
+        ]);
+        return $this->fetch('public/table_builder');
+    }
+    public function saveClazzNotice()
+    {
+        if (request()->isPost()) {
+            $data = input('post.');
+            $data['staff_id'] = session('login_id');
+            $data['edit_time'] = now();
+            if ($id = input('id')) {
+                $this->modelUpdate(ClazzNoticeModel::class, $data, ['id' => $data['id']], 'clazz_notice', '修改公告');
+            } else {
+                $data['add_time'] = now();
+                $this->modelCreate(ClazzNoticeModel::class, $data, 'clazz_notice', '添加公告');
+            }
+        } else {
+            return $this->fetchFormPageHtml(ClazzNoticeModel::class, __FUNCTION__);
+        }
+    }
     function deleteClazz()
     {
         $id = input('id/d');
@@ -530,7 +704,6 @@ class Student extends Base
                 $t = explode(',', $data['video_url']);
                 $data['video_url'] = $t[0];
                 $data['images'] = $t[1];
-                $data['images'] = $t[1];
             }
             $data['edit_time'] = now();
             $data['editor_id'] = session('login_id');
@@ -607,32 +780,40 @@ class Student extends Base
         $where = [];
         if (input('clazz_id'))
             $where[] = ['clazz_id', '=', input('clazz_id')];
+//        if (input('section_id'))
+//            $where[] = ['id', '=', \app\common\model\Section::where('id', input('section_id'))->value('task_id')];
 
         $data = [
-            'title' => '作业圈',
-            'collection' => ZoneTask::with('clazz,zone')->where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['ID','班级', '作业要求', '完成/待点评数量', '发布时间'],
+            'title' => '作业记录',
+//            'info' => '作业内容在课时里编辑',
+            'collection' => ZoneTask::with('clazz,staff,zone')->where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
+            'thead' => ['发布时间', '老师','班级', '要求', '完成/待点评数量', ],
             'fields' => [
-                'id',
+                'add_time',
                 function ($row) {
-                    echo $row->clazz['name'];
+                    echo $row->staff ? $row->staff->name : '';
                 },
-                'content',
+                function ($row) {
+                    echo $row->clazz ? $row->clazz->name : '';
+                },
+                function ($row) {
+                    echo $row->content ? substr_cn($row->content, 40)   : '';
+                },
                 function ($row) {
                     $count = $row->zone()->where('verify_content','')->count();
                     echo $row->zone()->count() .' / <span style="' . ($count > 0 ? 'color:red' : '') . '">'. $count .'</span>';
                 },
-                'add_time',
             ],
             'buttons' => [
                 ['title' => '修改', 'onclick' => 'openBigWin','url' => url('editZoneTask')],
                 ['title' => '完成列表', 'onclick' => 'openBigWin', 'url' => url('zonePublished')],
             ],
             'mbuttons' => [
-                ['title' => '添加作业', 'onclick' => 'openBigWin','url' => url('editZoneTask')],
+                ['title' => '布置作业', 'onclick' => 'openBigWin','url' => url('editZoneTask')],
             ],
             'searcher' => [
                 ['type' => 'select', 'name' => 'clazz_id', 'options' => Clazz::column('name', 'id'), 'placeholder' => '选择班级'],
+//                ['type' => 'select', 'name' => 'section_id', 'options' => \app\common\model\Section::column('title', 'id'), 'placeholder' => '选择课时'],
             ],
         ];
         $this->assign('data', $data);
@@ -642,6 +823,7 @@ class Student extends Base
     {
         if (request()->isPost()) {
             $data = input('post.');
+            $data['staff_id'] = session('login_id');
             $data['content'] = $_POST['content'];
             if ($id = input('id')) {
                 $this->modelUpdate(ZoneTaskModel::class, $data, ['id' => $data['id']], 'zone_task_saving', '修改作业');
@@ -663,9 +845,9 @@ class Student extends Base
             $where[] = ['student_id', '=', input('student_id')];
 
         $data = [
-            'title' => '作业发布列表',
+            'title' => '练习记录',
             'collection' => Zone::with('clazz,student')->where($where)->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['发布时间', '学生', '内容', '媒体', '点评内容'],
+            'thead' => ['发布时间', '学生', '内容', '录音', '点评内容'],
             'fields' => [
                 'add_time',
                 function ($row) {
@@ -673,14 +855,11 @@ class Student extends Base
                 },
                 'content',
                 function ($row) {
-                    if($row['type'] == 2) {
-                        echo "<audio src='".$row['attach'] ."' controls>该浏览器不支持audio标签</audio>";
-                    }
-                    if($row['type'] == 3) {
+                    if($row['voice']) echo "<audio src='". add_image_prefix($row['voice'])  ."' controls>该浏览器不支持audio标签</audio>";
+                    if($row['attach'])
                         foreach ( explode(',',$row['attach']) as $img ) {
                             echo '<img src="'.$img.'" style="width:80px; margin:0 3px;" onclick="previewImage(this)"/>';
                         }
-                    }
                 },
                 function ($row) {
                     if($row['verify_content'] == false) {

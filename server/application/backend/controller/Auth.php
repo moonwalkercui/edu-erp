@@ -102,15 +102,14 @@ class Auth extends Base
 			echo json_encode(['info'=>"该账号可以使用",'status'=>"y"]);
 	}
 	public function changePw(){
-        $this->error('测试目的已经关闭');
-//        $id = input('post.id');
-//        $pw = input('post.value');
-//        if(!$pw || strlen($pw) <= 4) $this->error('密码须大于4位');
-//		$newpw = md500($pw);
-//		$adm = model('auth');
-//		$res = $adm->save(['password' => $newpw],['id'=>$id]);
-//		if($res) 				$this->success('密码修改成功');
-//		else 					$this->error('密码修改失败！');
+        $id = input('post.id');
+        $pw = input('post.value');
+        if(!$pw || strlen($pw) <= 4) $this->error('密码须大于4位');
+		$newpw = md500($pw);
+		$adm = model('auth');
+		$res = $adm->save(['password' => $newpw],['id'=>$id]);
+		if($res) 				$this->success('密码修改成功');
+		else 					$this->error('密码修改失败！');
 	}
 	//角色列表
 	public function roleList(){

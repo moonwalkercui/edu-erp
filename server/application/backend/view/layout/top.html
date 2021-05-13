@@ -1,7 +1,7 @@
 <div class="header-top">
     <div class="ui borderless menu my-menu">
 
-        <a class="item" href="{:url('index/index')}" style="width: 200px; text-align: center;"> 宏之博教务管理系统 </a>
+        <a class="item" href="{:url('index/index')}" style="width: 200px; text-align: center;"> 方正教育管理系统 </a>
         <!--<a class="item" id="miniwin"><i class="small bars icon"></i></a>-->
 <!--        <a class="{empty name='Request.param.pid'}active{/empty} item" href="{:url('index/index')}"><i class="small home icon"></i></a>-->
         {volist name="top_menu" id="tm"}
@@ -20,7 +20,7 @@
                 您好:{$Think.session.login_name}
                 <!--<i class="small bullhorn icon"></i><span style="color:#f60;">2</span>-->
                 <div class="menu">
-                    <!--<a data-title="改密码" data-url="/backend/auth/changepw.html" onclick="handlePrompt(this, '{$Think.session.login_id}')" class="item">修改密码</a>-->
+                    <a data-title="改密码" data-url="/backend/auth/changepw.html" onclick="handlePrompt(this, '{$Think.session.login_id}')" class="item">修改密码</a>
                     <a href="{:url('Login/logout')}" class="item">退出登录</a>
                 </div>
             </div>

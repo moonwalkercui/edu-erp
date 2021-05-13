@@ -3,9 +3,13 @@
 namespace app\staff\controller;
 
 use app\common\model\Course;
+use app\common\model\OffdutyType;
 use app\common\model\Staff;
+use app\common\model\StaffOffduty;
 use app\common\model\Zone;
 use app\common\model\ZoneLike;
+use app\common\model\ZoneTask;
+use think\Exception;
 
 class Clazz extends Base
 {
@@ -39,5 +43,47 @@ class Clazz extends Base
         }
         return $this->dataJson($data);
     }
+    function getList2()
+    {
+        if ($this->checkLogin() == false) return $this->errorJson('未登录',[],2);
+        $staff_id = session('login_id');
+        $data = \app\common\model\Clazz::getByStaffId($staff_id);
+        $res = [];
+        foreach ($data as $v) {
+            $res[] = $v->name;
+        }
+        return $this->dataJson($res);
+    }
 
+    /*
+     * 发布作业
+     * */
+    function publishTask()
+    {
+        if( $this->checkLogin() == false ) return $this->errorJson('未登录',[],2);
+
+        $class_name = input('clazz_name');
+        $clazz = \app\common\model\Clazz::where('name', $class_name)->find();
+        if(!$clazz) return $this->errorJson('无效培训班');
+
+        $content = input('content');
+        if(trim($content) == false)  return $this->errorJson('请输入内容');
+        $images = input('images/a');
+        $img_tags = '';
+        foreach ($images as $img) {
+            $img_tags .= "<img src='{$img}' style=\"width: 100%;\"/>";
+        }
+
+        $data['clazz_id'] = $clazz->id;
+        $data['staff_id'] = session('login_id');
+        $data['content'] = "<p><p>".$content."</p>".$img_tags."</p>";
+        $data['add_time'] = now();
+        try{
+            ZoneTask::insert($data);
+        }catch (Exception $e) {
+            return $this->errorJson($e->getMessage());
+        }
+        return $this->successJson('发布成功');
+
+    }
 }

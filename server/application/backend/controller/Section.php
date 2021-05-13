@@ -6,8 +6,10 @@ use app\backend\model\AuthRole;
 use app\backend\model\KnowledgeModel;
 use app\backend\model\SectionCategoryModel;
 use app\backend\model\SectionModel;
+use app\backend\model\StaffModel;
 use app\backend\model\TestModel;
 use app\common\model\SectionCategory;
+use app\common\model\ZoneTask;
 use think\Db;
 use think\Exception;
 
@@ -27,17 +29,67 @@ class Section extends Base
             $ids = array_merge($ids, SectionModel::where('title','like',"%{$kw}%")->column('id'));
             $where[] = ['id', 'in', array_unique($ids)];
         }
+        if($category = input('category')) {
+            $where[] = ['category_id', '=', $category ];
+        }
         if($sort_by = input('sort_by')) {
             $order = $sort_by . " ". input('sort_type','desc');
         } else {
             $order = 'id desc';
         }
         $this->assign('data', [
-            'title' => '课时列表',
+            'title' => '章节列表',
             'collection' => SectionModel::where($where)->order($order)->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
             'thead' => [
                 'ID',
                 ['标题',['sort' => 'title','sort_type'=>'asc']],
+                ['分类',['sort' => 'category_id','sort_type'=>'asc']],
+                '内容',
+                '重点',
+            ],
+            'fields' => [
+                'id', 'title',
+                function($row) {echo $row->category ? $row->category->name : '-';},
+                function($row) {echo substr_cn($row['remark'], 20);},
+                function($row) {echo $row['training'] ? substr_cn($row['training'], 20) : '无';},
+            ],
+            'buttons' => [
+//                ['title' => '预览', 'onclick' => 'openBigWin', 'url' => url('preview')],
+                ['title' => '编辑', 'onclick' => 'openBigWin', 'url' => url('saveSection'),'permission_id' => 176],
+                ['title' => '删除', 'onclick' => 'delOne', 'url'=> url('deleteSection'),'permission_id' => 177],
+            ],
+            'mbuttons' => [
+                ['title' => '分 类', 'onclick' => 'openBigWin', 'url' => url('sectionCategory'), 'class_name' => ''],
+                ['title' => '添 加', 'onclick' => 'openBigWin', 'url' => url('saveSection'),'permission_id' => 176],
+            ],
+            'searcher' => [
+                ['type' => 'input', 'name' => 'kw', 'placeholder' => '关键字搜索'],
+                ['type' => 'select', 'name' => 'category', 'placeholder' => '分类', 'options' => SectionCategoryModel::getTreeColumn()],
+            ],
+        ]);
+        return $this->fetch('public/table_builder');
+    }
+    function getList2()
+    {
+        $where = [];
+        if($kw = input('kw')) {
+            $ids = [];
+            $k_ids = \app\common\model\Knowledge::where('title','like',"%{$kw}%")->column('id');
+            if(!empty($k_ids)) $ids = array_merge($ids, Db::name('knowledge_section')->where('knowledge_id','in', $k_ids)->column('section_id')) ;
+            $ids = array_merge($ids, SectionModel::where('title','like',"%{$kw}%")->column('id'));
+            $where[] = ['id', 'in', array_unique($ids)];
+        }
+        if($sort_by = input('sort_by')) {
+            $order = $sort_by . " ". input('sort_type','desc');
+        } else {
+            $order = 'id desc';
+        }
+        $this->assign('data', [
+            'title' => '章节列表',
+            'collection' => SectionModel::where($where)->order($order)->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
+            'thead' => [
+                'ID',
+                ['章节标题',['sort' => 'title','sort_type'=>'asc']],
                 '重点词汇',
                 '重点句型',
                 '附加词汇',
@@ -78,8 +130,25 @@ class Section extends Base
         return $this->fetch('test/section_preview');
     }
 
-    // 编辑
     function saveSection()
+    {
+        if (request()->isPost()) {
+            $data = input('post.');
+            if ($id = input('id')) {
+                $this->modelUpdate(SectionModel::class, $data, ['id' => $data['id']], 'section_saving', '修改课时');
+            } else {
+                $this->modelCreate(SectionModel::class, $data, 'section_saving', '添加课时'
+//                    ,function ($item) { ZoneTask::updateTask($item['id']); }
+                    );
+            }
+
+        } else {
+            return $this->fetchFormPageHtml(SectionModel::class, __FUNCTION__);
+        }
+    }
+
+    // 编辑
+    function saveSection2()
     {
         if (request()->isPost()) {
             $id = input('id');
@@ -159,7 +228,7 @@ class Section extends Base
     function sectionCategory()
     {
         $this->assign('data', [
-            'title' => '试卷分类',
+            'title' => '章节分类',
             'collection' => SectionCategory::getListTree(),
             'thead' => ['ID', '名称'],
             'fields' => ['id', function ($row) {

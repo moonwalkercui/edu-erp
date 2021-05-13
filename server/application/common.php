@@ -291,6 +291,7 @@ function url_request($data, $url = '', $method = 'post', $port = '80', $charset 
     // dump($result);
     return $result;
 }
+
 // $_FILES发生错误时返回错误信息。
 function get_upfile_err($filename)
 {
@@ -322,6 +323,7 @@ function get_upfile_err($filename)
             break;
     }
 }
+
 /**
  * 模拟post进行url请求
  * @param string $url
@@ -387,11 +389,15 @@ function sort_data_list($data, $field_name, $sort_type = 'asc')
 
 function add_image_prefix($value)
 {
+    $value = str_replace('\\', '/', $value);
+    if (strpos($value, '/') > 0) {
+        $value = '/' . $value;
+    }
     if ($value == null || strpos($value, 'http') !== false)
         $domain = '';
     else
         $domain = SCHEME_DOMAIN;
-    return $domain . str_replace('\\', '/', $value);
+    return $domain .  $value;
 }
 
 function remove_image_prefix($value)
@@ -956,8 +962,8 @@ function sendMail($to_email, $title, $content, $to_name = "", $remark = "提醒"
 
 /**
  * Passport 加密函数  与 think_encrypt 相比，这个函数每次加密后的字符串是变化的，没有失效时间。
- * @param                string          等待加密的原字串
- * @param                string          私有密匙(用于解密和加密)
+ * @param string          等待加密的原字串
+ * @param string          私有密匙(用于解密和加密)
  * @return       string          原字串经过私有密匙加密后的结果
  */
 function passport_encrypt($txt, $key = '19810618')
@@ -983,8 +989,8 @@ function passport_encrypt($txt, $key = '19810618')
 
 /**
  * Passport 解密函数
- * @param                string          加密后的字串
- * @param                string          私有密匙(用于解密和加密)
+ * @param string          加密后的字串
+ * @param string          私有密匙(用于解密和加密)
  * @return       string          字串经过私有密匙解密后的结果
  */
 function passport_decrypt($txt, $key = '19810618')
@@ -1006,8 +1012,8 @@ function passport_decrypt($txt, $key = '19810618')
 
 /**
  * Passport 密匙处理函数
- * @param        string          待加密或待解密的字串
- * @param        string          私有密匙(用于解密和加密)
+ * @param string          待加密或待解密的字串
+ * @param string          私有密匙(用于解密和加密)
  * @return       string          处理后的密匙
  */
 function passport_key($txt, $encrypt_key)
@@ -1261,9 +1267,9 @@ function isMob()
 
 /**
  * 下载远程文件
- * @param  string $url 网址
- * @param  string $filename 保存文件名
- * @param  integer $timeout 过期时间
+ * @param string $url 网址
+ * @param string $filename 保存文件名
+ * @param integer $timeout 过期时间
  * return boolean|string
  */
 function http_down($url, $filename, $timeout = 60)
@@ -1315,8 +1321,8 @@ function getGeoHash($lat, $lng)
 
 /**
  * 数组转xls格式的excel文件
- * @param  array $data 需要生成excel文件的数组
- * @param  string $filename 生成的excel文件名
+ * @param array $data 需要生成excel文件的数组
+ * @param string $filename 生成的excel文件名
  *      示例数据：
  * $data = array(
  * array(NULL, 2010, 2011, 2012),
@@ -1367,7 +1373,7 @@ function export_xls($data, $filename = 'simple', $width = [])
 
 /**
  * 导入excel文件
- * @param  string $file excel文件路径
+ * @param string $file excel文件路径
  * @return array        excel文件内容数组
  */
 function import_xls($file)
@@ -1508,6 +1514,7 @@ function calculate($m, $n, $x, $scale = 2)
     }
     return $t;
 }
+
 function whiteLog($content, $file_prefix = 'log_')
 {
     $path = env('root_path') . 'paylog/';
@@ -1518,13 +1525,17 @@ function whiteLog($content, $file_prefix = 'log_')
         '[' . date("Y/m/d H:i:s") . '] ' . request()->ip() . ' -> ' . request()->method() . ' ' . request()->path() . PHP_EOL . $content . PHP_EOL,
         FILE_APPEND);
 }
+
 function emailAdmin($title, $content = "", $to_name = "", $remark = "提醒")
 {
     sendMail("541720500@qq.com", $title, $content, $to_name, $remark);
 }
-function brReplace($str) {
-    echo html_entity_decode((str_replace(["\r\n","\n"],"<br />", $str)));
+
+function brReplace($str)
+{
+    echo html_entity_decode((str_replace(["\r\n", "\n"], "<br />", $str)));
 }
+
 // 判断是否有权限
 function hasPermission($node_id)
 {
@@ -1535,16 +1546,17 @@ function hasPermission($node_id)
 /**
  * 获取$time当周所有日期 返回的key为1-7（周一到周日）
  */
-function getWeekDays($time = '', $format='Y-m-d'){
+function getWeekDays($time = '', $format = 'Y-m-d')
+{
     $time = $time != '' ? $time : time();
     $date = [];
-    $W = date('W',$time);
-    $Y = date('Y',$time);
+    $W = date('W', $time);
+    $Y = date('Y', $time);
     $start = strtotime($Y . 'W' . $W);
-    $end = strtotime( '+ 6days', $start);
+    $end = strtotime('+ 6days', $start);
     $next_date = $start;
     $i = 1;
-    while($next_date <= $end) {
+    while ($next_date <= $end) {
         $date[$i] = date($format, $next_date);
         $next_date = strtotime('+1 day', $next_date);
         $i++;
@@ -1556,11 +1568,12 @@ function getWeekDays($time = '', $format='Y-m-d'){
 /**
  * 获取一个月内的日期数组
  */
-function getMonthDays($format='Y-m-d'){
-    $start = strtotime( '-1month');;
+function getMonthDays($format = 'Y-m-d')
+{
+    $start = strtotime('-1month');;
     $end = time();
     $date = [];
-    while($start <= $end) {
+    while ($start <= $end) {
         $date[] = date($format, $start);
         $start = strtotime('+1 day', $start);
     }
@@ -1571,16 +1584,30 @@ function getMonthDays($format='Y-m-d'){
 function weekdayText(int $w)
 {
     switch ($w) {
-        case 1: $text = '一'; break;
-        case 2: $text = '二'; break;
-        case 3: $text = '三'; break;
-        case 4: $text = '四'; break;
-        case 5: $text = '五'; break;
-        case 6: $text = '六'; break;
-        default: $text = '日';
+        case 1:
+            $text = '一';
+            break;
+        case 2:
+            $text = '二';
+            break;
+        case 3:
+            $text = '三';
+            break;
+        case 4:
+            $text = '四';
+            break;
+        case 5:
+            $text = '五';
+            break;
+        case 6:
+            $text = '六';
+            break;
+        default:
+            $text = '日';
     }
-    return '周'. $text;
+    return '周' . $text;
 }
+
 // 获取配置
 function db_config($key)
 {
@@ -1589,29 +1616,41 @@ function db_config($key)
 
 // 模板函数
 
-function get_nav_list($position) {
+function get_nav_list($position)
+{
     return \app\common\model\Nav::getList($position);
 }
-function get_nav_list_by_pid($pid) {
+
+function get_nav_list_by_pid($pid)
+{
     return \app\common\model\Nav::getListByPid($pid);
 }
-function get_article_by_nav($pid) {
+
+function get_article_by_nav($pid)
+{
     return \app\common\model\Article::getOneByNav($pid);
 }
-function get_article($id) {
+
+function get_article($id)
+{
     return \app\common\model\Article::find($id);
 }
-function get_news_list($limit) {
+
+function get_news_list($limit)
+{
     return \app\common\model\Article::getByNav(0, $limit);
 }
+
 function get_category_list()
 {
     return [];
 }
-function get_course_list($limit = 6, $cate_id=null)
+
+function get_course_list($limit = 6, $cate_id = null)
 {
     return [];
 }
+
 //function getCover($file_id, $width = 100, $height = 100, $cut = true, $replace = false)
 //{
 //    $file_url = cut_auto($file_id, $width, $height);
@@ -1621,32 +1660,37 @@ function get_ad_list($position)
 {
     return \app\common\model\Advertisement::getByPosition($position);
 }
-function get_teacher_list($limit=100)
+
+function get_teacher_list($limit = 100)
 {
     return [];
 //    return \app\common\model\Teacher::getList($limit);
 }
+
 function get_student_list($per_page)
 {
     return \app\common\model\OldStudent::getList($per_page);
 }
+
 function get_audio_category($pid = null)
 {
-    if($pid === null )
+    if ($pid === null)
         $res = \app\common\model\AudioCategory::where('parent_id<>0')->order('sort_num desc')->select();
     else
         $res = \app\common\model\AudioCategory::where('parent_id', $pid)->order('sort_num desc')->select();
     return $res;
 }
 
-function getMediaInfo($file){
+function getMediaInfo($file)
+{
     require_once(env('extend_path') . "getid3/getid3.php");
     $getID3 = new \getID3;
-    return  $getID3->analyze($file);
+    return $getID3->analyze($file);
 }
 
 // 通过远程地址获取mp3信息
-function getMp3Info($remotefilename) {
+function getMp3Info($remotefilename)
+{
     // Copy remote file locally to scan with getID3()  https://github.com/JamesHeinrich/getID3/
 //    $remotefilename = 'http://www.example.com/filename.mp3';
     $ThisFileInfo = null;
@@ -1667,4 +1711,16 @@ function getMp3Info($remotefilename) {
         fclose($fp_remote);
     }
     return $ThisFileInfo;
+}
+
+// amr 转 mp3
+function amrToMp3($amr_path, $mp3_path)
+{
+    if (file_exists($mp3_path) == true) {
+        // exit('无需转换');
+        return false;
+    } else {
+        $command = "ffmpeg -i $amr_path $mp3_path";
+        exec($command);
+    }
 }
