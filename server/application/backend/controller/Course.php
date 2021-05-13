@@ -63,7 +63,7 @@ class Course extends Base
                     return $row->assistant->name ?? '';
                 },
                 function ($row) {
-                    return $row->section->title ?? '<span style="color: red">未设置</span>';
+                    return $row->section ? $row->section->title : '<span style="color: red">未设置</span>';
                 },
                 'status_text'
             ],
