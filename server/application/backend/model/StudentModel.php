@@ -38,6 +38,12 @@ class StudentModel extends \app\common\model\Student
                 'label' => '手机号',
 //                'require' => true
             ],
+            [
+                'type' => 'number',
+                'name' => 'score',
+                'label' => '分数',
+//                'require' => true
+            ],
 //            [
 //                'type' => 'image',
 //                'name' => 'avatar',

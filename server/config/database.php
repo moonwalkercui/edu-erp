@@ -4,9 +4,9 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     'hostname'        => 'localhost',
-    'database'        => 'wangzhen',
-    'username'        => 'wangzhen',
-    'password'        => 'efEPY82wyEczks7r',
+    'database'        => '',
+    'username'        => '',
+    'password'        => '',
     // 端口
     'hostport'        => '',
     // 连接dsn

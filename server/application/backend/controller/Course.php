@@ -40,7 +40,7 @@ class Course extends Base
         $this->assign('data', [
             'title' => '课程表',
             'collection' => CourseModel::where($where)->order($order)->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['ID', '班级', '日期', '课次', '授课老师','助教','章节', '状态'], // '课时','年级',
+            'thead' => ['ID', '班级', '日期', '课次', '授课老师','助教', '状态'], // '章节','年级',
             'select_type' => 2,
             'select_actions' => [
                 ['title' => '批量删除', 'onclick' => 'delMulti', 'url' => url('mulDelCourse'), 'class_name'=>'orange'],
@@ -62,9 +62,9 @@ class Course extends Base
                 function ($row) {
                     return $row->assistant->name ?? '';
                 },
-                function ($row) {
-                    return $row->section ? $row->section->title : '<span style="color: red">未设置</span>';
-                },
+//                function ($row) {
+//                    return $row->section ? $row->section->title : '<span style="color: red">未设置</span>';
+//                },
                 'status_text'
             ],
             'buttons' => [
@@ -181,7 +181,7 @@ class Course extends Base
                 $data['add_time'] = now();
                 $this->modelCreate(CourseModel::class, $data, 'course_saving', '添加课程', function ($item) {
                     ClazzEvent::addOne(
-                        $item->times->name . $item->staff->name . "老师给学生们上了一节" . $item->section->title,
+                        $item->times->name . $item->staff->name . "老师给学生们上了一节",
                         $item['clazz_id'],
                         $item['staff_id'],
                         ClazzEvent::TYPE_COURSE,

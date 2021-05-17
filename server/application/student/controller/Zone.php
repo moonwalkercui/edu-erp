@@ -2,14 +2,12 @@
 
 namespace app\student\controller;
 
-use app\backend\model\CourseModel;
-use app\common\model\Section;
 use app\common\model\Student;
+use app\common\model\WxAccess;
 use app\common\model\ZoneComment;
 use app\common\model\ZoneLike;
 use app\common\model\ZoneTask;
 use app\common\service\WxService;
-use think\facade\Log;
 
 class Zone extends Base
 {
@@ -52,6 +50,7 @@ class Zone extends Base
             if ($item['attach']) {
                 $item['attach'] = explode(',', $item['attach']);
             }
+            $item['student_avatar'] = WxAccess::getStudentHeadImg($item['student_id']);
             foreach ($item->comments as $c) {
                 $c->is_my = ($student_id && $c['publisher_id'] == $student_id) ? 1 : 0;
             }

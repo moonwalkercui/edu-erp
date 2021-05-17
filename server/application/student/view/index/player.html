@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>播放器</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+<!--    <script type="text/javascript" src="/static/plug/jquery.min.js"></script>-->
+    <link href="https://cloudcache.tencent-cloud.com/open/qcloud/video/tcplayer/tcplayer.css" rel="stylesheet">
+    <!--如果需要在 Chrome 和 Firefox 等现代浏览器中通过 H5 播放 HLS 格式的视频，需要在 tcplayer.v4.1.min.js 之前引入 hls.min.0.13.2m.js。-->
+    <script src="https://cloudcache.tencent-cloud.com/open/qcloud/video/tcplayer/libs/hls.min.0.13.2m.js"></script>
+    <!--播放器脚本文件-->
+    <script src="https://cloudcache.tencent-cloud.com/open/qcloud/video/tcplayer/tcplayer.v4.1.min.js"></script>
+</head>
+<body>
+<video id="player-container-id" style="width: 100%" height="270" preload="auto" playsinline webkit-playsinline>
+</video>
+<script>
+    var player = TCPlayer('player-container-id', { // player-container-id 为播放器容器 ID，必须与 html 中一致
+        fileID: '5285890807833642853', // 请传入需要播放的视频 filID（必须）
+        appID: '1256189212' // 请传入点播账号的 appID（必须）
+    });
+</script>
+</body>
+</html>

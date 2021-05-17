@@ -14,9 +14,9 @@ class TencentCloud
 {
     const CACHE_VOD_LIST = "vod_list_cache";
     private static $config = [
-        'secret_id' => 'AKIDPQbyRyQbesGnVJjDKYxS7eH0vx5Kp6dG',
-        'secret_key' => '3DXxUuDgOCDKYsIoRA4uskk1Ph7eI22N',
-        'sub_appid' => 1500001788 // 腾讯云子应用id
+        'secret_id' => '',
+        'secret_key' => '',
+        'sub_appid' => 1256189212 // 腾讯云子应用id
     ];
     static function signature()
     {

@@ -40,7 +40,7 @@
             <td>{{item.FileId}}</td>
             <td class="right aligned collapsing">
                 <a class="ui small label" href="javascript:;" @click="handleRemove(item.FileId)">删除</a>
-                {if isset($type) and $type==1}<a class="ui green small label" href="javascript:;" @click="handleSelect(item.BasicInfo)">选择</a>{/if}
+                {if isset($type) and $type==1}<a class="ui green small label" href="javascript:;" @click="handleSelect(item.FileId,item.BasicInfo,item.MetaData)">选择</a>{/if}
             </td>
         </tr>
         </tbody>
@@ -105,9 +105,9 @@
                         }
                     })
                 },
-                handleSelect: function(item) {
+                handleSelect: function(fileId,baseInfo,metaInfo) {
                     closeCurrentWin();
-                    parent.handleSelectVod(item);
+                    parent.handleSelectVod(fileId,baseInfo,metaInfo);
                 }
             },
         })

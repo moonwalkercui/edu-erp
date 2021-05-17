@@ -433,11 +433,11 @@
         popupPage("选择视频", '{:url("tencent/vodlist",["type"=>1])}', '90%', '90%')
     }
     // 处理选择后
-    function handleSelectVod(vod) {
-        if(vod) {
+    function handleSelectVod(fileId,baseInfo,metaInfo) {
+        if(baseInfo) {
             $(editVodSelectorBtn).hide();
-            $('#' + editVodSelector).prepend('<li class="upimgs-li" ><img src="'+vod.CoverUrl+'"/>' +
-                '<input type="hidden" name="'+editVodSelector+'" value="'+vod.MediaUrl+','+vod.CoverUrl +','+vod.Vid+'">' +
+            $('#' + editVodSelector).prepend('<li class="upimgs-li" ><img src="'+baseInfo.CoverUrl+'"/>' +
+                '<input type="hidden" name="'+editVodSelector+'" value="'+baseInfo.MediaUrl+','+baseInfo.CoverUrl +','+fileId +','+metaInfo.Duration+'">' +
                 '<span class="close" onclick="removeVodUpBtn(this)">X</span></li>')
         } else layer.msg('出错了, 请重新选择');
     }

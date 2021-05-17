@@ -45,7 +45,7 @@ class Staff extends Base
         if (input('status') == -1) array_push($where, ['status', '=', -1]);
         else  array_push($where, ['status', '=', 1]);
         $this->assign('data', [
-            'title' => '职员管理',
+            'title' => '教师管理',
             'collection' => \app\backend\model\Auth::where($where)->with('role')->order('status desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
             'thead' => ['#', '账号', ['照片', ['style' => '150px']], '电话', '管理组', '登录次数', '上次登录时间', '上次登录IP', '状态'],
             'fields' => ['id', 'name',

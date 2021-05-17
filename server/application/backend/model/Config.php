@@ -19,7 +19,7 @@ class Config extends \app\common\model\Config
             ]
         ],
         'attendance' => [
-            'title' => '考勤设置',
+            'title' => '教师考勤设置',
             'list' => [
                 ['label' => '签到开始时间', 'name' => 'sign_am_start', 'type' => 'input'],
                 ['label' => '签到结束时间', 'name' => 'sign_am_end', 'type' => 'input'],

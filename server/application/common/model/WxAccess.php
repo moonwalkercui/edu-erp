@@ -40,9 +40,15 @@ class WxAccess extends BaseModel
             'unsub_time' => now(),
         ]);
     }
+
     // 绑定学院
     static function bindStudent($id, $student_id, $type = 1)
     {
         return self::where(compact('id'))->update(compact('student_id','type')) !== false;
+    }
+
+    static function getStudentHeadImg($student_id)
+    {
+        return self::where(compact('student_id'))->value('headimg');
     }
 }

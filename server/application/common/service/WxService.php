@@ -6,15 +6,15 @@ use app\common\model\User;
 use app\common\model\WxAccess;
 use think\Db;
 use think\facade\Log;
-
 class WxService
 {
     private static $config = [
 
-        'token' => 'xxxx',
-        'appid' => 'xxxx',
-        'appsecret' => 'xxxx',
-        'encodingaeskey' => 'xxxx',
+        // wangzhen:
+        'token' => '',
+        'appid' => '',
+        'appsecret' => '',
+        'encodingaeskey' => '',
 
         // 配置商户支付参数（可选，在使用支付功能时需要）
         'mch_id' => "",

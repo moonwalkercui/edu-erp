@@ -28,13 +28,13 @@ return [
         'date|日期' => 'require',
 //        'grade_id|年级' => 'require',
         'clazz_id|班级' => 'require',
-        'section_id|课时' => 'require',
+//        'section_id|课时' => 'require',
         'times_id|课次' => 'require',
         'staff_id|授课老师' => 'require',
     ],
     'course_schedule_saving' => [
         'clazz_id|班级' => 'require',
-        'section_id|课时' => 'require',
+//        'section_id|课时' => 'require',
         'times_id|课次' => 'require',
         'staff_id|授课老师' => 'require',
         'loop_interval|频率' => 'require',
@@ -61,6 +61,14 @@ return [
         'title|标题' => 'require',
         'clazz_id|班级' => 'require',
         'content|内容' => 'require',
+    ],
+    'vcourse_save' => [
+        'vod_urls|视频' => 'require',
+        'title|标题' => 'require',
+        'clazz_id|班级' => 'require',
+    ],
+    'vcourse_study' => [
+        'done|是否完成' => 'require',
     ],
     'zone_task_saving' => [
         'content|内容' => 'require',

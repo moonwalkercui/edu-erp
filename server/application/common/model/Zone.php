@@ -26,6 +26,7 @@ class Zone extends BaseModel
             if($item['type'] == 3) {
                 $item['attach'] = explode(',', $item['attach']);
             }
+            $item['student_avatar'] = WxAccess::getStudentHeadImg($item['student_id']);
             foreach ($item->comments as $c) {
                 $c->is_my = ($student_id && $c['publisher_id'] == $student_id) ? 1 : 0;
             }

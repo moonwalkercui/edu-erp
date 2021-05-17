@@ -1,7 +1,17 @@
+### 功能介绍
+三个端：pc管理端，公众号教师端，公众号学员端
+ - 学员管理
+ - 老师管理
+ - 排课管理
+ - 云点播课程（对接腾讯云点播vod，支持学员公众号学习，并保持学习进度）
+ - 二维码班级签到（按班级为单位一天可以设置两次签到和两次签退）
+ - 作业管理（教师端发布和点评作业，学生端发布作业）
+
 ### 演示地址
 http://erp.hzb-it.com/s
 账号 admin
 密码 111111
+演示公众号：宏之博软件
 
 ### 说明
 
@@ -17,4 +27,8 @@ http://erp.hzb-it.com/s
 
 ## 公众号配置说明
 
-服务器配置URL是：http://域名/wx
+公众号服务器配置URL是：http://域名/wx
+
+公众号配置参数位置: \server\application\common\service\WxService.php
+
+腾讯云点播VOD配置参数位置:\server\application\common\service\TencentCloud.php

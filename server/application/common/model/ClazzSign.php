@@ -2,6 +2,7 @@
 namespace app\common\model;
 
 use think\Exception;
+use think\facade\Log;
 
 class ClazzSign extends BaseModel
 {
@@ -13,17 +14,18 @@ class ClazzSign extends BaseModel
     * @param student_id 学生id
     * @param time 签到时间戳
     * */
-    static function addOne($student_id, $clazz_id, $time = null)
+    static function addOne($student_id, $clazz_id)
     {
-        if($time == null) $time = time();
+        $time = time();
 
         list($sign_state, $sign_stage) = Clazz::validateSignTime($clazz_id, $time);
 
         if($sign_state == Clazz::TOO_EARLY) {
             throw new Exception("未到签到时间");
         }
-        $find = self::where(compact('student_id','clazz_id','sign_stage'))->order("sign_time desc")->find();
-        if(!$find) {
+        $record = self::where(compact('student_id','clazz_id','sign_stage'))->whereTime("sign_time", "today")->order("sign_time desc")->find();
+
+        if(!$record) {
             // 如果没找到现阶段的签到或签退，那么新增
             $data = [
                 'student_id' => $student_id,
@@ -35,14 +37,15 @@ class ClazzSign extends BaseModel
             ];
             self::insert($data);
         } else {
+
             // 如果已经第一次签到，并且这次也是签到，那么提示不能重复签到了
-            if(($find->sign_stage == Clazz::STAGE1 && $sign_stage == Clazz::STAGE1) || ($find->sign_stage == Clazz::STAGE3 && $sign_stage == Clazz::STAGE3)) {
+            if(($record->sign_stage == Clazz::STAGE1 && $sign_stage == Clazz::STAGE1) || ($record->sign_stage == Clazz::STAGE3 && $sign_stage == Clazz::STAGE3)) {
                 throw new Exception("不能重复签到");
             }
             // 处理重复签退，更新签退日期即可
             if($sign_state == Clazz::FIRST_LEAVE || $sign_state == Clazz::SECOND_LEAVE) {
-                $find->sign_time = now();
-                $find->save();
+                $record->sign_time = now();
+                $record->save();
             }
         }
         return $sign_state;

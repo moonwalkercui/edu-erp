@@ -44,12 +44,12 @@ class Student extends Base
 
         $this->assign('data', [
             'title' => '学生列表',
-            'collection' => StudentModel::with('account','wxAccount')->where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['学号', '姓名', '手机号', '班级', '性别', '积分', '注册时间', '绑定微信', '状态'], // '年级',  ['照片', 'width:60px'],
+            'collection' => StudentModel::with('account', 'wxAccount')->where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
+            'thead' => ['学号', '', '姓名', '手机号', '班级', '性别', '生日', '身份证', '地址', '分数', '注册时间', '绑定微信', '状态'], // '年级',  ['照片', 'width:60px'],
             'fields' => ['id',
-//                function ($row) {
-//                    return '<image src="' . $row['avatar'] . '" class="ui tiny image">';
-//                },
+                function ($row) {
+                    return '<image src="' . WxAccess::getStudentHeadImg($row['id']) . '" class="ui tiny image">';
+                },
                 'name', 'mobile',
 //                function ($row) {
 //                    return $row->grade->name ?? '';
@@ -60,23 +60,21 @@ class Student extends Base
                 function ($row) {
                     return $row->gender_text;
                 },
-                function ($row) {
-                    return $row->account['point'];
-                },
-                'add_time',
+
+                'birthday', 'id_card', 'address', 'score', 'add_time',
                 function ($row) {
                     return $row->wx_account ? $row->wx_account['nickname'] : '';
                 },
                 'status_text'
             ],
             'buttons' => [
-                ['title' => '编辑', 'onclick' => 'openBigWin', 'url' => url('saveStudent'),'permission_id' => 159],
+                ['title' => '编辑', 'onclick' => 'openBigWin', 'url' => url('saveStudent'), 'permission_id' => 159],
                 ['title' => '绑定微信', 'url' => url('bindWechat')],
-                ['title' => '删除', 'onclick' => 'delOne', 'url' => url('deleteStudent'),'permission_id' => 160],
+                ['title' => '删除', 'onclick' => 'delOne', 'url' => url('deleteStudent'), 'permission_id' => 160],
 //                ['title' => '改密码', 'url' => url('changePw') , 'onclick' => 'handlePrompt','permission_id' => 159],
             ],
             'mbuttons' => [
-                ['title' => '添加账号', 'onclick' => 'openBigWin', 'url' => url('saveStudent'),'permission_id' => 159],
+                ['title' => '添加账号', 'onclick' => 'openBigWin', 'url' => url('saveStudent'), 'permission_id' => 159],
             ],
             'searcher' => [
                 ['type' => 'input', 'name' => 'name', 'placeholder' => '姓名'],
@@ -93,11 +91,12 @@ class Student extends Base
     {
         $id = input('post.id');
         $pw = input('post.value');
-        if(!$pw || strlen($pw) <= 4) $this->error('密码须大于4位');
+        if (!$pw || strlen($pw) <= 4) $this->error('密码须大于4位');
         $res = \app\common\model\Student::where('id', $id)->update(['password' => $pw]);
-        if($res) 				$this->success('密码修改成功');
-        else 					$this->error('密码修改失败！');
+        if ($res) $this->success('密码修改成功');
+        else                    $this->error('密码修改失败！');
     }
+
     public function saveStudent()
     {
         if (request()->isPost()) {
@@ -116,6 +115,7 @@ class Student extends Base
             return $this->fetchFormPageHtml(StudentModel::class, __FUNCTION__);
         }
     }
+
     public function bindWechat()
     {
         if (request()->isPost()) {
@@ -138,8 +138,8 @@ class Student extends Base
         $this->assign('data', [
             'title' => '班级列表',
             'collection' => Clazz::where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['ID','名称', '开始日期','结束日期','负责人','加入密码'], // '年级',
-            'fields' => ['id','name','start_date', 'end_date',
+            'thead' => ['ID', '名称', '开始日期', '结束日期', '负责人', '加入密码'], // '年级',
+            'fields' => ['id', 'name', 'start_date', 'end_date',
 //                function ($row) {
 //                    return $row->grade->name ?? '';
 //                },
@@ -149,34 +149,36 @@ class Student extends Base
                 }, 'password'
             ],
             'buttons' => [
-                ['title' => '编辑', 'onclick' => 'openBigWin', 'url' => url('saveClazz'),'permission_id' => 161],
-                ['title' => '删除', 'onclick' => 'delOne', 'url' => url('deleteClazz'),'permission_id' => 162],
+                ['title' => '编辑', 'onclick' => 'openBigWin', 'url' => url('saveClazz'), 'permission_id' => 161],
+                ['title' => '删除', 'onclick' => 'delOne', 'url' => url('deleteClazz'), 'permission_id' => 162],
                 ['title' => '签到二维码', 'onclick' => 'openWin', 'url' => url('signQrcode')],
             ],
             'mbuttons' => [
-                ['title' => '添加班级', 'onclick' => 'openBigWin', 'url' => url('saveClazz'),'permission_id' => 161],
+                ['title' => '添加班级', 'onclick' => 'openBigWin', 'url' => url('saveClazz'), 'permission_id' => 161],
             ],
         ]);
         return $this->fetch('public/table_builder');
     }
+
     public function signQrcode()
     {
-        echo "<img src='" . makeQRcode(SCHEME_DOMAIN . "/wxauth.html?state=classSign_".input('id'), 14) . "' />";
+        echo "<small>如需保存图片，可以在二维码上点击右键选择:图片另存为...</small><img src='" . makeQRcode(SCHEME_DOMAIN . "/wxauth.html?state=classSign_" . input('id'), 14) . "' />";
     }
+
     public function saveClazz()
     {
         if (request()->isPost()) {
             $data = input('post.');
 
-            if($data['start_date'] == false)   $this->error('缺少开始日期');
-            if($data['end_date'] == false)   $this->error('缺少结束时间');
-            if($data['start_date'] > $data['end_date']) $this->error('起始日期设置错误');
-            if($data['sign_start1'] == false)   $this->error('缺少第1次签到时间');
-            if($data['sign_end1'] == false)   $this->error('缺少第1次签退时间');
-            if($data['sign_end1'] <= $data['sign_start1'] )  $this->error('第1次签到时间设置错误');
-            if(($data['sign_start2'] == false && $data['sign_end2']) || ($data['sign_end2'] == false && $data['sign_start2']) )
+            if ($data['start_date'] == false) $this->error('缺少开始日期');
+            if ($data['end_date'] == false) $this->error('缺少结束时间');
+            if ($data['start_date'] > $data['end_date']) $this->error('起始日期设置错误');
+            if ($data['sign_start1'] == false) $this->error('缺少第1次签到时间');
+            if ($data['sign_end1'] == false) $this->error('缺少第1次签退时间');
+            if ($data['sign_end1'] <= $data['sign_start1']) $this->error('第1次签到时间设置错误');
+            if (($data['sign_start2'] == false && $data['sign_end2']) || ($data['sign_end2'] == false && $data['sign_start2']))
                 $this->error('第2次签到时间设置错误');
-            if($data['sign_end2'] < $data['sign_start2'] )  $this->error('第2次签到时间设置错误');
+            if ($data['sign_end2'] < $data['sign_start2']) $this->error('第2次签到时间设置错误');
 
             if ($id = input('id')) {
                 $this->modelUpdate(ClazzModel::class, $data, ['id' => $data['id']], 'clazz_saving', '修改班级');
@@ -213,30 +215,48 @@ class Student extends Base
     function clazzSign()
     {
         $where = [];
-        if (input('name'))
-            $where[] = ['student_id', '=', \app\common\model\Student::where('name', input('name'))->value('id')];
-        if (input('state'))
+        $map = [];
+        if (input('name')) {
+            $sid = \app\common\model\Student::where('name', input('name'))->value('id');
+            $map['student_id'] = $sid;
+            $where[] = ['student_id', '=', $sid];
+        }
+        if (input('state')) {
+            $map['sign_state'] = input('state');
             $where[] = ['sign_state', '=', input('state')];
-        if (input('clazz_id'))
+        }
+        if (input('clazz_id')) {
+            $map['clazz_id'] = input('clazz_id');
             $where[] = ['clazz_id', '=', input('clazz_id')];
+        }
+
+        $header = ['签到时间', '班级', '学员', '签到状态'];
+        $fields = ['sign_time', function ($row) {
+            echo $row->clazz ? $row->clazz->name : '';
+        }, function ($row) {
+            echo $row->student ? $row->student->name : '';
+        }, function ($row) {
+            echo \app\common\model\Clazz::makeRemark($row['sign_state']);
+        }];
+
+        if(hasPermission(187)) {
+            array_push($header, '备注');
+            array_push($fields, function ($row) {
+                echo hasPermission(187) ? $row->remark : '';
+            });
+        }
 
         $this->assign('data', [
             'title' => '学员签到记录',
             'collection' => ClazzSign::where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['签到时间','班级','学员','签到状态',''],
-            'fields' => ['sign_time', function ($row) {
-                echo $row->clazz?$row->clazz->name:'';
-            }, function ($row) {
-                echo $row->student?$row->student->name:'';
-            }, function ($row) {
-                echo \app\common\model\Clazz::makeRemark($row['sign_state']);
-            }, 'remark'],
+            'thead' => $header,
+            'fields' => $fields,
             'buttons' => [
-                ['title' => '修改', 'onclick' => 'openBigWin', 'url' => url('changeSignState'),'permission_id' => 187],
+                ['title' => '修改', 'onclick' => 'openBigWin', 'url' => url('changeSignState'), 'permission_id' => 187],
             ],
             'mbuttons' => [
-                ['title' => '补签', 'onclick' => 'openBigWin', 'url' => url('changeSignState'),'permission_id' => 187],
-                ['title' => '导出', 'onclick' => 'openBigWin', 'url' => url('exportSignLog')],
+                ['title' => '补签', 'onclick' => 'openBigWin', 'url' => url('changeSignState'), 'permission_id' => 187],
+                ['title' => '导出', 'onclick' => 'openBigWin', 'url' => url('exportSignLog', $map)],
             ],
             'searcher' => [
                 ['type' => 'input', 'name' => 'name', 'placeholder' => '姓名'],
@@ -246,16 +266,28 @@ class Student extends Base
         ]);
         return $this->fetch('public/table_builder');
     }
+
     function exportSignLog()
     {
-        $list = ClazzSign::with('student,clazz')->where('sign_time','>', date('Y-m-d', strtotime('-6months')))->order("id desc")->select();
+        $where = [];
+        if (input('student_id')) {
+            $where[] = ['student_id', '=', input('student_id')];
+        }
+        if (input('sign_state')) {
+            $where[] = ['sign_state', '=', input('state')];
+        }
+        if (input('clazz_id')) {
+            $where[] = ['clazz_id', '=', input('clazz_id')];
+        }
+
+        $list = ClazzSign::where($where)->with('student,clazz')->where('sign_time', '>', date('Y-m-d', strtotime('-6months')))->order("id desc")->select();
         $data = [];
         foreach ($list as $v) {
             $data[] = [
                 'staff_name' => $v->student ? $v->student['name'] : '',
                 'clazz_name' => $v->clazz ? $v->clazz['name'] : '',
                 'sign_time' => $v->sign_time,
-                'sign_state' => Clazz::makeRemark( $v->sign_state ),
+                'sign_state' => Clazz::makeRemark($v->sign_state),
                 'remark' => $v->remark,
             ];
         }
@@ -265,8 +297,9 @@ class Student extends Base
             'clazz_name' => '班级',
             'sign_state' => '签到状态',
             'remark' => '备注',
-        ],[20,20,20,20,20]);
+        ], [20, 20, 20, 20, 20]);
     }
+
     public function changeSignState()
     {
         if (request()->isPost()) {
@@ -288,7 +321,7 @@ class Student extends Base
     {
         $where = [];
         if (input('title'))
-            $where[] = ['title', 'like', '%'.input('title').'%'];
+            $where[] = ['title', 'like', '%' . input('title') . '%'];
 
         if (input('clazz_id'))
             $where[] = ['clazz_id', '=', input('clazz_id')];
@@ -296,11 +329,11 @@ class Student extends Base
         $this->assign('data', [
             'title' => '班级公告',
             'collection' => ClazzNotice::withCount('readLog')->where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['发布时间','班级','标题','发布人','已读人数'],
+            'thead' => ['发布时间', '班级', '标题', '发布人', '已读人数'],
             'fields' => ['add_time', function ($row) {
-                echo $row->clazz?$row->clazz->name:'';
+                echo $row->clazz ? $row->clazz->name : '';
             }, 'title', function ($row) {
-                echo $row->staff?$row->staff->name:'';
+                echo $row->staff ? $row->staff->name : '';
             }, function ($row) {
                 echo $row->read_log_count;
             }],
@@ -317,6 +350,7 @@ class Student extends Base
         ]);
         return $this->fetch('public/table_builder');
     }
+
     public function saveClazzNotice()
     {
         if (request()->isPost()) {
@@ -333,6 +367,7 @@ class Student extends Base
             return $this->fetchFormPageHtml(ClazzNoticeModel::class, __FUNCTION__);
         }
     }
+
     function deleteClazz()
     {
         $id = input('id/d');
@@ -356,16 +391,16 @@ class Student extends Base
                 },
             ],
             'buttons' => [
-                ['title' => '增加', 'url' => url('changePoint', ['type' => 'inc']),'permission_id' => 163],
-                ['title' => '减少', 'url' => url('changePoint', ['type' => 'dec']),'permission_id' => 163],
-                ['title' => '明细', 'onclick' => 'openBigWin', 'url' => url('pointLog'),'permission_id' => 164],
+                ['title' => '增加', 'url' => url('changePoint', ['type' => 'inc']), 'permission_id' => 163],
+                ['title' => '减少', 'url' => url('changePoint', ['type' => 'dec']), 'permission_id' => 163],
+                ['title' => '明细', 'onclick' => 'openBigWin', 'url' => url('pointLog'), 'permission_id' => 164],
             ],
             'searcher' => [
                 ['type' => 'input', 'name' => 'name', 'placeholder' => '姓名'],
                 ['type' => 'input', 'name' => 'mob', 'placeholder' => '手机号'],
             ],
             'mbuttons' => [
-                ['title' => '变动记录', 'onclick' => 'openBigWin', 'url' => url('pointLog'),'permission_id' => 164],
+                ['title' => '变动记录', 'onclick' => 'openBigWin', 'url' => url('pointLog'), 'permission_id' => 164],
             ],
         ]);
         return $this->fetch('public/table_builder');
@@ -570,7 +605,7 @@ class Student extends Base
         $data = [
             'title' => '学员成绩',
             'collection' => TestScore::where($where)->group('student_id,test_id')->field('*,sum(score) total_score,count(id) total_count, sum(is_right=1) right_count')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['姓名', '班级', '考试','总分','正确率'],
+            'thead' => ['姓名', '班级', '考试', '总分', '正确率'],
             'fields' => [
                 function ($row) {
                     echo $row->student['name'];
@@ -583,14 +618,14 @@ class Student extends Base
                 },
                 'total_score',
                 function ($row) {
-                    echo ($row['total_count'] == 0 ? 0 : number_format($row['right_count'] / $row['total_count'] * 100) ) . '%';
+                    echo ($row['total_count'] == 0 ? 0 : number_format($row['right_count'] / $row['total_count'] * 100)) . '%';
                 },
             ],
             'buttons' => [
-                ['title' => '详情', 'onclick' => 'openBigWin', 'url' => url('scoreDetail'),'permission_id' => 165],
+                ['title' => '详情', 'onclick' => 'openBigWin', 'url' => url('scoreDetail'), 'permission_id' => 165],
             ],
             'mbuttons' => [
-                ['title' => '录成绩', 'onclick' => 'openBigWin', 'url' => url('editScore'),'permission_id' => 166],
+                ['title' => '录成绩', 'onclick' => 'openBigWin', 'url' => url('editScore'), 'permission_id' => 166],
             ],
             'searcher' => [
                 ['type' => 'input', 'name' => 'name', 'placeholder' => '学员姓名'],
@@ -606,12 +641,12 @@ class Student extends Base
     {
         $id = input('id');
         $test_score = TestScore::find($id);
-        $where[] = ['test_id','=',$test_score['test_id']];
-        $where[] = ['student_id','=',$test_score['student_id']];
+        $where[] = ['test_id', '=', $test_score['test_id']];
+        $where[] = ['student_id', '=', $test_score['student_id']];
         $data = [
             'title' => '打分列表',
             'collection' => TestScore::where($where)->order('test_id desc,id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['姓名', '班级', '考试', '试题', '正确答案', '录入答案', '是否正确','得分', '录入时间'],
+            'thead' => ['姓名', '班级', '考试', '试题', '正确答案', '录入答案', '是否正确', '得分', '录入时间'],
             'fields' => [
                 function ($row) {
                     echo $row->student['name'];
@@ -627,19 +662,20 @@ class Student extends Base
                 },
                 function ($row) {
                     echo $row->question['answer'];
-                },  'answer',
+                }, 'answer',
                 function ($row) {
                     echo $row['is_right'] == 1 ? '是' : '否';
                 },
-               'score', 'add_time'
+                'score', 'add_time'
             ],
             'mbuttons' => [
-                ['title' => '作废', 'onclick' => 'delOne', 'url' => url('delScore'),'permission_id' => 167],
+                ['title' => '作废', 'onclick' => 'delOne', 'url' => url('delScore'), 'permission_id' => 167],
             ],
         ];
         $this->assign('data', $data);
         return $this->fetch('public/table_builder');
     }
+
     function delScore()
     {
         echo TestScore::destroy(input('id/d')) ? 1 : 0;
@@ -648,7 +684,7 @@ class Student extends Base
     // 精彩瞬间
     function moments()
     {
-        $where =[];
+        $where = [];
         if (input('clazz_id'))
             $where[] = ['clazz_id', '=', input('clazz_id')];
 //        $data = [
@@ -692,15 +728,16 @@ class Student extends Base
         return $this->fetch();
 
     }
+
     function saveMoment()
     {
         $type = input('type');
         if (request()->isPost()) {
             $data = input('post.');
-            if(isset($data['images'])) {
+            if (isset($data['images'])) {
                 $data['images'] = implode(',', $data['images']);
             }
-            if(isset($data['video_url'])) {
+            if (isset($data['video_url'])) {
                 $t = explode(',', $data['video_url']);
                 $data['video_url'] = $t[0];
                 $data['images'] = $t[1];
@@ -708,7 +745,7 @@ class Student extends Base
             $data['edit_time'] = now();
             $data['editor_id'] = session('login_id');
 
-            if($type == 1) {
+            if ($type == 1) {
                 $vali = 'moment_saving';
             } else {
                 $vali = 'moment_saving1';
@@ -718,7 +755,7 @@ class Student extends Base
             } else {
                 $data['add_time'] = now();
 
-                $this->modelCreate(MediaModel::class, $data, $vali, '添加精彩瞬间',function($item) {
+                $this->modelCreate(MediaModel::class, $data, $vali, '添加精彩瞬间', function ($item) {
                     ClazzEvent::addOne(
                         $item->staff->name . "老师上传了精彩媒体",
                         $item['clazz_id'],
@@ -731,33 +768,35 @@ class Student extends Base
             }
 
         } else {
-            if($type == 1) {
+            if ($type == 1) {
                 $func = 'makeFromData1';
             } else {
                 $func = 'makeFromData2';
             }
             $id = input('id');
             $data = [];
-            if($id) {
+            if ($id) {
                 $data = MediaModel::find($id);
-                if($data['video_url']) {
+                if ($data['video_url']) {
                     $data['video_url'] .= ',' . implode('', $data['images']); // 视频地址在前, 封面在后
                 }
             }
             return $this->fetchFormPageHtml(MediaModel::class, url(__FUNCTION__, ['type' => $type]), $data, $func);
         }
     }
+
     function delMoment()
     {
         echo Media::destroy(input('id/d')) ? 1 : 0;
     }
+
     function previewMoment()
     {
         $id = input('id/d');
         $data = Media::find($id);
         $this->assign('data', $data);
-        $this->assign('previous_id', Media::where('id','>', $id)->value('id'));
-        $this->assign('next_id', Media::where('id','<', $id)->order('id desc')->value('id'));
+        $this->assign('previous_id', Media::where('id', '>', $id)->value('id'));
+        $this->assign('next_id', Media::where('id', '<', $id)->order('id desc')->value('id'));
         return $this->fetch('preview');
 
 //        $content = "<div style='padding: 20px;'>";
@@ -787,7 +826,7 @@ class Student extends Base
             'title' => '作业记录',
 //            'info' => '作业内容在课时里编辑',
             'collection' => ZoneTask::with('clazz,staff,zone')->where($where)->order('id desc')->paginate(config('paginate.per_page'), false, ['query' => $this->request->param()]),
-            'thead' => ['发布时间', '老师','班级', '要求', '完成/待点评数量', ],
+            'thead' => ['发布时间', '老师', '班级', '要求', '完成/待点评数量',],
             'fields' => [
                 'add_time',
                 function ($row) {
@@ -797,19 +836,19 @@ class Student extends Base
                     echo $row->clazz ? $row->clazz->name : '';
                 },
                 function ($row) {
-                    echo $row->content ? substr_cn($row->content, 40)   : '';
+                    echo $row->content ? substr_cn($row->content, 40) : '';
                 },
                 function ($row) {
-                    $count = $row->zone()->where('verify_content','')->count();
-                    echo $row->zone()->count() .' / <span style="' . ($count > 0 ? 'color:red' : '') . '">'. $count .'</span>';
+                    $count = $row->zone()->where('verify_content', '')->count();
+                    echo $row->zone()->count() . ' / <span style="' . ($count > 0 ? 'color:red' : '') . '">' . $count . '</span>';
                 },
             ],
             'buttons' => [
-                ['title' => '修改', 'onclick' => 'openBigWin','url' => url('editZoneTask')],
+                ['title' => '修改', 'onclick' => 'openBigWin', 'url' => url('editZoneTask')],
                 ['title' => '完成列表', 'onclick' => 'openBigWin', 'url' => url('zonePublished')],
             ],
             'mbuttons' => [
-                ['title' => '布置作业', 'onclick' => 'openBigWin','url' => url('editZoneTask')],
+                ['title' => '布置作业', 'onclick' => 'openBigWin', 'url' => url('editZoneTask')],
             ],
             'searcher' => [
                 ['type' => 'select', 'name' => 'clazz_id', 'options' => Clazz::column('name', 'id'), 'placeholder' => '选择班级'],
@@ -819,6 +858,7 @@ class Student extends Base
         $this->assign('data', $data);
         return $this->fetch('public/table_builder');
     }
+
     public function editZoneTask()
     {
         if (request()->isPost()) {
@@ -835,6 +875,7 @@ class Student extends Base
             return $this->fetchFormPageHtml(ZoneTaskModel::class, __FUNCTION__);
         }
     }
+
     // 作业完成列表
     function zonePublished()
     {
@@ -855,17 +896,17 @@ class Student extends Base
                 },
                 'content',
                 function ($row) {
-                    if($row['voice']) echo "<audio src='". add_image_prefix($row['voice'])  ."' controls>该浏览器不支持audio标签</audio>";
-                    if($row['attach'])
-                        foreach ( explode(',',$row['attach']) as $img ) {
-                            echo '<img src="'.$img.'" style="width:80px; margin:0 3px;" onclick="previewImage(this)"/>';
+                    if ($row['voice']) echo "<audio src='" . add_image_prefix($row['voice']) . "' controls>该浏览器不支持audio标签</audio>";
+                    if ($row['attach'])
+                        foreach (explode(',', $row['attach']) as $img) {
+                            echo '<img src="' . $img . '" style="width:80px; margin:0 3px;" onclick="previewImage(this)"/>';
                         }
                 },
                 function ($row) {
-                    if($row['verify_content'] == false) {
-                        echo '<a class="ui tiny orange label" data-title="点评" data-url="' . url('zoneVerify') . '" onclick="openWin(this, \'' . $row['id'] . '\')">点评</a> ' ;
+                    if ($row['verify_content'] == false) {
+                        echo '<a class="ui tiny orange label" data-title="点评" data-url="' . url('zoneVerify') . '" onclick="openWin(this, \'' . $row['id'] . '\')">点评</a> ';
                     } else {
-                        echo $row['verify_content'] . '<br>分数：'. $row['verify_score'];
+                        echo $row['verify_content'] . '<br>分数：' . $row['verify_score'];
                     }
                 },
             ],
@@ -877,6 +918,7 @@ class Student extends Base
         $this->assign('data', $data);
         return $this->fetch('public/table_builder');
     }
+
     public function zoneVerify()
     {
         if (request()->isPost()) {

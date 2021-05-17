@@ -17,10 +17,10 @@ class Course extends BaseModel
     {
         return $this->belongsTo(CourseTimes::class, 'times_id');
     }
-   function section()
-   {
-       return $this->belongsTo(Section::class, 'section_id');
-   }
+    function section()
+    {
+        return $this->belongsTo(Section::class, 'section_id');
+    }
     public function getStatusTextAttr($value, $data)
     {
         return $this->transferStatusText($data['status'], 'course');
