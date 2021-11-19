@@ -1,1 +1,0 @@
-<?phpnamespace app\common\model;use think\Db;class OffdutyType extends BaseModel{    protected $table = 'offduty_type';}

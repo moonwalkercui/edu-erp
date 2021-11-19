@@ -1,0 +1,9 @@
+1，目录说明：
+student-center是家长端
+teacher-center是老师端
+
+2，接口修改
+这两个端口的后台地址都是server的地址，请修改文件夹中util/config.js里的接口地址前缀即可。
+
+3，这两个项目是uniapp的H5端项目，用HBuildX打开编辑。
+小程序和app未作适配有兴趣的自行适配生成即可，工作量也不会很大。

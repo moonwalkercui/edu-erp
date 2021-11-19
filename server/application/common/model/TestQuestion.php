@@ -1,1 +1,0 @@
-<?phpnamespace app\common\model;class TestQuestion extends BaseModel{    use BelongsToQuestion;    protected $table = 'test_question';}

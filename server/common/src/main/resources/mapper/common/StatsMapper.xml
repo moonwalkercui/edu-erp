@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.StatsMapper">
+
+    <!--  按日销量统计         where t1.add_time &gt;= '2021-01-01' and t1.add_time &lt;= '2021-08-01'  -->
+    <select id="courseSalesByDate" resultType="map">
+        SELECT count(0)                                total_count,
+               sum(amount)                          as total_amount,
+               sum(count_lesson_total)              as count_lesson_total,
+               date_format(t1.add_time, '%m-%d') AS dates
+        FROM student_course t1
+        <where>
+            <if test="startDate != null and endDate != null">
+                AND ( t1.add_time &gt;= #{startDate} and t1.add_time &lt;= #{endDate} )
+            </if>
+            <if test="startDate == null">
+                AND DATE_FORMAT( t1.add_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+            </if>
+        </where>
+        GROUP BY dates
+        ORDER BY dates
+    </select>
+
+    <!--  统计各课程         where t1.add_time &gt;= '2021-01-01' and t1.add_time &lt;= '2021-08-01'  -->
+    <select id="courseSalesTotal" resultType="map">
+        SELECT t1.course_id,
+               t2.name                    course_name,
+               count(0)                   total_count,
+               sum(amount)             as total_amount,
+               sum(count_lesson_total) as count_lesson_total
+        FROM student_course t1
+        LEFT JOIN course t2 on t2.id = t1.course_id
+        <where>
+            <if test="startDate != null and endDate != null">
+                AND ( t1.add_time &gt;= #{startDate} and t1.add_time &lt;= #{endDate} )
+            </if>
+        </where>
+        GROUP BY t1.course_id
+        ORDER BY total_amount desc
+    </select>
+
+    <!--  授课量  -->
+    <select id="teacherLessonTotal" resultType="java.util.Map">
+        select t2.teacher_id,
+               t3.name as   teacher_name,
+               count(t1.id) lesson_count
+        from lesson t1
+                 LEFT JOIN lesson_teacher t2 on t2.lesson_id = t1.id
+                 LEFT JOIN staff t3 on t3.id = t2.teacher_id
+        <where>
+            t2.teacher_id is not null
+            <if test="startDate != null and endDate != null">
+                AND ( t1.date &gt;= #{startDate} and t1.date &lt;= #{endDate} )
+            </if>
+        </where>
+        GROUP BY t2.teacher_id
+        ORDER BY lesson_count desc
+    </select>
+
+    <!--  新学员录入趋势  -->
+    <select id="newStudentCounts" resultType="java.util.Map">
+        SELECT
+            count(0) total_count,
+            date_format(t1.add_time, '%Y-%m-%d') AS dates
+        FROM student t1
+        <where>
+            <if test="startDate != null and endDate != null">
+                AND ( t1.add_time &gt;= #{startDate} and t1.add_time &lt;= #{endDate} )
+            </if>
+            <if test="startDate == null">
+                AND DATE_FORMAT( t1.add_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+            </if>
+        </where>
+        GROUP BY dates
+        ORDER BY dates
+    </select>
+
+    <!--  学员课次数排行  -->
+    <select id="studentLessonCounts" resultType="java.util.Map">
+        SELECT
+            sum(t1.count_lesson_total) total_count,
+            t2.name student_name
+        FROM student_course t1
+        LEFT JOIN student t2 on t2.id = t1.student_id
+        <where>
+            <if test="startDate != null and endDate != null">
+                AND ( t1.start_date &gt;= #{startDate} and t1.start_date &lt;= #{endDate} )
+            </if>
+        </where>
+        GROUP BY t1.student_id
+        ORDER BY total_count desc
+        LIMIT 50
+    </select>
+
+    <!-- 控制台数字 -->
+    <select id="dashboardCounts" resultType="java.util.Map">
+        SELECT * from
+        (
+         (select count(0) student_count from student WHERE deleted!=1) count1,
+         (select count(0) lesson_count from lesson WHERE deleted!=1) count2,
+         (select ifnull (sum(course_amount) / 10000, 0) course_amount from student_course WHERE deleted!=1 and DATE_FORMAT( add_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )) count3,
+         (select count(0) teacher_count from staff WHERE is_manager!=1 and deleted!=1 and state=1) count4
+        )
+    </select>
+
+    <!-- 销售漏斗 -->
+    <select id="funnelData" resultType="hashmap">
+        select count(0) num, t2.stage from
+        (
+            select t1.* from
+                (select id, student_id, stage from contact_record WHERE stage != 0 and deleted = 0 ORDER BY id desc) t1
+            GROUP BY t1.student_id
+        ) t2
+        GROUP BY t2.stage
+    </select>
+
+    <select id="studentAgeStats" resultType="java.util.Map">
+        SELECT
+            count(0) value,
+            CONCAT(year(CURDATE()) - YEAR(t1.birthday) + 1, '岁') name
+        FROM
+            student t1
+        WHERE
+            t1.stage = 2 and t1.birthday IS NOT NULL
+        GROUP BY
+            YEAR ( t1.birthday )
+    </select>
+
+    <!--  受教评价 默认本月 -->
+    <select id="teachEvaluationStatis" resultType="map">
+        select
+            count(t1.teacher_id) count_score,
+            ROUND(avg(score1), 2) avg_s1,
+            ROUND(avg(score2), 2) avg_s2,
+            ROUND(avg(score3), 2) avg_s3,
+            ROUND(avg(score4), 2) avg_s4,
+            t2.name teacher_name
+        from teach_evaluation t1
+        LEFT JOIN staff t2 on t2.id = t1.teacher_id
+        <where>
+            <if test="startDate != null and endDate != null">
+                AND ( t1.add_time &gt;= #{startDate} and t1.add_time &lt;= #{endDate} )
+            </if>
+            <if test="teacherId != null ">
+                AND t1.teacher_id = #{teacherId}
+            </if>
+        </where>
+        GROUP BY t1.teacher_id
+        ORDER BY avg_s1 desc
+    </select>
+
+</mapper>

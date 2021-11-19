@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.StaffOrginfoMapper">
+    <select id="getByStaffId" resultType="com.hzb.erp.common.entity.StaffOrginfo">
+        select * from staff_orginfo where staff_id = ${staffId} limit 1
+    </select>
+</mapper>

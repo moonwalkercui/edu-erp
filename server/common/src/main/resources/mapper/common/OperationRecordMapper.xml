@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.OperationRecordMapper">
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.OperationRecordVO">
+        select t1.*,
+            t2.name creator_name,
+            t4.name com_name,
+            t5.name dpt_name
+        from operation_record t1
+            left join staff t2 on t2.id = t1.creator
+            left join staff_orginfo t3 on t3.staff_id = t2.id
+            LEFT JOIN org t4 ON t4.id = t3.com_id
+            LEFT JOIN org t5 ON t5.id = t3.dpt_id
+        where t1.type= #{param.type}  and t1.target_id = #{param.itemId}
+    </select>
+</mapper>

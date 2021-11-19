@@ -1,1 +1,0 @@
-<?phpnamespace app\backend\model;class SmsLog extends Base{    protected $table = 'sms_log';}

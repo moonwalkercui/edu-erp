@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.ClazzMapper">
+    <sql id="sqlClassNormal">
+        select t1.*,
+        t3.name classroom,
+        t4.name teacher_name,
+        t7.name course_name,
+        ( SELECT count( 0 ) FROM class_student t0 WHERE t0.class_id = t1.id and deleted = 0 ) student_count,
+        ( SELECT count( 0 ) FROM lesson t8 WHERE t8.class_id = t1.id and t8.date &lt;= CURDATE() and t8.end_time &lt; CURTIME()) over_lesson_count,
+        ( SELECT count( 0 ) FROM lesson t8 WHERE t8.class_id = t1.id) schedule_lesson_count,
+        ( SELECT t10.name FROM subject t10 WHERE t10.id = t7.subject_id ) AS subject_name
+        from class t1
+        LEFT JOIN classroom t3 on t3.id = t1.classroom_id
+        LEFT JOIN staff t4 ON t4.id = t1.teacher_id
+        LEFT JOIN course t7 ON t7.id = t1.course_id
+    </sql>
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.ClassVO">
+        <include refid="sqlClassNormal"/>
+        <where>
+            <if test="param.teacherId != null">
+                AND t1.teacher_id = #{param.teacherId}
+            </if>
+            <if test="param.relTeacherId != null">
+                AND (t1.teacher_id = #{param.relTeacherId} OR t1.id in (
+                select DISTINCT class_id from lesson where id in ( select lesson_id from lesson_teacher where teacher_id
+                = #{param.relTeacherId}))
+                )
+            </if>
+            <if test="param.courseId != null">
+                AND t1.course_id = #{param.courseId}
+            </if>
+            <if test="param.className != null and param.className != ''">
+                AND t1.name like concat('%', #{param.className}, '%')
+            </if>
+            <if test="param.studentId != null">
+                AND t1.id in (select class_id from class_student where student_id = #{param.studentId} and deleted != 1)
+            </if>
+            <if test="param.over != null and param.over == true">
+                AND t1.be_over = 0
+            </if>
+            AND t1.deleted != 1
+        </where>
+        order by t1.id desc
+    </select>
+
+    <select id="getInfo" resultType="com.hzb.erp.common.pojo.vo.ClassVO">
+        <include refid="sqlClassNormal"/>
+        WHERE
+        t1.id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,24 @@
+@font-face {
+  font-family: "custom-icon"; /* Project id 2666629 */
+  src: url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAATIAAsAAAAACXQAAAR6AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHFQGYACDHAqFcIRlATYCJAMQCwoABCAFhQsHUxscCBFVnGHJfhTGMeH6fPZ98D2iCJE/CuobizX/+e+0c9+bSUepMBWwdLoCki6ZZGn+QUgDBBCQXVzLJxoJFzlg+Xak2ff6ab9XyC1Nx8LPqTnBwm7+j6VeWiToB/DLaEo6sLNoy+fVW1um2AZoe4BnmHSi2TcBAVCQgiKwylVrN4Zzz3YDe0OHgKCSgFcy9ezWpR0kXQYhAk+QhIakBwXQLIgAm8wuA5h5+316gzSSAAaRI7hW/c5VOuL4c/H5aG52mNGSP4a5uBxczACIADiAhIYpqGu0rj34w5cADkXyCMgC2COBAYX2uD8f7XAwo1M86cBD1n88BpABAU9DZIafA8/FE+3Fd0cJCPmjMQgGYKkckAAYAXyHdASoAHAMhzORkVwo1VlVE1VNSx+xaZm3Le5IxkkRq2OamOZ5Np4XsBge2Hove59Puakx31brkgqvQ5k843TG7ernC47WvGjaWzWrpTnWGmlVaU/mmshIr9MLrPHa4KcuDV5V96hpb5RisxGfWuNOYhfLxinrzQu8VPumDs+HUtWpi9rZl22Mam9b621auHe3b+N5qz3brl6/xKuJdYFn0/lb9kSX26fqj7Bm3za9uW2RT3vLsalHzIcVZe3RdtoUm8WuGqdazfNMFvqhy9EjtCmHAeUsMR/J/XLHiCxHFYWMTCGLd7l94drVno2jpS4UAeEfm0XqyFWjq4e5Oca94JXPdus+qe7gSWvWbnx2s92Ay5WdA+pu3ruvZ6/jywev+r4n/xTGXS6oiHxVavR8zT0eet5+8pdXBeKiMz902iEhItra2et5jNzLka41k/3e54913LueFEq7SOPy15R4r8LU+xp84ftxO1sO3en14BrTPlaR3kszy1jk8TY1B76paNVqzoDXtdocZ5FlM6X3h/bOHxqQQBENuse+GLZH33PeEtu9QUQCBQyd//uKr1vKYa4va4tOH3IMk7RJhssk76sAa0vJbimheBlkhz297ldJbxXsl66P0NP9Ruq38+jBra5/OBDs0rNWRfOuLSc0rzHm85+0Az1aHtAz/D48p6MvAMDxl4/jRMut/D/vDgB8O3u67yzCh9rFV9q4FIC/Sepiq3qyuX6EbA7rJKete7pD21P4EpYVXDsgTGKdGHufrrOB7mEA5aAEdo0Q4O6vCIEHewCiftA1wDgJApwqEiogU6AiMh9qQFYFiniX1MKWv+miyQCivCMg3j4A4+wS4Lx9QgXkP0REJ0INSH+gMHV0NlVUEysxKsEFVM/gNCVzzBJdslDc8/tfoS1BsZn7dN8hZ4fVcJSUIgQvMCHntyU/2GMRA4Ypwnmx18MQCBqmGrXsL0Wa+UFyZ+lZ9jXF1gmGFIEWQOUZcDSSmMtpQisyQaK9iL9zBVlFoHB0CYLnDmKd52g84Mi+w2TQC15KWrCB27MH1jEhDGCYms0AzpusQeHgI6CR59WQJvYtM3gacwdUziTl7VcriDO8CUARnFuIESeBRDi93UuhZ9yITqX7E8k+ubRp1S7VzpaLNbhWCwAA') format('woff2');
+}
+
+.custom-icon {
+  font-family: "custom-icon" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.custom-icon-dazuoye:before {
+  content: "\e612";
+}
+
+.custom-icon-mianqiangxingxing:before {
+  content: "\e67e";
+}
+
+.custom-icon-banjiguanli:before {
+  content: "\e605";
+}

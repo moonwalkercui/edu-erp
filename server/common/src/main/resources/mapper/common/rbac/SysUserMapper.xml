@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.rbac.SysUserMapper">
+
+    <select id="getUsersByRoleId" resultType="com.hzb.erp.common.pojo.vo.StaffVO">
+        select id, name, mobile, state
+        from staff
+        where id in (select user_id from sys_user_role where role_id = #{roleId})
+        and deleted !=1 and state = 1
+    </select>
+
+</mapper>

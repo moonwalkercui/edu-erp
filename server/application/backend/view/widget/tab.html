@@ -1,7 +1,0 @@
-{notempty name="data.tabs"}
-<div class="ui pointing secondary menu">
-    {volist name="data.tabs" id="tab"}
-    <a class="{eq name='Request.param.type' value='$tab.type'}active{/eq} item" href="{$tab.url}">{$tab.title}</a>
-    {/volist}
-</div>
-{/notempty}

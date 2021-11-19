@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.StudentLeaveMapper">
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.StudentLeaveVO">
+        SELECT
+        t1.id,t1.reason,t1.add_time,t1.state,
+        t2.NAME AS student_name, t8.mobile,
+        t5.name AS course_name, t3.date, t3.start_time, t3.end_time,
+        (select group_concat(name) from staff where id in (select teacher_id from lesson_teacher where lesson_id =
+        t3.id)) teacher_names
+        FROM
+        student_leave t1
+        LEFT JOIN student t2 ON t2.id = t1.student_id
+        LEFT JOIN lesson t3 ON t3.id = t1.lesson_id
+        LEFT JOIN course t5 ON t5.id = t3.course_id
+        LEFT JOIN user t8 ON t8.id = t2.user_id
+
+        <where>
+            <if test="param.teacherId != null">
+                AND t1.lesson_id in ( select lesson_id from lesson_teacher where teacher_id = #{param.teacherId} )
+            </if>
+            <if test="param.startDate != null and param.endDate != null">
+                AND t1.lesson_id in ( select id from lesson
+                <where>
+                    <![CDATA[AND ( date >= #{param.startDate} and date <= #{param.endDate} ) ]]>
+                    AND deleted != 1
+                </where>
+                )
+            </if>
+            <if test="param.studentName !=null and param.studentName != ''">
+                AND t1.student_id = #{param.studentName} or t1.student_id in ( select id from student where name = #{param.studentName}
+                or user_id = (select id from user where mobile = #{param.studentName})
+            </if>
+            <!--            <if test="param.state != null">-->
+            <!--                AND t1.verify_state = #{param.state}-->
+            <!--            </if>-->
+        </where>
+        order by id desc
+    </select>
+</mapper>

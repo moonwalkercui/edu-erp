@@ -1,0 +1,196 @@
+{
+	"easycom": {
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "教务管理系统"
+			}
+		},
+		{
+			"path": "pages/lesson/index",
+			"style": {
+				"navigationBarTitleText": "课次列表"
+			}
+		},
+		{
+			"path": "pages/lesson/evaluate",
+			"style": {
+				"navigationBarTitleText": "课后点评"
+			}
+		},
+		{
+			"path": "pages/lesson/teach-evaluate",
+			"style": {
+				"navigationBarTitleText": "受教评价"
+			}
+		},
+		{
+			"path": "pages/center/index",
+			"style": {
+				"navigationBarTitleText": "课次列表"
+			}
+		},
+		{
+			"path": "pages/center/changepw",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
+		},
+		{
+			"path": "pages/center/contract-record",
+			"style": {
+				"navigationBarTitleText": "购买记录"
+			}
+		},
+		{
+			"path": "pages/lesson/sign-record",
+			"style": {
+				"navigationBarTitleText": "签到记录"
+			}
+		},
+		{
+			"path": "pages/help/index",
+			"style": {
+				"navigationBarTitleText": "使用帮助"
+			}
+		},
+		{
+			"path": "pages/help/detail",
+			"style": {
+				"navigationBarTitleText": "帮助详情"
+			}
+		},
+		{
+			"path": "pages/student/index",
+			"style": {
+				"navigationBarTitleText": "学生信息"
+			}
+		},
+		{
+			"path": "pages/student/new",
+			"style": {
+				"navigationBarTitleText": "添加学生"
+			}
+		},
+		{
+			"path": "pages/student/avatar",
+			"style": {
+				"navigationBarTitleText": "头像编辑"
+			}
+		},
+		{
+			"path": "pages/center/grade",
+			"style": {
+				"navigationBarTitleText": "成绩单"
+			}
+		},
+		{
+			"path": "pages/center/profile",
+			"style": {
+				"navigationBarTitleText": "我的资料"
+			}
+		},	
+		{
+			"path": "uview-ui/components/u-avatar-cropper/u-avatar-cropper",
+			"style": {
+				"navigationBarTitleText": "头像裁剪",
+				"navigationBarBackgroundColor": "#000000"
+			}
+		},
+		{
+			"path": "pages/class/detail",
+			"style": {
+				"navigationBarTitleText": "班级介绍"
+			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/login/code",
+			"style": {
+				"navigationBarTitleText": "验证码"
+			}
+		},
+		{
+			"path": "pages/login/binding",
+			"style": {
+				"navigationBarTitleText": "绑定学员"
+			}
+		},
+		{
+			"path": "pages/login/register",
+			"style": {
+				"navigationBarTitleText": "注册账号"
+			}
+		},
+		{
+			"path": "pages/login/forget",
+			"style": {
+				"navigationBarTitleText": "找回密码"
+			}
+		},
+		{
+			"path": "pages/homework/index",
+			"style": {
+				"navigationBarTitleText": "作业"
+			}
+		},
+		{
+			"path": "pages/homework/detail",
+			"style": {
+				"navigationBarTitleText": "作业详情"
+			}
+		},
+		{
+			"path": "pages/homework/new",
+			"style": {
+				"navigationBarTitleText": "发布作业"
+			}
+		}
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uView",
+		"navigationBarBackgroundColor": "#2ac79f",
+		"backgroundColor": "#2ac79f",
+		// #ifdef H5
+		"navigationStyle": "custom"
+		// #endif
+	},
+	"tabBar": {
+		"color": "#909399",
+		"borderStyle": "white",
+		"backgroundColor": "#ffffff",
+		"selectedColor": "black",
+	    "list": [
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/b2.png",
+				"selectedIconPath": "static/b1.png",
+				"text": "首页"
+			}, {
+				"pagePath": "pages/lesson/index",
+				"iconPath": "static/c2.png",
+				"selectedIconPath": "static/c1.png",
+				"text": "课表"
+			}, {
+				"pagePath": "pages/homework/index",
+				"iconPath": "static/w2.png",
+				"selectedIconPath": "static/w1.png",
+				"text": "作业"
+			}, {
+				"pagePath": "pages/center/index",
+				"iconPath": "static/me2.png",
+				"selectedIconPath": "static/me1.png",
+				"text": "我的"
+			}
+		]
+	}
+}

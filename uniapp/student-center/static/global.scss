@@ -1,0 +1,112 @@
+
+.text-gray {
+	color: #999;
+}
+.text-black {
+	color: black;
+}
+.text-red {
+	color: #fa3534;
+}
+.text-orange {
+	color: #ff9900;
+}
+.text-white {
+	color: #fff;
+}
+.text-primary {
+	color: $u-type-primary;
+}
+.text-mini {
+	font-size: 24rpx;
+}
+.text-bold {
+	font-weight: bold;
+}
+.bg-primary {
+	background-color: $u-type-primary;
+}
+.bg-white {
+	background-color: white;
+}
+.bg-gray {
+	background-color: #999;
+}
+.bg-success {
+	background-color: white;
+}
+.bg-light-gray {
+	background-color: #f4f4f5;
+}
+.popup-content {
+	display: flex;
+	height: calc(100% - 140rpx);
+}
+
+.u-card-wrap {
+	padding: 1px;
+}
+
+.u-body-item {
+	font-size: 32rpx;
+	color: #333;
+	padding: 20rpx 10rpx;
+}
+	
+.u-body-item image {
+	width: 120rpx;
+	flex: 0 0 120rpx;
+	height: 120rpx;
+	border-radius: 8rpx;
+	margin-left: 12rpx;
+}
+
+.line-height-md {
+	line-height: 150%;
+}
+
+.boder-radius-lg {
+	border-radius: 30rpx;
+}
+.boder-radius-md {
+	border-radius: 20rpx;
+}
+
+.boder-radius-sm {
+	border-radius: 15rpx;
+}
+
+.fix-bottom-buttons-box {
+	height: 140rpx;
+}
+.fix-bottom-buttons {
+	display: flex;
+	justify-content: space-around;
+	position: fixed;
+	bottom: 10rpx;
+	left: 0;
+	width: 100%;
+	padding: 20rpx;
+	z-index: 100;
+	.btn{
+		background-color: $u-type-primary;
+		border-radius: 60rpx;
+		font-size: 30rpx;
+		line-height: 100rpx;
+		align-items: center;
+		color: #ffffff;
+		width: 100%;
+		text-align: center;
+		.icon{
+			margin-right: 10rpx;
+		}
+	}
+	.gray {
+		background-color: $u-type-info;
+	}
+	
+	.success {
+		background-color: $u-type-success-dark;
+	}
+	
+}

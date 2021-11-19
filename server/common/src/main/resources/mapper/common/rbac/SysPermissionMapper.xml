@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.rbac.SysPermissionMapper">
+    <sql id="Base_Column_List">
+        id, name, parent_id, url, path, enabled
+    </sql>
+
+    <resultMap id="Menu_Role_Info" type="com.hzb.erp.common.entity.rbac.SysPermissionDTO">
+        <collection property="roles"
+                    select="com.hzb.erp.common.mapper.rbac.SysRoleMapper.selectRoleByPermission"
+                    column="id"
+                    ofType="com.hzb.erp.common.entity.rbac.SysRole"/>
+    </resultMap>
+
+    <select id="getAllInfo" resultMap="Menu_Role_Info">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_permission
+    </select>
+
+    <select id="getAllBaseInfo" resultType="com.hzb.erp.common.entity.rbac.SysPermissionDTO">
+        select id, url
+        from sys_permission
+    </select>
+
+    <select id="getByRoleId" resultType="com.hzb.erp.common.entity.rbac.SysPermission">
+        select *
+        from sys_permission
+        where id in (select permission_id from sys_role_permission where role_id = #{roleId})
+    </select>
+
+    <select id="getByRoleIds" resultType="com.hzb.erp.common.entity.rbac.SysPermission">
+        select *
+        from sys_permission
+        where id in (select permission_id from sys_role_permission where role_id in
+        <foreach collection="roleIds" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>)
+    </select>
+
+</mapper>

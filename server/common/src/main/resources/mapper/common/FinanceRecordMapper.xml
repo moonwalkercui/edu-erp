@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.FinanceRecordMapper">
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.FinanceRecordVO">
+
+        select t1.*, t2.`name` payer_name, t3.name operator_name, t4.name verify_staff_name
+        from finance_record t1
+        LEFT JOIN student t2 on t2.id = t1.payer
+        LEFT JOIN staff t3 on t3.id = t1.operator
+        LEFT JOIN staff t4 on t4.id = t1.verify_staff
+        <where>
+            <if test="param.title != null and param.title != ''">
+                AND t1.title like concat('%', #{param.title}, '%')
+            </if>
+            <if test="param.payer != null">
+                AND t1.payer = #{param.payer}
+            </if>
+            <if test="param.operator != null">
+                AND t1.operator = #{param.operator}
+            </if>
+            <if test="param.operator != null">
+                AND t1.operator = #{param.operator}
+            </if>
+            <if test="param.type != null and param.type.size > 0">
+                AND t1.item_type in
+                <foreach collection="param.type" item="type" index="index" open="(" close=")" separator=",">
+                    #{type}
+                </foreach>
+            </if>
+            <if test="param.state != null ">
+                AND t1.verify_state = #{param.state}
+            </if>
+        </where>
+        ORDER BY t1.id desc
+
+    </select>
+</mapper>

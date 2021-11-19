@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.PositionMapper">
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.PositionVO">
+        select t1.* from position t1
+        <where>
+            <if test="param.name != null">
+                AND t1.name like concat('%', #{param.name}, '%')
+            </if>
+            and t1.deleted = 0
+        </where>
+    </select>
+</mapper>
