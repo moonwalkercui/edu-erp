@@ -10,7 +10,7 @@
 ## 技术栈
 
 #### 框架
-- 核心框架：sprinboot3.4.1
+- 核心框架：sprinboot2.4.1
 - JS框架：vue2 + Element
 - 移动端框架：uniapp
 - 数据库：MySQL5.7
