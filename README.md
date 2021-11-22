@@ -80,7 +80,7 @@ sudo nohup java -jar base-api-1.0.0.jar > output.log 2>&1 &
 运行完成
 
 ## 数据库版本
-mysql的版本是5.7，不过去掉一个参数配置： `ONLY_FULL_GROUP_BY` ，否则会有group by的错误。或者用5.5也可以，未测试5.5
+mysql的版本是5.7，不过去掉一个参数配置： `ONLY_FULL_GROUP_BY` ，否则会有group by的错误，解决方案百度搜ONLY_FULL_GROUP_BY很多。或者用mysql5.6也可以。
 
 ## 微信配置
 
