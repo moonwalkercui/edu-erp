@@ -7145,8 +7145,8 @@ CREATE TABLE `setting_option`  (
 INSERT INTO `setting_option` VALUES (1, 1, '班级结业时班内学员自动结业', 'class_close_with_graduate_student', 'true', 'bool', '如果学员课次有余量的则不会自动结业', 0);
 INSERT INTO `setting_option` VALUES (2, 1, '报单1V1课程时自动生成班级', 'class_auto_create_on_one2one', 'true', 'bool', NULL, 0);
 INSERT INTO `setting_option` VALUES (3, 1, '课次数不足预警数量', 'lesson_count_less_warning_count', '5', 'int', '课次不足时可以按设置给学员和负责老师发通知', 0);
-INSERT INTO `setting_option` VALUES (4, 3, '短信接口KEY', 'sms_access_key', 'LTAI5tLMp6QxQsNjMJHUq2T9', 'str', '课次不足时可以按设置给学员和负责老师发通知', 0);
-INSERT INTO `setting_option` VALUES (5, 3, '短信接口秘钥', 'sms_access_secret', 'Hi3FtFZ32s0IBbi6KicKeeGuZlwu9t', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (4, 3, '短信接口KEY', 'sms_access_key', 'LTAI5tLMp6QxQsNjMJHUq2T91', 'str', '课次不足时可以按设置给学员和负责老师发通知', 0);
+INSERT INTO `setting_option` VALUES (5, 3, '短信接口秘钥', 'sms_access_secret', 'Hi3FtFZ32s0IBbi6KicKeeGuZlwu9t1', 'str', NULL, 0);
 INSERT INTO `setting_option` VALUES (6, 3, '短信签名', 'sms_sign_name', '双惠德', 'str', NULL, 0);
 INSERT INTO `setting_option` VALUES (9, 1, '家长端初始密码', 'student_default_pwd', '111111', 'str', '添加学生时的默认登录密码', 0);
 INSERT INTO `setting_option` VALUES (8, 1, '课次数不足提醒次数', 'lesson_count_less_warning_times', '2', 'int', '课次不足时可以按设置给学员和负责老师发通知', 0);
