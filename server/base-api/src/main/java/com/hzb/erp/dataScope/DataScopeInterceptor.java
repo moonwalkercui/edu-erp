@@ -52,7 +52,6 @@ public class DataScopeInterceptor implements InnerInterceptor {
         * 获取登录者
         * */
         if(UserAuthService.getCurrentUserId() == null) {
-            System.out.println("=======uid: null");
             return;
         }
         // 获取登录信息 未登录跳过

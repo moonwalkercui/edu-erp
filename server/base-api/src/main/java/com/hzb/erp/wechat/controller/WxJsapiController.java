@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/app/wx/jsapi/{confName}")
+@RequestMapping("/wx/jsapi/{confName}")
 @EnableConfigurationProperties(WxMpProperties.class)
 @Slf4j
 public class WxJsapiController {

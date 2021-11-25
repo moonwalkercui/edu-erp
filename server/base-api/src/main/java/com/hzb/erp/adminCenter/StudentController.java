@@ -4,6 +4,7 @@ package com.hzb.erp.adminCenter;
 import com.hzb.erp.annotation.Log;
 import com.hzb.erp.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.configuration.SystemConfig;
+import com.hzb.erp.common.entity.Staff;
 import com.hzb.erp.common.entity.StaffOrginfo;
 import com.hzb.erp.common.entity.Student;
 import com.hzb.erp.common.entity.User;
@@ -16,6 +17,7 @@ import com.hzb.erp.common.pojo.dto.ParentInfoSaveDTO;
 import com.hzb.erp.common.pojo.dto.StudentBaseInfoDTO;
 import com.hzb.erp.common.pojo.dto.StudentParamDTO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
+import com.hzb.erp.common.pojo.vo.StaffVO;
 import com.hzb.erp.common.pojo.vo.StudentVO;
 import com.hzb.erp.common.service.SettingService;
 import com.hzb.erp.common.service.StudentService;
@@ -27,6 +29,7 @@ import com.hzb.erp.service.UserAuthService;
 import com.hzb.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -215,13 +218,17 @@ public class StudentController {
             String gender = map.get("gender") != null ? map.get("gender").toString().trim() : null;
             String idcard = map.get("idcard") != null ? map.get("idcard").toString().trim() : null;
             String password = map.get("password") != null ? map.get("password").toString().trim() : null;
+            String parentname = map.get("parent") != null ? map.get("parent").toString().trim() : name + "的家长";
 
             if (password == null) {
                 throw new BizException("缺少密码:" + name);
             }
 
-            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDate birthday = map.get("birthday") != null ? LocalDateTime.parse(map.get("birthday").toString(), df).toLocalDate() : null;
+            LocalDate birthday = null;
+            if(map.get("birthday") != null && StringUtils.isNotBlank(map.get("birthday").toString())) {
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                birthday = LocalDateTime.parse(map.get("birthday").toString(), df).toLocalDate() ;
+            }
 
             GenderEnum genderEum = EnumTools.getByDist(gender, GenderEnum.class);
             if (genderEum == null) {
@@ -234,7 +241,7 @@ public class StudentController {
             }
 
             String defaultPwd = settingService.strValue(SettingConstants.STUDENT_DEFAULT_PWD);
-            User user = userService.existOrCreate(mobile, null, SecurityUtils.passwordEncode(defaultPwd));
+            User user = userService.existOrCreate(mobile, parentname, SecurityUtils.passwordEncode(defaultPwd));
 
             Student item = new Student();
             item.setName(name);
@@ -243,6 +250,10 @@ public class StudentController {
             item.setStage(stageEnum);
             item.setBirthday(birthday);
             item.setIdcard(idcard);
+            Long staffId = UserAuthUtil.getCurrentUserId();
+            StaffOrginfo orginfo = staffOrginfoMapper.getByStaffId(staffId);
+            item.setCounselor(staffId);
+            item.setSchoolId(orginfo == null ? null : orginfo.getComId());
 
             records.add(item);
         }
@@ -256,8 +267,9 @@ public class StudentController {
             put("name", "*姓名");
             put("mobile", "*手机号");
             put("password", "*登录密码");
+            put("parent", "家长姓名");
             put("gender", "性别(有效值:男|女|未知)");
-            put("birthday", "生日(格式:日期)");
+            put("birthday", "生日(格式:2000-01-01)");
             put("idcard", "身份证");
         }};
     }
