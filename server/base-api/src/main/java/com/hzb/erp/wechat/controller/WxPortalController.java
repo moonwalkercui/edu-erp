@@ -21,7 +21,7 @@ import java.net.URL;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/app/wx/portal/{confName}")
+@RequestMapping("/wx/portal/{confName}")
 @EnableConfigurationProperties(WxMpProperties.class)
 public class WxPortalController {
     private final WxMpService wxService;

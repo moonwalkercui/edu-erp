@@ -1,5 +1,8 @@
 package com.hzb.erp.security.provider.user;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.hzb.erp.common.entity.User;
+import com.hzb.erp.common.mapper.UserMapper;
 import com.hzb.erp.mybatis.mapper.SecurityUserMapper;
 import com.hzb.erp.security.Util.JwtUserDetails;
 import com.hzb.erp.utils.Enums.LoginUserIdentity;
@@ -16,7 +19,8 @@ public class UserUserDetailsService implements UserDetailsService {
 
     @Autowired
     private SecurityUserMapper securityUserMapper;
-
+    @Autowired
+    private UserMapper userMapper;
     @Override
     public JwtUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         JwtUserDetails userDetails = securityUserMapper.loadUserByUsername(username);
@@ -26,11 +30,13 @@ public class UserUserDetailsService implements UserDetailsService {
         return userDetails;
     }
 
-    public void storeWxAccessId(String mobile, Long wxAccessId) {
-//        User user = userService.getByMobile(mobile);
-//        if (user != null) {
-//            user.setWxAccessId(wxAccessId);
-//            studentService.updateById(student);
-//        }
+    public void storeWxAccessId(Long uid, Long wxAccessId) {
+        QueryWrapper<User> qw = new QueryWrapper<>();
+        qw.eq("id", uid);
+        User user = userMapper.selectOne(qw);
+        if (user != null) {
+            user.setWxAccessId(wxAccessId);
+            userMapper.updateById(user);
+        }
     }
 }

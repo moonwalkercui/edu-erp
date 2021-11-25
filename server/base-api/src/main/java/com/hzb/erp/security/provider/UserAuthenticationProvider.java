@@ -37,7 +37,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
         String wxAccessId = CommonUtil.getCookie("wxaccess");
         if(StringUtils.isNotBlank(wxAccessId)) {
-            userDetailsService.storeWxAccessId(userDetails.getUsername(), Long.valueOf(wxAccessId));
+            userDetailsService.storeWxAccessId(userDetails.getId(), Long.valueOf(wxAccessId));
         }
 
         //转换authentication 认证时会先调用support方法,受支持才会调用,所以能强转

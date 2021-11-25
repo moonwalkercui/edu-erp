@@ -21,7 +21,7 @@ import static me.chanjar.weixin.common.api.WxConsts.MenuButtonType;
 @AllArgsConstructor
 @RestController
 @EnableConfigurationProperties(value = {WxMpProperties.class, SystemConfig.class})
-@RequestMapping("/app/wx/menu/{confName}")
+@RequestMapping("/wx/menu/{confName}")
 public class WxMenuController {
     private final WxMpService wxService;
     private final WxMpProperties wxMpProperties;

@@ -17,10 +17,10 @@
 		</view>
 		<view class="buttom">
 			<view class="loginType">
-			  <!-- <view class="item" @click="wxLogin" v-if="inWeixin">
+			  <view class="item" @click="wxLogin" v-if="inWeixin">
 					<view class="icon"><u-icon size="70" name="weixin-fill" color="rgb(83,194,64)"></u-icon></view>
 					微信登录
-				</view> -->
+				</view>
 			</view>
 			<view class="hint">
 				<!-- 登录代表同意<text class="link">本机构的用户协议、隐私政策，</text>并授权使用您的个人信息. -->
