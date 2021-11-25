@@ -58,7 +58,7 @@ mybatis-plus:
 system:
   version: 1.0.1020
   # 是否是演示demo（会限制关键操作） 生产环境是false！！！
-  isDemo: true
+  isDemo: false
   # 带http的域名
   domain:
   # 静态文件目录
