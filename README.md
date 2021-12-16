@@ -13,7 +13,7 @@
 - 核心框架：sprinboot2.4.1
 - JS框架：vue2 + Element
 - 移动端框架：uniapp
-- 数据库：MySQL5.7
+- 数据库：MySQL5.6
 - 缓存：Redist、Guava Cache
 - java工具包：Hutool
 - Api管理：Swagger + knife4j
@@ -22,7 +22,7 @@
 #### 开发环境
 
 - IDE: idea
-- DB: Mysql5.7
+- DB: Mysql5.6
 - JDK: JAVA 8
 
 #### 技术特色
@@ -33,7 +33,7 @@
 - vue使用自研CUI组件，极大减少页面代码量
 
 ## 部署说明
-首先装好nginx和java1.8，mysql5.7
+首先装好nginx和java1.8，mysql5.6
 
 #### 文件结构
  - server
@@ -80,7 +80,7 @@ sudo nohup java -jar base-api-1.0.0.jar > output.log 2>&1 &
 运行完成
 
 ## 数据库版本
-mysql的版本是5.7，不过去掉一个参数配置： `ONLY_FULL_GROUP_BY` ，否则会有group by的错误，解决方案百度搜ONLY_FULL_GROUP_BY很多。或者用mysql5.6也可以。
+mysql的版本如果是5.7，不过去掉一个参数配置： `ONLY_FULL_GROUP_BY` ，否则会有group by的错误，解决方案百度搜ONLY_FULL_GROUP_BY很多。推荐用mysql5.6。
 
 ## 微信配置
 
