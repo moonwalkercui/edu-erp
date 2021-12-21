@@ -67,7 +67,15 @@ public interface LessonService extends IService<Lesson> {
 
     LessonVO getInfo(Long id);
 
+    /**
+     * 添加或更新
+     */
     Boolean saveOrUpdateByDTO(LessonSaveDTO dto);
+
+    /**
+     * 快速创建课次，选择学生即可开课，不用选择班级
+     */
+    Boolean createQuickly(LessonSaveQuicklyDTO dto, Long creatorId);
 
     Boolean reopenLesson(List<Long> ids);
 
@@ -112,6 +120,7 @@ public interface LessonService extends IService<Lesson> {
      * 导出课表
      */
     void exportLessonData(LessonParamDTO param);
+
     /**
      * 上课提醒
      */
@@ -133,8 +142,8 @@ public interface LessonService extends IService<Lesson> {
     boolean changeCourseAtSign(Long lessonId, Long studentId, Long courseId);
 
     /**
-    * 老师点评
-    * */
+     * 老师点评
+     */
     boolean teachEvaluate(TeachEvaluateDTO dto, Long studentId);
 
     boolean addStudents(LessonStudentAddDTO dto, Long currentUserId);

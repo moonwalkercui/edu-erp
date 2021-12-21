@@ -47,12 +47,12 @@ public class StudentLessonCountLogServiceImpl extends ServiceImpl<StudentLessonC
         if (record != null) {
             return false;
         }
-        return handleAdd(ls.getStudentId(), ls.getConsumeCourseId(), -Math.abs(ls.getDecLessonCount()), LessonCountChangeStageEnum.LESSON_DEC, "消课", teacherId);
+        return handleAdd(ls.getStudentId(), ls.getConsumeCourseId(), -Math.abs(ls.getDecLessonCount()), ls.getLessonId(), LessonCountChangeStageEnum.LESSON_DEC, "消课", teacherId);
     }
 
     @Override
     public Boolean addOneByContract(Long studentId, Long courseId, Integer count, Long staffId) {
-        return handleAdd(studentId, courseId, count, LessonCountChangeStageEnum.CONTRACT, "报名", staffId);
+        return handleAdd(studentId, courseId, count, null, LessonCountChangeStageEnum.CONTRACT,  "报名", staffId);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class StudentLessonCountLogServiceImpl extends ServiceImpl<StudentLessonC
             return null;
         }
         StudentCourse sc = studentCourseService.getById(studentCourseId);
-        return handleAdd(studentId, sc.getCourseId(), -count, LessonCountChangeStageEnum.REFUND, "退课", staffId);
+        return handleAdd(studentId, sc.getCourseId(),  -count, null, LessonCountChangeStageEnum.REFUND, "退课", staffId);
     }
 
     @Override
@@ -70,10 +70,10 @@ public class StudentLessonCountLogServiceImpl extends ServiceImpl<StudentLessonC
             return null;
         }
         StudentCourse sc = studentCourseService.getById(studentCourseId);
-        return handleAdd(studentId, sc.getCourseId(), count, LessonCountChangeStageEnum.REFUND_REJECT, "退课审核驳回", staffId);
+        return handleAdd(studentId, sc.getCourseId(), count, null, LessonCountChangeStageEnum.REFUND_REJECT, "退课审核驳回", staffId);
     }
     @Override
-    public Boolean handleAdd(Long studentId, Long courseId, Integer count, LessonCountChangeStageEnum stage, String remark, Long staffId) {
+    public Boolean handleAdd(Long studentId, Long courseId, Integer count, Long lessonId, LessonCountChangeStageEnum stage, String remark, Long staffId) {
         if (count == 0) {
             return false;
         }
@@ -83,6 +83,7 @@ public class StudentLessonCountLogServiceImpl extends ServiceImpl<StudentLessonC
         lcLog.setStudentId(studentId);
         lcLog.setChangeCount(count);
         lcLog.setStaffId(staffId);
+        lcLog.setLessonId(lessonId);
         lcLog.setAddTime(LocalDateTime.now());
         lcLog.setStage(stage);
         lcLog.setRemark(remark);

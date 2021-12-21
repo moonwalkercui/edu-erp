@@ -183,7 +183,7 @@ public class LessonStudentServiceImpl extends ServiceImpl<LessonStudentMapper, L
             record.setCountLessonComplete(record.getCountLessonComplete() - decLessonCount);
             studentCourseService.updateById(record);
             // 记录
-            studentLessonCountLogService.handleAdd(studentId, consumeCourseId, decLessonCount, LessonCountChangeStageEnum.ROLLBACK, "签到状态变更", teacherId);
+            studentLessonCountLogService.handleAdd(studentId, consumeCourseId, decLessonCount, null, LessonCountChangeStageEnum.ROLLBACK, "签到状态变更", teacherId);
         }
     }
 

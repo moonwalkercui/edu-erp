@@ -6,7 +6,7 @@
         select t1.*,
         t2.name as class_name,
         t3.name as course_name,
-        (select count(0) from lesson where schedule_id = t1.id) as lesson_count,
+        (select count(0) from lesson where schedule_id = t1.id and deleted = 0) as lesson_count,
         (select group_concat(name) from staff where find_in_set(id, t1.teacher_ids)) teacher_names,
         (select group_concat(name) from staff where find_in_set(id, t1.assistant_ids)) assistant_names
 

@@ -10,14 +10,17 @@ import java.time.LocalTime;
 import java.util.List;
 
 /**
+ * 快速开课
  * @author Ryan 541720500@qq.com
  * description
  */
 @Data
-public class LessonSaveDTO {
+public class LessonSaveQuicklyDTO {
 
     private Long id;
-    private String title;
+
+    @NotNull(message = "未选择课程")
+    private Long courseId;
 
     @NotNull(message = "未选择老师")
     @Size(min = 1, message = "未选择老师")
@@ -25,8 +28,10 @@ public class LessonSaveDTO {
 
     private List<Long> assistantIds;
 
-    @NotNull(message = "未选择班级")
-    private Long classId;
+    // 快速开课不需要班级，需要学生
+    @NotNull(message = "未选择学生")
+    @Size(min = 1, message = "未选择学生")
+    private List<Long> studentIds;
 
     private Long roomId;
 

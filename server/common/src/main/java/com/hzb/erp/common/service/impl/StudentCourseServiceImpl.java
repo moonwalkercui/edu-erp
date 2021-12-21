@@ -127,7 +127,7 @@ public class StudentCourseServiceImpl extends ServiceImpl<StudentCourseMapper, S
         sc.setCountLessonComplete(countLessonComplete);
         this.updateById(sc);
 
-        studentLessonCountLogService.handleAdd(sc.getStudentId(), sc.getCourseId(), oldCount - countLessonComplete, LessonCountChangeStageEnum.ADMIN, "调整原因:" + remark, staffId);
+        studentLessonCountLogService.handleAdd(sc.getStudentId(), sc.getCourseId(), oldCount - countLessonComplete, null, LessonCountChangeStageEnum.ADMIN, "调整原因:" + remark, staffId);
 
     }
 

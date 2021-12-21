@@ -26,5 +26,17 @@ public interface StudentLessonCountLogService extends IService<StudentLessonCoun
 
     Boolean addOneByContract(Long studentId, Long courseId, Integer count, Long staffId);
 
-    Boolean handleAdd(Long studentId, Long courseId, Integer count, LessonCountChangeStageEnum stage, String remark, Long staffId);
+    /***
+     * 添加上课记录
+     * @param studentId 学员id
+     * @param courseId 课程id
+     * @param count 变动数量
+     * @param lessonId 相关课时id
+     * @param stage 阶段
+     * @param remark 备注
+     * @param staffId 操作老师id
+     * @return java.lang.Boolean
+     *
+    * */
+    Boolean handleAdd(Long studentId, Long courseId, Integer count, Long lessonId, LessonCountChangeStageEnum stage, String remark, Long staffId);
 }

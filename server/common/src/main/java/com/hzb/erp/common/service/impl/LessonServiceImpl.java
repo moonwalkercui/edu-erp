@@ -129,18 +129,24 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
         qw.in("schedule_id", ids);
         // 删除签到记录
         List<Lesson> lessonList = list(qw);
+
+        // 删除签到记录
         for (Lesson lesson: lessonList) {
             QueryWrapper<LessonStudent> qw1 = new QueryWrapper<>();
             qw1.eq("lesson_id", lesson.getId());
             lessonStudentService.remove(qw1);
+            // 删除课次记录
+            removeById(lesson.getId());
         }
-        Boolean res = remove(qw);
+
+        // 更新排课计划为未生成
         for(Long id: ids) {
             LessonSchedule schedule = lessonScheduleService.getById(id);
             schedule.setState(false);
             lessonScheduleService.updateById(schedule);
         }
-        return res;
+
+        return true;
     }
 
     @Override
@@ -173,7 +179,6 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
         BeanUtils.copyProperties(dto, item);
 
         Clazz clazz = clazzService.getById(dto.getClassId());
-        Course course = courseService.getById(clazz.getCourseId());
 
         item.setCourseId(clazz.getCourseId());
         item.setTeacherId(dto.getTeacherIds().get(0));
@@ -221,6 +226,51 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
         }
 
         return true;
+    }
+
+    @Override
+    public Boolean createQuickly(LessonSaveQuicklyDTO dto, Long creatorId){
+
+        if (dto.getStartTime().isAfter(dto.getEndTime())) {
+            throw new BizException("上课时间设置有误");
+        }
+
+        Course course = courseService.getById(dto.getCourseId());
+        List<Long> teacherIds = dto.getTeacherIds();
+
+        // 创建班级
+        Clazz clazz = new Clazz();
+        clazz.setName(course.getName() + " *");
+        clazz.setCourseId(dto.getCourseId());
+        clazz.setClassroomId(dto.getRoomId());
+        clazz.setTeacherId(teacherIds.get(0));
+        clazz.setBeOver(false);
+        clazz.setOverTime(dto.getDate().atTime(23, 59));
+        clazz.setStartDate(dto.getDate());
+        clazz.setEndDate(dto.getDate());
+        clazz.setPlannedLessonCount(1);
+        clazz.setPlannedStudentCount(dto.getStudentIds().size());
+        clazzService.save(clazz);
+
+        // 创建班级的学生
+        ClassStudentAddDTO classStudentAddDTO = new ClassStudentAddDTO();
+        classStudentAddDTO.setClassId(clazz.getId());
+        classStudentAddDTO.setStudentIds(dto.getStudentIds());
+        classStudentService.addClassStudents(classStudentAddDTO, creatorId);
+
+        // 添加课程
+        LessonSaveDTO lessonSaveDTO = new LessonSaveDTO();
+        lessonSaveDTO.setTitle(course.getName());
+        lessonSaveDTO.setTeacherIds(dto.getTeacherIds());
+        lessonSaveDTO.setAssistantIds(dto.getAssistantIds());
+        lessonSaveDTO.setClassId(clazz.getId());
+        lessonSaveDTO.setRoomId(dto.getRoomId());
+        lessonSaveDTO.setDate(dto.getDate());
+        lessonSaveDTO.setDecCount(dto.getDecCount());
+        lessonSaveDTO.setStartTime(dto.getStartTime());
+        lessonSaveDTO.setEndTime(dto.getEndTime());
+
+        return saveOrUpdateByDTO(lessonSaveDTO);
     }
 
     @Override

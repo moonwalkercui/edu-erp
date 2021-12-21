@@ -112,6 +112,19 @@ public class LessonController {
         }
     }
 
+    @ApiOperation("快速添加课次")
+    @Log(description = "快速添加课次", type = "课次管理")
+    @PostMapping("/saveQuick")
+    @PreventMultiSubmit
+    public JsonResponse saveQuick(@Valid @RequestBody LessonSaveQuicklyDTO dto, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
+        if (lessonService.createQuickly(dto, UserAuthService.getCurrentUserId())) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
     @ApiOperation("课表日历")
     @GetMapping("/calendar")
     public List<LessonVO> calendar(
