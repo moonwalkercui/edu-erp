@@ -6,6 +6,7 @@ import com.hzb.erp.common.enums.LessonStateEnum;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -29,6 +30,6 @@ public class StudentLessonCountLogVO {
     private String staffName;
     private String remark;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    private Date addTime;
+    private LocalDateTime addTime;
     private LessonCountChangeStageEnum stage;
 }
