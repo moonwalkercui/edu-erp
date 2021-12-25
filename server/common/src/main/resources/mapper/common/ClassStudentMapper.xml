@@ -3,7 +3,6 @@
 <mapper namespace="com.hzb.erp.common.mapper.ClassStudentMapper">
 
     <select id="signRecord" resultType="com.hzb.erp.common.pojo.vo.ClassStudentSignVO">
-
         select s.*, t2.id,t2.sign_time, t2.sign_state, t2.sign_type, t2.dec_lesson_count, t3.name student_name,t5.mobile,
             t7.course_id consume_course_id, t8.name consume_course_name,
             t2.class_id, t6.name class_name,
@@ -23,11 +22,11 @@
         LEFT JOIN user t5 on t5.id = t3.user_id
         LEFT JOIN class t6 on t6.id = t2.class_id
         LEFT JOIN student_course t7 ON t7.student_id = s.student_id
-                and t7.course_id = IFNULL(t2.consume_course_id, t4.consume_course_id)
-                AND t7.deleted = 0
+            AND t7.course_id = IFNULL(t2.consume_course_id, t4.consume_course_id)
+            AND t7.deleted = 0
         LEFT JOIN course t8 on t8.id = t7.course_id
         <if test="param.unsigned != null and param.unsigned == true">
-            where t2.sign_time is null
+            WHERE t2.sign_time is null
         </if>
         GROUP BY s.student_id
 

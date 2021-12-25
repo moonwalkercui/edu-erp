@@ -63,18 +63,21 @@
     </select>
 
     <delete id="removeByStudentIdAndClassId">
-    delete from lesson_student where
-    lesson_id in (
-        select t2.id from lesson t2 where t2.class_id=#{classId} and t2.date &gt; CURDATE() or ( t2.date = CURDATE() and t2.start_time &gt; CURTIME() )
-    )
-    and student_id = #{studentId}
-    and class_id = #{classId}
-    and sign_state = 0
+    delete from lesson_student
+    where student_id = #{studentId}
+        and class_id = #{classId}
+        and sign_state = 0
+        and lesson_id in (
+            select t2.id from lesson t2 where t2.class_id=#{classId}
+        )
     </delete>
 
     <select id="listGenerateLessonIdsByClassId" resultType="java.lang.Long">
-    select id from lesson where
-    class_id = #{classId} and date &gt; CURDATE()
-    or ( date = CURDATE() and start_time &gt; CURTIME())
+    select id from lesson
+    where class_id = #{classId}
+    and (date &gt; CURDATE() or ( date = CURDATE() and start_time &gt; CURTIME()))
+    and deleted = 0
     </select>
+
+
 </mapper>

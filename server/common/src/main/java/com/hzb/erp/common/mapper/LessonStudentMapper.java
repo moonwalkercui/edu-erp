@@ -33,7 +33,7 @@ public interface LessonStudentMapper extends BaseMapper<LessonStudent> {
     List<Long> getStudentIds(Long id);
 
     /**
-    * 删除学生记录，不包括已经签到或者已经过期的课程
+    * 删除学生记录，包含未签到的
     * */
     Boolean removeByStudentIdAndClassId(@Param("studentId") Long studentId, @Param("classId") Long classId);
 
