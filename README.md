@@ -30,7 +30,7 @@
 - RBAC角色与权限管理
 - 自研基于岗位的数据权限管理，扩展性强
 - Security + JWT 多角色权限认证模式
-- vue使用自研CUI组件，极大减少页面代码量，组件说明 https://gitee.com/ryan1981/vue-element-cui
+- vue使用自研CUI组件，极大减少页面代码量，前端CUI组件开发说明wiki: https://gitee.com/ryan1981/vue-element-cui/wikis
 
 ## 部署说明
 首先装好nginx和java1.8，mysql5.6
