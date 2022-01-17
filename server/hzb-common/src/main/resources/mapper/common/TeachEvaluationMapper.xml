@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.TeachEvaluationMapper">
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.TeachEvaluationVO">
+        select t1.*,
+        t2.name teacher_name,
+        t3.name student_name,
+        t4.title lesson_title
+        from teach_evaluation t1
+        LEFT JOIN staff t2 on t2.id = t1.teacher_id
+        LEFT JOIN student t3 on t3.id = t1.student_id
+        LEFT JOIN lesson t4 on t4.id = t1.lesson_id
+        <where>
+            <if test="param.teacherId != null ">
+                AND t1.teacher_id = #{param.teacherId}
+            </if>
+            <if test="param.lessonId != null ">
+                AND t1.lesson_id = #{param.lessonId}
+            </if>
+            <if test="param.studentId != null ">
+                AND t1.student_id = #{param.studentId}
+            </if>
+            <if test="param.startDate != null and param.endDate != null">
+                AND ( t1.add_time &gt;= #{param.startDate} and t1.add_time &lt;= #{param.endDate} )
+            </if>
+        </where>
+        order by t1.id desc
+    </select>
+</mapper>

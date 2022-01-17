@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/erp?useUnicode=true&characterEncoding=utf-8&serverTimezone=CST&useSSL=false
+    username: root
+    password: root
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password:
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    root: info
+
+system:
+  domain: http://localhost:8106 # 项目域名
+  staticDir: C:/eduerpdata/static/
+  logDir: C:/eduerpdata/logs/

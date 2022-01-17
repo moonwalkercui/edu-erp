@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.LessonStudentMapper">
+
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.LessonStudentVO">
+        select
+        t1.*,
+        t2.name, t8.mobile,
+        t3.name teacher_name,
+        t5.name course_name,
+        t6.name evaluate_teacher_name,
+        t7.title lesson_title
+        <if test="param.studentId != null">
+            , (select count(0) FROM teach_evaluation where lesson_id = t1.lesson_id and student_id = t1.student_id)
+            count_teach_evaluation
+        </if>
+        from lesson_student t1
+        LEFT JOIN student t2 on t2.id = t1.student_id
+        LEFT JOIN staff t3 ON t3.id = t1.teacher_id
+        LEFT JOIN lesson t4 ON t4.id = t1.lesson_id
+        LEFT JOIN course t5 ON t5.id = t4.course_id
+        LEFT JOIN staff t6 ON t6.id = t1.evaluate_teacher
+        LEFT JOIN lesson t7 ON t7.id = t1.lesson_id
+        LEFT JOIN user t8 ON t8.id = t2.user_id
+        <where>
+            <if test="param.onlyEvaluate != null and param.onlyEvaluate">
+                AND t1.evaluate_time is not null
+            </if>
+            <if test="param.teacherId != null">
+                AND t1.teacher_id = #{param.teacherId}
+            </if>
+            <if test="param.evaluateTeacherId != null">
+                AND t1.evaluate_teacher = #{param.evaluateTeacherId}
+            </if>
+            <if test="param.lessonId != null">
+                AND t1.lesson_id = #{param.lessonId}
+            </if>
+            <if test="param.courseId != null">
+                AND t1.lesson_id in ( select id from lesson where course_id = #{param.courseId} )
+            </if>
+            <if test="param.studentId != null">
+                AND t1.student_id = #{param.studentId}
+            </if>
+            <if test="param.startDate != null and param.endDate != null">
+                AND ( evaluate_time &gt;= #{param.startDate} and evaluate_time &lt;= #{param.endDate} )
+            </if>
+            <if test="param.keyword != null and param.keyword != '' and param.keyword.length() > 1">
+                AND t1.evaluation like concat('%', #{param.keyword}, '%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+    <select id="getConsumeCourseId" resultType="java.lang.Long">
+    select IFNULL(t1.consume_course_id, t2.consume_course_id)
+    from lesson_student t1
+    LEFT JOIN class_student t2 on t2.class_id = t1.class_id and t2.student_id = t1.student_id
+    where t1.lesson_id = #{lessonId} and t1.student_id = #{studentId}
+    </select>
+    <select id="getStudentIds" resultType="java.lang.Long">
+    (select t1.student_id from lesson_student t1 where t1.lesson_id = #{id})
+    union
+    (select t2.student_id from class_student t2 where t2.class_id = (select class_id from lesson where id = #{id} ))
+    </select>
+
+    <delete id="removeByStudentIdAndClassId">
+    delete from lesson_student
+    where student_id = #{studentId}
+        and class_id = #{classId}
+        and sign_state = 0
+        and lesson_id in (
+            select t2.id from lesson t2 where t2.class_id=#{classId}
+        )
+    </delete>
+
+    <select id="listGenerateLessonIdsByClassId" resultType="java.lang.Long">
+    select id from lesson
+    where class_id = #{classId}
+    and (date &gt; CURDATE() or ( date = CURDATE() and start_time &gt; CURTIME()))
+    and deleted = 0
+    </select>
+
+
+</mapper>

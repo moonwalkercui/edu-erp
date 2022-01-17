@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.StaffMapper">
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.StaffVO">
+        SELECT t1.*,
+        t3.name group_name,
+        t4.name com_name,
+        t5.name dpt_name,
+        GROUP_CONCAT( DISTINCT t6.name ) role_name,
+        t7.id position_id,
+        t7.name position_name
+        FROM staff t1
+        LEFT JOIN staff_orginfo t2 ON t1.id = t2.staff_id
+        <if test="param.orgId != null">
+            and t2.org_id = #{param.orgId}
+        </if>
+        LEFT JOIN org t3 ON t3.id = t2.group_id
+        LEFT JOIN org t4 ON t4.id = t2.com_id
+        LEFT JOIN org t5 ON t5.id = t2.dpt_id
+        LEFT JOIN `position` t7 on t7.id = t2.position_id
+        LEFT JOIN sys_role t6 on t6.id in (select role_id from sys_user_role where user_id = t1.id)
+        <where>
+            <if test="param.state != null">
+                AND t1.state = #{param.state}
+            </if>
+            <if test="param.state == null">
+                AND t1.state = 1
+            </if>
+            <if test="param.orgId != null">
+                AND t1.id in (select staff_id from staff_orginfo where org_id = #{param.orgId})
+            </if>
+            <if test="param.isManager != null">
+                AND t1.is_manager = #{param.isManager}
+            </if>
+            <if test="param.keyword != null and param.keyword != ''">
+                AND (
+                t1.name like concat('%', #{param.keyword}, '%')
+                or t1.mobile like concat('%', #{param.keyword}, '%')
+                )
+            </if>
+            <if test="param.role != null and param.role != ''">
+                AND t1.id in (select user_id from sys_user_role where role_id = (select id from sys_role where name =
+                #{param.role}))
+            </if>
+            AND t1.deleted != 1
+        </where>
+        GROUP BY t1.id order by t1.id desc
+    </select>
+
+    <select id="getInfo" resultType="com.hzb.erp.common.pojo.vo.StaffVO">
+        SELECT t1.*
+        FROM staff t1
+        where id = #{id}
+    </select>
+
+    <select id="listByComId" resultType="com.hzb.erp.common.pojo.vo.StaffVO">
+        select t1.id, t1.name
+        from staff t1
+        where t1.id in (select staff_id from staff_orginfo where com_id = #{comId})
+    </select>
+    <select id="getWxOpenid" resultType="java.lang.String">
+        select t1.openid from wx_access t1 where t1.id = (select wx_access_id from staff where id = #{id})
+    </select>
+
+</mapper>

@@ -3,3 +3,4 @@
 *.log
 unpackage/
 target/
+/ui/dist

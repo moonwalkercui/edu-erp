@@ -9,7 +9,7 @@
     </parent>
 
     <groupId>com.hzb.erp</groupId>
-    <artifactId>erp-main</artifactId>
+    <artifactId>hzb-erp</artifactId>
     <version>1.0.0</version>
     <name>main-module</name>
     <description>主工程</description>
@@ -17,8 +17,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>common</module>
-        <module>base-api</module>
+        <module>hzb-common</module>
+        <module>hzb-base-api</module>
+        <module>hzb-wechat</module>
+        <module>hzb-security</module>
     </modules>
 
     <properties>
