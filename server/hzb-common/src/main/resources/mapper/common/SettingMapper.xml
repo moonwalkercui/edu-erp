@@ -9,4 +9,9 @@
         remark,sort_num
     </sql>
 
+    <select id="listOptionByCode" resultType="com.hzb.erp.common.entity.SettingOption">
+        select * from setting_option
+        where setting_id = (select id from setting where code = #{code})
+    </select>
+
 </mapper>

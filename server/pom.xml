@@ -10,9 +10,10 @@
 
     <groupId>com.hzb.erp</groupId>
     <artifactId>hzb-erp</artifactId>
+    <name>hzb-erp</name>
     <version>1.0.0</version>
-    <name>main-module</name>
     <description>主工程</description>
+    <url>https://hzb-it.com</url>
 
     <packaging>pom</packaging>
 

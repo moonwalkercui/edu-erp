@@ -3,6 +3,7 @@ package com.hzb.erp.common.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.Setting;
 import com.hzb.erp.common.entity.SettingOption;
+import com.hzb.erp.common.enums.SettingCodeEnum;
 import com.hzb.erp.common.mapper.SettingMapper;
 import com.hzb.erp.common.service.SettingOptionService;
 import com.hzb.erp.common.service.SettingService;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -28,6 +31,19 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
 
     @Resource
     private SettingOptionService settingOptionService;
+
+    @Resource
+    private SettingMapper settingMapper;
+
+    @Override
+    public Map<String, Object> listOptionByCode(SettingCodeEnum code) {
+        List<SettingOption> options = settingMapper.listOptionByCode(String.valueOf(SettingCodeEnum.SMS_SETTING).toLowerCase());
+        Map<String, Object> res = new HashMap<>();
+        for(SettingOption opt : options) {
+            res.put(opt.getCode(), opt.getValue());
+        }
+        return res;
+    }
 
     @Override
     public String strValue(String code) {

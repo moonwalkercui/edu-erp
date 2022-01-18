@@ -6,6 +6,7 @@ package com.hzb.erp.utils;
  */
 public class SettingConstants {
 
+
     /**
      * 班级结业时班内学员自动结业
      */
@@ -45,4 +46,29 @@ public class SettingConstants {
      * 课次数不足预警数量
      */
     public static final String SMS_SIGN_NAME = "sms_sign_name";
+
+    /**
+     * 微信设置的code
+     */
+    public static final String SETTING_CODE_WX_MP = "wx_mp_setting";
+
+    /**
+     * 公众号AppId
+     */
+    public static final String WX_MP_APP_ID = "wx_mp_app_id";
+
+    /**
+     * 公众号Secret
+     */
+    public static final String WX_MP_SECRET = "wx_mp_app_id";
+
+    /**
+     * 公众号Token
+     */
+    public static final String WX_MP_TOKEN = "wx_mp_token";
+
+    /**
+     * 公众号AesKey
+     */
+    public static final String WX_MP_AES_KEY = "wx_mp_aes_key";
 }
