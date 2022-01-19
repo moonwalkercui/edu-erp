@@ -18,6 +18,12 @@
 
         <dependency>
             <groupId>com.hzb.erp</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hzb.erp</groupId>
             <artifactId>hzb-security</artifactId>
             <version>1.0.0</version>
         </dependency>
@@ -29,4 +35,5 @@
         </dependency>
 
     </dependencies>
+
 </project>
