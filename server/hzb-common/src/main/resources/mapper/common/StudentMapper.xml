@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.StudentMapper">
+    <update id="switchStudent">
+        UPDATE student SET as_default = ( CASE WHEN id = #{studentId} THEN 1 ELSE 0 END ) WHERE	user_id = #{userId};
+    </update>
+
+    <select id="getBaseInfo" resultType="com.hzb.erp.common.pojo.vo.StudentVO">
+        SELECT t1.*, t8.mobile, t8.name parent_name, t9.name join_way_name
+        from student t1
+        LEFT JOIN user t8 on t8.id = t1.user_id
+        LEFT JOIN dict_item t9 on t9.id = t1.join_way
+        where t1.id = #{id}
+    </select>
+
+    <select id="getBaseInfoByUid" resultType="com.hzb.erp.common.pojo.vo.StudentVO">
+        SELECT t1.*, t8.mobile, t8.name parent_name, t9.name join_way_name
+        from student t1
+        LEFT JOIN user t8 on t8.id = t1.user_id
+        LEFT JOIN dict_item t9 on t9.id = t1.join_way
+        where t1.id = #{id} and t1.user_id = #{uid}
+    </select>
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.StudentVO">
+        SELECT t1.*,t8.mobile, t8.name parent_name, t2.contact_time, t2.contact_next_time,t2.info contact_info,
+        t3.name counselor_name, t4.name school_name, t9.name join_way_name
+        <if test="param.classId !=null ">
+            , ( select sum(count_lesson_total - count_lesson_complete- count_lesson_refund)
+            from student_course
+            where student_id = t1.id
+            and course_id = (select course_id from class where id = #{param.classId})
+            and expire_date &gt;= CURDATE()
+            ) count_lesson_remaining
+        </if>
+        <if test="param.classId == null ">
+            , IFNULL(sum(t5.count_lesson_total - t5.count_lesson_complete - t5.count_lesson_refund), 0)
+            count_lesson_remaining
+        </if>
+        FROM student t1
+        LEFT JOIN staff t3 on t3.id = t1.counselor
+        LEFT JOIN user t8 on t8.id = t1.user_id
+        LEFT JOIN contact_record t2 on t2.student_id = t1.id AND t2.contact_time = (select max(contact_time) FROM
+        contact_record where student_id = t1.id )
+        LEFT JOIN org t4 on t4.id = t1.school_id
+        LEFT JOIN student_course t5 on t5.student_id = t1.id AND t5.expire_date &gt;= CURDATE()
+        LEFT JOIN dict_item t9 on t9.id = t1.join_way
+        <where>
+            t1.deleted = 0
+            <if test="param.stage !=null ">
+                AND t1.stage = #{param.stage}
+            </if>
+            <if test="param.excludeStage !=null ">
+                AND t1.stage != #{param.excludeStage}
+            </if>
+            <if test="param.creator !=null ">
+                AND t1.creator = #{param.creator}
+            </if>
+            <if test="param.userId !=null ">
+                AND t1.user_id = #{param.userId}
+            </if>
+            <if test="param.keyword !=null and param.keyword != ''">
+                AND (
+                t1.name like concat('%', #{param.keyword}, '%')
+                or t1.user_id = (select id from user where mobile = #{param.keyword})
+                )
+            </if>
+            <if test="param.classId !=null ">
+                AND t1.id in (select student_id from class_student where class_id = #{param.classId} and deleted != 1)
+            </if>
+            <if test="param.excludeClassId !=null ">
+                AND t1.id not in ( select student_id from class_student where class_id = #{param.excludeClassId} and
+                deleted = 0 )
+            </if>
+            <if test="param.courseId !=null ">
+                AND t1.id in (
+                select student_id from student_course
+                where course_id = #{param.courseId} or course_id in (select linked_id from course_link where course_id =
+                #{param.courseId})
+                or course_id in (select course_id from course_link where linked_id = #{param.courseId})
+                and expire_date &gt;= CURDATE()
+                )
+            </if>
+        </where>
+        GROUP BY t1.id
+        ORDER BY t1.id desc
+    </select>
+
+    <select id="getListByClassId" resultType="com.hzb.erp.common.pojo.vo.ClassStudentVO">
+        SELECT t2.name,t8.mobile,t2.gender,t2.birthday,t1.*,
+        sum(t4.count_lesson_total) count_lesson_total,
+        sum(t4.count_lesson_complete) count_lesson_complete,
+        sum(t4.count_lesson_refund) count_lesson_refund,
+        sum(t4.count_lesson_total - t4.count_lesson_complete - t4.count_lesson_refund) count_lesson_remaining,
+        t5.name consume_course_name
+        from class_student t1
+        LEFT JOIN student t2 on t1.student_id = t2.id
+        LEFT JOIN user t8 on t8.id = t2.user_id
+        LEFT JOIN student_course t4 on t4.student_id = t1.student_id and t4.course_id = t1.consume_course_id and
+        t4.expire_date &gt;= CURDATE()
+        LEFT JOIN course t5 on t5.id = t1.consume_course_id
+
+        <where>
+            t1.class_id = #{param.classId} and t1.deleted != 1
+            <if test="param.keyword !=null and param.keyword != ''">
+                AND (
+                t2.name like concat('%', #{param.keyword}, '%')
+                or t2.user_id = (select id from user where mobile = #{param.keyword})
+                )
+            </if>
+        </where>
+        group by t1.student_id
+        order by t1.id desc
+    </select>
+
+    <select id="getRedpointCounts" resultType="hashmap">
+        select * from (
+        (select count(0) homework_count FROM homework where class_id in (select class_id from class_student where student_id = #{studentId} ) and id not in (select homework_id from homework_record where student_id = #{studentId})) t1,
+        (select count(0) evaluate_count FROM lesson_student where student_id = #{studentId} and evaluate_time is not null and evaluate_time &gt; (select redpoint_evaluate from student where id = #{studentId}) ) t2,
+        (select count(0) grade_count FROM grade_record where student_id = #{studentId} and add_time &gt; (select redpoint_grade from student where id = #{studentId}) ) t3
+        )
+    </select>
+    <select id="listByUserId" resultType="com.hzb.erp.common.entity.Student">
+        SELECT t1.*, t8.mobile, t8.name parent_name
+        from student t1
+        LEFT JOIN user t8 on t8.id = t1.user_id
+        where t1.user_id = #{uid} and deleted = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.SettingMapper">
+
+    <sql id="Base_Column_List">
+        id,code,name,
+        remark,sort_num
+    </sql>
+
+    <select id="listOptionByCode" resultType="com.hzb.erp.common.entity.SettingOption">
+        select * from setting_option
+        where setting_id = (select id from setting where code = #{code})
+    </select>
+
+</mapper>
