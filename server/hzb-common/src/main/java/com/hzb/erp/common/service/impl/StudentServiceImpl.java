@@ -24,6 +24,7 @@ import com.hzb.erp.common.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -41,6 +42,7 @@ import java.util.List;
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
 
     @Autowired
+    @Lazy
     private StudentCourseService studentCourseService;
 
     @Autowired
@@ -81,7 +83,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
-    public Integer codeByName(String name) {
+    public Long codeByName(String name) {
         QueryWrapper<Student> qw = new QueryWrapper<>();
         qw.likeRight("name", name);
         return this.count(qw);

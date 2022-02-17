@@ -18,11 +18,6 @@ import java.util.List;
  */
 public interface FinanceRecordService extends IService<FinanceRecord> {
 
-    /**
-     * amount在收入时是正数 支出是负数
-     */
-    FinanceRecord addOne(FinanceRecord record);
-
     IPage<FinanceRecordVO> getList(FinanceParamDTO param);
 
     Boolean changeState(List<Long> ids, FinanceStateEnum reject, String remark, Long staffId);

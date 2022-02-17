@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.enums.OprationTypeEnum;
+import com.hzb.erp.common.mapper.StudentCourseMapper;
 import com.hzb.erp.service.ImportExportService;
 import com.hzb.erp.service.NotificationService;
 import com.hzb.erp.service.notification.NoticeCodeEnum;
@@ -37,7 +38,7 @@ import java.util.List;
 public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, FinanceRecord> implements FinanceRecordService {
 
     @Autowired
-    private StudentCourseService studentCourseService;
+    private StudentCourseMapper studentCourseMapper;
     @Autowired
     private NotificationService notificationService;
     @Autowired
@@ -48,20 +49,10 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
     private StudentService studentService;
     @Autowired
     private StudentLessonCountLogService studentLessonCountLogService;
-
     @Autowired
     private ImportExportService importExportService;
-
     @Autowired
     private OperationRecordService operationRecordService;
-
-    @Override
-    public FinanceRecord addOne(FinanceRecord record) {
-        record.setAddTime(LocalDateTime.now());
-        record.setVerifyState(FinanceStateEnum.APPLY);
-        this.save(record);
-        return record;
-    }
 
     @Override
     public IPage<FinanceRecordVO> getList(FinanceParamDTO param) {
@@ -113,12 +104,12 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
      */
     private void handleCourseVerify(FinanceRecord item, FinanceStateEnum state) {
 
-        StudentCourse target = studentCourseService.getById(item.getItemId());
+        StudentCourse target = studentCourseMapper.selectById(item.getItemId());
         if (target == null) {
             throw new BizException("系统异常:缺少数据源!");
         }
         target.setVerifyState(state);
-        studentCourseService.updateById(target);
+        studentCourseMapper.updateById(target);
 
         if (FinanceStateEnum.PASS.equals(state)) {
             sendNewContractNotice(target);
@@ -159,7 +150,7 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
                 throw new BizException("系统异常:缺少数据源!!");
             }
 
-            StudentCourse sc = studentCourseService.getById(refund.getStudentCourseId());
+            StudentCourse sc = studentCourseMapper.selectById(refund.getStudentCourseId());
             if (sc == null) {
                 throw new BizException("系统异常:缺少数据源!!!");
             }
@@ -167,7 +158,7 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
             // 学生课程的支付金额增加, 退费课次减少: 逆向方法:  refundService.saveOrUpdateByDTO
             sc.setPaidAmount(sc.getPaidAmount().add(refund.getRefundAmount().abs()));
             sc.setCountLessonRefund(sc.getCountLessonRefund() - refund.getRefundLessonCount());
-            studentCourseService.updateById(sc);
+            studentCourseMapper.updateById(sc);
 
         }
 

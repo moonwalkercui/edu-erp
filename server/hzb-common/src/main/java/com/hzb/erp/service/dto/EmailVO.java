@@ -15,7 +15,6 @@ import java.io.Serializable;
  * 邮件发送VO
  */
 @ApiModel
-@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Data
 public class EmailVO implements Serializable {
 

@@ -6,10 +6,13 @@ import com.hzb.erp.security.provider.staff.StaffUserDetailsService;
 import com.hzb.erp.utils.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +27,6 @@ public class StaffAuthenticationProvider implements AuthenticationProvider {
 
     @Resource
     private StaffUserDetailsService userDetailsService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private HttpServletRequest request;
 
     /**
      * 鉴权具体逻辑 登录时路过
@@ -51,7 +48,7 @@ public class StaffAuthenticationProvider implements AuthenticationProvider {
         //转换authentication 认证时会先调用support方法,受支持才会调用,所以能强转
         StaffAuthenticationToken authenticationToken = (StaffAuthenticationToken) authentication;
         // 用户名密码校验 具体逻辑
-        SecurityUtils.additionalAuthenticationChecks(userDetails, authentication, passwordEncoder);
+        SecurityUtils.additionalAuthenticationChecks(userDetails, authentication, passwordEncoder());
 
         //构造已认证的authentication
         StaffAuthenticationToken authenticatedToken = new StaffAuthenticationToken(userDetails, authenticationToken.getCredentials(), userDetails.getAuthorities());
@@ -88,5 +85,8 @@ public class StaffAuthenticationProvider implements AuthenticationProvider {
 //        }
 //    }
 
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 }

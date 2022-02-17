@@ -11,6 +11,7 @@ import com.hzb.erp.common.pojo.dto.PositionSetDTO;
 import com.hzb.erp.common.service.OrgService;
 import com.hzb.erp.common.service.StaffOrginfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 public class StaffOrginfoServiceImpl extends ServiceImpl<StaffOrginfoMapper, StaffOrginfo> implements StaffOrginfoService {
 
     @Autowired
+    @Lazy
     private OrgService orgService;
 
     /**

@@ -9,6 +9,7 @@ import com.hzb.erp.common.entity.Student;
 import com.hzb.erp.common.enums.SignStateEnum;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.ClassStudentMapper;
+import com.hzb.erp.common.mapper.ClazzMapper;
 import com.hzb.erp.common.mapper.LessonStudentMapper;
 import com.hzb.erp.common.pojo.dto.ClassStudentAddDTO;
 import com.hzb.erp.common.service.ClassStudentService;
@@ -16,6 +17,7 @@ import com.hzb.erp.common.service.ClazzService;
 import com.hzb.erp.common.service.LessonStudentService;
 import com.hzb.erp.common.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,7 +38,7 @@ public class ClassStudentServiceImpl extends ServiceImpl<ClassStudentMapper, Cla
     @Autowired
     private StudentService studentService;
     @Autowired
-    private ClazzService clazzService;
+    private ClazzMapper clazzMapper;
     @Autowired
     private LessonStudentService lessonStudentService;
     @Autowired
@@ -47,7 +49,7 @@ public class ClassStudentServiceImpl extends ServiceImpl<ClassStudentMapper, Cla
      */
     @Override
     public Boolean addClassStudent(Long classId, Long studentId, Long staffId) {
-        Clazz clazz = clazzService.getById(classId);
+        Clazz clazz = clazzMapper.selectById(classId);
         QueryWrapper<ClassStudent> queryWrapper = buildQW(classId, studentId);
         ClassStudent item = this.getOne(queryWrapper);
         Boolean res;
@@ -100,7 +102,7 @@ public class ClassStudentServiceImpl extends ServiceImpl<ClassStudentMapper, Cla
     @Override
     public void addClassStudents(ClassStudentAddDTO dto, Long staffId) {
         List<ClassStudent> list = new ArrayList<>();
-        Clazz clazz = clazzService.getById(dto.getClassId());
+        Clazz clazz = clazzMapper.selectById(dto.getClassId());
         for (Long studentId : dto.getStudentIds()) {
             QueryWrapper<ClassStudent> queryWrapper = buildQW(dto.getClassId(), studentId);
             ClassStudent item = this.getOne(queryWrapper);
