@@ -77,12 +77,8 @@ system:
   jwtExpiredTtlSec: 28800
   # 跨域域名设置 不设置表示不限域名
   allowOrigin:
-    - ${system.domain}
-    - http://localhost:8001
-    - http://localhost:8002
-    - http://localhost:8080
-    - http://localhost:8081
-    - http://localhost:8082
+  #  - ${system.domain}
+  #  - http://localhost:8001
   # 配置放行策略 跳过security
   securityIgnoringMatchers:
     - /doc.html

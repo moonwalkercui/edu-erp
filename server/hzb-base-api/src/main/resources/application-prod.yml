@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/erp?useUnicode=true&characterEncoding=utf-8&serverTimezone=CST&useSSL=false
+    url: jdbc:mysql://localhost:3306/erp?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: erp
     password: 111
   redis:
