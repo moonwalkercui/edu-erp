@@ -11,6 +11,7 @@ import com.hzb.erp.common.enums.SignTypeEnum;
 import com.hzb.erp.common.enums.TeacherTypeEnum;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.LessonMapper;
+import com.hzb.erp.common.mapper.LessonScheduleMapper;
 import com.hzb.erp.common.mapper.LessonStudentMapper;
 import com.hzb.erp.common.pojo.dto.*;
 import com.hzb.erp.common.pojo.vo.LessonTeacherStatsVO;
@@ -86,7 +87,7 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
     @Autowired
     private TeachEvaluationService teachEvaluationService;
     @Autowired
-    private LessonScheduleService lessonScheduleService;
+    private LessonScheduleMapper lessonScheduleMapper;
 
     @Override
     public IPage<LessonVO> getList(LessonParamDTO param) {
@@ -142,9 +143,9 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
 
         // 更新排课计划为未生成
         for (Long id : ids) {
-            LessonSchedule schedule = lessonScheduleService.getById(id);
+            LessonSchedule schedule = lessonScheduleMapper.selectById(id);
             schedule.setState(false);
-            lessonScheduleService.updateById(schedule);
+            lessonScheduleMapper.updateById(schedule);
         }
 
         return true;

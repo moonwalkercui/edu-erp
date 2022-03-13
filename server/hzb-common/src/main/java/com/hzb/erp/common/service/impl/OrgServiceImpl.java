@@ -9,6 +9,7 @@ import com.hzb.erp.common.entity.StaffOrginfo;
 import com.hzb.erp.common.enums.OrgLevelEnum;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.OrgMapper;
+import com.hzb.erp.common.mapper.StaffOrginfoMapper;
 import com.hzb.erp.common.pojo.dto.OrgParamDTO;
 import com.hzb.erp.common.pojo.dto.OrgSaveDTO;
 import com.hzb.erp.common.pojo.vo.OrgVO;
@@ -28,8 +29,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgService {
+
     @Autowired
-    private StaffOrginfoService staffOrginfoService;
+    private StaffOrginfoMapper staffOrginfoMapper;
 
     @Override
     public IPage<OrgVO> getList(OrgParamDTO param) {
@@ -67,7 +69,7 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
             }
             QueryWrapper<StaffOrginfo> qw1 = new QueryWrapper<>();
             qw1.eq("group_id", id).or().eq("com_id", id).or().eq("dpt_id", id);
-            if (staffOrginfoService.count(qw1) > 0) {
+            if (staffOrginfoMapper.selectCount(qw1) > 0) {
                 Org target = getById(id);
                 throw new BizException(target.getName() + "下有人员故无法删除");
             }

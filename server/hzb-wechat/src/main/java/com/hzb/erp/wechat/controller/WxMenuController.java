@@ -39,13 +39,13 @@ public class WxMenuController {
      */
     @PostMapping("/create")
     public String menuCreate(@PathVariable String confName, @RequestBody WxMenu menu) throws WxErrorException {
-        String appid = WechatService.getAppIdByConfName(wxMpProperties, confName);
+        String appid = WechatService.getAppIdByConfName( confName);
         return this.wxService.switchoverTo(appid).getMenuService().menuCreate(menu);
     }
 
     @GetMapping("/create")
     public String menuCreateSample(@PathVariable String confName) throws WxErrorException, MalformedURLException {
-        String appid = WechatService.getAppIdByConfName(wxMpProperties, confName);
+        String appid = WechatService.getAppIdByConfName( confName);
         String domain = systemConfig.getDomain();
 
         WxMenu menu = new WxMenu();

@@ -19,6 +19,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -90,6 +92,7 @@ public class SystemController {
     @Log(description = "创建和修改配置项", type = "系统管理")
     @PostMapping("/saveSettingOption")
     @PreventMultiSubmit
+    @CacheEvict(value = "setting_cache")
     public JsonResponse saveSettingOption(@RequestBody SettingOption option) {
         System.out.println(option);
         if (StringUtils.isBlank(option.getName())) {

@@ -22,8 +22,8 @@ spring:
         max-wait: 3000
   mail:
     host: smtp.163.com
-    username: erp@163.com
-    password: 11
+    username: hzbit_erp@163.com
+    password: 
     port: 465
     default-encoding: UTF-8
     properties:
@@ -36,11 +36,6 @@ spring:
 logging:
   file:
     path: ${system.logDir}
-
-#  security:
-#    user:
-#      name: user
-#      password: ***
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
@@ -56,9 +51,9 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 
 system:
-  version: 1.0.1125
+  version: 1.1.0313
   # 是否是演示demo（会限制关键操作） 生产环境是false！！！
-  isDemo: true
+  isDemo: false
   # 带http的域名
   domain:
   # 静态文件目录
@@ -77,12 +72,7 @@ system:
   jwtExpiredTtlSec: 28800
   # 跨域域名设置 不设置表示不限域名
   allowOrigin:
-    - ${system.domain}
-    - http://localhost:8001
-    - http://localhost:8002
-    - http://localhost:8080
-    - http://localhost:8081
-    - http://localhost:8082
+  #  - ${system.domain}
   # 配置放行策略 跳过security
   securityIgnoringMatchers:
     - /doc.html
@@ -107,9 +97,9 @@ system:
     useRedis: false
     defaultConfIndex: 0
     configs:
-      # 公众号配置，可以设置多组
-      - name: default
-        appId: 11
-        secret: 11
-        token: 11
-        aesKey: 11
+      # 公众号配置，可以设置多组 1.1.0313: default的配置已经改为通过数据库配置，以下配置可省略
+#      - name:
+#        appId:
+#        secret:
+#        token:
+#        aesKey:

@@ -69,7 +69,7 @@ public class WxLoginController {
                                 @RequestParam String state,
                                 ModelAndView view) {
 
-        String appid = WechatService.getAppIdByConfName(wxMpProperties, confName);
+        String appid = WechatService.getAppIdByConfName(confName);
 
         try {
             if (!this.wxService.switchover(appid)) {

@@ -26,7 +26,7 @@ public class WxJsapiController {
 
     @GetMapping("/getJsapiTicket")
     public WxJsapiSignature getJsapiTicket(@PathVariable String confName, @Param(value = "url") String url) throws WxErrorException {
-        String appid = WechatService.getAppIdByConfName(wxMpProperties, confName);
+        String appid = WechatService.getAppIdByConfName(confName);
         final WxJsapiSignature jsapiSignature;
         try {
             jsapiSignature = this.wxService.switchoverTo(appid).createJsapiSignature(url);

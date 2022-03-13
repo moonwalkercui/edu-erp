@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hzb.erp.common.enums.FinanceStateEnum;
 import com.hzb.erp.common.enums.LessonCountChangeStageEnum;
+import com.hzb.erp.common.mapper.FinanceRecordMapper;
 import com.hzb.erp.common.pojo.dto.PayOverdueDTO;
 import com.hzb.erp.service.ImportExportService;
 import com.hzb.erp.common.entity.Course;
@@ -21,11 +23,13 @@ import com.hzb.erp.common.pojo.vo.StudentCourseVO;
 import com.hzb.erp.common.service.*;
 import com.hzb.erp.utils.SettingConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,15 +49,17 @@ public class StudentCourseServiceImpl extends ServiceImpl<StudentCourseMapper, S
     private CourseService courseService;
 
     @Autowired
-    private FinanceRecordService financeRecordService;
+    private FinanceRecordMapper financeRecordMapper;
 
     @Autowired
+    @Lazy
     private StudentService studentService;
 
     @Autowired
     private SettingService settingService;
 
     @Autowired
+    @Lazy
     private StudentLessonCountLogService studentLessonCountLogService;
 
     @Autowired
@@ -278,7 +284,9 @@ public class StudentCourseServiceImpl extends ServiceImpl<StudentCourseMapper, S
         record.setOperator(operator);
         record.setPayer(sc.getStudentId());
         record.setRemark(sc.getRemark());
-        financeRecordService.addOne(record);
+        record.setAddTime(LocalDateTime.now());
+        record.setVerifyState(FinanceStateEnum.APPLY);
+        financeRecordMapper.insert(record);
 
     }
 
@@ -303,7 +311,9 @@ public class StudentCourseServiceImpl extends ServiceImpl<StudentCourseMapper, S
         record.setItemId(sc.getId());
         record.setOperator(operator);
         record.setPayer(sc.getStudentId());
-        financeRecordService.addOne(record);
+        record.setAddTime(LocalDateTime.now());
+        record.setVerifyState(FinanceStateEnum.APPLY);
+        financeRecordMapper.insert(record);
 
         return true;
     }

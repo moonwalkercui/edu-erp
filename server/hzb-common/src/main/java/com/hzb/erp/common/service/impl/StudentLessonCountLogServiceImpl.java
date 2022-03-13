@@ -16,6 +16,7 @@ import com.hzb.erp.common.service.LessonService;
 import com.hzb.erp.common.service.StudentCourseService;
 import com.hzb.erp.common.service.StudentLessonCountLogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ import java.time.LocalDateTime;
 public class StudentLessonCountLogServiceImpl extends ServiceImpl<StudentLessonCountLogMapper, StudentLessonCountLog> implements StudentLessonCountLogService {
 
     @Autowired
+    @Lazy
     private StudentCourseService studentCourseService;
 
     @Override

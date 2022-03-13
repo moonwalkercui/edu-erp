@@ -8,7 +8,6 @@ import com.hzb.erp.security.provider.UserAuthenticationProvider;
 import com.hzb.erp.security.provider.staff.StaffAuthenticationFilter;
 import com.hzb.erp.security.provider.user.UserAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,8 +21,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
@@ -31,6 +28,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
  * description :  Spring Security 配置类
@@ -56,9 +54,9 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private FilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource;
     @Autowired
     private AccessDecisionManager accessDecisionManager;
-    @Autowired
-    @Qualifier("authenticationManagerBean")
-    private AuthenticationManager authenticationManager;
+//    @Autowired
+//    @Qualifier("authenticationManagerBean")
+//    private AuthenticationManager authenticationManager;
     @Autowired
     private StaffAuthenticationProvider staffAuthenticationProvider;
     @Autowired
@@ -121,16 +119,16 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    @Bean
+//    @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
     // 员工登录过滤器
     @Bean
-    public StaffAuthenticationFilter staffAuthenticationFilter() {
+    public StaffAuthenticationFilter staffAuthenticationFilter() throws Exception {
         StaffAuthenticationFilter filter = new StaffAuthenticationFilter();
-        filter.setAuthenticationManager(authenticationManager);
+        filter.setAuthenticationManager(authenticationManagerBean());
         filter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
         filter.setAuthenticationFailureHandler(authenticationFailureHandler);
         filter.setFilterProcessesUrl(STAFF_LOGIN_URL);
@@ -139,9 +137,9 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // 学生登录过滤器
     @Bean
-    public UserAuthenticationFilter userAuthenticationFilter() {
+    public UserAuthenticationFilter userAuthenticationFilter() throws Exception {
         UserAuthenticationFilter filter = new UserAuthenticationFilter();
-        filter.setAuthenticationManager(authenticationManager);
+        filter.setAuthenticationManager(authenticationManagerBean());
         filter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
         filter.setAuthenticationFailureHandler(authenticationFailureHandler);
         filter.setFilterProcessesUrl(STUDENT_LOGIN_URL);
@@ -158,10 +156,4 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(systemConfig.getSecurityIgnoringMatchers().toArray(new String[0]));
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 }

@@ -3,10 +3,12 @@ package com.hzb.erp.common.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.*;
+import com.hzb.erp.common.enums.FinanceStateEnum;
 import com.hzb.erp.common.enums.FinanceTypeEnum;
 import com.hzb.erp.common.enums.RefundTypeEnum;
 import com.hzb.erp.common.enums.VerifyStateEnum;
 import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.common.mapper.FinanceRecordMapper;
 import com.hzb.erp.common.mapper.RefundMapper;
 import com.hzb.erp.common.pojo.dto.RefundSaveDTO;
 import com.hzb.erp.common.service.*;
@@ -31,7 +33,7 @@ public class RefundServiceImpl extends ServiceImpl<RefundMapper, Refund> impleme
     @Autowired
     private StudentCourseService studentCourseService;
     @Autowired
-    private FinanceRecordService financeRecordService;
+    private FinanceRecordMapper financeRecordMapper;
     @Autowired
     private CourseService courseService;
     @Autowired
@@ -79,7 +81,9 @@ public class RefundServiceImpl extends ServiceImpl<RefundMapper, Refund> impleme
         record.setOperator(staffId);
         record.setPayer(item.getStudentId());
         record.setRemark(item.getRemark());
-        financeRecordService.addOne(record);
+        record.setAddTime(LocalDateTime.now());
+        record.setVerifyState(FinanceStateEnum.APPLY);
+        financeRecordMapper.insert(record);
 
         // 学生课程的支付金额减少, 退费课次增加
         sc.setPaidAmount(sc.getPaidAmount().subtract(amount));

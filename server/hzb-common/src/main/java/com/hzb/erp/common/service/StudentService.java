@@ -32,7 +32,7 @@ public interface StudentService extends IService<Student> {
     /**
      * 为了杜绝重名，通过数量获取一个code
      */
-    Integer codeByName(String name);
+    Long codeByName(String name);
 
     IPage<StudentVO> getList(StudentParamDTO param);
 

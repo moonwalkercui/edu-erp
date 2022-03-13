@@ -12,12 +12,12 @@
     <artifactId>hzb-security</artifactId>
     <version>1.0.0</version>
     <name>hzb-security</name>
-    <description>security service</description>
+    <description>security model</description>
 
     <dependencies>
         <dependency>
             <groupId>com.hzb.erp</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>hzb-common</artifactId>
             <version>1.0.0</version>
         </dependency>
 

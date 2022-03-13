@@ -17,7 +17,6 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel
-@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SmtpDO implements Serializable {
 
     private static final long serialVersionUID = 9787156257241506L;

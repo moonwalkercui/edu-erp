@@ -8,10 +8,10 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>base-api</artifactId>
+    <artifactId>hzb-base-api</artifactId>
     <version>1.0.0</version>
     <name>hzb-base-api</name>
-    <description>hzb-base-api</description>
+    <description>base api web</description>
     <packaging>jar</packaging>
 
     <dependencies>

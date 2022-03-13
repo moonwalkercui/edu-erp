@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +22,6 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private UserUserDetailsService userDetailsService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     /**
      * 鉴权具体逻辑 登录时路过
@@ -43,7 +41,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         //转换authentication 认证时会先调用support方法,受支持才会调用,所以能强转
         UserAuthenticationToken authenticationToken = (UserAuthenticationToken) authentication;
         // 用户名密码校验 具体逻辑
-        SecurityUtils.additionalAuthenticationChecks(userDetails, authentication, passwordEncoder);
+        SecurityUtils.additionalAuthenticationChecks(userDetails, authentication, passwordEncoder());
         //构造已认证的authentication
         UserAuthenticationToken authenticatedToken = new UserAuthenticationToken(userDetails, authenticationToken.getCredentials(), userDetails.getAuthorities());
         authenticatedToken.setDetails(authenticationToken.getDetails());
@@ -62,4 +60,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
                 .isAssignableFrom(authentication));
     }
 
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

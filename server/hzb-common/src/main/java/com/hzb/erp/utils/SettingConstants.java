@@ -60,7 +60,7 @@ public class SettingConstants {
     /**
      * 公众号Secret
      */
-    public static final String WX_MP_SECRET = "wx_mp_app_id";
+    public static final String WX_MP_SECRET = "wx_mp_secret";
 
     /**
      * 公众号Token
