@@ -69,6 +69,9 @@ public class WxMpConfiguration {
         WxMpProperties.MpConfig defaultConf = new WxMpProperties.MpConfig();
         // 从数据库获取：
         Map<String, Object> settings = settingService.listOptionByCode(SettingCodeEnum.WX_MP_SETTING);
+        if(settings == null) {
+            return;
+        }
         String wxAppId = settings.get(SettingConstants.WX_MP_APP_ID).toString();
         if(!StringUtils.isBlank(wxAppId)) {
             defaultConf.setName("default");
@@ -76,8 +79,8 @@ public class WxMpConfiguration {
             defaultConf.setSecret(settings.get(SettingConstants.WX_MP_SECRET).toString());
             defaultConf.setToken(settings.get(SettingConstants.WX_MP_TOKEN).toString());
             defaultConf.setAesKey(settings.get(SettingConstants.WX_MP_AES_KEY).toString());
+            configs.add(defaultConf);
         }
-        configs.add(defaultConf);
     }
 
     /**
