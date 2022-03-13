@@ -23,7 +23,7 @@ spring:
   mail:
     host: smtp.163.com
     username: hzbit_erp@163.com
-    password: PCIOFCFQHUOBWSBH
+    password: 
     port: 465
     default-encoding: UTF-8
     properties:
