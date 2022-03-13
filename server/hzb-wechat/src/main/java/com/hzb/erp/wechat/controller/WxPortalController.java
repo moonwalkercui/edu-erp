@@ -36,7 +36,7 @@ public class WxPortalController {
                           @RequestParam(name = "nonce", required = false) String nonce,
                           @RequestParam(name = "echostr", required = false) String echostr) {
 
-        String appid = WechatService.getAppIdByConfName(wxMpProperties, confName);
+        String appid = WechatService.getAppIdByConfName( confName);
 
         log.info("\n接收到来自微信服务器的认证消息：[{}, {}, {}, {}]", signature, timestamp, nonce, echostr);
         if (StringUtils.isAnyBlank(signature, timestamp, nonce, echostr)) {
@@ -70,7 +70,7 @@ public class WxPortalController {
                         + " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
                 openid, signature, encType, msgSignature, timestamp, nonce, requestBody);
 
-        String appid = WechatService.getAppIdByConfName(wxMpProperties, confName);
+        String appid = WechatService.getAppIdByConfName( confName);
 
         if (!this.wxService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
@@ -123,7 +123,7 @@ public class WxPortalController {
     @GetMapping(value = "/loginUrl", produces = "text/plain;charset=utf-8")
     public String getLoginUrl(HttpServletRequest request, @PathVariable String confName, @RequestParam(value = "state", defaultValue = "") String state) throws MalformedURLException {
 
-        String appid = WechatService.getAppIdByConfName(wxMpProperties, confName);
+        String appid = WechatService.getAppIdByConfName( confName);
         URL requestUrl = new URL(request.getRequestURL().toString());
         String url = this.wxService.switchoverTo(appid).getOAuth2Service().buildAuthorizationUrl(
                 String.format("%s://%s/app/wx/login/%s", requestUrl.getProtocol(), requestUrl.getHost(), confName),

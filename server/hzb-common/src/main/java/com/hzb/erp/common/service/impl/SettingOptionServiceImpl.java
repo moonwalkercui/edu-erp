@@ -5,6 +5,7 @@ import com.hzb.erp.common.entity.SettingOption;
 import com.hzb.erp.common.mapper.SettingOptionMapper;
 import com.hzb.erp.common.service.SettingOptionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class SettingOptionServiceImpl extends ServiceImpl<SettingOptionMapper, SettingOption> implements SettingOptionService {
 
     @Override
+    @Cacheable(value = "setting_cache")
     public SettingOption getByCode(String code) {
         QueryWrapper<SettingOption> qw = new QueryWrapper<>();
         qw.eq("code", code).last("limit 1");

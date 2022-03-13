@@ -37,7 +37,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
 
     @Override
     public Map<String, Object> listOptionByCode(SettingCodeEnum code) {
-        List<SettingOption> options = settingMapper.listOptionByCode(String.valueOf(SettingCodeEnum.SMS_SETTING).toLowerCase());
+        List<SettingOption> options = settingMapper.listOptionByCode(String.valueOf(code).toLowerCase());
         Map<String, Object> res = new HashMap<>();
         for(SettingOption opt : options) {
             res.put(opt.getCode(), opt.getValue());

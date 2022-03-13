@@ -1,6 +1,7 @@
 package com.hzb.erp.wechat.service;
 
 import com.hzb.erp.common.configuration.WxMpProperties;
+import com.hzb.erp.wechat.config.WxMpConfiguration;
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -24,8 +25,6 @@ public class WechatService {
     @Autowired
     protected WxMpService wxService;
 
-    private final WxMpProperties wxMpProperties;
-
 //    private final WxMpProperties wxMpProperties;
 
 //    public String redirectUrl(HttpServletRequest request, String confName) throws MalformedURLException {
@@ -39,7 +38,7 @@ public class WechatService {
 //    }
 
     /**
-     * 通过配置名称获取配置
+     * 通过配置名称获取配置 只从配置文件获取
      *
      * @param wxMpProperties WxMpProperties
      * @param confName       参数名 null表示取第一个公众号配置
@@ -47,7 +46,7 @@ public class WechatService {
     public static WxMpProperties.MpConfig getConfigByName(WxMpProperties wxMpProperties, String confName) {
         List<WxMpProperties.MpConfig> configs = wxMpProperties.getConfigs();
         if (StringUtils.isBlank(confName)) {
-            return configs.get(0);
+            confName = "default";
         }
         for (WxMpProperties.MpConfig conf : configs) {
             System.out.println(conf.getName().equals(confName));
@@ -59,7 +58,26 @@ public class WechatService {
     }
 
     /**
-     * 通过配置名称获取confName
+     * 通过配置名称获取配置 1.1.0313 通过数据库和配置文件扩区
+     *
+     * @param confName 参数名 null表示取第一个公众号配置
+     */
+    public static WxMpProperties.MpConfig getConfigByName(String confName) {
+        List<WxMpProperties.MpConfig> configs = WxMpConfiguration.configs;
+        if (StringUtils.isBlank(confName)) {
+            confName = "default";
+        }
+        for (WxMpProperties.MpConfig conf : configs) {
+            System.out.println(conf.getName().equals(confName));
+            if (conf.getName().equals(confName)) {
+                return conf;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 通过配置名称获取confName 旧版从配置文件获取
      */
     public static String getAppIdByConfName(WxMpProperties wxMpProperties, String confName) {
         WxMpProperties.MpConfig mpConfig = getConfigByName(wxMpProperties, confName);
@@ -70,10 +88,22 @@ public class WechatService {
     }
 
     /**
+     * 通过配置名称获取confName 1.1.0313从数据库和配置文件里获取
+     */
+    public static String getAppIdByConfName(String confName) {
+        WxMpProperties.MpConfig mpConfig = getConfigByName(confName);
+        if (mpConfig == null) {
+            throw new RuntimeException("配置参数APPID设置错误");
+        }
+        return mpConfig.getAppId();
+    }
+
+
+    /**
      * 使用自定义公众号配置发送模板消息
      */
     public void sendTemplateMsg(WxMpTemplateMessage templateMessage, String configName) throws WxErrorException {
-        String appid = WechatService.getAppIdByConfName(wxMpProperties, configName);
+        String appid = WechatService.getAppIdByConfName( configName);
         String msgId = this.wxService.switchoverTo(appid).getTemplateMsgService().sendTemplateMsg(templateMessage);
         System.out.println("========模板消息发送结果msgId：" + msgId);
     }
@@ -82,7 +112,7 @@ public class WechatService {
      * 使用默认公众号配置发送模板消息
      */
     public void sendTemplateMsg(WxMpTemplateMessage templateMessage) throws WxErrorException {
-        String appid = WechatService.getAppIdByConfName(wxMpProperties, null);
+        String appid = WechatService.getAppIdByConfName(null);
         String msgId = this.wxService.switchoverTo(appid).getTemplateMsgService().sendTemplateMsg(templateMessage);
         System.out.println("========模板消息发送结果msgId：" + msgId);
     }
