@@ -70,16 +70,20 @@ public class WxMpConfiguration {
         // 从数据库获取：
         Map<String, Object> settings = settingService.listOptionByCode(SettingCodeEnum.WX_MP_SETTING);
         if(settings == null) {
-            return;
+            throw new RuntimeException("未找到微信公众号配置. Not Found Wechat Setting Named 'wx_mp_setting'.");
         }
-        String wxAppId = settings.get(SettingConstants.WX_MP_APP_ID).toString();
-        if(!StringUtils.isBlank(wxAppId)) {
-            defaultConf.setName("default");
-            defaultConf.setAppId(wxAppId);
-            defaultConf.setSecret(settings.get(SettingConstants.WX_MP_SECRET).toString());
-            defaultConf.setToken(settings.get(SettingConstants.WX_MP_TOKEN).toString());
-            defaultConf.setAesKey(settings.get(SettingConstants.WX_MP_AES_KEY).toString());
-            configs.add(defaultConf);
+        try {
+            String wxAppId = settings.get(SettingConstants.WX_MP_APP_ID).toString();
+            if(!StringUtils.isBlank(wxAppId)) {
+                defaultConf.setName("default");
+                defaultConf.setAppId(wxAppId);
+                defaultConf.setSecret(settings.get(SettingConstants.WX_MP_SECRET).toString());
+                defaultConf.setToken(settings.get(SettingConstants.WX_MP_TOKEN).toString());
+                defaultConf.setAesKey(settings.get(SettingConstants.WX_MP_AES_KEY).toString());
+                configs.add(defaultConf);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("请检查数据表 setting_option 的微信配置项是否完整. Missing Wechat Setting Option In Table:setting_option");
         }
     }
 

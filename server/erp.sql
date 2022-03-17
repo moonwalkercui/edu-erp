@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 182.92.217.153
+ Source Server         : 94
  Source Server Type    : MySQL
  Source Server Version : 50650
- Source Host           : 182.92.217.153:3306
- Source Schema         : erp
+ Source Host           : 114.115.185.94:3306
+ Source Schema         : erp_empty
 
  Target Server Type    : MySQL
  Target Server Version : 50650
  File Encoding         : 65001
 
- Date: 16/12/2021 21:33:17
+ Date: 17/03/2022 09:41:48
 */
 
 SET NAMES utf8mb4;
@@ -4612,13 +4612,14 @@ CREATE TABLE `setting`  (
   `sort_num` int(11) NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `code`(`code`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统设置表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统设置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of setting
 -- ----------------------------
 INSERT INTO `setting` VALUES (1, '系统设置', 'normal_setting', NULL, 0);
 INSERT INTO `setting` VALUES (3, '短信设置', 'sms_setting', NULL, 0);
+INSERT INTO `setting` VALUES (4, '微信公众号设置', 'wx_mp_setting', NULL, 0);
 
 -- ----------------------------
 -- Table structure for setting_notice
@@ -4669,7 +4670,7 @@ CREATE TABLE `setting_option`  (
   `sort_num` int(11) NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `code`(`code`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统设置表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统设置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of setting_option
@@ -4682,6 +4683,10 @@ INSERT INTO `setting_option` VALUES (5, 3, '短信接口秘钥', 'sms_access_sec
 INSERT INTO `setting_option` VALUES (6, 3, '短信签名', 'sms_sign_name', '双惠德', 'str', NULL, 0);
 INSERT INTO `setting_option` VALUES (9, 1, '家长端初始密码', 'student_default_pwd', '111111', 'str', '添加学生时的默认登录密码', 0);
 INSERT INTO `setting_option` VALUES (8, 1, '课次数不足提醒次数', 'lesson_count_less_warning_times', '2', 'int', '课次不足时可以按设置给学员和负责老师发通知', 0);
+INSERT INTO `setting_option` VALUES (10, 4, '公众号AppId', 'wx_mp_app_id', 'app_idAAAAA', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (11, 4, '公众号Secret', 'wx_mp_secret', 'secret', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (12, 4, '公众号Token', 'wx_mp_token', 'token', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (13, 4, '公众号AesKey', 'wx_mp_aes_key', 'aes_key', 'str', NULL, 0);
 
 -- ----------------------------
 -- Table structure for staff

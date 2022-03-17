@@ -10,9 +10,6 @@ class ErpApplicationTests {
 
     @Autowired
     private LessonScheduleService lessonScheduleService;
-
-    //    @Autowired
-//    private LessonScheduleSettingService lessonScheduleSettingService;
     @Test
     void contextLoads() {
 //
@@ -31,7 +28,6 @@ class ErpApplicationTests {
 //        List<LessonDatetimeBO> lessonDatetimeList = lessonScheduleSettingService.getLessonDatetimeList(list);
 //        System.out.println("lessonDatetimeList");
 //        lessonDatetimeList.forEach(System.out::println);
-
 
 //        System.out.println(DateUtil.isHoliday(cn.hutool.core.date.DateUtil.parse("2021-02-10")));
 //        System.out.println(DateUtil.isHoliday(cn.hutool.core.date.DateUtil.parse("2021-02-11")));
