@@ -1,37 +1,33 @@
 ## 部署
-首先要有个服务器，装好nginx和java8，mysql
+首先装好nginx和java1.8，mysql5.6
 
-#### 文件结构
+#### 包结构与依赖关系
 
- - 前端
-   - index.html 管理端前端首页
-   - /s/index.html 学生端首页
-   - /t/index.html 教师端首页
- - 服务端
-   - base-api-1.0.0.jar 服务端运行包
-   - application.yml 服务端配置
+- hzb-base-api : 接口服务模块，依赖hzb-security、hzb-wechat
+- hzb-wechat : 微信服务接口模块，依赖hzb-security
+- hzb-security : 认证模块，依赖hzb-common
+- hzb-common : 通用模块
    
-#### 前端安装方法
-
-将三个前端解压到站点跟目录里，访问方式如下：
-
-- 管理后台前端：http://域名
-- 老师手机端：http://域名/t/
-- 家长手机端：http://域名/s/
-
 #### 后端服务配置
-服务端默认开启上下文是app，后台服务端需要用nginx做一下代理设置如下：
+默认的yml配置文件里是没有定义跨域的，所以不用对请求域名没有做限制，
+如果需要配置跨域提高安全性，方案有两个：
+1. 在配置文件${system.allowOrigin}配置一个允许访问的域名列表，就是把前端域名放进去即可。
+2. 把后端的服务代理到`http://域名/app/`下，这样前端和后端都用一个的域名了。后端需要做的就是做一个nginx代理，后台服务端需要用nginx做一下代理设置如下：
 ```
 location /app {
-    proxy_pass   http://localhost:8106/app; # 端口要和application.yml里的一致
+    proxy_pass   http://localhost:8106/app; # 8106端口要和application.yml里的一致；localhost不要改，除非后端跑在另外一台服务器上
     proxy_redirect    off;
     proxy_set_header  Host $host;
     proxy_set_header  X-real-ip $remote_addr;
     proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
 }
 ```
-服务端地址前缀：http://域名/app/
-可以通过这个地址访问后端是否正常启动：http://域名/app/common/open
+#### 服务端地址
+服务端地址：http://域名/app/
+可以通过这个地址访问后端是否正常启动：http://域名/app/common/open/
+
+#### 接口文档地址
+服务端地址/doc.html#/home
 
 #### 后端服务启动方法
 
@@ -47,15 +43,23 @@ sudo nohup java -jar base-api-1.0.0.jar > output.log 2>&1 &
 ```
 运行完成
 
-## 数据库版本
-mysql的版本是5.7，不过去掉一个参数配置： ONLY_FULL_GROUP_BY ，否则会有group by的错误。或者用5.5也可以，未测试5.5
+#### 数据库版本
+mysql的版本是5.6，如果使用5.7需要去掉一个参数配置： ONLY_FULL_GROUP_BY ，否则会有group by的错误
 
 ## 微信配置
 
-#### 微信配置
+#### 微信配置已经实现了数据库存储 
+sql变动见 升级指南 - 2022.3.17实现微信配置的数据库存储
+
+#### 微信相关url
 公众号配置入口：http://域名/app/wx/portal/default
-自定义菜单：http://域名/app/wx/menu/default/create
-获取微信登录按钮跳转地址接口: http://域名/app/wx/portal/default/loginUrl?state=student
+自定义菜单执行：http://域名/app/wx/menu/default/create
+手机端获取微信登录按钮跳转地址接口: http://域名/app/wx/portal/default/loginUrl?state=student
 
 #### 模板消息配置：
-
+因为每个公众号里需要单独申请微信模板，所以，不能使用本系统默认的配置。用到的表是：setting_notice
+1，到公众号里申请模板消息的内容格式，参考和修改模板消息发送实现类里的注释：
+\src\main\java\com\hzb\erp\wechat\service\WxNoticeSenderImpl.java
+文件里case用到了模板的枚举类：
+com.hzb.erp.service.notification.NoticeCodeEnum;
+2，到管理端配置一下模板ID

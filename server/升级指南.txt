@@ -1,0 +1,12 @@
+## 2022.3.17实现微信配置的数据库存储
+
+需要增加一下sql语句：
+```
+
+INSERT INTO `setting`(`id`, `name`, `code`, `remark`, `sort_num`) VALUES (4, '微信公众号设置', 'wx_mp_setting', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (10, 4, '公众号AppId', 'wx_mp_app_id', 'app_idAAAAA', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (11, 4, '公众号Secret', 'wx_mp_secret', 'secret', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (12, 4, '公众号Token', 'wx_mp_token', 'token', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (13, 4, '公众号AesKey', 'wx_mp_aes_key', 'aes_key', 'str', NULL, 0);
+
+```
