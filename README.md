@@ -53,6 +53,9 @@
 #### 后端服务配置 和 微信公众号配置 
 见server里的readme.md
 
+#### 推荐一个服务器优惠链接
+https://www.aliyun.com/minisite/goods?userCode=hk2fn0gu
+
 ## 家长端和老师端体验公众号：
 ![输入图片说明](HZB%E5%85%AC%E4%BC%97%E5%8F%B7.jpg)
 本公众号可以体验手机端，同时不定期发布最新版本公告。
