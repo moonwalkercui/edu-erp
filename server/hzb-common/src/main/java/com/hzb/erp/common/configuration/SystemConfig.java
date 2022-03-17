@@ -16,9 +16,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "system")
 public class SystemConfig {
 
-    /**
-     * 是否是演示程序
-     */
+    private Boolean isSaas;
     private Boolean isDemo;
     private String version;
     private String domain;
