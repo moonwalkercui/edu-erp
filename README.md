@@ -51,7 +51,7 @@
 家长手机端：http://域名/s/
 
 #### 后端服务配置 和 微信公众号配置 
-见server里的readme.md
+见server里的`部署说明.md`
 
 #### 推荐一个服务器优惠链接
 https://www.aliyun.com/minisite/goods?userCode=hk2fn0gu
