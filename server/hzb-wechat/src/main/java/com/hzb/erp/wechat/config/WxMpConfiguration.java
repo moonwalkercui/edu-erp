@@ -6,7 +6,7 @@ import com.hzb.erp.common.enums.SettingCodeEnum;
 import com.hzb.erp.common.service.SettingService;
 import com.hzb.erp.utils.SettingConstants;
 import com.hzb.erp.wechat.handler.*;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.common.redis.JedisWxRedisOps;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -14,7 +14,6 @@ import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 import me.chanjar.weixin.mp.config.impl.WxMpRedisConfigImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +38,7 @@ import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType.EVENT;
  * https://gitee.com/binary/weixin-java-mp-demo-springboot
  * https://github.com/wechat-group/WxJava/wiki
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Configuration
 @EnableConfigurationProperties(value = WxMpProperties.class)
 public class WxMpConfiguration {
@@ -52,14 +51,10 @@ public class WxMpConfiguration {
     private final SubscribeHandler subscribeHandler;
     private final ScanHandler scanHandler;
     private final WxMpProperties properties;
+    private final SettingService settingService;
+    private final RedisProperty redisProperty;
 
     public static List<WxMpProperties.MpConfig> configs = new ArrayList<>();
-
-    @Autowired
-    private SettingService settingService;
-
-    @Autowired
-    private RedisProperty redisProperty;
 
     /**
     * 从数据库加载微信默认配置，重启服务生效
