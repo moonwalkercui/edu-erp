@@ -32,10 +32,8 @@
 - Security + JWT 多角色权限认证模式
 - vue使用自研CUI组件，极大减少页面代码量，前端CUI组件开发说明wiki: https://gitee.com/ryan1981/vue-element-cui/wikis
 
-## 部署说明
-首先装好nginx和java1.8，mysql5.6
-
-#### 文件结构
+## 文件结构
+#### 目录说明
  - server
    - base-api-1.0.0.jar 服务端运行包
    - application.yml 服务端配置
@@ -52,45 +50,11 @@
 老师手机端：http://域名/t/
 家长手机端：http://域名/s/
 
-#### 后端服务配置
-服务端默认开启上下文是app，后台服务端需要用nginx做一下代理设置如下：
-```
-location /app {
-    proxy_pass   http://localhost:8106/app; # 端口要和application.yml里的一致
-    proxy_redirect    off;
-    proxy_set_header  Host $host;
-    proxy_set_header  X-real-ip $remote_addr;
-    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
-}
-```
-服务端地址前缀：http://域名/app/
+#### 后端服务配置 和 微信公众号配置 
+见server里的`部署说明.md`
 
-#### 后端服务启动方法
-
-1，导入sql到数据库里。
-2，修改application.yml里的配置 里面有具体说明
-3，然后cmd，切换到在jar包所在的目录执行（注意配置文件application.yml要和jar包在一个目录里，否则默认加载不到）：
-```
-直接运行：
-sudo java -jar ./base-api-1.0.0.jar
-
-后台模式：
-sudo nohup java -jar base-api-1.0.0.jar > output.log 2>&1 &
-```
-运行完成
-
-## 数据库版本
-mysql的版本如果是5.7，不过去掉一个参数配置： `ONLY_FULL_GROUP_BY` ，否则会有group by的错误，解决方案百度搜ONLY_FULL_GROUP_BY很多。推荐用mysql5.6。
-
-## 微信配置
-
-#### 微信配置
-公众号配置入口：http://域名/app/wx/portal/default
-自定义菜单：http://域名/app/wx/menu/default/create
-获取微信登录按钮跳转地址接口: http://域名/app/wx/portal/default/loginUrl?state=student
-
-#### 模板消息配置：
-管理端可配置模板
+#### 推荐一个服务器优惠链接
+https://www.aliyun.com/minisite/goods?userCode=hk2fn0gu
 
 ## 家长端和老师端体验公众号：
 ![输入图片说明](HZB%E5%85%AC%E4%BC%97%E5%8F%B7.jpg)
@@ -114,7 +78,6 @@ a：检查config.js里的api接口是否跨域访问，跨域通过一个开放�
 b: 在服务器上运行的话，config.js不能设置为localhost,要设置为ip或域名，至于端口号留不留，要看情况，如果服务端做了nginx的反向代理，就不用加，如果没做就加端口号。反向代理代码上面有。
 c: 跨域导致的无法请求，可以在application.yml的 allowOrigin: 参数里，配置上前端访问用的ip或域名。或者干脆不限制跨域，就是把这个参数底下带-的的内容删除掉。
 即可解决。
-
 
 
 ## 软件著作权证书

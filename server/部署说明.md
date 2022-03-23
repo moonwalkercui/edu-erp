@@ -1,6 +1,9 @@
 ## 部署
 首先装好nginx和java1.8，mysql5.6
 
+#### 推荐一个服务器优惠链接
+https://www.aliyun.com/minisite/goods?userCode=hk2fn0gu
+
 #### 包结构与依赖关系
 
 - hzb-base-api : 接口服务模块，依赖hzb-security、hzb-wechat
