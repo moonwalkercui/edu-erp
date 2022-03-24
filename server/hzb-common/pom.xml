@@ -89,5 +89,11 @@
             <version>1.21</version>
         </dependency>
 
+        <!-- Quartz 定时任务 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

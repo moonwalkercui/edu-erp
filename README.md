@@ -18,6 +18,7 @@
 - java工具包：Hutool
 - Api管理：Swagger + knife4j
 - Mail：javamail
+- 定时任务：quartz
 
 #### 开发环境
 
