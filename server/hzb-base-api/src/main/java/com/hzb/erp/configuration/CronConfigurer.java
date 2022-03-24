@@ -29,7 +29,7 @@ public class CronConfigurer {
     private SystemConfig systemConfig;
 
     /**
-     * 每隔时间恢复一次数据 生产环境禁用！！！！！！！！！！！！！！ todo 发行
+     * 每隔时间恢复一次数据 生产环境禁用！！！！！！！！！！！！！！
      */
     @Scheduled(cron = "0 0/30 * * * ?")
     void revertData() {
@@ -53,29 +53,29 @@ public class CronConfigurer {
         System.out.println("恢复数据end");
     }
 
-    /**
-     * 结课逻辑处理。
-     */
-    @Scheduled(cron = "0 0/5 * * * ?")
-    private void scheduleLessonsClose() {
-        log.info("========== 循环结课 ==========");
-        lessonService.closeLesson();
-    }
-
-    /**
-     * 次日上课提醒
-     */
-    @Scheduled(cron = "0 1 19 * * ?")
-    private void lessonNotice() {
-        lessonService.lessonNotice();
-    }
-
-    /**
-     * 课次数预警提醒
-     */
-    @Scheduled(cron = "0 1 7 * * ?")
-    private void lessonLessNotice() {
-        lessonService.lessonLessWarning();
-    }
-
+//    已经改成quarz管理定时任务以下作废。
+//    /**
+//     * 结课逻辑处理。
+//     */
+//    @Scheduled(cron = "0 0/5 * * * ?")
+//    private void scheduleLessonsClose() {
+//        log.info("========== 循环结课 ==========");
+//        lessonService.closeLesson();
+//    }
+//
+//    /**
+//     * 次日上课提醒
+//     */
+//    @Scheduled(cron = "0 1 19 * * ?")
+//    private void lessonNotice() {
+//        lessonService.lessonNotice();
+//    }
+//
+//    /**
+//     * 课次数预警提醒
+//     */
+//    @Scheduled(cron = "0 1 7 * * ?")
+//    private void lessonLessNotice() {
+//        lessonService.lessonLessWarning();
+//    }
 }
