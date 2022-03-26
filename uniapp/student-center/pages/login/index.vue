@@ -84,7 +84,8 @@
 			getWxRedirctUrl() {
 				this.$http.get('wx/portal/default/loginUrl', {state: 'student'}, res => {
 					if (!this.$common.handleResponseMsg(res)) return;
-					window.location.href = res
+					//window.location.href = res
+					window.open(res)
 				})
 			},
 			submit: async function() {
