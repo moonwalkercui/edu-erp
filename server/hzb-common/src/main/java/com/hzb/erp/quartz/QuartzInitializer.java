@@ -1,12 +1,7 @@
 package com.hzb.erp.quartz;
 
 import com.hzb.erp.quartz.entity.QuartzJob;
-import com.hzb.erp.quartz.mapper.QuartzJobMapper;
-import org.quartz.Scheduler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -20,12 +15,12 @@ public interface QuartzInitializer {
     /**
      * 初始化数据库
      */
-    public void initJobDb() throws Exception;
+    public void initJobDb(List<QuartzJob> list) throws Exception;
 
     /**
      * 启动全部
      */
-    public void startAll() throws Exception;
+    public void startAll(List<QuartzJob> list) throws Exception;
 
     /**
      * 获取Job的组名

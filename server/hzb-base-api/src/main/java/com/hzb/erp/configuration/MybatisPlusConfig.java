@@ -30,11 +30,11 @@ public class MybatisPlusConfig {
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
 
+        // 数据权限 一定放到第一位执行，否则分页不受数据权限控制
+        interceptor.addInnerInterceptor(dataScopeInterceptor());
+
         // 分页
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
-
-        // 数据权限
-        interceptor.addInnerInterceptor(dataScopeInterceptor());
 
         if (PropertyUtil.isProd() && !systemConfig.getIsDemo()) {
             interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
