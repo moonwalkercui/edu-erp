@@ -35,8 +35,9 @@ public class SingleQuartzInitializerImpl implements QuartzInitializer {
     @PostConstruct
     public void init() {
         log.info("============= Quartz：单服务模式下启动定时任务==========");
-        initJobDb();
-        this.startAll();
+        List<QuartzJob> list = quartzJobMapper.getList();
+        initJobDb(list);
+        startAll(list);
         log.info("============= Quartz：启动定时任务完毕================");
     }
 
@@ -44,15 +45,15 @@ public class SingleQuartzInitializerImpl implements QuartzInitializer {
     * 初始化的时候把计划任务插入到数据库里。
     * */
     @Override
-    public void initJobDb() {
+    public void initJobDb(List<QuartzJob> list) {
         for (JobRegisterEnumImpl jobEnum : JobRegisterEnumImpl.values()) {
-            existOrRegisterJob(jobEnum);
+            existOrRegisterJob(jobEnum, list);
         }
     }
 
-    public void existOrRegisterJob(JobRegisterEnumImpl jobEnum) {
+    public void existOrRegisterJob(JobRegisterEnumImpl jobEnum, List<QuartzJob> list) {
         boolean exist = false;
-        List<QuartzJob> list = quartzJobMapper.getList();
+
         for(QuartzJob job : list) {
             if(jobEnum.name().equals(job.getJobName())) {
                 exist = true;
@@ -72,8 +73,7 @@ public class SingleQuartzInitializerImpl implements QuartzInitializer {
     }
 
     @Override
-    public void startAll() {
-        List<QuartzJob> list = quartzJobMapper.getList();;
+    public void startAll(List<QuartzJob> list) {
         for (QuartzJob item : list) {
             item.setGroupName(getJobGroupName());
             QuartzUtil.rebootJob(scheduler, item);

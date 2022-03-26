@@ -20,7 +20,7 @@ public enum JobRegisterEnumImpl implements JobRegisterEnum {
     /**
      * job枚举类包列表
      */
-    LESSON_ENDING_JOB("com.hzb.erp.quartzJob.jobs.LessonEndingJob", "0 0/5 * * * ?"),
+    LESSON_ENDING_JOB("com.hzb.erp.quartzJob.jobs.LessonEndingJob", "0 */5 * * * ?"),
     LESSON_REMIND_JOB("com.hzb.erp.quartzJob.jobs.LessonRemindJob", "0 0 19 * * ?"),
     LESSON_COUNT_WARNING_JOB("com.hzb.erp.quartzJob.jobs.LessonCountWarningJob", "0 0 7 * * ?");
 
