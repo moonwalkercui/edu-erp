@@ -30,22 +30,22 @@ public class SingleQuartzInitializerImpl implements QuartzInitializer {
     private QuartzJobMapper quartzJobMapper;
 
     /**
-    * 自动启动
-    * */
+     * 自动启动
+     */
     @PostConstruct
     public void init() {
         log.info("============= Quartz：单服务模式下启动定时任务==========");
-        List<QuartzJob> list = quartzJobMapper.getList();
-        initJobDb(list);
-        startAll(list);
+        initJobDb();
+        startAll();
         log.info("============= Quartz：启动定时任务完毕================");
     }
 
     /**
-    * 初始化的时候把计划任务插入到数据库里。
-    * */
+     * 初始化的时候把计划任务插入到数据库里。
+     */
     @Override
-    public void initJobDb(List<QuartzJob> list) {
+    public void initJobDb() {
+        List<QuartzJob> list = getQuartzJobList();
         for (JobRegisterEnumImpl jobEnum : JobRegisterEnumImpl.values()) {
             existOrRegisterJob(jobEnum, list);
         }
@@ -54,14 +54,14 @@ public class SingleQuartzInitializerImpl implements QuartzInitializer {
     public void existOrRegisterJob(JobRegisterEnumImpl jobEnum, List<QuartzJob> list) {
         boolean exist = false;
 
-        for(QuartzJob job : list) {
-            if(jobEnum.name().equals(job.getJobName())) {
+        for (QuartzJob job : list) {
+            if (jobEnum.name().equals(job.getJobName())) {
                 exist = true;
                 break;
             }
         }
         // 如果数据库不存在新增一个job
-        if(!exist) {
+        if (!exist) {
             QuartzJob res = new QuartzJob();
             res.setJobName(jobEnum.name());
             res.setGroupName(getJobGroupName());
@@ -73,7 +73,8 @@ public class SingleQuartzInitializerImpl implements QuartzInitializer {
     }
 
     @Override
-    public void startAll(List<QuartzJob> list) {
+    public void startAll() {
+        List<QuartzJob> list = getQuartzJobList();
         for (QuartzJob item : list) {
             item.setGroupName(getJobGroupName());
             QuartzUtil.rebootJob(scheduler, item);
@@ -81,11 +82,16 @@ public class SingleQuartzInitializerImpl implements QuartzInitializer {
     }
 
     /**
-    * 单服务模式下返回null
-    * */
+     * 单服务模式下返回null
+     */
     @Override
     public String getJobGroupName() {
         return null;
+    }
+
+
+    public List<QuartzJob> getQuartzJobList() {
+        return quartzJobMapper.getList();
     }
 
 }

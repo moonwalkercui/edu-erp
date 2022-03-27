@@ -9,6 +9,7 @@ import com.hzb.erp.common.service.SettingOptionService;
 import com.hzb.erp.common.service.SettingService;
 import com.hzb.erp.common.exception.BizException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,6 +37,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
     private SettingMapper settingMapper;
 
     @Override
+    @Cacheable(value = "SettingOptionList")
     public Map<String, Object> listOptionByCode(SettingCodeEnum code) {
         List<SettingOption> options = settingMapper.listOptionByCode(String.valueOf(code).toLowerCase());
         Map<String, Object> res = new HashMap<>();

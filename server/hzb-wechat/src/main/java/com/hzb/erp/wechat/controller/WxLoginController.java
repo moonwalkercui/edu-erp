@@ -1,7 +1,6 @@
 package com.hzb.erp.wechat.controller;
 
 import com.hzb.erp.common.configuration.SystemConfig;
-import com.hzb.erp.common.configuration.WxMpProperties;
 import com.hzb.erp.common.constants.CommonConst;
 import com.hzb.erp.common.entity.Staff;
 import com.hzb.erp.common.entity.User;
@@ -40,7 +39,7 @@ import java.net.URL;
 @Controller
 @RequestMapping("/wx/login/{confName}")
 @Slf4j
-@EnableConfigurationProperties(value = {WxMpProperties.class, SystemConfig.class})
+@EnableConfigurationProperties(value = {SystemConfig.class})
 public class WxLoginController {
 
     @Autowired
@@ -59,8 +58,6 @@ public class WxLoginController {
 
     private final WxMpService wxService;
 
-    private final WxMpProperties wxMpProperties;
-
     @GetMapping
     public ModelAndView wxLogin(HttpServletRequest request,
                                 HttpServletResponse response,
@@ -68,7 +65,7 @@ public class WxLoginController {
                                 @RequestParam String code,
                                 @RequestParam String state,
                                 ModelAndView view) {
-
+        WechatService.setConfig(wxService);
         String appid = WechatService.getAppIdByConfName(confName);
 
         try {

@@ -30,8 +30,6 @@ public class SystemConfig {
     private List<String> securityIgnoringMatchers;
     private List<String> blackList;
 
-    private WxMpProperties wxMpProperties;
-
     /**
      * 下面参数是filter里用的，用@Autowaire注解会是null，所以这里get设成静态的, set不是静态
      */

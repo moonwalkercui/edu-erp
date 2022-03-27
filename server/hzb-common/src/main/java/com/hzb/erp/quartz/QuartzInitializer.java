@@ -15,12 +15,12 @@ public interface QuartzInitializer {
     /**
      * 初始化数据库
      */
-    public void initJobDb(List<QuartzJob> list) throws Exception;
+    public void initJobDb() throws Exception;
 
     /**
      * 启动全部
      */
-    public void startAll(List<QuartzJob> list) throws Exception;
+    public void startAll() throws Exception;
 
     /**
      * 获取Job的组名

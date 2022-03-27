@@ -6,23 +6,27 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
 
+/**
+ * 微信公众号配置
+ * 20220313 Ryan 取消从配置文件读取的方式，改为数据库读取
+ */
 @Data
-@ConfigurationProperties(prefix = "system.wxmp")
+//@ConfigurationProperties(prefix = "system.wxmp")
 public class WxMpProperties {
     /**
      * 是否使用redis存储access token
      */
-    private boolean useRedis;
+//    private boolean useRedis;
 
-    /**
-     * 默认配置文件
-     */
-    private Integer defaultConfIndex;
-
-    /**
-     * 多个公众号配置信息
-     */
-    private List<MpConfig> configs;
+//    /**
+//     * 默认配置文件
+//     */
+//    private Integer defaultConfIndex;
+//
+//    /**
+//     * 多个公众号配置信息 20220326 已经取消从配置文件里获取配置的方式，改为从数据库获取
+//     */
+//    private List<MpConfig> configs;
 
     @Data
     public static class MpConfig {

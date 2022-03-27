@@ -14,9 +14,7 @@ public class MyWebMvcConfig extends WebMvcConfigurationSupport {
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        /**
-         * 解决swagger-ui.html 404无法访问的问题
-         */
+        // 解决swagger-ui.html 404无法访问的问题
         registry.addResourceHandler("/swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
@@ -24,9 +22,7 @@ public class MyWebMvcConfig extends WebMvcConfigurationSupport {
         registry.addResourceHandler("doc.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
 
-        /**
-         * 静态资源目录
-         */
+        // 静态资源目录
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("file:" + systemConfig.getStaticDir());
     }

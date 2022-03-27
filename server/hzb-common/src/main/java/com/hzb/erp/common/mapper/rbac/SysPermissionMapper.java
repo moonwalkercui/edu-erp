@@ -14,7 +14,7 @@ import java.util.List;
 public interface SysPermissionMapper extends BaseMapper<SysPermission> {
     List<SysPermissionDTO> getAllInfo();
 
-    @Cacheable(cacheNames = "SysPermissionListV3")
+    @Cacheable(value = "SysPermissionList")
     List<SysPermissionDTO> getAllBaseInfo();
 
     List<SysPermission> getByRoleId(Long roleId);

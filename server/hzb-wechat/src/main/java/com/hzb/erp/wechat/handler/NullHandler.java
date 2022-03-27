@@ -1,5 +1,6 @@
 package com.hzb.erp.wechat.handler;
 
+import com.hzb.erp.wechat.service.WechatService;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
@@ -15,6 +16,7 @@ public class NullHandler extends AbstractHandler {
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
                                     Map<String, Object> context, WxMpService wxMpService,
                                     WxSessionManager sessionManager) {
+        WechatService.setConfig(wxMpService);
         return null;
     }
 

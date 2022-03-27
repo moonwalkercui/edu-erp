@@ -1,17 +1,27 @@
 package com.hzb.erp;
 
-import com.hzb.erp.common.service.LessonScheduleService;
+import com.hzb.erp.quartz.entity.QuartzJob;
+import com.hzb.erp.quartz.mapper.QuartzJobMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.boot.test.context.SpringBootTest;
+import java.util.List;
 
 //@SpringBootTest
 class ErpApplicationTests {
 
-    @Autowired
-    private LessonScheduleService lessonScheduleService;
+//    @Autowired
+//    private QuartzJobMapper quartzJobService;
+
     @Test
     void contextLoads() {
+
+//
+//        List<QuartzJob> list1 = quartzJobService.getList();
+//        System.out.println(list1);
+//        List<QuartzJob> list2 = quartzJobService.getList();
+//        System.out.println(list2);
+
 //
 //        LessonSchedule schedule = lessonScheduleService.getById(51L);
 //        List<LessonDatetimeBO> LessonDatetimeBOList = lessonScheduleService.getLessonDatetime(schedule);

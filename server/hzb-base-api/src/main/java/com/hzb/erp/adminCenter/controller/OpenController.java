@@ -41,7 +41,7 @@ public class OpenController {
 
     @GetMapping("/")
     public String test() {
-        return "教务系统已部署成功";
+        return "HZB-ERP BOOT SUCCESSFUL!!!";
     }
 
     @ApiOperation("版本号判断 大于0表示有新版")

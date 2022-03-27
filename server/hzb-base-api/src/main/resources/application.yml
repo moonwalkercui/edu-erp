@@ -14,6 +14,9 @@ spring:
     multipart:
       max-request-size: 20MB # 上传文件总的最大值
       max-file-size: 10MB   # 单个文件的最大值
+  datasource:
+    hikari:
+      max-lifetime: 200000 # 设置为比数据库超时时间小的值，否则会有 Warning: Failed to validate connection
   redis:
     jedis:
       pool:
@@ -115,10 +118,10 @@ system:
 
   # 微信公众号配置
   wxmp:
-    useRedis: false
-    defaultConfIndex: 0
-    configs:
-      # 公众号配置，可以设置多组 1.1.0313: default的配置已经改为通过数据库配置，以下配置可省略
+    useRedis: true
+#    defaultConfIndex: 0
+#    configs:
+#      # 公众号配置，可以设置多组 20220313: default的配置已经改为通过数据库配置，以下配置可省略
 #      - name:
 #        appId:
 #        secret:

@@ -1,6 +1,7 @@
 package com.hzb.erp.wechat.handler;
 
 import com.hzb.erp.wechat.builder.TextBuilder;
+import com.hzb.erp.wechat.service.WechatService;
 import com.hzb.erp.wechat.utils.JsonUtils;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
@@ -21,7 +22,7 @@ public class MsgHandler extends AbstractHandler {
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
                                     Map<String, Object> context, WxMpService weixinService,
                                     WxSessionManager sessionManager) {
-
+        WechatService.setConfig(weixinService);
         if (!wxMessage.getMsgType().equals(XmlMsgType.EVENT)) {
             // 可以选择将消息保存到本地
         }

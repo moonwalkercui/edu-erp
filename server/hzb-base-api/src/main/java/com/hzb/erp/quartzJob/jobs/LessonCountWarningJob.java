@@ -13,14 +13,15 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  * @author Ryan 541720500@qq.com
  */
 public class LessonCountWarningJob extends QuartzJobBean {
+
     @Autowired
     private LessonService lessonService;
-
 
     @SneakyThrows
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
         lessonService.lessonLessWarning();
+
     }
 }

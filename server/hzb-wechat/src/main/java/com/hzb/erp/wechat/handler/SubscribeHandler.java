@@ -1,6 +1,7 @@
 package com.hzb.erp.wechat.handler;
 
 import com.hzb.erp.wechat.builder.TextBuilder;
+import com.hzb.erp.wechat.service.WechatService;
 import com.hzb.erp.wechat.service.WxAccessService;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
@@ -24,7 +25,7 @@ public class SubscribeHandler extends AbstractHandler {
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
                                     Map<String, Object> context, WxMpService weixinService,
                                     WxSessionManager sessionManager) throws WxErrorException {
-
+        WechatService.setConfig(weixinService);
         this.logger.info("新关注用户 OPENID: " + wxMessage.getFromUser());
 
         // 获取微信用户基本信息

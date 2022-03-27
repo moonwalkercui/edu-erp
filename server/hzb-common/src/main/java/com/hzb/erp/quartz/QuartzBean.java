@@ -2,13 +2,17 @@ package com.hzb.erp.quartz;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * <p> quartz实体类 </p>
  *
  * @author Ryan 541720500@qq.com
  */
 @Data
-public class QuartzBean {
+public class QuartzBean implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /** 任务名称 */
     private String jobName;

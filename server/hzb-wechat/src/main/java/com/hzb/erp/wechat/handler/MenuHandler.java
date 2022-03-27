@@ -1,6 +1,7 @@
 package com.hzb.erp.wechat.handler;
 
 import com.hzb.erp.common.configuration.SystemConfig;
+import com.hzb.erp.wechat.service.WechatService;
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -24,6 +25,7 @@ public class MenuHandler extends AbstractHandler {
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
                                     Map<String, Object> context, WxMpService weixinService,
                                     WxSessionManager sessionManager) {
+        WechatService.setConfig(weixinService);
         String msg = String.format("type:%s, event:%s, key:%s",
                 wxMessage.getMsgType(), wxMessage.getEvent(),
                 wxMessage.getEventKey());

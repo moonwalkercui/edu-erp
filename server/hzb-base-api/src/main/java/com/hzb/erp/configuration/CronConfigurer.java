@@ -12,15 +12,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import javax.annotation.Resource;
 
 /**
- * 系统定时任务配置
+ * 系统定时任务配置 生产下可以注释掉该类
  */
 @Configuration
 @EnableScheduling
 @Slf4j
 public class CronConfigurer {
-
-    @Autowired
-    private LessonService lessonService;
 
     @Resource
     private CommonMapper commonMapper;
@@ -53,29 +50,4 @@ public class CronConfigurer {
         System.out.println("恢复数据end");
     }
 
-//    已经改成quarz管理定时任务以下作废。
-//    /**
-//     * 结课逻辑处理。
-//     */
-//    @Scheduled(cron = "0 0/5 * * * ?")
-//    private void scheduleLessonsClose() {
-//        log.info("========== 循环结课 ==========");
-//        lessonService.closeLesson();
-//    }
-//
-//    /**
-//     * 次日上课提醒
-//     */
-//    @Scheduled(cron = "0 1 19 * * ?")
-//    private void lessonNotice() {
-//        lessonService.lessonNotice();
-//    }
-//
-//    /**
-//     * 课次数预警提醒
-//     */
-//    @Scheduled(cron = "0 1 7 * * ?")
-//    private void lessonLessNotice() {
-//        lessonService.lessonLessWarning();
-//    }
 }

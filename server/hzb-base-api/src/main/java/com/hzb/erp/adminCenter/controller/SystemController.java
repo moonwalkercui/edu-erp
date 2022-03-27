@@ -92,7 +92,7 @@ public class SystemController {
     @Log(description = "创建和修改配置项", type = "系统管理")
     @PostMapping("/saveSettingOption")
     @PreventMultiSubmit
-    @CacheEvict(value = "setting_cache")
+    @CacheEvict(value = {"SettingCache", "SettingOptionList"})
     public JsonResponse saveSettingOption(@RequestBody SettingOption option) {
         System.out.println(option);
         if (StringUtils.isBlank(option.getName())) {

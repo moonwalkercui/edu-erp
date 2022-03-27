@@ -3,6 +3,7 @@ package com.hzb.erp.wechat.service;
 import com.hzb.erp.service.notification.NoticeCodeEnum;
 import com.hzb.erp.service.notification.WxNoticeSender;
 import com.hzb.erp.service.notification.bo.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
@@ -21,11 +22,11 @@ import java.util.Map;
  * description 微信发送器
  */
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class WxNoticeSenderImpl implements WxNoticeSender {
 
-    @Autowired
-    private WechatService wechatService;
+    private final WechatService wechatService;
 
     /**
      * 发送消息

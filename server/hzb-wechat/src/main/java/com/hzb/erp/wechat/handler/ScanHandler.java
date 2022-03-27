@@ -1,5 +1,6 @@
 package com.hzb.erp.wechat.handler;
 
+import com.hzb.erp.wechat.service.WechatService;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -18,6 +19,7 @@ public class ScanHandler extends AbstractHandler {
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map,
                                     WxMpService wxMpService, WxSessionManager wxSessionManager) throws WxErrorException {
+        WechatService.setConfig(wxMpService);
         // 扫码事件处理
         return null;
     }

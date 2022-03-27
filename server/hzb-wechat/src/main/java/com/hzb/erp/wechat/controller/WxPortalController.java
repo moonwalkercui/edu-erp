@@ -1,7 +1,5 @@
 package com.hzb.erp.wechat.controller;
 
-import com.hzb.erp.common.configuration.SystemConfig;
-import com.hzb.erp.common.configuration.WxMpProperties;
 import com.hzb.erp.wechat.service.WechatService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +9,6 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,12 +19,9 @@ import java.net.URL;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/wx/portal/{confName}")
-@EnableConfigurationProperties(WxMpProperties.class)
 public class WxPortalController {
     private final WxMpService wxService;
     private final WxMpMessageRouter messageRouter;
-    private final WxMpProperties wxMpProperties;
-    private final SystemConfig systemConfig;
 
     @GetMapping(produces = "text/plain;charset=utf-8")
     public String authGet(@PathVariable String confName,
@@ -35,7 +29,7 @@ public class WxPortalController {
                           @RequestParam(name = "timestamp", required = false) String timestamp,
                           @RequestParam(name = "nonce", required = false) String nonce,
                           @RequestParam(name = "echostr", required = false) String echostr) {
-
+        WechatService.setConfig(wxService);
         String appid = WechatService.getAppIdByConfName( confName);
 
         log.info("\n接收到来自微信服务器的认证消息：[{}, {}, {}, {}]", signature, timestamp, nonce, echostr);
@@ -66,6 +60,7 @@ public class WxPortalController {
                        @RequestParam("openid") String openid,
                        @RequestParam(name = "encrypt_type", required = false) String encType,
                        @RequestParam(name = "msg_signature", required = false) String msgSignature) {
+        WechatService.setConfig(wxService);
         log.info("\n接收微信请求：[openid=[{}], [signature=[{}], encType=[{}], msgSignature=[{}],"
                         + " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
                 openid, signature, encType, msgSignature, timestamp, nonce, requestBody);
@@ -122,7 +117,7 @@ public class WxPortalController {
      */
     @GetMapping(value = "/loginUrl", produces = "text/plain;charset=utf-8")
     public String getLoginUrl(HttpServletRequest request, @PathVariable String confName, @RequestParam(value = "state", defaultValue = "") String state) throws MalformedURLException {
-
+        WechatService.setConfig(wxService);
         String appid = WechatService.getAppIdByConfName( confName);
         URL requestUrl = new URL(request.getRequestURL().toString());
         String url = this.wxService.switchoverTo(appid).getOAuth2Service().buildAuthorizationUrl(

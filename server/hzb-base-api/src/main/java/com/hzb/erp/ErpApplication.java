@@ -18,7 +18,6 @@ import java.net.UnknownHostException;
  */
 @SpringBootApplication
 @EnableAsync
-@EnableCaching
 @Slf4j
 public class ErpApplication {
     public static void main(String[] args) throws UnknownHostException {
