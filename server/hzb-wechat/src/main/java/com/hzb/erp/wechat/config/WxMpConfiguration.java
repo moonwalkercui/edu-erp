@@ -77,7 +77,6 @@ public class WxMpConfiguration {
 
     @Bean
     public WxMpMessageRouter messageRouter(WxMpService wxMpService) {
-        WechatService.setConfig(wxMpService);
         final WxMpMessageRouter newRouter = new WxMpMessageRouter(wxMpService);
 
         // 记录所有事件的日志 （异步执行）
