@@ -1,5 +1,6 @@
 package com.hzb.erp.quartzJob;
 
+import com.hzb.erp.common.configuration.SystemConfig;
 import com.hzb.erp.quartz.QuartzInitializer;
 import com.hzb.erp.quartz.QuartzUtil;
 import com.hzb.erp.quartz.entity.QuartzJob;
@@ -21,7 +22,7 @@ import java.util.List;
 @ConditionalOnExpression("${system.isSaas:false}==false")
 @Service
 @Slf4j
-public class SingleQuartzInitializerImpl implements QuartzInitializer {
+public class QuartzInitializerImpl implements QuartzInitializer {
 
     @Autowired
     private Scheduler scheduler;
@@ -29,11 +30,17 @@ public class SingleQuartzInitializerImpl implements QuartzInitializer {
     @Autowired
     private QuartzJobMapper quartzJobMapper;
 
+    @Autowired
+    private SystemConfig systemConfig;
+
     /**
      * 自动启动
      */
     @PostConstruct
     public void init() {
+        if(systemConfig.getIsSaas() != null && systemConfig.getIsSaas()) {
+            return;
+        }
         log.info("============= Quartz：单服务模式下启动定时任务==========");
         initJobDb();
         startAll();
