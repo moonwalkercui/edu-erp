@@ -1,5 +1,6 @@
 package com.hzb.erp.configuration;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -25,6 +26,7 @@ import java.util.Map;
  */
 @Configuration
 @EnableCaching
+@ConditionalOnExpression("${system.isSaas:false}==false")
 public class CacheConfig extends CachingConfigurerSupport {
 
     /**

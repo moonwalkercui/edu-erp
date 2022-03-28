@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p> </p>
+ * <p> 数据权限的mybatisplus实现 </p>
  *
  * @author Ryan 541720500@qq.com
  */

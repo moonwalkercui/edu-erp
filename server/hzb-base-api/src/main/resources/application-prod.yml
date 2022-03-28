@@ -12,7 +12,7 @@ spring:
 
 logging:
   level:
-    root: info
+    root: warn
 
 system:
   domain: http://erp2.hzb-it.com
