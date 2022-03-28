@@ -89,7 +89,6 @@ public class SingleQuartzInitializerImpl implements QuartzInitializer {
         return null;
     }
 
-
     public List<QuartzJob> getQuartzJobList() {
         return quartzJobMapper.getList();
     }

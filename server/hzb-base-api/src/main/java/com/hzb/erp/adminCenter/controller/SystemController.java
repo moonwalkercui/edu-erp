@@ -13,6 +13,7 @@ import com.hzb.erp.common.pojo.vo.PaginationVO;
 import com.hzb.erp.common.service.SettingNoticeService;
 import com.hzb.erp.common.service.SettingOptionService;
 import com.hzb.erp.common.service.SettingService;
+import com.hzb.erp.service.SettingChangeService;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
 import io.swagger.annotations.Api;
@@ -20,7 +21,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +48,8 @@ public class SystemController {
     private SettingNoticeService settingNoticeService;
     @Resource
     private SysLogMapper sysLogMapper;
+    @Resource
+    private SettingChangeService settingChangeService;
 
     @ApiOperation("设置列表")
     @GetMapping("/settingList")
@@ -92,21 +94,26 @@ public class SystemController {
     @Log(description = "创建和修改配置项", type = "系统管理")
     @PostMapping("/saveSettingOption")
     @PreventMultiSubmit
-    @CacheEvict(value = {"SettingCache", "SettingOptionList"})
+    @CacheEvict(value = "SettingCache", allEntries = true)
     public JsonResponse saveSettingOption(@RequestBody SettingOption option) {
-        System.out.println(option);
         if (StringUtils.isBlank(option.getName())) {
             return JsonResponseUtil.error("缺少配置名称");
         }
         boolean res;
         option.setName(StringUtils.trim(option.getName()));
         option.setCode(StringUtils.trim(option.getCode()));
+        settingOptionService.valueValidate(option);
         if (option.getId() != null) {
             res = settingOptionService.updateById(option);
         } else {
             res = settingOptionService.save(option);
         }
-        return res ? JsonResponseUtil.success("已保存") : JsonResponseUtil.error("操作失败");
+        // 处理更新后逻辑
+        if(res) {
+            settingChangeService.afterChange(option);
+            return JsonResponseUtil.success("已保存");
+        }
+        return JsonResponseUtil.error("操作失败");
     }
 
     @ApiOperation("通知设置列表")

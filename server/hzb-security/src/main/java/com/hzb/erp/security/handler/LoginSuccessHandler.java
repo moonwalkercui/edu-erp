@@ -11,6 +11,7 @@ import com.hzb.erp.security.Enums.LoginUserIdentity;
 import com.hzb.erp.utils.IpUtil;
 import com.hzb.erp.utils.JsonResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private SysLogService sysLogService;
 
     @Override
+    @CacheEvict(value = "SysPermissionList", allEntries = true)
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         JwtUserDetails user = (JwtUserDetails) authentication.getPrincipal();
         String jwtToken = SecurityUtils.generateToken(user, SystemConfig.getJwtExpiredTtlSec());

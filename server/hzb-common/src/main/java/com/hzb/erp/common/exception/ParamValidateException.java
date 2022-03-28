@@ -2,15 +2,14 @@ package com.hzb.erp.common.exception;
 
 import com.hzb.erp.utils.ResponseCodeEnums;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 /**
- * 业务异常类
+ * 参数验证异常类
  *
  * @author Ryan
  */
 @Getter
-public class BizException extends RuntimeException {
+public class ParamValidateException extends RuntimeException {
     private final Integer code;
 
     /**
@@ -18,7 +17,7 @@ public class BizException extends RuntimeException {
      *
      * @param type 枚举类中的错误类型
      */
-    public BizException(ResponseCodeEnums type) {
+    public ParamValidateException(ResponseCodeEnums type) {
         super(type.getMsg());
         this.code = type.getCode();
     }
@@ -29,7 +28,7 @@ public class BizException extends RuntimeException {
      * @param code 自定义的错误码
      * @param msg  自定义的错误提示
      */
-    public BizException(Integer code, String msg) {
+    public ParamValidateException(Integer code, String msg) {
         super(msg);
         this.code = code;
     }
@@ -39,7 +38,7 @@ public class BizException extends RuntimeException {
      *
      * @param msg 自定义的错误提示
      */
-    public BizException(String msg) {
+    public ParamValidateException(String msg) {
         super(msg);
         this.code = ResponseCodeEnums.BIZ_ERROR.getCode();
     }

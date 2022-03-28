@@ -71,4 +71,15 @@ public class SettingConstants {
      * 公众号AesKey
      */
     public static final String WX_MP_AES_KEY = "wx_mp_aes_key";
+
+    /**
+     * 上课提现时间
+     */
+    public static final String LESSON_REMIND_TIME = "lesson_remind_time";
+
+    /**
+     * 上课次数预警时间
+     */
+    public static final String LESSON_COUNT_WARNING_TIME = "lesson_count_warning_time";
+
 }

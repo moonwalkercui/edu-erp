@@ -12,5 +12,14 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SettingOptionService extends IService<SettingOption> {
 
+    /**
+    * 通过code获取配置项
+    * */
     SettingOption getByCode(String code);
+
+    /**
+     * 值验证
+     * */
+    boolean valueValidate(SettingOption option);
+
 }

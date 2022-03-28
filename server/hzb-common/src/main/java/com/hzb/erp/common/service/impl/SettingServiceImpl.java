@@ -24,11 +24,12 @@ import java.util.Map;
 @Service
 public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> implements SettingService {
 
-    public final String STR_TYPE = "str";
-    public final String INT_TYPE = "int";
-    public final String BOOL_TYPE = "bool";
-    public final String LIST_STR_TYPE = "strlist";
-    public final String LIST_INT_TYPE = "intlist";
+    public static final String STR_TYPE = "str";
+    public static final String INT_TYPE = "int";
+    public static final String BOOL_TYPE = "bool";
+    public static final String TIME_TYPE = "time";
+    public static final String LIST_STR_TYPE = "strlist";
+    public static final String LIST_INT_TYPE = "intlist";
 
     @Resource
     private SettingOptionService settingOptionService;
@@ -37,7 +38,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
     private SettingMapper settingMapper;
 
     @Override
-    @Cacheable(value = "SettingOptionList")
+    @Cacheable(value = "SettingCache")
     public Map<String, Object> listOptionByCode(SettingCodeEnum code) {
         List<SettingOption> options = settingMapper.listOptionByCode(String.valueOf(code).toLowerCase());
         Map<String, Object> res = new HashMap<>();

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 手机短信实现
+ * todo 请根据自己的短信服务商自行实现 send 方法
  */
 @Service
 @Slf4j
@@ -23,6 +24,7 @@ public class SmsManagerImpl implements SmsManager {
 //
 //    @Autowired
 //    private MessageTemplateClient messageTemplateClient;
+//
 //    @Autowired
 //    private Cache cache;
 
@@ -31,7 +33,7 @@ public class SmsManagerImpl implements SmsManager {
     private static final String ALI_SIGN_NAME = "双惠德";
     private static final String ALI_REGION_ID = "cn-hangzhou";
 
-    //    @Autowired
+//    @Autowired
 //    private SmsAliYunPlugin smsAliYunPlugin;
 
     @Override
@@ -121,9 +123,12 @@ public class SmsManagerImpl implements SmsManager {
 //        cache.put(CachePrefix.SMS_CODE.getPrefix() + scene + "_" + mobile, code, javashopConfig.getSmscodeTimout());
     }
 
+    /**
+     * 生成5位验证码
+     */
     @Override
     public String makeSmsCode() {
-        return "" + (int) ((Math.random() * 9 + 1) * 100000);
+        return "" + (int) ((Math.random() * 9 + 1) * 10000);
     }
 
     private SmsSceneType getSceneEnum(String scene) {
