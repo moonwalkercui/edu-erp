@@ -13,7 +13,7 @@ public class SettingConstants {
     public static final String CLASS_CLOSE_WITH_GRADUATE_STUDENT = "class_close_with_graduate_student";
 
     /**
-     * 报单1V1课程时自动生成班级
+     * 报名1V1课程时自动生成班级
      */
     public static final String CLASS_AUTO_CREATE_ON_ONE2ONE = "class_auto_create_on_one2one";
 

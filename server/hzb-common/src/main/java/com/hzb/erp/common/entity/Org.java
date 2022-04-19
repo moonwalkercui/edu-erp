@@ -36,6 +36,10 @@ public class Org extends AutoFillEntity implements ParentListBO {
      * 公司简称
      */
     private String shortname;
+
+    /**
+     * ID路径
+     */
     private String idPath;
 
     /**
@@ -104,5 +108,4 @@ public class Org extends AutoFillEntity implements ParentListBO {
      */
     private Integer sortNum;
 
-    private String shipRoutes;
 }

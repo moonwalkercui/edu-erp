@@ -166,19 +166,16 @@ public class DataScopeInterceptor implements InnerInterceptor {
             return "";
         }
 
-        System.out.println("===========makeCondition");
         Long uid = UserAuthService.getCurrentUserId();
         if (uid == null) {
             return "";
         }
         List<DataPermission> permissions = DataPermissionService.getPermissionList(UserAuthService.getCurrentUserId(), entityName);
         if (permissions == null || permissions.size() == 0) {
-            System.out.println("===========null1");
             return "";
         }
         StaffOrginfo orgInfo = DataPermissionService.getOrgInfo(uid);
         if (orgInfo == null) {
-            System.out.println("===========null2");
             return "";
         }
 

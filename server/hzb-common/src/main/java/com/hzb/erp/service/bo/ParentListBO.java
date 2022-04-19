@@ -6,7 +6,10 @@ package com.hzb.erp.service.bo;
  * @author Ryan 541720500@qq.com
  */
 public interface ParentListBO {
-    public Long getId();
+    Long getId();
 
-    public Long getPid();
+    /**
+     * 父级id
+     */
+    Long getPid();
 }

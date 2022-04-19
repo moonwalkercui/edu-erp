@@ -1,18 +1,19 @@
 package com.hzb.erp.adminCenter.controller;
 
 
+import com.hzb.erp.annotation.Log;
+import com.hzb.erp.common.enums.StudentStageEnum;
 import com.hzb.erp.common.pojo.dto.AppointmentParamDTO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
 import com.hzb.erp.common.service.AppointmentService;
+import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 /**
  * <p>
@@ -40,4 +41,28 @@ public class AppointmentController {
         param.setStudentId(studentId);
         return JsonResponseUtil.paginate(appointmentService.getList(param));
     }
+
+    @ApiOperation("审核通过")
+    @Log(description = "审核通过", type = "预约管理")
+    @PostMapping("/pass")
+    public JsonResponse pass(@RequestBody List<Long> ids) {
+        if (appointmentService.handleAudit(ids, true)) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+
+    @ApiOperation("审核驳回")
+    @Log(description = "审核驳回", type = "预约管理")
+    @PostMapping("/reject")
+    public JsonResponse reject(@RequestBody List<Long> ids) {
+        if (appointmentService.handleAudit(ids, false)) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
 }

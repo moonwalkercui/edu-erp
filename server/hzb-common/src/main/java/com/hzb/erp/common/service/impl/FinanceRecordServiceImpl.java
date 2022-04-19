@@ -89,7 +89,7 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
 
         if (FinanceTypeEnum.COURSE.equals(item.getItemType())) {
             handleCourseVerify(item, state);
-            operationRecordService.addOne(item.getItemId(), OprationTypeEnum.StudentCourse, state.getDist(), "报单认款审核:" + state.getDist(), staffId);
+            operationRecordService.addOne(item.getItemId(), OprationTypeEnum.StudentCourse, state.getDist(), "报名认款审核:" + state.getDist(), staffId);
         } else if (FinanceTypeEnum.REFUND.equals(item.getItemType())) {
             handleRefundVerify(item, state);
             operationRecordService.addOne(item.getItemId(), OprationTypeEnum.Refund, state.getDist(), "退课退课审核:" + state.getDist(), staffId);
@@ -100,7 +100,7 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
     }
 
     /**
-     * 处理报单课程逻辑
+     * 处理报名课程逻辑
      */
     private void handleCourseVerify(FinanceRecord item, FinanceStateEnum state) {
 

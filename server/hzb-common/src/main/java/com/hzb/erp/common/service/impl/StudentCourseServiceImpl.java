@@ -372,7 +372,7 @@ public class StudentCourseServiceImpl extends ServiceImpl<StudentCourseMapper, S
     private void validatePostData(StudentCourseSaveDTO postData, Course course) {
 
         if (postData.getId() != null && !course.getId().equals(postData.getCourseId())) {
-            throw new BizException("报单后的合约ID无法修改");
+            throw new BizException("报名后的合约ID无法修改");
 
 //        } else if (postData.getCourseAmount() != null
 //                && !course.getPrice().equals(postData.getCourseAmount())) {

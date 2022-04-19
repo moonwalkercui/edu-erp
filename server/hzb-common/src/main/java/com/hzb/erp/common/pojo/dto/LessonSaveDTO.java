@@ -42,4 +42,7 @@ public class LessonSaveDTO {
     @NotNull(message = "未设置结束时间")
     private LocalTime endTime;
 
+    @NotNull(message = "是否开放预约")
+    private Boolean booking;
+
 }

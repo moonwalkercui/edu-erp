@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
+import com.hzb.erp.common.enums.VerifyStateEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -44,7 +45,7 @@ public class Appointment implements Serializable {
     private LocalDateTime verifyTime;
 
     @ApiModelProperty(value = "审核状态")
-    private Integer verifyState;
+    private VerifyStateEnum verifyState;
 
     @ApiModelProperty(value = "审核人")
     private Long verifyStaff;

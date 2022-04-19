@@ -15,7 +15,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum OprationTypeEnum implements BaseEnum {
     COURSE(1, "课程"),
-    StudentCourse(2, "报单"),
+    StudentCourse(2, "报名"),
     Refund(3, "退款退课"),
     CASHOUT(4, "请款");
 

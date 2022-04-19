@@ -75,8 +75,8 @@ public class TCourseController {
     }
 
 
-    @ApiOperation("新增和编辑报单信息")
-    @Log(description = "新增和编辑报单信息", type = "报单管理")
+    @ApiOperation("新增和编辑报名信息")
+    @Log(description = "新增和编辑报名信息", type = "报名管理")
     @PostMapping("/saveCourse")
     public JsonResponse saveCourse(@Valid @RequestBody StudentCourseSaveDTO postData, BindingResult result) {
 

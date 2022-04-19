@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum LessonCountChangeStageEnum implements BaseEnum {
-    CONTRACT(1, "课程报单"),
+    CONTRACT(1, "课程报名"),
     LESSON_DEC(2, "上课消课"),
     ADMIN(3, "后台操作"),
     REFUND(4, "退课"),

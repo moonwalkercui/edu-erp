@@ -82,7 +82,11 @@ public class LessonVO {
     @ApiModelProperty(value = "学员数量")
     private Integer studentNum;
 
+    @ApiModelProperty(value = "备注")
     private String remark;
+
+    @ApiModelProperty(value = "是否开放预约")
+    private Boolean booking;
 
     private LessonStateEnum state;
 

@@ -52,10 +52,16 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
             item.setCity(dto.getRegion().get(1));
             item.setDistrict(dto.getRegion().get(2));
         }
-
+        this.saveOrUpdate(item);
         List<Long> idList = getParentsIds(dto.getPid());
-        item.setIdPath(idList == null ? null : StringUtils.join(idList, ","));
-        return this.saveOrUpdate(item);
+        if(idList == null) {
+            item.setIdPath(item.getId().toString());
+        } else {
+            idList.add(item.getId());
+            item.setIdPath(StringUtils.join(idList, ","));
+        }
+        this.updateById(item);
+        return true;
     }
 
     @Override
@@ -73,7 +79,6 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
                 Org target = getById(id);
                 throw new BizException(target.getName() + "下有人员故无法删除");
             }
-
         }
         return removeByIds(ids);
     }

@@ -119,15 +119,15 @@ public class StudentCourseController {
     }
 
     @ApiOperation("删除学员合约")
-    @Log(description = "删除学员合约", type = "报单管理")
+    @Log(description = "删除学员合约", type = "报名管理")
     @PostMapping("/delete")
     public JsonResponse delete(@RequestBody List<Long> ids) {
         studentCourseService.delete(ids);
         return JsonResponseUtil.success();
     }
 
-    @ApiOperation("新增和编辑报单信息")
-    @Log(description = "新增和编辑报单信息", type = "报单管理")
+    @ApiOperation("新增和编辑报名信息")
+    @Log(description = "新增和编辑报名信息", type = "报名管理")
     @PostMapping("/saveCourse")
     @PreventMultiSubmit
     public JsonResponse saveCourse(@Valid @RequestBody StudentCourseSaveDTO postData, BindingResult result) {
@@ -143,7 +143,7 @@ public class StudentCourseController {
     }
 
     @ApiOperation("修改已完成课时")
-    @Log(description = "修改已完成课时", type = "报单管理")
+    @Log(description = "修改已完成课时", type = "报名管理")
     @GetMapping("/editLessonCountRemaining")
     public JsonResponse editLessonCountRemaining(@RequestParam(value = "id") Long id,
                                                  @RequestParam(value = "countLessonComplete") Integer countLessonComplete,
@@ -153,7 +153,7 @@ public class StudentCourseController {
     }
 
     @ApiOperation("修改学生的课程到期日")
-    @Log(description = "修改学生的课程到期日", type = "报单管理")
+    @Log(description = "修改学生的课程到期日", type = "报名管理")
     @GetMapping("/editLessonExpireDate")
     public JsonResponse editLessonExpireDate(@RequestParam(value = "id") Long id,
                                              @RequestParam(value = "expireDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate expireDate) {
@@ -162,7 +162,7 @@ public class StudentCourseController {
     }
 
     @ApiOperation("交欠费")
-    @Log(description = "交欠费", type = "报单管理")
+    @Log(description = "交欠费", type = "报名管理")
     @PostMapping("/payOverdue")
     public JsonResponse payOverdue(@Valid @RequestBody PayOverdueDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);
@@ -171,7 +171,7 @@ public class StudentCourseController {
     }
 
     @ApiOperation("修改消课优先级")
-    @Log(description = "修改消课优先级", type = "报单管理")
+    @Log(description = "修改消课优先级", type = "报名管理")
     @GetMapping("/changePriority")
     public JsonResponse changePriority(@RequestParam(value = "id") Long id, @RequestParam(value = "value") Integer value) {
         studentCourseService.changePriority(id, value);

@@ -56,4 +56,7 @@ public class Course extends AutoFillEntity {
     @ApiModelProperty(value = "单位")
     private String unitName;
 
+    @ApiModelProperty(value = "单位")
+    private Boolean booking;
+
 }

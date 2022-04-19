@@ -181,9 +181,11 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
         BeanUtils.copyProperties(dto, item);
 
         Clazz clazz = clazzService.getById(dto.getClassId());
+        Course course = courseService.getById(clazz.getCourseId());
 
         item.setCourseId(clazz.getCourseId());
         item.setTeacherId(dto.getTeacherIds().get(0));
+        item.setBooking(course.getBooking() ? course.getBooking() : false);
         this.saveOrUpdate(item);
 
         if (isUpdate) {
@@ -271,7 +273,7 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
         lessonSaveDTO.setDecCount(dto.getDecCount());
         lessonSaveDTO.setStartTime(dto.getStartTime());
         lessonSaveDTO.setEndTime(dto.getEndTime());
-
+        lessonSaveDTO.setBooking(dto.getBooking() ? dto.getBooking() : false);
         return saveOrUpdateByDTO(lessonSaveDTO);
     }
 

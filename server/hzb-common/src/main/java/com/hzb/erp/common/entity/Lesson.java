@@ -89,6 +89,9 @@ public class Lesson extends AutoFillEntity {
     @ApiModelProperty(value = "主讲人（第一个老师）")
     private Long teacherId;
 
+    @ApiModelProperty(value = "是否开放预约")
+    private Boolean booking;
+
 //    @ApiModelProperty(value = "点名状态")
 //    private Boolean rollcallState;
 

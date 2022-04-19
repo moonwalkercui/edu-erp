@@ -47,7 +47,7 @@ public class RefundServiceImpl extends ServiceImpl<RefundMapper, Refund> impleme
 
         StudentCourse sc = studentCourseService.getById(dto.getStudentCourseId());
         if (sc == null) {
-            throw new BizException("未查询到报单记录");
+            throw new BizException("未查询到报名记录");
         }
         Refund findRecord = getOneByStudentCourseId(dto.getStudentCourseId());
         if (findRecord != null && !VerifyStateEnum.REJECT.equals(findRecord.getVerifyState())) {

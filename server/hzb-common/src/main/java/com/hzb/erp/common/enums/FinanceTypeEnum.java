@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum FinanceTypeEnum implements BaseEnum {
-    COURSE(1, "课程报单"),
+    COURSE(1, "课程报名"),
     SUPPLEMENT(2, "课费补缴"),
     //    RECHARGE(3, "课程续费"),
     REFUND(10, "课程退款");

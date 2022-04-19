@@ -14,7 +14,7 @@ public enum DataScopeEntityEnum {
     COURSE("course", "课程表", "creator"),
     CLASS("class", "班级表", "teacher_id"),
     LESSON("lesson", "课次表", "creator"),
-    STUDENT_COURSE("student_course", "报单表", "creator"),
+    STUDENT_COURSE("student_course", "报名表", "creator"),
     CONTACT_RECORD("contact_record", "跟进记录表", "creator"),
     LESSON_SCHEDULE("lesson_schedule", "排课计划表", "creator"),
     HOMEWORK("homework", "作业表", "creator"),
