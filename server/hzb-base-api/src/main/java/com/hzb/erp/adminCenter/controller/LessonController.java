@@ -217,6 +217,28 @@ public class LessonController {
         }
     }
 
+    @ApiOperation("关闭预约")
+    @Log(description = "关闭预约", type = "课次管理")
+    @PostMapping("/stopBooking")
+    public JsonResponse stopBooking(@RequestBody List<Long> ids) {
+        if (lessonService.handleBooking(ids, false)) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+    @ApiOperation("开启预约")
+    @Log(description = "开启预约", type = "课次管理")
+    @PostMapping("/openBooking")
+    public JsonResponse openBooking(@RequestBody List<Long> ids) {
+        if (lessonService.handleBooking(ids, true)) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
     @ApiOperation("课堂点名签到学员列表")
     @GetMapping("/rollCallStudent")
     public List<ClassStudentSignVO> rollCallStudent(

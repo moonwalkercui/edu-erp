@@ -32,6 +32,9 @@ public class Appointment implements Serializable {
     @ApiModelProperty(value = "试听课次")
     private Long lessonId;
 
+    @ApiModelProperty(value = "所属课程")
+    private Long courseId;
+
     @ApiModelProperty(value = "学员id")
     private Long studentId;
 

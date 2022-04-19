@@ -6,6 +6,7 @@ import com.hzb.erp.common.enums.StudentStageEnum;
 import com.hzb.erp.common.pojo.dto.AppointmentParamDTO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
 import com.hzb.erp.common.service.AppointmentService;
+import com.hzb.erp.security.Util.UserAuthUtil;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
 import io.swagger.annotations.Api;
@@ -46,7 +47,7 @@ public class AppointmentController {
     @Log(description = "审核通过", type = "预约管理")
     @PostMapping("/pass")
     public JsonResponse pass(@RequestBody List<Long> ids) {
-        if (appointmentService.handleAudit(ids, true)) {
+        if (appointmentService.handleAudit(ids, true, UserAuthUtil.getCurrentUserId())) {
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error("操作失败");
@@ -58,7 +59,7 @@ public class AppointmentController {
     @Log(description = "审核驳回", type = "预约管理")
     @PostMapping("/reject")
     public JsonResponse reject(@RequestBody List<Long> ids) {
-        if (appointmentService.handleAudit(ids, false)) {
+        if (appointmentService.handleAudit(ids, false, UserAuthUtil.getCurrentUserId())) {
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error("操作失败");

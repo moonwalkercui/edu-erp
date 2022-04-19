@@ -734,4 +734,15 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
         return list.size() > 0 && lessonStudentService.saveBatch(list);
     }
 
+    @Override
+    public boolean handleBooking(List<Long> ids, Boolean state) {
+        List<Lesson> lessonList = listByIds(ids);
+
+        // 删除签到记录
+        for (Lesson lesson : lessonList) {
+           lesson.setBooking(state);
+        }
+        return updateBatchById(lessonList);
+    }
+
 }

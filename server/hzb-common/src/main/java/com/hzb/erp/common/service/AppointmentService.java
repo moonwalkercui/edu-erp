@@ -16,9 +16,13 @@ import java.util.List;
  * @author Ryan
  */
 public interface AppointmentService extends IService<Appointment> {
-    // 带分页的列表
+    /**
+    * 带分页的列表
+    * */
     IPage<AppointmentVO> getList(AppointmentParamDTO param);
 
-    // 审核
-    Boolean handleAudit(List<Long> ids , Boolean state);
+    /**
+    * 审核
+    * */
+    Boolean handleAudit(List<Long> ids , Boolean state, Long auditorId);
 }

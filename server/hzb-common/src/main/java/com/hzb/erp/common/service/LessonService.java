@@ -147,4 +147,9 @@ public interface LessonService extends IService<Lesson> {
     boolean teachEvaluate(TeachEvaluateDTO dto, Long studentId);
 
     boolean addStudents(LessonStudentAddDTO dto, Long currentUserId);
+
+    /**
+    * 开启与关闭预约状态
+    * */
+    boolean handleBooking(List<Long> ids, Boolean state);
 }
