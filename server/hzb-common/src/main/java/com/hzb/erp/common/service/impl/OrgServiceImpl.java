@@ -53,6 +53,7 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
             item.setDistrict(dto.getRegion().get(2));
         }
         this.saveOrUpdate(item);
+
         List<Long> idList = getParentsIds(dto.getPid());
         if(idList == null) {
             item.setIdPath(item.getId().toString());
@@ -60,6 +61,16 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
             idList.add(item.getId());
             item.setIdPath(StringUtils.join(idList, ","));
         }
+
+        if(item.getPid() == null || item.getPid() == 0) {
+            item.setNamePath(item.getName());
+        } else {
+            Org parentOrg = getById(item.getPid());
+            item.setNamePath(StringUtils.isBlank(parentOrg.getNamePath())
+                    ? item.getName()
+                    : parentOrg.getNamePath() + " " + item.getName());
+        }
+
         this.updateById(item);
         return true;
     }
@@ -167,6 +178,15 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
             }
         }
         return null;
+    }
+
+    /**
+    * 更新全路径 todo
+    * */
+    private void updateNamePath(Org org) {
+
+        List<Org> children = baseMapper.getChildrenList(org.getId());
+
     }
 
 }

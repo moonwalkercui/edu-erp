@@ -20,6 +20,11 @@ public interface OrgMapper extends BaseMapper<Org> {
     List<OrgVO> getList(@Param("param") OrgParamDTO param);
 
     OrgVO getInfo(Long id);
+
+    /**
+    * 获取下级所有机构列表
+    * */
+    List<Org> getChildrenList(Long orgId);
 }
 
 

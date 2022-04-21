@@ -43,6 +43,11 @@ public class Org extends AutoFillEntity implements ParentListBO {
     private String idPath;
 
     /**
+     * 名称全路径
+     */
+    private String namePath;
+
+    /**
      * 级别
      */
     private OrgLevelEnum level;

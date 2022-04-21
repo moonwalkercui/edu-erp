@@ -1,11 +1,6 @@
 package com.hzb.erp;
 
-import com.hzb.erp.quartz.entity.QuartzJob;
-import com.hzb.erp.quartz.mapper.QuartzJobMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import java.util.List;
 
 //@SpringBootTest
 class ErpApplicationTests {

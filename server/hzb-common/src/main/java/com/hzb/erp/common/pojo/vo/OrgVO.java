@@ -30,6 +30,11 @@ public class OrgVO {
     private String name;
 
     /**
+     * 公司名称全路径
+     */
+    private String namePath;
+
+    /**
      * 公司简称
      */
     private String shortname;

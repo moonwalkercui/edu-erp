@@ -4,9 +4,12 @@
 
 ```
 ALTER TABLE `org` DROP COLUMN `ship_routes`;
+ALTER TABLE `org` ADD COLUMN `name_path` varchar(255) NULL COMMENT '机构名路径' AFTER `id_path`;
 ALTER TABLE `course` ADD COLUMN `booking` tinyint(1) NULL DEFAULT 0 COMMENT '是否可以预约';
 ALTER TABLE `lesson` ADD COLUMN `booking` tinyint(1) NULL DEFAULT 0 COMMENT '是否开放预约';
 ALTER TABLE `appointment` ADD COLUMN `course_id` bigint(20) NOT NULL COMMENT '所属课程';
+ALTER TABLE `staff_orginfo` ADD COLUMN `id_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'id全路径' ;
+
 
 INSERT INTO `setting`(`id`, `name`, `code`, `remark`, `sort_num`) VALUES (4, '微信公众号设置', 'wx_mp_setting', NULL, 0);
 INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (10, 4, '公众号AppId', 'wx_mp_app_id', 'app_idAAAAA', 'str', NULL, 0);

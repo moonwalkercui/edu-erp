@@ -5,7 +5,7 @@
 <mapper namespace="com.hzb.erp.common.mapper.OrgMapper">
 
     <sql id="Base_Column">
-         select t1.*, t3.name province_name, t4.name city_name, t5.name district_name,
+        select t1.*, t3.name province_name, t4.name city_name, t5.name district_name,
             (CASE WHEN (select count(0) from org WHERE pid = t1.id and deleted = 0)> 0 THEN 1 ELSE 0 END) hasChildren
         from org t1
         left join org t2 on t2.id = t1.pid and t2.deleted = 0
@@ -32,13 +32,17 @@
             and t1.deleted = 0
         </where>
         group by t1.id
-        order by t1.sort_num desc
+        order by t1.sort_num desc, t1.id asc
     </select>
 
     <select id="getInfo" resultType="com.hzb.erp.common.pojo.vo.OrgVO">
         <include refid="Base_Column"/>
         where t1.id = #{id}
         group by t1.id
+    </select>
+
+    <select id="getChildrenList" resultType="com.hzb.erp.common.entity.Org" parameterType="java.lang.Long">
+         select * from org where id_path like concat((select id_path from org where id = #{orgId}), '%')
     </select>
 
 </mapper>

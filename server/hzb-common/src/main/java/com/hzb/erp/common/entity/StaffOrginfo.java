@@ -62,6 +62,11 @@ public class StaffOrginfo implements Serializable {
     private LocalDateTime addTime;
 
     /**
+     * id全路径
+     */
+    private String idPath;
+
+    /**
      *
      */
     private Long creator;

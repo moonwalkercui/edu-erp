@@ -7,17 +7,17 @@
         t3.name group_name,
         t4.name com_name,
         t5.name dpt_name,
+        t8.id org_id,
+        t8.name_path org_name_path,
         GROUP_CONCAT( DISTINCT t6.name ) role_name,
         t7.id position_id,
         t7.name position_name
         FROM staff t1
         LEFT JOIN staff_orginfo t2 ON t1.id = t2.staff_id
-        <if test="param.orgId != null">
-            and t2.org_id = #{param.orgId}
-        </if>
         LEFT JOIN org t3 ON t3.id = t2.group_id
         LEFT JOIN org t4 ON t4.id = t2.com_id
         LEFT JOIN org t5 ON t5.id = t2.dpt_id
+        LEFT JOIN org t8 ON t8.id = t2.org_id
         LEFT JOIN `position` t7 on t7.id = t2.position_id
         LEFT JOIN sys_role t6 on t6.id in (select role_id from sys_user_role where user_id = t1.id)
         <where>
@@ -28,7 +28,9 @@
                 AND t1.state = 1
             </if>
             <if test="param.orgId != null">
-                AND t1.id in (select staff_id from staff_orginfo where org_id = #{param.orgId})
+                AND t1.id in (
+                    select staff_id from staff_orginfo where id_path like concat((select id_path from org where id = #{param.orgId}), '%')
+                )
             </if>
             <if test="param.isManager != null">
                 AND t1.is_manager = #{param.isManager}

@@ -102,6 +102,9 @@ public class StaffOrginfoServiceImpl extends ServiceImpl<StaffOrginfoMapper, Sta
         item.setComId(parentOrgs[1] == null ? null : parentOrgs[1].getId());
         item.setDptId(parentOrgs[2] == null ? null : parentOrgs[2].getId());
 
+        Org parentOrg = orgService.getById(orgId);
+        item.setIdPath(parentOrg.getIdPath());
+
         return item;
     }
 }
