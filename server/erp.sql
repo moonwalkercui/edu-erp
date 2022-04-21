@@ -4683,10 +4683,12 @@ INSERT INTO `setting_option` VALUES (5, 3, '短信接口秘钥', 'sms_access_sec
 INSERT INTO `setting_option` VALUES (6, 3, '短信签名', 'sms_sign_name', '双惠德', 'str', NULL, 0);
 INSERT INTO `setting_option` VALUES (9, 1, '家长端初始密码', 'student_default_pwd', '111111', 'str', '添加学生时的默认登录密码', 0);
 INSERT INTO `setting_option` VALUES (8, 1, '课次数不足提醒次数', 'lesson_count_less_warning_times', '2', 'int', '课次不足时可以按设置给学员和负责老师发通知', 0);
-INSERT INTO `setting_option` VALUES (10, 4, '公众号AppId', 'wx_mp_app_id', 'app_idAAAAA', 'str', NULL, 0);
-INSERT INTO `setting_option` VALUES (11, 4, '公众号Secret', 'wx_mp_secret', 'secret', 'str', NULL, 0);
-INSERT INTO `setting_option` VALUES (12, 4, '公众号Token', 'wx_mp_token', 'token', 'str', NULL, 0);
-INSERT INTO `setting_option` VALUES (13, 4, '公众号AesKey', 'wx_mp_aes_key', 'aes_key', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (10, 4, '公众号AppId', 'wx_mp_app_id', 'app_idAAAAA', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (11, 4, '公众号Secret', 'wx_mp_secret', 'secret', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (12, 4, '公众号Token', 'wx_mp_token', 'token', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (13, 4, '公众号AesKey', 'wx_mp_aes_key', 'aes_key', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (14, 1, '每天上课提醒时间', 'lesson_remind_time', '18:30', 'time', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (15, 1, '每天上课次数预警时间', 'lesson_count_warning_time', '7:00', 'time', NULL, 0);
 
 -- ----------------------------
 -- Table structure for staff
@@ -5235,5 +5237,21 @@ CREATE TABLE `wx_access`  (
 -- ----------------------------
 -- Records of wx_access
 -- ----------------------------
+
+-- -------------20220401 更新---------------
+ALTER TABLE `org` DROP COLUMN `ship_routes`;
+ALTER TABLE `course` ADD COLUMN `booking` tinyint(1) NULL DEFAULT 0 COMMENT '是否可以预约';
+ALTER TABLE `lesson` ADD COLUMN `booking` tinyint(1) NULL DEFAULT 0 COMMENT '是否开放预约';
+ALTER TABLE `appointment` ADD COLUMN `course_id` bigint(20) NOT NULL COMMENT '所属课程';
+
+CREATE TABLE `quartz_job` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `job_name` varchar(255) DEFAULT NULL COMMENT '任务名称',
+  `group_name` varchar(255) DEFAULT NULL COMMENT '任务分组',
+  `job_class` varchar(255) DEFAULT NULL COMMENT '执行类路径',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `cron_expression` varchar(255) DEFAULT NULL COMMENT 'cron表达式',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='定时任务';
 
 SET FOREIGN_KEY_CHECKS = 1;
