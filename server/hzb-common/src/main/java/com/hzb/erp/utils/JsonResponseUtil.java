@@ -2,6 +2,7 @@ package com.hzb.erp.utils;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
+import org.apache.poi.ss.formula.functions.T;
 
 /**
  * ClassName: ResponseUtils
@@ -17,15 +18,15 @@ public class JsonResponseUtil {
     /**
      * 调用成功
      */
-    public static JsonResponse success() {
+    public static <T> JsonResponse<T> success() {
         return success(SUCCESS_MSG, null);
     }
 
-    public static <T> JsonResponse data(T data) {
+    public static <T> JsonResponse<T> data(T data) {
         return success(SUCCESS_MSG, data);
     }
 
-    public static JsonResponse success(String msg) {
+    public static <T> JsonResponse<T> success(String msg) {
         return success(msg, null);
     }
 
@@ -39,26 +40,26 @@ public class JsonResponseUtil {
     /**
      * 调用错误
      */
-    public static JsonResponse error(String msg) {
-        JsonResponse res = new JsonResponse();
+    public static <T> JsonResponse<T> error(String msg) {
+        JsonResponse<T> res = new JsonResponse<>();
         res.setErrCode(ResponseCodeEnums.BIZ_ERROR.getCode());
         res.setMsg(msg);
         return res;
     }
 
-    public static JsonResponse error() {
-        JsonResponse res = new JsonResponse();
+    public static <T> JsonResponse<T> error() {
+        JsonResponse<T> res = new JsonResponse<>();
         res.setErrCode(ResponseCodeEnums.BIZ_ERROR.getCode());
         res.setMsg(ERROR);
         return res;
     }
 
-    public static JsonResponse error(ResponseCodeEnums responseCodeEnums) {
+    public static <T> JsonResponse<T> error(ResponseCodeEnums responseCodeEnums) {
         return error(responseCodeEnums.getCode(), responseCodeEnums.getMsg());
     }
 
-    public static JsonResponse error(Integer code, String msg) {
-        JsonResponse res = new JsonResponse();
+    public static <T> JsonResponse<T> error(Integer code, String msg) {
+        JsonResponse<T> res = new JsonResponse<>();
         res.setErrCode(code);
         res.setMsg(msg);
         return res;

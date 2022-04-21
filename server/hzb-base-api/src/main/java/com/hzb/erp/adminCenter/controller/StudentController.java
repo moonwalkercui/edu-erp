@@ -122,7 +122,7 @@ public class StudentController {
         studentDTO.setSchoolId(orginfo == null ? null : orginfo.getComId());
 
         if (studentDTO.getId() == null) {
-            String defaultPwd = settingService.strValue(SettingConstants.STUDENT_DEFAULT_PWD);
+            String defaultPwd = settingService.strValue(SettingConstants.STUDENT_DEFAULT_PWD, "123456");
             studentDTO.setPasswordEncode(SecurityUtils.passwordEncode(defaultPwd));
         }
 

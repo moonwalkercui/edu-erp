@@ -18,6 +18,8 @@ public interface SettingService extends IService<Setting> {
 
     String strValue(String code);
 
+    String strValue(String code, String defaultValue);
+
     Integer intValue(String code);
 
     Boolean boolValue(String code);

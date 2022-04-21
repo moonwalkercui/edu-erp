@@ -1,6 +1,7 @@
 package com.hzb.erp.quartz.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.hzb.erp.common.constants.CacheNames;
 import com.hzb.erp.quartz.entity.QuartzJob;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,7 +17,7 @@ import java.util.List;
 @Mapper
 public interface QuartzJobMapper extends BaseMapper<QuartzJob> {
 
-    @Cacheable(value = "QuartzJobList")
+    @Cacheable(value = CacheNames.QUARTZ_JOB_LIST)
     List<QuartzJob> getList();
 
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         BeanUtils.copyProperties(courseSaveDTO, item);
 
         if ("期".equals(courseSaveDTO.getUnitName())) {
-            BigDecimal res = courseSaveDTO.getPrice().divide(BigDecimal.valueOf(courseSaveDTO.getLessonCount()));
+            BigDecimal res = courseSaveDTO.getPrice().divide(BigDecimal.valueOf(courseSaveDTO.getLessonCount()), RoundingMode.HALF_UP);
             if (res.compareTo(new BigDecimal(1)) < 0) {
                 throw new BizException("单价不能小于1");
             }

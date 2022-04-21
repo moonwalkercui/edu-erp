@@ -2,6 +2,7 @@ package com.hzb.erp.security.handler;
 
 import cn.hutool.json.JSONUtil;
 import com.hzb.erp.common.configuration.SystemConfig;
+import com.hzb.erp.common.constants.CacheNames;
 import com.hzb.erp.common.entity.SysLog;
 import com.hzb.erp.common.service.SysLogService;
 import com.hzb.erp.security.Util.JwtUserDetails;
@@ -30,7 +31,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private SysLogService sysLogService;
 
     @Override
-    @CacheEvict(value = "SysPermissionList", allEntries = true)
+    @CacheEvict(value = CacheNames.SYS_PERMISSION_LIST, allEntries = true)
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         JwtUserDetails user = (JwtUserDetails) authentication.getPrincipal();
         String jwtToken = SecurityUtils.generateToken(user, SystemConfig.getJwtExpiredTtlSec());

@@ -1,6 +1,7 @@
 package com.hzb.erp.common.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hzb.erp.common.constants.CacheNames;
 import com.hzb.erp.common.entity.Setting;
 import com.hzb.erp.common.entity.SettingOption;
 import com.hzb.erp.common.enums.SettingCodeEnum;
@@ -38,7 +39,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
     private SettingMapper settingMapper;
 
     @Override
-    @Cacheable(value = "SettingCache")
+    @Cacheable(value = CacheNames.SETTING_CACHE)
     public Map<String, Object> listOptionByCode(SettingCodeEnum code) {
         List<SettingOption> options = settingMapper.listOptionByCode(String.valueOf(code).toLowerCase());
         Map<String, Object> res = new HashMap<>();
@@ -56,6 +57,15 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
         }
         if (!STR_TYPE.equals(option.getValueType())) {
             throw new BizException("参数类型value_type需要为str");
+        }
+        return option.getValue();
+    }
+
+    @Override
+    public String strValue(String code, String defaultValue) {
+        SettingOption option = getOption(code);
+        if (StringUtils.isBlank(option.getValue())) {
+            return defaultValue;
         }
         return option.getValue();
     }

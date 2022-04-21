@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hzb.erp.annotation.Log;
 import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.common.constants.CacheNames;
 import com.hzb.erp.common.entity.Setting;
 import com.hzb.erp.common.entity.SettingNotice;
 import com.hzb.erp.common.entity.SettingOption;
@@ -94,7 +95,7 @@ public class SystemController {
     @Log(description = "创建和修改配置项", type = "系统管理")
     @PostMapping("/saveSettingOption")
     @PreventMultiSubmit
-    @CacheEvict(value = "SettingCache", allEntries = true)
+    @CacheEvict(value = CacheNames.SETTING_CACHE, allEntries = true)
     public JsonResponse saveSettingOption(@RequestBody SettingOption option) {
         if (StringUtils.isBlank(option.getName())) {
             return JsonResponseUtil.error("缺少配置名称");
