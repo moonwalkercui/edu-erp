@@ -1,6 +1,6 @@
 package com.hzb.erp.utils;
 
-import com.hzb.erp.service.bo.ParentListBO;
+import com.hzb.erp.service.bo.TreeListBO;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author Ryan 541720500@qq.com
  */
-public class ParentListBuilder<T extends ParentListBO> {
+public class ParentListBuilder<T extends TreeListBO> {
 
     List<T> res;
     List<T> dataList;

@@ -32,4 +32,6 @@ public class StudentBaseInfoDTO {
     private Long counselor;
     private Long schoolId;
     private String passwordEncode;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate joinDate;
 }

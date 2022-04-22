@@ -18,4 +18,5 @@ public class StudentParamDTO extends PaginateDTO {
     private Long creator;
     private Long userId;
     private Long courseId;
+    private Integer grade;
 }

@@ -14,15 +14,20 @@ import com.hzb.erp.common.pojo.dto.OrgParamDTO;
 import com.hzb.erp.common.pojo.dto.OrgSaveDTO;
 import com.hzb.erp.common.pojo.vo.OrgVO;
 import com.hzb.erp.common.service.OrgService;
-import com.hzb.erp.common.service.StaffOrginfoService;
+import com.hzb.erp.service.TreeListBuilder;
+import com.hzb.erp.service.bo.TreeListBO;
 import com.hzb.erp.utils.ParentListBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.hzb.erp.common.constants.CommonConst.ORG_ID_PATH_SEPARATOR;
+import static com.hzb.erp.common.constants.CommonConst.ORG_NAME_PATH_SEPARATOR;
 
 /**
  *
@@ -54,24 +59,16 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
         }
         this.saveOrUpdate(item);
 
+        // 生成机构id路径
         List<Long> idList = getParentsIds(dto.getPid());
-        if(idList == null) {
+        if (idList == null) {
             item.setIdPath(item.getId().toString());
         } else {
             idList.add(item.getId());
-            item.setIdPath(StringUtils.join(idList, ","));
+            item.setIdPath(StringUtils.join(idList, ORG_ID_PATH_SEPARATOR));
         }
-
-        if(item.getPid() == null || item.getPid() == 0) {
-            item.setNamePath(item.getName());
-        } else {
-            Org parentOrg = getById(item.getPid());
-            item.setNamePath(StringUtils.isBlank(parentOrg.getNamePath())
-                    ? item.getName()
-                    : parentOrg.getNamePath() + " " + item.getName());
-        }
-
         this.updateById(item);
+        this.syncIdAndNamePath(item);
         return true;
     }
 
@@ -181,14 +178,33 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
     }
 
     /**
-    * 更新全路径 todo
-    * */
-    private void updateNamePath(Org org) {
+     * 更新本身与子级机构的全名称和id路径
+     */
+    @Async
+    public void syncIdAndNamePath(Org org) {
+        List<Org> childrenList = baseMapper.getChildrenList(org.getId());
+        childrenList.add(org);
 
-        List<Org> children = baseMapper.getChildrenList(org.getId());
-
+        List<Org> orgList = baseMapper.selectList(null);
+        List<TreeListBO> tree = new ArrayList<>(orgList);
+        for (Org item : childrenList) {
+            updateTreeData(item, tree);
+        }
     }
 
+    /**
+    * 给org对象更新全名称和id路径
+    * */
+    private void updateTreeData(Org org, List<TreeListBO> tree) {
+        if (org == null) {
+            return;
+        }
+        TreeListBuilder builder = new TreeListBuilder(tree);
+        builder.build(org.getId());
+        org.setIdPath(StringUtils.join(builder.getIdPath(), ORG_ID_PATH_SEPARATOR));
+        org.setNamePath(StringUtils.join(builder.getNamePath(), ORG_NAME_PATH_SEPARATOR));
+        updateById(org);
+    }
 }
 
 

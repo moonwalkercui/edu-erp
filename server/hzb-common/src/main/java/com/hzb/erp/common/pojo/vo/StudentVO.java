@@ -77,6 +77,13 @@ public class StudentVO {
     @ApiModelProperty(value = "课次少提醒标记")
     private Boolean warning;
 
+    @ApiModelProperty(value = "年级")
+    private Integer grade;
+
+    @ApiModelProperty(value = "入学时间")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate joinDate;
+
     public Boolean getWarning() {
         return countLessonRemaining == null ? null : countLessonRemaining <= 5;
     }

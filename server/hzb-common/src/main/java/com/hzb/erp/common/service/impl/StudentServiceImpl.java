@@ -117,6 +117,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         student.setUserId(user.getId());
         student.setEditor(dto.getCounselor());
         student.setEditTime(LocalDateTime.now());
+        student.setGrade(dto.getJoinDate() == null ? null : dto.getJoinDate().getYear());
 
         if (student.getId() == null) {
             student.setCreator(dto.getCounselor());

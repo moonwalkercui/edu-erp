@@ -91,6 +91,7 @@ public class StudentController {
             @RequestParam(value = "excludeClassId", defaultValue = "") Long excludeClassId,
             @RequestParam(value = "stage", defaultValue = "") Integer stage,
             @RequestParam(value = "excludeStage", defaultValue = "") Integer excludeStage,
+            @RequestParam(value = "grade", defaultValue = "") Integer grade,
             @RequestParam(value = "keyword", defaultValue = "") String keyword) {
         StudentParamDTO param = new StudentParamDTO();
         param.setPage(page);
@@ -102,6 +103,7 @@ public class StudentController {
         param.setUserId(userId);
         param.setCourseId(courseId);
         param.setExcludeStage(excludeStage);
+        param.setGrade(grade);
         if (self != null && self) {
             param.setCreator(UserAuthService.getCurrentUserId());
         }

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.hzb.erp.common.enums.OrgLevelEnum;
 import com.hzb.erp.common.enums.OrgTypeEnum;
-import com.hzb.erp.service.bo.ParentListBO;
+import com.hzb.erp.service.bo.TreeListBO;
 import lombok.Data;
 
 /**
@@ -15,7 +15,7 @@ import lombok.Data;
  */
 @TableName(value = "org")
 @Data
-public class Org extends AutoFillEntity implements ParentListBO {
+public class Org extends AutoFillEntity implements TreeListBO {
     /**
      * 主键
      */

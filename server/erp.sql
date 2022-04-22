@@ -4801,6 +4801,8 @@ CREATE TABLE `student`  (
   `idcard` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '身份证号',
   `redpoint_grade` datetime(0) NULL DEFAULT NULL COMMENT '红点标记成绩最后查看时间',
   `redpoint_evaluate` datetime(0) NULL DEFAULT NULL COMMENT '红点标记点评最后查看时间',
+  `grade` year NULL COMMENT '年级',
+  `join_date` date NULL DEFAULT NULL COMMENT '入学日期',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `stage`(`stage`) USING BTREE,
   INDEX `name`(`name`) USING BTREE,

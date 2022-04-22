@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -105,4 +106,12 @@ public class Student extends AutoFillEntity {
     @TableLogic
     @ApiModelProperty(value = "逻辑删除")
     private Boolean deleted;
+
+    @ApiModelProperty(value = "年级")
+    private Integer grade;
+
+    @ApiModelProperty(value = "入学日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate joinDate;
+
 }

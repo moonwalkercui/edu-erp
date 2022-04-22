@@ -67,6 +67,9 @@
             <if test="param.classId !=null ">
                 AND t1.id in (select student_id from class_student where class_id = #{param.classId} and deleted != 1)
             </if>
+            <if test="param.grade !=null ">
+                AND t1.grade = #{param.grade}
+            </if>
             <if test="param.excludeClassId !=null ">
                 AND t1.id not in ( select student_id from class_student where class_id = #{param.excludeClassId} and
                 deleted = 0 )
