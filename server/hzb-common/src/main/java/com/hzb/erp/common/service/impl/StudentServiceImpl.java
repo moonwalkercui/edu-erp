@@ -17,10 +17,7 @@ import com.hzb.erp.common.pojo.dto.StudentParamDTO;
 import com.hzb.erp.common.pojo.dto.StudentRegisterDTO;
 import com.hzb.erp.common.pojo.vo.ClassStudentVO;
 import com.hzb.erp.common.pojo.vo.StudentVO;
-import com.hzb.erp.common.service.StaffOrginfoService;
-import com.hzb.erp.common.service.StudentCourseService;
-import com.hzb.erp.common.service.StudentService;
-import com.hzb.erp.common.service.UserService;
+import com.hzb.erp.common.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +47,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Autowired
     private StaffOrginfoMapper staffOrginfoMapper;
+
+    @Autowired
+    @Lazy
+    private ClassStudentService classStudentService;
 
     @Override
     public StudentVO getBaseInfo(Long id) {
@@ -192,7 +193,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Override
     public Boolean delete(List<Long> ids) {
-        return this.removeByIds(ids);
+        if(this.removeByIds(ids)) {
+            classStudentService.deleteClassStudent(ids);
+            return true;
+        }
+        return false;
     }
 
     @Override

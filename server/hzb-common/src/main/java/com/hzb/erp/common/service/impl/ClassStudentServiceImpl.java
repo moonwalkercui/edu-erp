@@ -178,6 +178,13 @@ public class ClassStudentServiceImpl extends ServiceImpl<ClassStudentMapper, Cla
         return res;
     }
 
+    @Override
+    public int deleteClassStudent(List<Long> studentIds) {
+        QueryWrapper<ClassStudent> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("student_id", studentIds);
+        return this.baseMapper.delete(queryWrapper);
+    }
+
     /**
      * 批量移除学员
      */
