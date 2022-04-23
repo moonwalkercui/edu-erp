@@ -178,7 +178,7 @@ public class StudentController {
                 deleteIds.add(student.getId());
             }
         }
-        if (studentService.removeByIds(deleteIds)) {
+        if (studentService.delete(deleteIds)) {
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error("删除失败,只有意向学员可以被删除");

@@ -20,7 +20,15 @@ public interface ClassStudentService extends IService<ClassStudent> {
 //
 //    List<ClassStudentVO> getAll(ClassStudentParamDTO param);
 
+    /**
+    * 删除学员
+    * */
     Boolean deleteClassStudent(Long classId, Long studentId);
+
+    /**
+     * 删除学员 根据学生id列表删除
+     * */
+    int deleteClassStudent(List<Long> studentIds);
 
     Boolean deleteClassStudentByIds(List<Long> ids);
 
