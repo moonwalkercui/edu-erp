@@ -53,7 +53,7 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
             case STUDENT_LESSON_START:
             case TEACHER_LESSON_START:
 
-//                详细内容
+//            上课提醒模板消息变量：
 //            {{first.DATA}}
 //            课程名称：{{keyword1.DATA}}
 //            上课时间：{{keyword2.DATA}}
@@ -74,6 +74,7 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
 
             case STUDENT_SIGN:
 
+//            学生签到模板消息变量：
 //            {{first.DATA}}
 //            课程名称：{{keyword1.DATA}}
 //            剩余课时：{{keyword2.DATA}}
@@ -97,6 +98,7 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
             case STUDENT_LESSON_ONCHANGE:
             case TEACHER_LESSON_ONCHANGE:
 
+//            课程安排变动提醒模板消息变量：
 //            {{first.DATA}}
 //            课程名称：{{keyword1.DATA}}
 //            课程说明：{{keyword2.DATA}}
@@ -115,6 +117,7 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
 
             case STUDENT_NEW_CONTRACT:
 
+//            管理端学生报名成功提醒模板消息变量：
 //            {{first.DATA}}
 //            报名内容：{{keyword1.DATA}}
 //            报名结果：{{keyword2.DATA}}
@@ -135,6 +138,7 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
             case STUDENT_LESSON_COUNT_LESS:
             case TEACHER_STUDENT_LESSONLESS:
 
+//            剩余课时余量不足提醒模板消息变量：
 //            {{first.DATA}}
 //            学员名称：{{keyword1.DATA}}
 //            剩余课时：{{keyword2.DATA}}
@@ -153,6 +157,7 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
 
             case TEACHER_STUDENT_LEAVE:
 
+//            学生请假给老师提醒模板消息变量：
 //            {{first.DATA}}
 //            学生姓名：{{keyword1.DATA}}
 //            课程名称：{{keyword2.DATA}}
