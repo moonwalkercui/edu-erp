@@ -5240,8 +5240,8 @@ CREATE TABLE `wx_access`  (
 
 -- -------------20220401 更新---------------
 ALTER TABLE `org` DROP COLUMN `ship_routes`;
-ALTER TABLE `course` ADD COLUMN `booking` tinyint(1) NULL DEFAULT 0 COMMENT '是否可以预约';
-ALTER TABLE `lesson` ADD COLUMN `booking` tinyint(1) NULL DEFAULT 0 COMMENT '是否开放预约';
+ALTER TABLE `course` ADD COLUMN `bookable` tinyint(1) NULL DEFAULT 0 COMMENT '是否可以预约';
+ALTER TABLE `lesson` ADD COLUMN `bookable` tinyint(1) NULL DEFAULT 0 COMMENT '是否开放预约';
 ALTER TABLE `appointment` ADD COLUMN `course_id` bigint(20) NOT NULL COMMENT '所属课程';
 
 CREATE TABLE `quartz_job` (
