@@ -90,7 +90,7 @@ public class Lesson extends AutoFillEntity {
     private Long teacherId;
 
     @ApiModelProperty(value = "是否开放预约")
-    private Boolean booking;
+    private Boolean bookable;
 
 //    @ApiModelProperty(value = "点名状态")
 //    private Boolean rollcallState;

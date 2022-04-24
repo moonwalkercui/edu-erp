@@ -726,11 +726,11 @@ CREATE TABLE `org`  (
   `pid` bigint(20) NULL DEFAULT 0 COMMENT '上级公司',
   `state` tinyint(1) NULL DEFAULT 1 COMMENT '是否有效',
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '公司名称',
+  `ship_routes` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '所属航线',
   `shortname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '公司简称',
   `type` tinyint(4) NULL DEFAULT 0 COMMENT '类型',
   `level` tinyint(4) NOT NULL COMMENT '级别',
-  `id_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'ID路径',
-  `name_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '机构名路径',
+  `id_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '路径',
   `contact_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系人',
   `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系电话',
   `fax` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '传真',
@@ -4744,7 +4744,6 @@ CREATE TABLE `staff_orginfo`  (
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
   `add_time` datetime(0) NULL DEFAULT NULL,
   `creator` bigint(255) NULL DEFAULT NULL,
-  `id_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'id全路径',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `staff_id`(`staff_id`, `org_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 119 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '员工机构信息表' ROW_FORMAT = Compact;
@@ -4801,8 +4800,6 @@ CREATE TABLE `student`  (
   `idcard` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '身份证号',
   `redpoint_grade` datetime(0) NULL DEFAULT NULL COMMENT '红点标记成绩最后查看时间',
   `redpoint_evaluate` datetime(0) NULL DEFAULT NULL COMMENT '红点标记点评最后查看时间',
-  `grade` year NULL COMMENT '年级',
-  `join_date` date NULL DEFAULT NULL COMMENT '入学日期',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `stage`(`stage`) USING BTREE,
   INDEX `name`(`name`) USING BTREE,
@@ -5242,8 +5239,9 @@ CREATE TABLE `wx_access`  (
 -- ----------------------------
 
 -- -------------20220401 更新---------------
-ALTER TABLE `course` ADD COLUMN `booking` tinyint(1) NULL DEFAULT 0 COMMENT '是否可以预约';
-ALTER TABLE `lesson` ADD COLUMN `booking` tinyint(1) NULL DEFAULT 0 COMMENT '是否开放预约';
+ALTER TABLE `org` DROP COLUMN `ship_routes`;
+ALTER TABLE `course` ADD COLUMN `bookable` tinyint(1) NULL DEFAULT 0 COMMENT '是否可以预约';
+ALTER TABLE `lesson` ADD COLUMN `bookable` tinyint(1) NULL DEFAULT 0 COMMENT '是否开放预约';
 ALTER TABLE `appointment` ADD COLUMN `course_id` bigint(20) NOT NULL COMMENT '所属课程';
 
 CREATE TABLE `quartz_job` (

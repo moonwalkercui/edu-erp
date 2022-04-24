@@ -62,10 +62,19 @@ public class SLessonController {
     public Object list(@RequestParam(value = "page", defaultValue = "") Integer page, // 若为null则是查全部
                        @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
                        @RequestParam(value = "isToday", defaultValue = "false") Boolean isToday,
+                       @RequestParam(value = "bookable", defaultValue = "false") Boolean bookable, // 是否是可预约列表
                        @RequestParam(value = "date", defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        LessonParamDTO param = buildParam(page, pageSize, isToday, date, bookable);
+        return page != null && page > 0 ?
+                JsonResponseUtil.paginate(lessonService.getList(param)) :
+                lessonService.getAll(param);
+    }
+
+    private LessonParamDTO buildParam(Integer page, Integer pageSize, Boolean isToday, LocalDate date, Boolean bookable) {
         LessonParamDTO param = new LessonParamDTO();
         param.setPage(page);
         param.setPageSize(pageSize);
+        param.setBookable(bookable);
         Student student = UserAuthService.getCurrentStudent();
         if (student == null) {
             return null;
@@ -78,11 +87,8 @@ public class SLessonController {
         if (date != null) {
             param.setDate(date);
         }
-        return page != null && page > 0 ?
-                JsonResponseUtil.paginate(lessonService.getList(param)) :
-                lessonService.getAll(param);
+        return param;
     }
-
 
     @ApiOperation("日课表数量统计")
     @GetMapping("/lessonCountEveryDay")

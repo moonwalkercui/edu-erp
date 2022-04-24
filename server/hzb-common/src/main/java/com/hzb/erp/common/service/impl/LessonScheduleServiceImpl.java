@@ -346,7 +346,7 @@ public class LessonScheduleServiceImpl extends ServiceImpl<LessonScheduleMapper,
             newLesson.setDecCount(schedule.getDecLessonCount());
             newLesson.setState(LessonStateEnum.UNDERWAY);
             newLesson.setTeacherId(Long.valueOf(teacherIds.get(0)));
-            newLesson.setBooking(course.getBooking() ? course.getBooking() : false);
+            newLesson.setBookable(course.getBookable() != null && course.getBookable());
             lessons.add(newLesson);
         }
 

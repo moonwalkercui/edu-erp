@@ -86,7 +86,6 @@
         where t1.student_id = #{studentId} and t1.course_id = #{courseId} and t1.expire_date &gt;= CURDATE() and t1.deleted = 0
     </select>
 
-
     <select id="getValidList" resultType="com.hzb.erp.common.pojo.vo.StudentCourseVO">
         SELECT
         t1.id, t1.course_id,

@@ -59,8 +59,18 @@
                     #{id}
                 </foreach>
             </if>
-            <if test="param.studentId != null">
+            <if test="param.studentId != null and (param.bookable == null or !param.bookable)">
                 AND t1.id in ( select lesson_id from lesson_student where student_id = #{param.studentId} )
+            </if>
+            <if test="param.bookable != null and param.bookable and param.studentId != null">
+                AND t1.bookable = 1 and t1.state = 1 and t1.id not in (
+                    select lesson_id from lesson_student where student_id = #{param.studentId}
+                ) and t1.course_id in (
+                    select course_id from student_course where student_id = #{param.studentId} AND expire_date &gt;= CURDATE()
+                    group by course_id having sum(count_lesson_total - count_lesson_complete - count_lesson_refund) > 0
+                ) and t1.id not in (
+                    select lesson_id from appointment where student_id = #{param.studentId}
+                )
             </if>
             <if test="param.classId != null">
                 AND t1.class_id = #{param.classId}

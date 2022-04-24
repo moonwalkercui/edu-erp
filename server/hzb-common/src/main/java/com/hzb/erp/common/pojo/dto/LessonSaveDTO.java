@@ -43,6 +43,6 @@ public class LessonSaveDTO {
     private LocalTime endTime;
 
     @NotNull(message = "是否开放预约")
-    private Boolean booking;
+    private Boolean bookable;
 
 }

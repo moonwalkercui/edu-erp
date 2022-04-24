@@ -26,4 +26,7 @@ public class LessonParamDTO extends PaginateDTO {
     private LocalDate startDate;
 
     private LocalDate date;
+
+    // 是否可预约 20220424 cui
+    private Boolean bookable;
 }
