@@ -16,10 +16,10 @@ import com.hzb.erp.common.pojo.vo.LessonVO;
 import com.hzb.erp.common.service.*;
 import com.hzb.erp.service.ImportExportService;
 import com.hzb.erp.service.NotificationService;
+import com.hzb.erp.service.enums.SettingNameEnum;
 import com.hzb.erp.service.notification.NoticeCodeEnum;
 import com.hzb.erp.service.notification.bo.*;
 import com.hzb.erp.utils.EnumTools;
-import com.hzb.erp.utils.SettingConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -755,10 +755,10 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
         appointmentService.addOne(studentId, lessonId);
 
         Student student = studentService.getById(studentId);
-        if(settingService.boolValue(SettingConstants.AUTO_JOIN_LESSON_BY_APPOINTMENT)) {
+        if(settingService.boolValue(SettingNameEnum.AUTO_JOIN_LESSON_BY_APPOINTMENT.getCode())) {
             lessonStudentService.addOne(lessonId, student, SignStateEnum.NONE);
         }
-        Lesson lesson = this.getById(studentId);
+        Lesson lesson = this.getById(lessonId);
         String mobile = studentService.getMobile(student);
         messageService.sendToStaff(
                 studentId,

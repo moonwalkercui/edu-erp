@@ -28,9 +28,6 @@ import java.util.Arrays;
 @Service
 public class SettingOptionServiceImpl extends ServiceImpl<SettingOptionMapper, SettingOption> implements SettingOptionService {
 
-    @Autowired
-    private QuartzJobMapper quartzJobMapper;
-
     @Override
     @Cacheable(value = CacheNames.SETTING_CACHE)
     public SettingOption getByCode(String code) {
@@ -54,7 +51,7 @@ public class SettingOptionServiceImpl extends ServiceImpl<SettingOptionMapper, S
 
         if (SettingServiceImpl.INT_TYPE.equals(type) && !valIsNum) {
             throw new ParamValidateException(name + "的值须是数字");
-        } else if(SettingServiceImpl.BOOL_TYPE.equals(type) && !Arrays.asList(new String[]{"true", "false"}).contains(type)) {
+        } else if(SettingServiceImpl.BOOL_TYPE.equals(type) && !Arrays.asList(new String[]{"true", "false"}).contains(value)) {
             throw new ParamValidateException(name + "的值须是true或false");
         } else if(SettingServiceImpl.TIME_TYPE.equals(type)) {
             try {

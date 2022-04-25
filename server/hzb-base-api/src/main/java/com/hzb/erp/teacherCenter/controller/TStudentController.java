@@ -14,10 +14,10 @@ import com.hzb.erp.common.service.StudentService;
 import com.hzb.erp.security.Util.SecurityUtils;
 import com.hzb.erp.security.Util.UserAuthUtil;
 import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.service.enums.SettingNameEnum;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
-import com.hzb.erp.utils.SettingConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +95,7 @@ public class TStudentController {
         studentDTO.setSchoolId(orginfo == null ? null : orginfo.getComId());
 
         if (studentDTO.getId() == null) {
-            String defaultPwd = settingService.strValue(SettingConstants.STUDENT_DEFAULT_PWD);
+            String defaultPwd = settingService.strValue(SettingNameEnum.STUDENT_DEFAULT_PWD.getCode());
             studentDTO.setPasswordEncode(SecurityUtils.passwordEncode(defaultPwd));
         }
 

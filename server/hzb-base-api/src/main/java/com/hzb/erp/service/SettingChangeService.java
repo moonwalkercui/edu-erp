@@ -7,8 +7,7 @@ import com.hzb.erp.quartz.QuartzUtil;
 import com.hzb.erp.quartz.entity.QuartzJob;
 import com.hzb.erp.quartz.mapper.QuartzJobMapper;
 import com.hzb.erp.quartzJob.JobRegisterEnumImpl;
-import com.hzb.erp.quartzJob.jobs.LessonEndingJob;
-import com.hzb.erp.utils.SettingConstants;
+import com.hzb.erp.service.enums.SettingNameEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class SettingChangeService {
      */
     public void afterChange(SettingOption option) {
 
-        if (SettingConstants.LESSON_REMIND_TIME.equals(option.getCode())) {
+        if (SettingNameEnum.LESSON_REMIND_TIME.getCode().equals(option.getCode())) {
             // 上课提醒时间
             String exp = timeToCronExp(option.getValue());
             QueryWrapper<QuartzJob> qw = new QueryWrapper<>();
@@ -44,7 +43,7 @@ public class SettingChangeService {
             quartzJobMapper.updateById(job);
             QuartzUtil.updateJob(scheduler, job);
 
-        } else if (SettingConstants.LESSON_COUNT_WARNING_TIME.equals(option.getCode())) {
+        } else if (SettingNameEnum.LESSON_COUNT_WARNING_TIME.getCode().equals(option.getCode())) {
             // 课次数警告提醒
             String exp = timeToCronExp(option.getValue());
             QueryWrapper<QuartzJob> qw = new QueryWrapper<>();

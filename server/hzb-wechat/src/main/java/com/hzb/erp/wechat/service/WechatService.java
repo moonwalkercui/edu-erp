@@ -3,7 +3,7 @@ package com.hzb.erp.wechat.service;
 import com.hzb.erp.common.configuration.WxMpProperties;
 import com.hzb.erp.common.enums.SettingCodeEnum;
 import com.hzb.erp.common.service.SettingService;
-import com.hzb.erp.utils.SettingConstants;
+import com.hzb.erp.service.enums.SettingNameEnum;
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -147,14 +147,14 @@ public class WechatService {
             throw new RuntimeException("未找到微信公众号配置. Not Found Wechat Setting Named 'wx_mp_setting'.");
         }
         try {
-            String wxAppId = settings.get(SettingConstants.WX_MP_APP_ID).toString();
+            String wxAppId = settings.get(SettingNameEnum.WX_MP_APP_ID.getCode()).toString();
             if (!StringUtils.isBlank(wxAppId)) {
                 WxMpProperties.MpConfig defaultConf = new WxMpProperties.MpConfig();
                 defaultConf.setName("default");
                 defaultConf.setAppId(wxAppId);
-                defaultConf.setSecret(settings.get(SettingConstants.WX_MP_SECRET).toString());
-                defaultConf.setToken(settings.get(SettingConstants.WX_MP_TOKEN).toString());
-                defaultConf.setAesKey(settings.get(SettingConstants.WX_MP_AES_KEY).toString());
+                defaultConf.setSecret(settings.get(SettingNameEnum.WX_MP_SECRET.getCode()).toString());
+                defaultConf.setToken(settings.get(SettingNameEnum.WX_MP_TOKEN.getCode()).toString());
+                defaultConf.setAesKey(settings.get(SettingNameEnum.WX_MP_AES_KEY.getCode()).toString());
                 configs.add(defaultConf);
             }
         } catch (Exception e) {

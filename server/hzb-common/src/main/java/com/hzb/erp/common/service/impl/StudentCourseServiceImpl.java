@@ -4,24 +4,24 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hzb.erp.common.enums.FinanceStateEnum;
-import com.hzb.erp.common.enums.LessonCountChangeStageEnum;
-import com.hzb.erp.common.mapper.FinanceRecordMapper;
-import com.hzb.erp.common.pojo.dto.PayOverdueDTO;
-import com.hzb.erp.service.ImportExportService;
 import com.hzb.erp.common.entity.Course;
 import com.hzb.erp.common.entity.FinanceRecord;
 import com.hzb.erp.common.entity.Student;
 import com.hzb.erp.common.entity.StudentCourse;
+import com.hzb.erp.common.enums.FinanceStateEnum;
 import com.hzb.erp.common.enums.FinanceTypeEnum;
+import com.hzb.erp.common.enums.LessonCountChangeStageEnum;
 import com.hzb.erp.common.enums.StudentStageEnum;
 import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.common.mapper.FinanceRecordMapper;
 import com.hzb.erp.common.mapper.StudentCourseMapper;
+import com.hzb.erp.common.pojo.dto.PayOverdueDTO;
 import com.hzb.erp.common.pojo.dto.StudentCourseParamDTO;
 import com.hzb.erp.common.pojo.dto.StudentCourseSaveDTO;
 import com.hzb.erp.common.pojo.vo.StudentCourseVO;
 import com.hzb.erp.common.service.*;
-import com.hzb.erp.utils.SettingConstants;
+import com.hzb.erp.service.ImportExportService;
+import com.hzb.erp.service.enums.SettingNameEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -187,11 +187,11 @@ public class StudentCourseServiceImpl extends ServiceImpl<StudentCourseMapper, S
 
     @Override
     public List<StudentCourse> getWarningList() {
-        Integer warningCount = settingService.intValue(SettingConstants.LESSON_COUNT_LESS_WARNING_COUNT);
+        Integer warningCount = settingService.intValue(SettingNameEnum.LESSON_COUNT_LESS_WARNING_COUNT.getCode());
         if (warningCount == null || warningCount <= 0) {
             return null;
         }
-        Integer warningTimes = settingService.intValue(SettingConstants.LESSON_COUNT_LESS_WARNING_TIMES);
+        Integer warningTimes = settingService.intValue(SettingNameEnum.LESSON_COUNT_LESS_WARNING_TIMES.getCode());
         if (warningTimes == null || warningTimes <= 0) {
             warningTimes = 0;
         }

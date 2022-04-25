@@ -16,7 +16,7 @@ import com.hzb.erp.common.service.ClassStudentService;
 import com.hzb.erp.common.service.ClazzService;
 import com.hzb.erp.common.service.SettingService;
 import com.hzb.erp.common.service.StudentService;
-import com.hzb.erp.utils.SettingConstants;
+import com.hzb.erp.service.enums.SettingNameEnum;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,7 +73,7 @@ public class ClazzServiceImpl extends ServiceImpl<ClazzMapper, Clazz> implements
             item.setBeOver(true);
             item.setOverOperator(operatorId);
             item.setOverTime(LocalDateTime.now());
-            Boolean bl = settingService.boolValue(SettingConstants.CLASS_CLOSE_WITH_GRADUATE_STUDENT);
+            Boolean bl = settingService.boolValue(SettingNameEnum.CLASS_CLOSE_WITH_GRADUATE_STUDENT.getCode());
             if (bl != null && bl) {
                 // 学生结业
                 List<Student> studentList = classStudentService.getStudentsByClassId(item.getId());
@@ -90,7 +90,7 @@ public class ClazzServiceImpl extends ServiceImpl<ClazzMapper, Clazz> implements
     public void autoCreateOne2One(Student student, Course course, Long teacherId) {
 
         // 判断是否1v1并自动生成班级
-        if (LessonTypeEnum.VIP.equals(course.getLessonType()) && settingService.boolValue(SettingConstants.CLASS_AUTO_CREATE_ON_ONE2ONE)) {
+        if (LessonTypeEnum.VIP.equals(course.getLessonType()) && settingService.boolValue(SettingNameEnum.CLASS_AUTO_CREATE_ON_ONE2ONE.getCode())) {
             Clazz clazz = new Clazz();
             clazz.setName(student.getName() + "1V1");
             clazz.setCourseId(course.getId());

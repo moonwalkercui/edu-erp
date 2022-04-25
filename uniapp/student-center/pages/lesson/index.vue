@@ -127,8 +127,9 @@
 				this.$common.showAlert("签到确认", `确认签到本课次？`, ()=> {
 					this.$http.post(`sCenter/lesson/sign/${lesson.id}`, {}, res => {
 						if(!this.$common.handleResponseMsg(res)) return;
-						this.$common.showMsg("已签到")
-						this.getLessons()
+						this.$common.showMsg("已签到", () => {
+							this.getLessons()
+						})
 					})
 				})
 			},
@@ -141,9 +142,10 @@
 				this.$common.showAlert("预约确认", `确认预约本课？`, ()=> {
 					this.$http.post(`sCenter/lesson/appoint/${lesson.id}`, {}, res => {
 						if(!this.$common.handleResponseMsg(res)) return;
-						this.$common.showMsg("已预约")
-						this.getLessons()
-						this.getBookable()
+						this.$common.showMsg("已提交预约", () => {
+							this.getLessons()
+							this.getBookable()
+						})
 					})
 				})
 			}

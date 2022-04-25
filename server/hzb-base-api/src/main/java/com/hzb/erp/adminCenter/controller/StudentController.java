@@ -24,6 +24,7 @@ import com.hzb.erp.security.Util.SecurityUtils;
 import com.hzb.erp.security.Util.UserAuthUtil;
 import com.hzb.erp.service.ImportExportService;
 import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.service.enums.SettingNameEnum;
 import com.hzb.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -124,7 +125,7 @@ public class StudentController {
         studentDTO.setSchoolId(orginfo == null ? null : orginfo.getComId());
 
         if (studentDTO.getId() == null) {
-            String defaultPwd = settingService.strValue(SettingConstants.STUDENT_DEFAULT_PWD, "123456");
+            String defaultPwd = settingService.strValue(SettingNameEnum.STUDENT_DEFAULT_PWD.getCode(), "123456");
             studentDTO.setPasswordEncode(SecurityUtils.passwordEncode(defaultPwd));
         }
 
@@ -240,7 +241,7 @@ public class StudentController {
                 stageEnum = StudentStageEnum.INTENTION;
             }
 
-            String defaultPwd = settingService.strValue(SettingConstants.STUDENT_DEFAULT_PWD);
+            String defaultPwd = settingService.strValue(SettingNameEnum.STUDENT_DEFAULT_PWD.getCode());
             User user = userService.existOrCreate(mobile, parentname, SecurityUtils.passwordEncode(defaultPwd));
 
             Student item = new Student();

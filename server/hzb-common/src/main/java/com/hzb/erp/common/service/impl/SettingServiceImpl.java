@@ -9,6 +9,7 @@ import com.hzb.erp.common.mapper.SettingMapper;
 import com.hzb.erp.common.service.SettingOptionService;
 import com.hzb.erp.common.service.SettingService;
 import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.service.enums.SettingNameEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
     public static final String INT_TYPE = "int";
     public static final String BOOL_TYPE = "bool";
     public static final String TIME_TYPE = "time";
+    public static final String DATE_TYPE = "date";
+    public static final String DATETIME_TYPE = "datetime";
     public static final String LIST_STR_TYPE = "strlist";
     public static final String LIST_INT_TYPE = "intlist";
 
@@ -122,12 +125,32 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
     }
 
     private SettingOption getOption(String code) {
+
         if (StringUtils.isBlank(code)) {
             throw new BizException("配置获取方法中缺少CODE");
         }
         SettingOption option = settingOptionService.getByCode(code);
         if (option == null) {
-            throw new BizException("获取配置异常");
+
+            SettingNameEnum findItem = null;
+            for(SettingNameEnum enumItem: SettingNameEnum.values()) {
+                if(enumItem.getCode().equals(code)) {
+                    findItem = enumItem;
+                    break;
+                }
+            }
+
+            if(findItem == null) {
+                throw new BizException("未知配置项");
+            }
+
+            option = new SettingOption();
+            option.setSettingId(1L);
+            option.setName(findItem.getDesc());
+            option.setCode(findItem.getCode());
+            option.setValue(findItem.getDefaultValue());
+            option.setValueType(findItem.getValueType());
+            settingOptionService.save(option);
         }
         return option;
     }
