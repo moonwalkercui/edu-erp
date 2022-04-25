@@ -117,7 +117,7 @@
 
     <select id="getRedpointCounts" resultType="hashmap">
         select * from (
-        (select count(0) homework_count FROM homework where class_id in (select class_id from class_student where student_id = #{studentId} ) and id not in (select homework_id from homework_record where student_id = #{studentId})) t1,
+        (select count(0) homework_count FROM homework where class_id in (select class_id from class_student where student_id = #{studentId} ) and id not in (select homework_id from homework_record where student_id = #{studentId}) and deleted = 0) t1,
         (select count(0) evaluate_count FROM lesson_student where student_id = #{studentId} and evaluate_time is not null and evaluate_time &gt; (select redpoint_evaluate from student where id = #{studentId}) ) t2,
         (select count(0) grade_count FROM grade_record where student_id = #{studentId} and add_time &gt; (select redpoint_grade from student where id = #{studentId}) ) t3
         )

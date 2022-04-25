@@ -4,21 +4,21 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hzb.erp.common.entity.Lesson;
 import com.hzb.erp.common.entity.LessonStudent;
 import com.hzb.erp.common.entity.Student;
 import com.hzb.erp.common.entity.StudentCourse;
 import com.hzb.erp.common.enums.LessonCountChangeStageEnum;
+import com.hzb.erp.common.enums.MessageUserTypeEnum;
 import com.hzb.erp.common.enums.SignStateEnum;
 import com.hzb.erp.common.enums.SignTypeEnum;
 import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.common.mapper.LessonMapper;
 import com.hzb.erp.common.mapper.LessonStudentMapper;
 import com.hzb.erp.common.pojo.dto.LessonEvaluateSaveDTO;
 import com.hzb.erp.common.pojo.dto.LessonStudentParamDTO;
 import com.hzb.erp.common.pojo.vo.LessonStudentVO;
-import com.hzb.erp.common.service.LessonStudentService;
-import com.hzb.erp.common.service.StudentCourseService;
-import com.hzb.erp.common.service.StudentLessonCountLogService;
-import com.hzb.erp.common.service.StudentService;
+import com.hzb.erp.common.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +45,13 @@ public class LessonStudentServiceImpl extends ServiceImpl<LessonStudentMapper, L
     private StudentLessonCountLogService studentLessonCountLogService;
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private LessonMapper lessonMapper;
+    @Autowired
+    private MessageService messageService;
+    @Autowired
+    private AppointmentService appointmentService;
+
 
     @Override
     public IPage<LessonStudentVO> getList(LessonStudentParamDTO param) {
@@ -170,6 +177,27 @@ public class LessonStudentServiceImpl extends ServiceImpl<LessonStudentMapper, L
             return newLs;
         }
 
+    }
+
+    @Override
+    public LessonStudent addOne(Long lessonId, Student student, SignStateEnum state) {
+        Long studentId = student.getId();
+        LessonStudent ls = getByLessonIdAndStudentId(lessonId, studentId);
+        // 找到消费课时
+        if (ls != null) {
+            return null;
+        }
+
+        Lesson lesson = lessonMapper.selectById(lessonId);
+        LessonStudent newLs = new LessonStudent();
+        newLs.setLessonId(lessonId);
+        newLs.setStudentId(studentId);
+        newLs.setSignState(state);
+        // 消课id
+        newLs.setConsumeCourseId(lesson.getCourseId());
+        newLs.setCounselor(student.getCounselor());
+        this.save(newLs);
+        return newLs;
     }
 
     /**

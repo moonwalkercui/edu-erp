@@ -82,4 +82,9 @@ public class SettingConstants {
      */
     public static final String LESSON_COUNT_WARNING_TIME = "lesson_count_warning_time";
 
+    /**
+     * 学员预约后自动加入到课时
+     */
+    public static final String AUTO_JOIN_LESSON_BY_APPOINTMENT = "auto_join_lesson_by_appointment";
+
 }

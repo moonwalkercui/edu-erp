@@ -16,6 +16,11 @@ import java.util.List;
  * @author Ryan
  */
 public interface AppointmentService extends IService<Appointment> {
+
+    /**
+    * 新增
+    * */
+    Appointment addOne(Long studentId, Long lessonId);
     /**
     * 带分页的列表
     * */

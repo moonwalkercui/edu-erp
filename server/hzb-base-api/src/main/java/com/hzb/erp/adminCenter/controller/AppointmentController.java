@@ -43,10 +43,10 @@ public class AppointmentController {
         return JsonResponseUtil.paginate(appointmentService.getList(param));
     }
 
-    @ApiOperation("审核通过")
-    @Log(description = "审核通过", type = "预约管理")
-    @PostMapping("/pass")
-    public JsonResponse pass(@RequestBody List<Long> ids) {
+    @ApiOperation("确认预约")
+    @Log(description = "确认预约", type = "预约管理")
+    @PostMapping("/approve")
+    public JsonResponse approve(@RequestBody List<Long> ids) {
         if (appointmentService.handleAudit(ids, true, UserAuthUtil.getCurrentUserId())) {
             return JsonResponseUtil.success();
         } else {
@@ -54,11 +54,10 @@ public class AppointmentController {
         }
     }
 
-
-    @ApiOperation("审核驳回")
-    @Log(description = "审核驳回", type = "预约管理")
-    @PostMapping("/reject")
-    public JsonResponse reject(@RequestBody List<Long> ids) {
+    @ApiOperation("取消预约")
+    @Log(description = "取消预约", type = "预约管理")
+    @PostMapping("/cancel")
+    public JsonResponse cancel(@RequestBody List<Long> ids) {
         if (appointmentService.handleAudit(ids, false, UserAuthUtil.getCurrentUserId())) {
             return JsonResponseUtil.success();
         } else {

@@ -23,6 +23,11 @@ public interface StudentService extends IService<Student> {
 
     User getUser(Student student);
 
+    /**
+    * 获取手机号码
+    * */
+    String getMobile(Student student);
+
 //    Student getByMobile(String mobile);
 
 //    Student getByName(String name);

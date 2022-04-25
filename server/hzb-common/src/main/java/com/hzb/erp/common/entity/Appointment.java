@@ -1,11 +1,14 @@
 package com.hzb.erp.common.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hzb.erp.common.enums.VerifyStateEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,7 +41,9 @@ public class Appointment implements Serializable {
     @ApiModelProperty(value = "学员id")
     private Long studentId;
 
-    @ApiModelProperty(value = "预约时间")
+    @ApiModelProperty(value = "添加时间")
+    @TableField(fill = FieldFill.INSERT)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime addTime;
 
     @ApiModelProperty(value = "备注")
@@ -53,5 +58,7 @@ public class Appointment implements Serializable {
     @ApiModelProperty(value = "审核人")
     private Long verifyStaff;
 
+    @ApiModelProperty(value = "审核内容")
+    private String verifyRemark;
 
 }

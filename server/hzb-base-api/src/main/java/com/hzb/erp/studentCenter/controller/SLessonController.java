@@ -173,4 +173,16 @@ public class SLessonController {
         }
     }
 
+    @ApiOperation("预约")
+    @Log(description = "预约", type = "学生端", isStaff = false)
+    @PostMapping("/appoint/{lessonId}")
+    public JsonResponse appoint(@PathVariable("lessonId") Long lessonId) {
+        Student student = UserAuthService.getCurrentStudent();
+        Long studentId = student.getId();
+        if (lessonService.studentAppoint(lessonId, studentId)) {
+            return JsonResponseUtil.success("预约完成");
+        } else {
+            return JsonResponseUtil.error("预约失败");
+        }
+    }
 }

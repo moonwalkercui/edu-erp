@@ -4,3 +4,7 @@
 unpackage/
 target/
 /ui/dist
+server/hzb-base-api/src/main/resources/rebel.xml
+server/hzb-common/src/main/resources/rebel.xml
+server/hzb-security/src/main/resources/rebel.xml
+server/hzb-wechat/src/main/resources/rebel.xml

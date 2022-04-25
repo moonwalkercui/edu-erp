@@ -3,7 +3,7 @@
 		<view class="content">
 			<ren-calendar ref='ren' :markDays='markDays' @onDayClick='onDayClick' @onChangeMonth="changeMonth"></ren-calendar>
 			
-			<u-card :title="curDatePretty+' 课表'"  :sub-title="lessonList.length>0 ? `本日${lessonList.length}节课` : '本日无课'" :padding="20">
+			<u-card :title="curDatePretty+' 课表'"  :sub-title="lessonList.length>0 ? `${lessonList.length}节` : '本日无课'" :padding="20">
 				<view class="" slot="body">
 					<view class="bg-light-gray u-flex boder-radius-md u-padding-20 u-margin-bottom-10"
 						v-for="(item,index) in lessonList" :key="index">
@@ -11,7 +11,7 @@
 							<view class="line-height-md">
 								<view class="u-black u-type-primary-dark">{{item.startTime}} ~ {{item.endTime}} {{item.state}}</view>
 								<view class="u-font-md text-black">{{item.className}} {{item.courseName}}</view>
-								<view class="u-font-sm">老师: {{item.teacherNames}} 教室: {{item.classroom}}</view>
+								<view class="u-font-sm">老师: {{item.teacherNames}} {{item.classroom ? '教室:' + item.classroom : ''}}</view>
 							</view>
 						</view>
 						<view class="u-flex-1 u-text-right">
@@ -28,7 +28,7 @@
 				</view>
 			</u-card>
 			
-			<u-card :title="curDatePretty+' 预约课'"  :sub-title="bookableList.length>0 ? `可预约${bookableList.length}节` : ''" :padding="20">
+			<u-card :title="curDatePretty+' 预约课'"  :sub-title="bookableList.length>0 ? `${bookableList.length}节` : ''" :padding="20">
 				<view class="" slot="body">
 					<view class="bg-light-gray u-flex boder-radius-md u-padding-20 u-margin-bottom-10"
 						v-for="(item,index) in bookableList" :key="index">
@@ -36,14 +36,14 @@
 							<view class="line-height-md">
 								<view class="u-black u-type-primary-dark">{{item.startTime}} ~ {{item.endTime}} {{item.state}}</view>
 								<view class="u-font-md text-black">{{item.className}} {{item.courseName}}</view>
-								<view class="u-font-sm">老师: {{item.teacherNames}} 教室: {{item.classroom}}</view>
+								<view class="u-font-sm">老师: {{item.teacherNames}} {{item.classroom ? '教室:' + item.classroom : ''}}</view>
 							</view>
 						</view>
 						<view class="u-flex-1 u-text-right">
 							<view class="u-flex-1 u-text-right">
 								<view class="u-font-sm u-margin-bottom-40">{{item.studentSignState}}</view>
 								<view>
-									<u-button v-if="item.studentSignState == '未到课'" type="primary" shape="circle" size="mini" @click="handleSign(item)">签 到
+									<u-button type="primary" shape="circle" size="mini" @click="appoint(item)">预 约
 									</u-button>
 								</view>
 							</view>
@@ -136,6 +136,16 @@
 				const weekDayZh = ['日', '一', '二', '三', '四', '五', '六']
 				let day = new Date(date);
 				return (day.getMonth() + 1) + "." + day.getDate()
+			},
+			appoint(lesson) {
+				this.$common.showAlert("预约确认", `确认预约本课？`, ()=> {
+					this.$http.post(`sCenter/lesson/appoint/${lesson.id}`, {}, res => {
+						if(!this.$common.handleResponseMsg(res)) return;
+						this.$common.showMsg("已预约")
+						this.getLessons()
+						this.getBookable()
+					})
+				})
 			}
 		}
 	}

@@ -152,4 +152,9 @@ public interface LessonService extends IService<Lesson> {
     * 开启与关闭预约状态
     * */
     boolean handleBooking(List<Long> ids, Boolean state);
+
+    /**
+     * 学生预约
+     */
+    Boolean studentAppoint(Long lessonId, Long studentId);
 }

@@ -18,7 +18,7 @@
                 ) and deleted != 1)
             </if>
             <if test="param.startDate != null and param.endDate != null">
-                <![CDATA[AND ( t1.start_date >= #{param.startDate} and t1.start_date <= #{param.endDate} ) ]]>
+                AND ( t1.start_date &gt;= #{param.startDate} and t1.start_date &lt;= #{param.endDate} )
             </if>
             <if test="param.expiredStart != null and param.expiredEnd != null">
                 AND ( t1.expire_date &gt;= #{param.expiredStart} and t1.expire_date &lt;= #{param.expiredEnd} )

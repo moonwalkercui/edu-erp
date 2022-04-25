@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.*;
-import com.hzb.erp.common.enums.LessonStateEnum;
-import com.hzb.erp.common.enums.SignStateEnum;
-import com.hzb.erp.common.enums.SignTypeEnum;
-import com.hzb.erp.common.enums.TeacherTypeEnum;
+import com.hzb.erp.common.enums.*;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.LessonMapper;
 import com.hzb.erp.common.mapper.LessonScheduleMapper;
@@ -22,6 +19,7 @@ import com.hzb.erp.service.NotificationService;
 import com.hzb.erp.service.notification.NoticeCodeEnum;
 import com.hzb.erp.service.notification.bo.*;
 import com.hzb.erp.utils.EnumTools;
+import com.hzb.erp.utils.SettingConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +86,14 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
     private TeachEvaluationService teachEvaluationService;
     @Autowired
     private LessonScheduleMapper lessonScheduleMapper;
+    @Autowired
+    private MessageService messageService;
+
+    @Autowired
+    private SettingService settingService;
+
+    @Autowired
+    private AppointmentService appointmentService;
 
     @Override
     public IPage<LessonVO> getList(LessonParamDTO param) {
@@ -744,4 +750,22 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
         return updateBatchById(lessonList);
     }
 
+    @Override
+    public Boolean studentAppoint(Long lessonId, Long studentId) {
+        appointmentService.addOne(studentId, lessonId);
+
+        Student student = studentService.getById(studentId);
+        if(settingService.boolValue(SettingConstants.AUTO_JOIN_LESSON_BY_APPOINTMENT)) {
+            lessonStudentService.addOne(lessonId, student, SignStateEnum.NONE);
+        }
+        Lesson lesson = this.getById(studentId);
+        String mobile = studentService.getMobile(student);
+        messageService.sendToStaff(
+                studentId,
+                MessageUserTypeEnum.STUDENT,
+                lesson.getTeacherId(),
+                "你的课程有新的预约",
+                student.getName() + "(" + mobile + ") 预约了你的课程:" + lesson.descToString());
+        return true;
+    }
 }

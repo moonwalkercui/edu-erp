@@ -62,6 +62,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         return userService.getById(student.getUserId());
     }
 
+    @Override
+    public String getMobile(Student student) {
+        User user = getUser(student);
+        return user == null ? "" : user.getMobile();
+    }
+
 //    @Override
 //    public Student getByMobile(String mobile) {
 //        QueryWrapper<Student> qw = new QueryWrapper<>();

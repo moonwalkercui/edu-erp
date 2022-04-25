@@ -1,7 +1,10 @@
 package com.hzb.erp.common.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hzb.erp.common.enums.SignStateEnum;
 import com.hzb.erp.common.enums.SignTypeEnum;
 import io.swagger.annotations.ApiModel;
@@ -11,6 +14,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * <p>
@@ -70,5 +74,10 @@ public class LessonStudent implements Serializable {
 
     @ApiModelProperty(value = "顾问id")
     private Long counselor;
+
+    @ApiModelProperty(value = "添加时间")
+    @TableField(fill = FieldFill.INSERT)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime addTime;
 }
 

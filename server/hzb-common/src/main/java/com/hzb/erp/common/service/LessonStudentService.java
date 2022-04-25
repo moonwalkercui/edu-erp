@@ -3,6 +3,7 @@ package com.hzb.erp.common.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.LessonStudent;
+import com.hzb.erp.common.entity.Student;
 import com.hzb.erp.common.enums.SignStateEnum;
 import com.hzb.erp.common.enums.SignTypeEnum;
 import com.hzb.erp.common.pojo.dto.LessonEvaluateSaveDTO;
@@ -35,8 +36,22 @@ public interface LessonStudentService extends IService<LessonStudent> {
 
     /**
      * 点名和签到时用于增加签到记录,并扣减响应的课时.
+     * @param lessonId 课时id
+     * @param studentId 学生id
+     * @param classId 班级id
+     * @param decLessonCount 扣减数量
+     * @param state 签到状态
+     * @param teacherId 操作老师id
      */
     LessonStudent addOne(Long lessonId, Long studentId, Long classId, Integer decLessonCount, SignStateEnum state, SignTypeEnum type, Long teacherId);
+
+    /**
+     * 只添加课时和学生关系记录
+     * @param lessonId 课时id
+     * @param student 学生
+     * @param state 签到状态
+     */
+    LessonStudent addOne(Long lessonId, Student student, SignStateEnum state);
 
     /**
      * 判断是否需要扣课时

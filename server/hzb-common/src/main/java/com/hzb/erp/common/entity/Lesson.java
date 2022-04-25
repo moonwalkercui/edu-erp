@@ -95,4 +95,10 @@ public class Lesson extends AutoFillEntity {
 //    @ApiModelProperty(value = "点名状态")
 //    private Boolean rollcallState;
 
+    /**
+    * 课程描述文字
+    * */
+    public String descToString() {
+        return date.toString() + " " + startTime.toString() + "~" + endTime.toString() + " " + title;
+    }
 }

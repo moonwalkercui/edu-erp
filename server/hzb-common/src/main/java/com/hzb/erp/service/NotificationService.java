@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author Ryan 541720500@qq.com
- * description 消息发送服务
+ * description 对外消息发送服务
  */
 @Service
 @Slf4j

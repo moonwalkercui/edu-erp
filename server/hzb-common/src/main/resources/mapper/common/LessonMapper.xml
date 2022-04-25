@@ -36,10 +36,8 @@
         sum(case when t7.sign_state in (1,2) then 1 else 0 end) student_sign_num
 
         <if test="param.studentId != null">
-            , (select sign_state from lesson_student where lesson_id = t1.id and student_id = #{param.studentId}) as
-            student_sign_state
-            , (select dec_lesson_count from lesson_student where lesson_id = t1.id and student_id = #{param.studentId})
-            as student_dec_lesson_count
+            , (select sign_state from lesson_student where lesson_id = t1.id and student_id = #{param.studentId}) as student_sign_state
+            , (select dec_lesson_count from lesson_student where lesson_id = t1.id and student_id = #{param.studentId}) as student_dec_lesson_count
         </if>
 
         FROM lesson t1
@@ -67,7 +65,7 @@
                     select lesson_id from lesson_student where student_id = #{param.studentId}
                 ) and t1.course_id in (
                     select course_id from student_course where student_id = #{param.studentId} AND expire_date &gt;= CURDATE()
-                    group by course_id having sum(count_lesson_total - count_lesson_complete - count_lesson_refund) > 0
+                    group by course_id having sum(count_lesson_total - count_lesson_complete - count_lesson_refund) &gt; 0
                 ) and t1.id not in (
                     select lesson_id from appointment where student_id = #{param.studentId}
                 )
