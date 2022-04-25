@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 94
+ Source Server         : @localhost
  Source Server Type    : MySQL
- Source Server Version : 50650
- Source Host           : 114.115.185.94:3306
- Source Schema         : erp_empty
+ Source Server Version : 50726
+ Source Host           : localhost:3306
+ Source Schema         : test
 
  Target Server Type    : MySQL
- Target Server Version : 50650
+ Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 17/03/2022 09:41:48
+ Date: 25/04/2022 23:55:52
 */
 
 SET NAMES utf8mb4;
@@ -37,7 +37,7 @@ CREATE TABLE `advertisement`  (
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '唯一码',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `code`(`code`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通知管理' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通知管理' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of advertisement
@@ -49,15 +49,19 @@ CREATE TABLE `advertisement`  (
 DROP TABLE IF EXISTS `appointment`;
 CREATE TABLE `appointment`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `lesson_id` bigint(20) NULL DEFAULT NULL COMMENT '试听课次',
-  `student_id` bigint(20) NULL DEFAULT NULL COMMENT '学员id',
+  `lesson_id` bigint(20) NOT NULL COMMENT '试听课次',
+  `student_id` bigint(20) NOT NULL COMMENT '学员id',
   `add_time` datetime(0) NULL DEFAULT NULL COMMENT '预约时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `verify_state` tinyint(2) NULL DEFAULT 1 COMMENT '审核状态',
   `verify_time` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
   `verify_staff` bigint(20) NULL DEFAULT NULL COMMENT '审核人',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '试听预约记录' ROW_FORMAT = Dynamic;
+  `verify_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审核内容',
+  `course_id` bigint(20) NULL DEFAULT NULL COMMENT '所属课程',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `student_id`(`student_id`) USING BTREE,
+  INDEX `lesson_id`(`lesson_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '试听预约记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of appointment
@@ -79,7 +83,7 @@ CREATE TABLE `attachment`  (
   `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `url`(`url`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 2461 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '附件管理表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '附件管理表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of attachment
@@ -109,7 +113,7 @@ CREATE TABLE `cashout`  (
   `attach_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '附件id列表',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '样本' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '样本' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cashout
@@ -142,7 +146,7 @@ CREATE TABLE `class`  (
   INDEX `course_id`(`course_id`) USING BTREE,
   INDEX `teacher_id`(`teacher_id`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 58 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '班级' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '班级' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of class
@@ -165,7 +169,7 @@ CREATE TABLE `class_student`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `class_id`(`class_id`, `student_id`) USING BTREE,
   INDEX `student_id`(`student_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 93 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '班级学员表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '班级学员表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of class_student
@@ -188,7 +192,7 @@ CREATE TABLE `classroom`  (
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '教室' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '教室' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of classroom
@@ -214,7 +218,7 @@ CREATE TABLE `contact_record`  (
   INDEX `student_id`(`student_id`) USING BTREE,
   INDEX `stage`(`stage`, `deleted`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学员跟进表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学员跟进表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of contact_record
@@ -243,10 +247,11 @@ CREATE TABLE `course`  (
   `lesson_type` tinyint(4) NULL DEFAULT NULL COMMENT '课堂类型1 大课  2 小班课 3 1v1',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '描述',
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  `bookable` tinyint(1) NULL DEFAULT 0 COMMENT '是否可以预约',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `subject_id`(`subject_id`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程套餐表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程套餐表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of course
@@ -262,7 +267,7 @@ CREATE TABLE `course_link`  (
   `linked_id` bigint(20) NOT NULL COMMENT '关联课程id',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `course_id`(`course_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程关联表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程关联表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of course_link
@@ -281,7 +286,7 @@ CREATE TABLE `data_permission`  (
   `info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `table_name`(`position_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据权限' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据权限' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of data_permission
@@ -291,6 +296,8 @@ INSERT INTO `data_permission` VALUES (17, 7, 2, 'lesson', 'teacher_id', '课次�
 INSERT INTO `data_permission` VALUES (18, 7, 0, 'homework', 'creator', '作业创建数据');
 INSERT INTO `data_permission` VALUES (19, 7, 2, 'student_course', 'creator', '报单记录');
 INSERT INTO `data_permission` VALUES (20, 7, 2, 'staff', 'id', '员工数据');
+INSERT INTO `data_permission` VALUES (23, 14, 0, 'student', 'creator', '学生数据');
+INSERT INTO `data_permission` VALUES (24, 16, 0, 'student', 'yyy', '1');
 
 -- ----------------------------
 -- Table structure for data_permission_custom
@@ -340,7 +347,7 @@ CREATE TABLE `dict_item`  (
   `sort_num` int(11) NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `dict_id`(`dict_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统设置表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统设置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dict_item
@@ -355,6 +362,7 @@ INSERT INTO `dict_item` VALUES (20, 1, '手动输入', NULL, 0);
 INSERT INTO `dict_item` VALUES (21, 1, '微信登记', NULL, 0);
 INSERT INTO `dict_item` VALUES (22, 1, '活动报名', NULL, 0);
 INSERT INTO `dict_item` VALUES (23, 1, '主动咨询', NULL, 0);
+INSERT INTO `dict_item` VALUES (24, 2, 'searyaer', 'ATAgt', 0);
 
 -- ----------------------------
 -- Table structure for finance_record
@@ -376,7 +384,7 @@ CREATE TABLE `finance_record`  (
   `verify_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审核备注',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `operator`(`operator`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '财务记录表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '财务记录表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of finance_record
@@ -397,7 +405,7 @@ CREATE TABLE `grade`  (
   `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '成绩单' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '成绩单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of grade
@@ -417,7 +425,7 @@ CREATE TABLE `grade_record`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `student_id`(`student_id`) USING BTREE,
   INDEX `grade_id`(`grade_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '成绩单学生分数' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '成绩单学生分数' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of grade_record
@@ -458,7 +466,7 @@ CREATE TABLE `holiday`  (
   `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 598 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '节假日设置' ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '节假日设置' ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of holiday
@@ -481,7 +489,7 @@ CREATE TABLE `homework`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `class_id`(`class_id`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '作业' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '作业' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of homework
@@ -504,7 +512,7 @@ CREATE TABLE `homework_record`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `homework_id`(`homework_id`) USING BTREE,
   INDEX `student_id`(`student_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '作业提交记录' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '作业提交记录' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of homework_record
@@ -540,6 +548,7 @@ CREATE TABLE `lesson`  (
   `close_time` datetime(0) NULL DEFAULT NULL COMMENT '结课时间',
   `close_operator` bigint(20) NULL DEFAULT NULL COMMENT '结课人',
   `teacher_id` bigint(20) NULL DEFAULT NULL COMMENT '主讲人(只用于数据权限)',
+  `bookable` tinyint(1) NULL DEFAULT 0 COMMENT '是否开放预约',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `course_id`(`course_id`, `deleted`) USING BTREE,
   INDEX `class_id`(`class_id`, `deleted`) USING BTREE,
@@ -549,7 +558,7 @@ CREATE TABLE `lesson`  (
   INDEX `deleted`(`deleted`) USING BTREE,
   INDEX `state_2`(`state`, `end_time`) USING BTREE,
   INDEX `creator_2`(`creator`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 795 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of lesson
@@ -581,7 +590,7 @@ CREATE TABLE `lesson_schedule`  (
   INDEX `course_id`(`course_id`, `deleted`) USING BTREE,
   INDEX `class_id`(`class_id`, `deleted`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '排课计划' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '排课计划' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of lesson_schedule
@@ -600,7 +609,7 @@ CREATE TABLE `lesson_schedule_setting`  (
   `room_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '教室ID',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `schedule_id`(`schedule_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 92 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '编排上课时间设置' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '编排上课时间设置' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of lesson_schedule_setting
@@ -626,12 +635,13 @@ CREATE TABLE `lesson_student`  (
   `evaluate_teacher` bigint(20) NULL DEFAULT NULL COMMENT '评语老师',
   `consume_course_id` bigint(20) NULL DEFAULT NULL COMMENT '实际消费课程',
   `counselor` bigint(20) NULL DEFAULT NULL COMMENT '学生的顾问',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '加入时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `lesson_id_student_id`(`lesson_id`, `student_id`) USING BTREE,
   INDEX `student_id`(`student_id`) USING BTREE,
   INDEX `teacher_id`(`teacher_id`) USING BTREE,
   INDEX `counselor`(`counselor`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1729 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课时学员关联表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课时学员关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of lesson_student
@@ -650,7 +660,7 @@ CREATE TABLE `lesson_teacher`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `lesson_id`(`lesson_id`, `teacher_id`) USING BTREE,
   INDEX `teacher_id`(`teacher_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 950 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课时老师关联表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课时老师关联表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of lesson_teacher
@@ -661,16 +671,19 @@ CREATE TABLE `lesson_teacher`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message`  (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发送标题',
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发送内容',
-  `to_student` bigint(20) NOT NULL COMMENT '发送给学员',
-  `from_staff` bigint(20) NOT NULL COMMENT '发送人',
+  `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发送内容',
+  `to_id` bigint(20) NOT NULL COMMENT '接收人ID 0所有',
+  `from_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '发送人ID',
+  `to_type` tinyint(4) NULL DEFAULT NULL COMMENT '接受者类型  1 老师 2 学生',
+  `from_type` tinyint(4) NULL DEFAULT NULL COMMENT '发送者类型 0 系统 1 老师 2 学生',
   `send_time` datetime(0) NULL DEFAULT NULL COMMENT '发送时间',
   `add_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `deleted` tinyint(1) NULL DEFAULT NULL COMMENT '删除标记',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '发送消息记录' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '站内信' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of message
@@ -691,7 +704,7 @@ CREATE TABLE `notice`  (
   `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公告' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公告' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of notice
@@ -711,10 +724,32 @@ CREATE TABLE `operation_record`  (
   `add_time` datetime(0) NULL DEFAULT NULL COMMENT '处理时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 310 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作记录' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of operation_record
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for order
+-- ----------------------------
+DROP TABLE IF EXISTS `order`;
+CREATE TABLE `order`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `course_id` bigint(20) NULL DEFAULT NULL COMMENT '课程id',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户',
+  `student_id` bigint(20) NULL DEFAULT NULL COMMENT '学生id',
+  `pay_money` decimal(10, 2) NULL DEFAULT NULL COMMENT '支付金额',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of order
 -- ----------------------------
 
 -- ----------------------------
@@ -724,13 +759,13 @@ DROP TABLE IF EXISTS `org`;
 CREATE TABLE `org`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `pid` bigint(20) NULL DEFAULT 0 COMMENT '上级公司',
-  `state` tinyint(1) NULL DEFAULT 1 COMMENT '是否有效',
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '公司名称',
-  `ship_routes` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '所属航线',
+  `state` tinyint(1) NULL DEFAULT 1 COMMENT '是否有效',
   `shortname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '公司简称',
   `type` tinyint(4) NULL DEFAULT 0 COMMENT '类型',
   `level` tinyint(4) NOT NULL COMMENT '级别',
   `id_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '路径',
+  `name_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '机构名路径',
   `contact_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系人',
   `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系电话',
   `fax` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '传真',
@@ -748,13 +783,14 @@ CREATE TABLE `org`  (
   `sort_num` int(11) NULL DEFAULT 0 COMMENT '排序',
   `license` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '营业执照',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `pid`(`pid`, `deleted`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 41 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '机构表' ROW_FORMAT = Dynamic;
+  INDEX `pid`(`pid`, `deleted`) USING BTREE,
+  INDEX `id_path`(`id_path`(250)) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '机构表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of org
 -- ----------------------------
-INSERT INTO `org` VALUES (1, 0, 1, '学校总部', NULL, NULL, 0, 1, '', '', '', NULL, NULL, NULL, 3, 1, '2021-09-10 11:38:15', '2021-10-09 23:55:36', 0, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `org` VALUES (1, 0, '测试机构', 1, NULL, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, NULL);
 
 -- ----------------------------
 -- Table structure for point_record
@@ -788,16 +824,29 @@ CREATE TABLE `position`  (
   `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '职位岗位' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '职位岗位' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of position
 -- ----------------------------
-INSERT INTO `position` VALUES (7, '总校长', NULL, NULL, NULL, NULL, 0);
-INSERT INTO `position` VALUES (11, '教师', NULL, NULL, NULL, NULL, 0);
-INSERT INTO `position` VALUES (12, '分校长', NULL, NULL, NULL, NULL, 0);
-INSERT INTO `position` VALUES (13, '执行校长', NULL, NULL, NULL, NULL, 0);
-INSERT INTO `position` VALUES (1, '平台会员', NULL, NULL, NULL, NULL, 0);
+
+-- ----------------------------
+-- Table structure for quartz_job
+-- ----------------------------
+DROP TABLE IF EXISTS `quartz_job`;
+CREATE TABLE `quartz_job`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `job_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务名称',
+  `group_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务分组',
+  `job_class` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '执行类路径',
+  `status` tinyint(1) NULL DEFAULT 1 COMMENT '状态',
+  `cron_expression` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'cron表达式',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of quartz_job
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for refund
@@ -819,7 +868,7 @@ CREATE TABLE `refund`  (
   `verify_staff` bigint(20) NULL DEFAULT NULL COMMENT '审核人',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `student_course_id`(`student_course_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学员退款记录' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学员退款记录' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of refund
@@ -4645,15 +4694,15 @@ CREATE TABLE `setting_notice`  (
 -- ----------------------------
 -- Records of setting_notice
 -- ----------------------------
-INSERT INTO `setting_notice` VALUES (3, '学员上课提醒', 'studentLessonStart', 1, 'VPRMRW82ibUYaOg5vs8Jg8VlLYoEGVMqz4uIYwE_VVg', 0, '无', 1, '上课前一天自动发送上课提醒给学员', 0, 'student', '{date=2021-07-30, className=班级名, classroom=教室名, startTime=08:50, endTime=11:00, studentName=学生姓名}');
+INSERT INTO `setting_notice` VALUES (3, '学员上课提醒', 'studentLessonStart', 1, 'VPRMRW82ibUYaOg5vs8Jg8VlLYoEGVMqz4uIYwE_VVg', 1, '无', 0, '上课前一天自动发送上课提醒给学员', 0, 'student', '{date=2021-07-30, className=班级名, classroom=教室名, startTime=08:50, endTime=11:00, studentName=学生姓名}');
 INSERT INTO `setting_notice` VALUES (4, '学员签到与点名通知', 'studentSign', 1, '65vkd9GGQBREbOIicozD647Tjr0evDXK9x5uzPxjT8Y', 0, '无', 1, '点名后，自动发送点名信息给学员', 0, 'student', '{lessonTitle=第22次课, datetime=07-29 09:48, state=迟到, studentName=学生名}');
-INSERT INTO `setting_notice` VALUES (5, '课次状态变更通知给学员', 'studentLessonOnChange', 1, 'A4ZQe57VBkPxPzSwpkZweNosebVEodr2KwBNNQx3NKo', 0, '无', 1, '课次状态变化后发送通知给学员', 0, 'student', '{lessonTitle=第22次课, date=2021-12-25, startTime=11:00, endTime=12:30, newState=已停课, studentName=学生名}');
-INSERT INTO `setting_notice` VALUES (6, '报名通知', 'studentNewContract', 1, 'IldxiI55g0lPVs6VEAAdGTliZpXm29l2pdB3ouxDYb0', 0, '无', 1, '报名后，自动发送课程签约信息给学员', 0, 'student', '{courseName=课程名, amount=1000.00, lessonCount=20, expireDate=2022-01-29, startDate=2021-07-29, studentName=学生名}');
-INSERT INTO `setting_notice` VALUES (7, '缴费预警通知', 'studentLessonCountLess', 1, 'yr8ezeT9cAhjiGcQ1Q-yDUg8rVyTnRtE2tUeOlNhi3s', 0, '无', 1, '学员剩余课时不足时，发送提醒通知给学员', 0, 'student', '{courseName=课程名, lessonCount=1, expireDate=2022-06-08, studentName=学生名}');
-INSERT INTO `setting_notice` VALUES (8, '老师上课提醒', 'teacherLessonStart', 1, 'VPRMRW82ibUYaOg5vs8Jg8VlLYoEGVMqz4uIYwE_VVg', 0, '无', 1, '上课前一天自动发送上课提醒给上课老师', 0, 'teacher', '{date=2021-07-30, className=班级名, classroom=教室名, startTime=08:50, endTime=11:00, teacherName=老师姓名}');
-INSERT INTO `setting_notice` VALUES (9, '学员请假提醒', 'teacherStudentLeave', 1, 'v956MOdVrribWTkBwFn32N1eSO0Hxkmpc7FW8GKC_SI', 0, '无', 1, '学员发起请假后，自动发送提醒给上课老师', 0, 'teacher', '{lessonTitle=第23次课, date=2021-07-29, startTime=08:50, studentName=学生名, teacherName=张老师}');
-INSERT INTO `setting_notice` VALUES (10, '学员课次不足提醒', 'teacherStudentLessonLess', 1, 'yr8ezeT9cAhjiGcQ1Q-yDUg8rVyTnRtE2tUeOlNhi3s', 0, '无', 1, '学员剩余课时不足时，发送提醒通知学员的负责老师', 0, 'teacher', '{courseName=课程名, lessonCount=1, expireDate=2022-06-08, teacherName=老师名}');
-INSERT INTO `setting_notice` VALUES (11, '课次状态变更通知给老师', 'teacherLessonOnChange', 1, 'A4ZQe57VBkPxPzSwpkZweNosebVEodr2KwBNNQx3NKo', 0, '无', 1, '课次状态变化后发送通知给上课老师和助教', 0, 'teacher', '{lessonTitle=第5次课, date=2021-08-30, startTime=08:20, endTime=09:50, newState=已停课, teacherName=张老师}');
+INSERT INTO `setting_notice` VALUES (5, '课次状态变更通知给学员', 'studentLessonOnChange', 1, 'A4ZQe57VBkPxPzSwpkZweNosebVEodr2KwBNNQx3NKo', 1, '无', 0, '课次状态变化后发送通知给学员', 0, 'student', '{lessonTitle=第22次课, date=2021-12-25, startTime=11:00, endTime=12:30, newState=已停课, studentName=学生名}');
+INSERT INTO `setting_notice` VALUES (6, '报名通知', 'studentNewContract', 1, 'IldxiI55g0lPVs6VEAAdGTliZpXm29l2pdB3ouxDYb0', 1, '无', 0, '报名后，自动发送课程签约信息给学员', 0, 'student', '{courseName=课程名, amount=1000.00, lessonCount=20, expireDate=2022-01-29, startDate=2021-07-29, studentName=学生名}');
+INSERT INTO `setting_notice` VALUES (7, '缴费预警通知', 'studentLessonCountLess', 1, 'yr8ezeT9cAhjiGcQ1Q-yDUg8rVyTnRtE2tUeOlNhi3s', 1, '无', 0, '学员剩余课时不足时，发送提醒通知给学员', 0, 'student', '{courseName=课程名, lessonCount=1, expireDate=2022-06-08, studentName=学生名}');
+INSERT INTO `setting_notice` VALUES (8, '老师上课提醒', 'teacherLessonStart', 1, 'VPRMRW82ibUYaOg5vs8Jg8VlLYoEGVMqz4uIYwE_VVg', 1, '无', 1, '上课前一天自动发送上课提醒给上课老师', 0, 'teacher', '{date=2021-07-30, className=班级名, classroom=教室名, startTime=08:50, endTime=11:00, teacherName=老师姓名}');
+INSERT INTO `setting_notice` VALUES (9, '学员请假提醒', 'teacherStudentLeave', 1, 'v956MOdVrribWTkBwFn32N1eSO0Hxkmpc7FW8GKC_SI', 1, '无', 1, '学员发起请假后，自动发送提醒给上课老师', 0, 'teacher', '{lessonTitle=第23次课, date=2021-07-29, startTime=08:50, studentName=学生名, teacherName=张老师}');
+INSERT INTO `setting_notice` VALUES (10, '学员课次不足提醒', 'teacherStudentLessonLess', 1, 'yr8ezeT9cAhjiGcQ1Q-yDUg8rVyTnRtE2tUeOlNhi3s', 1, '无', 1, '学员剩余课时不足时，发送提醒通知学员的负责老师', 0, 'teacher', '{courseName=课程名, lessonCount=1, expireDate=2022-06-08, teacherName=老师名}');
+INSERT INTO `setting_notice` VALUES (11, '课次状态变更通知给老师', 'teacherLessonOnChange', 1, 'A4ZQe57VBkPxPzSwpkZweNosebVEodr2KwBNNQx3NKo', 1, '无', 1, '课次状态变化后发送通知给上课老师和助教', 0, 'teacher', '{lessonTitle=第5次课, date=2021-08-30, startTime=08:20, endTime=09:50, newState=已停课, teacherName=张老师}');
 
 -- ----------------------------
 -- Table structure for setting_option
@@ -4670,7 +4719,7 @@ CREATE TABLE `setting_option`  (
   `sort_num` int(11) NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `code`(`code`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统设置表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统设置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of setting_option
@@ -4678,17 +4727,18 @@ CREATE TABLE `setting_option`  (
 INSERT INTO `setting_option` VALUES (1, 1, '班级结业时班内学员自动结业', 'class_close_with_graduate_student', 'true', 'bool', '如果学员课次有余量的则不会自动结业', 0);
 INSERT INTO `setting_option` VALUES (2, 1, '报单1V1课程时自动生成班级', 'class_auto_create_on_one2one', 'true', 'bool', NULL, 0);
 INSERT INTO `setting_option` VALUES (3, 1, '课次数不足预警数量', 'lesson_count_less_warning_count', '5', 'int', '课次不足时可以按设置给学员和负责老师发通知', 0);
-INSERT INTO `setting_option` VALUES (4, 3, '短信接口KEY', 'sms_access_key', 'LTAI5tLMp6QxQsNjMJHUq2T91', 'str', '课次不足时可以按设置给学员和负责老师发通知', 0);
-INSERT INTO `setting_option` VALUES (5, 3, '短信接口秘钥', 'sms_access_secret', 'Hi3FtFZ32s0IBbi6KicKeeGuZlwu9t1', 'str', NULL, 0);
-INSERT INTO `setting_option` VALUES (6, 3, '短信签名', 'sms_sign_name', '双惠德', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (4, 3, '短信接口KEY', 'sms_access_key', 'LTAI5tLMp6QxQsNT9', 'str', '课次不足时可以按设置给学员和负责老师发通知', 0);
+INSERT INTO `setting_option` VALUES (5, 3, '短信接口秘钥', 'sms_access_secret', 'Hi3FtFZ32s0IBbi', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (6, 3, '短信签名', 'sms_sign_name', '双', 'str', NULL, 0);
 INSERT INTO `setting_option` VALUES (9, 1, '家长端初始密码', 'student_default_pwd', '111111', 'str', '添加学生时的默认登录密码', 0);
 INSERT INTO `setting_option` VALUES (8, 1, '课次数不足提醒次数', 'lesson_count_less_warning_times', '2', 'int', '课次不足时可以按设置给学员和负责老师发通知', 0);
-INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (10, 4, '公众号AppId', 'wx_mp_app_id', 'app_idAAAAA', 'str', NULL, 0);
-INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (11, 4, '公众号Secret', 'wx_mp_secret', 'secret', 'str', NULL, 0);
-INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (12, 4, '公众号Token', 'wx_mp_token', 'token', 'str', NULL, 0);
-INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (13, 4, '公众号AesKey', 'wx_mp_aes_key', 'aes_key', 'str', NULL, 0);
-INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (14, 1, '每天上课提醒时间', 'lesson_remind_time', '18:30', 'time', NULL, 0);
-INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (15, 1, '每天上课次数预警时间', 'lesson_count_warning_time', '7:00', 'time', NULL, 0);
+INSERT INTO `setting_option` VALUES (10, 4, '公众号AppId', 'wx_mp_app_id', 'app_id1', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (11, 4, '公众号Secret', 'wx_mp_secret', 'secret1', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (12, 4, '公众号Token', 'wx_mp_token', 'token1', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (13, 4, '公众号AesKey', 'wx_mp_aes_key', 'aes_key1', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (14, 1, '每天上课提醒时间', 'lesson_remind_time', '19:31', 'time', NULL, 0);
+INSERT INTO `setting_option` VALUES (15, 1, '每天上课次数预警时间', 'lesson_count_warning_time', '07:01', 'time', NULL, 0);
+INSERT INTO `setting_option` VALUES (16, 1, '学员预约后自动入课', 'auto_join_lesson_by_appointment', 'true', 'bool', '管理端可以取消预约', 0);
 
 -- ----------------------------
 -- Table structure for staff
@@ -4722,12 +4772,13 @@ CREATE TABLE `staff`  (
   `assistant_fee` decimal(10, 2) UNSIGNED NULL DEFAULT NULL COMMENT '助教费',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `mobile`(`mobile`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '教师员工表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '教师员工表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of staff
 -- ----------------------------
-INSERT INTO `staff` VALUES (1, '系统管理员', 'admin', 326, NULL, '1981-06-18', 1, '234234', NULL, 5, NULL, 1, 0, 'http://erp2.hzb-it.com/app/static/uploads/2021-10-16/92cbb98d-e757-4bd0-9eb4-ba45c59d815e.png', '2021-07-08', '2021-07-20', NULL, NULL, '2021-09-12 15:54:41', 3, 3, 0, '$2a$10$NEsrNyBIPGELx9DpIbm/x.VwAMOzhmX4cOfO4jzwRJf6XizYrxjI2', 120.00, 60.00);
+INSERT INTO `staff` VALUES (1, '管理员', 'admin', 499, NULL, '1981-06-18', 1, '234234', NULL, 5, NULL, 1, 0, 'http://erp2.hzb-it.com/app/static/uploads/2022-03-08/682e5890-79f8-44fd-ae22-68a7f074e3f3.jpeg', '2021-07-08', '2021-07-20', NULL, NULL, '2022-04-22 16:19:53', 1, 1, 0, '$2a$10$NEsrNyBIPGELx9DpIbm/x.VwAMOzhmX4cOfO4jzwRJf6XizYrxjI2', 120.00, 60.00);
+INSERT INTO `staff` VALUES (18, '测试删除', '11111', NULL, NULL, NULL, 1, NULL, '', 0, NULL, 1, 0, 'http://erp2.hzb-it.com/photo.png', NULL, NULL, '', '2021-10-10 00:45:38', '2022-04-22 16:21:08', 1, 1, 0, '$2a$10$DGNICw13yrBY0QB8OMlFR.wS4A4qOOf0XlUo.v2CSdSTYrwecj9kK', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for staff_orginfo
@@ -4744,14 +4795,16 @@ CREATE TABLE `staff_orginfo`  (
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
   `add_time` datetime(0) NULL DEFAULT NULL,
   `creator` bigint(255) NULL DEFAULT NULL,
+  `id_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'id全路径',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `staff_id`(`staff_id`, `org_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 119 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '员工机构信息表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 148 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '员工机构信息表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of staff_orginfo
 -- ----------------------------
-INSERT INTO `staff_orginfo` VALUES (110, 1, 1, 1, 1, NULL, 7, 0, '2021-09-12 15:54:41', 3);
+INSERT INTO `staff_orginfo` VALUES (145, 1, 1, NULL, NULL, 1, 15, 0, '2022-04-22 16:19:54', 1, '1');
+INSERT INTO `staff_orginfo` VALUES (147, 18, 1, NULL, NULL, 1, 15, 0, '2022-04-22 16:21:08', 1, '1,37');
 
 -- ----------------------------
 -- Table structure for staff_position
@@ -4800,12 +4853,14 @@ CREATE TABLE `student`  (
   `idcard` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '身份证号',
   `redpoint_grade` datetime(0) NULL DEFAULT NULL COMMENT '红点标记成绩最后查看时间',
   `redpoint_evaluate` datetime(0) NULL DEFAULT NULL COMMENT '红点标记点评最后查看时间',
+  `grade` year NULL DEFAULT NULL COMMENT '年级',
+  `join_date` date NULL DEFAULT NULL COMMENT '入学日期',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `stage`(`stage`) USING BTREE,
   INDEX `name`(`name`) USING BTREE,
   INDEX `mobile`(`user_id`) USING BTREE,
   INDEX `counselor`(`counselor`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 141 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学生表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学生表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of student
@@ -4845,7 +4900,7 @@ CREATE TABLE `student_course`  (
   INDEX `course_id`(`course_id`) USING BTREE,
   INDEX `student_id`(`student_id`, `course_id`, `expire_date`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学员签约表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '报名签约表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of student_course
@@ -4868,7 +4923,7 @@ CREATE TABLE `student_leave`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `student_id`(`student_id`) USING BTREE,
   INDEX `lesson_id`(`lesson_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学员请假' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学员请假' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of student_leave
@@ -4892,7 +4947,7 @@ CREATE TABLE `student_lesson_count_log`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `student_id`(`student_id`) USING BTREE,
   INDEX `course_id`(`course_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学员课次变更记录表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学员课次变更记录表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of student_lesson_count_log
@@ -4913,7 +4968,7 @@ CREATE TABLE `subject`  (
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '科目' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '科目' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of subject
@@ -4941,12 +4996,11 @@ CREATE TABLE `sys_log`  (
   `time_cost` int(10) NULL DEFAULT NULL COMMENT '响应时间毫秒',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `operator`(`operator`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 3862 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统用户日志' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统用户日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_log
 -- ----------------------------
-INSERT INTO `sys_log` VALUES (3861, 1, NULL, '老师登录', '登录成功', '/app/common/login', 'http://182.92.217.153/app/common/login', 'POST', '系统管理员', '113.227.115.182', 'Chrome 9', '94.0.4606.81', 'Windows 10', '2021-12-16 21:32:28', NULL);
 
 -- ----------------------------
 -- Table structure for sys_permission
@@ -5038,7 +5092,7 @@ CREATE TABLE `sys_role`  (
   `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '角色编码',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `code`(`code`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_role
@@ -5046,6 +5100,10 @@ CREATE TABLE `sys_role`  (
 INSERT INTO `sys_role` VALUES (1, '超级管理员', 'superadmin');
 INSERT INTO `sys_role` VALUES (11, '行政', 'xingzheng');
 INSERT INTO `sys_role` VALUES (12, '1', '1');
+INSERT INTO `sys_role` VALUES (13, '导师', 'DD');
+INSERT INTO `sys_role` VALUES (14, '校长', 'xiaozhang');
+INSERT INTO `sys_role` VALUES (15, 'bai1111', '12345');
+INSERT INTO `sys_role` VALUES (16, '唐山市天', 'test');
 
 -- ----------------------------
 -- Table structure for sys_role_permission
@@ -5148,17 +5206,35 @@ CREATE TABLE `sys_user_role`  (
   `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户id',
   `role_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '角色id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户角色' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户角色' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------
-INSERT INTO `sys_user_role` VALUES (1, '1', '1');
 INSERT INTO `sys_user_role` VALUES (4, '17', '11');
-INSERT INTO `sys_user_role` VALUES (5, '18', '11');
-INSERT INTO `sys_user_role` VALUES (6, '17', '1');
-INSERT INTO `sys_user_role` VALUES (7, '1', '12');
-INSERT INTO `sys_user_role` VALUES (8, '20', '2');
+INSERT INTO `sys_user_role` VALUES (9, '18', '11');
+INSERT INTO `sys_user_role` VALUES (10, '1', '1');
+INSERT INTO `sys_user_role` VALUES (11, '20', '1');
+INSERT INTO `sys_user_role` VALUES (14, '23', '11');
+INSERT INTO `sys_user_role` VALUES (15, '22', '11');
+INSERT INTO `sys_user_role` VALUES (16, '20', '11');
+INSERT INTO `sys_user_role` VALUES (17, '25', '11');
+INSERT INTO `sys_user_role` VALUES (18, '1', '11');
+INSERT INTO `sys_user_role` VALUES (20, '19', '14');
+INSERT INTO `sys_user_role` VALUES (21, '18', '14');
+INSERT INTO `sys_user_role` VALUES (22, '21', '14');
+INSERT INTO `sys_user_role` VALUES (24, '24', '1');
+INSERT INTO `sys_user_role` VALUES (25, '26', '12');
+INSERT INTO `sys_user_role` VALUES (26, '24', '12');
+INSERT INTO `sys_user_role` VALUES (27, '23', '12');
+INSERT INTO `sys_user_role` VALUES (29, '27', '1');
+INSERT INTO `sys_user_role` VALUES (30, '27', '11');
+INSERT INTO `sys_user_role` VALUES (31, '27', '12');
+INSERT INTO `sys_user_role` VALUES (32, '27', '14');
+INSERT INTO `sys_user_role` VALUES (33, '27', '13');
+INSERT INTO `sys_user_role` VALUES (34, '27', '15');
+INSERT INTO `sys_user_role` VALUES (35, '24', '11');
+INSERT INTO `sys_user_role` VALUES (36, '26', '11');
 
 -- ----------------------------
 -- Table structure for teach_evaluation
@@ -5179,7 +5255,7 @@ CREATE TABLE `teach_evaluation`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `lesson_id`(`lesson_id`, `student_id`) USING BTREE,
   INDEX `teacher_id`(`teacher_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学评教' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学评教' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of teach_evaluation
@@ -5206,7 +5282,7 @@ CREATE TABLE `user`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `mobile`(`mobile`) USING BTREE,
   INDEX `creator`(`creator`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 146 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '家长端用户表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '家长端用户表' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of user
@@ -5232,27 +5308,10 @@ CREATE TABLE `wx_access`  (
   `country` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `openid`(`openid`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 327 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信登录记录表' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信登录记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of wx_access
 -- ----------------------------
-
--- -------------20220401 更新---------------
-ALTER TABLE `org` DROP COLUMN `ship_routes`;
-ALTER TABLE `course` ADD COLUMN `bookable` tinyint(1) NULL DEFAULT 0 COMMENT '是否可以预约';
-ALTER TABLE `lesson` ADD COLUMN `bookable` tinyint(1) NULL DEFAULT 0 COMMENT '是否开放预约';
-ALTER TABLE `lesson_student` ADD COLUMN `add_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-ALTER TABLE `appointment` ADD COLUMN `course_id` bigint(20) NOT NULL COMMENT '所属课程';
-
-CREATE TABLE `quartz_job` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `job_name` varchar(255) DEFAULT NULL COMMENT '任务名称',
-  `group_name` varchar(255) DEFAULT NULL COMMENT '任务分组',
-  `job_class` varchar(255) DEFAULT NULL COMMENT '执行类路径',
-  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
-  `cron_expression` varchar(255) DEFAULT NULL COMMENT 'cron表达式',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='定时任务';
 
 SET FOREIGN_KEY_CHECKS = 1;

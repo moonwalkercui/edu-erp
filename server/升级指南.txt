@@ -1,6 +1,7 @@
-## 数据增量变动sql
-- 2022.3.17 实现微信配置的数据库存储
+## 数据增量变动sql 20220425
+- 2022.4.25 实现预约功能
 - 2022.3.28 实现系统设置管理定时任务
+- 2022.3.17 实现微信配置的数据库存储
 
 ```
 ALTER TABLE `org` DROP COLUMN `ship_routes`;
@@ -30,5 +31,41 @@ CREATE TABLE `quartz_job` (
   `cron_expression` varchar(255) DEFAULT NULL COMMENT 'cron表达式',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='定时任务';
+
+
+DROP TABLE IF EXISTS `appointment`;
+CREATE TABLE `appointment`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `lesson_id` bigint(20) NOT NULL COMMENT '试听课次',
+  `student_id` bigint(20) NOT NULL COMMENT '学员id',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '预约时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `verify_state` tinyint(2) NULL DEFAULT 1 COMMENT '审核状态',
+  `verify_time` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
+  `verify_staff` bigint(20) NULL DEFAULT NULL COMMENT '审核人',
+  `verify_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审核内容',
+  `course_id` bigint(20) NULL DEFAULT NULL COMMENT '所属课程',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `student_id`(`student_id`) USING BTREE,
+  INDEX `lesson_id`(`lesson_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '试听预约记录' ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发送标题',
+  `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发送内容',
+  `to_id` bigint(20) NOT NULL COMMENT '接收人ID 0所有',
+  `from_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '发送人ID',
+  `to_type` tinyint(4) NULL DEFAULT NULL COMMENT '接受者类型  1 老师 2 学生',
+  `from_type` tinyint(4) NULL DEFAULT NULL COMMENT '发送者类型 0 系统 1 老师 2 学生',
+  `send_time` datetime(0) NULL DEFAULT NULL COMMENT '发送时间',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `deleted` tinyint(1) NULL DEFAULT NULL COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '站内信' ROW_FORMAT = Dynamic;
+
 
 ```
