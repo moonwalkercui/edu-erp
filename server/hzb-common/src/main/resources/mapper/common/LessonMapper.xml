@@ -61,7 +61,7 @@
                 AND t1.id in ( select lesson_id from lesson_student where student_id = #{param.studentId} )
             </if>
             <if test="param.bookable != null and param.bookable and param.studentId != null">
-                AND t1.bookable = 1 and t1.state = 1 and t1.id not in (
+                AND t1.bookable = 1 and t1.state = 1 and t1.date > CURDATE() and t1.id not in (
                     select lesson_id from lesson_student where student_id = #{param.studentId}
                 ) and t1.course_id in (
                     select course_id from student_course where student_id = #{param.studentId} AND expire_date &gt;= CURDATE()
