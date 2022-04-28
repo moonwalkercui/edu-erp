@@ -75,7 +75,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 
 system:
-  version: 1.1.0313
+  version: 1.1.0428
   # 是否是演示demo（会限制关键操作） 生产环境是false！！！
   isDemo: false
   # 带http的域名
@@ -115,15 +115,4 @@ system:
     #    - /wx/menu/**
   # 黑名单的ip,禁止访问该系统
   blackList:
-
-  # 微信公众号配置
-  wxmp:
-    useRedis: true
-#    defaultConfIndex: 0
-#    configs:
-#      # 公众号配置，可以设置多组 20220313: default的配置已经改为通过数据库配置，以下配置可省略
-#      - name:
-#        appId:
-#        secret:
-#        token:
-#        aesKey:
+  #  - 127.0

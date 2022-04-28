@@ -1,6 +1,6 @@
 package com.hzb.erp.wechat.service;
 
-import com.hzb.erp.common.configuration.WxMpProperties;
+import com.hzb.erp.wechat.config.WxMpConfig;
 import com.hzb.erp.common.enums.SettingCodeEnum;
 import com.hzb.erp.common.service.SettingService;
 import com.hzb.erp.service.enums.SettingNameEnum;
@@ -40,12 +40,12 @@ public class WechatService {
      *
      * @param confName 参数名 null表示取默认配置
      */
-    public static WxMpProperties.MpConfig getConfigByName(String confName) {
-        List<WxMpProperties.MpConfig> configs = getConfigList();
+    public static WxMpConfig getConfigByName(String confName) {
+        List<WxMpConfig> configs = getConfigList();
         if (StringUtils.isBlank(confName)) {
             confName = "default";
         }
-        for (WxMpProperties.MpConfig conf : configs) {
+        for (WxMpConfig conf : configs) {
             System.out.println(conf.getName().equals(confName));
             if (conf.getName().equals(confName)) {
                 return conf;
@@ -54,22 +54,22 @@ public class WechatService {
         return null;
     }
 
-    public static WxMpProperties.MpConfig getDefaultConfig() {
+    public static WxMpConfig getDefaultConfig() {
         return getConfigByName(null);
     }
 
 //    /**
 //     * 通过配置名称获取配置 只从配置文件获取
 //     *
-//     * @param wxMpProperties WxMpProperties
+//     * @param wxMpProperties WxMpConfig
 //     * @param confName       参数名 null表示取第一个公众号配置
 //     */
-//    public static WxMpProperties.MpConfig getConfigByName(WxMpProperties wxMpProperties, String confName) {
-//        List<WxMpProperties.MpConfig> configs = wxMpProperties.getConfigs();
+//    public static WxMpConfig getConfigByName(WxMpConfig wxMpProperties, String confName) {
+//        List<WxMpConfig> configs = wxMpProperties.getConfigs();
 //        if (StringUtils.isBlank(confName)) {
 //            confName = "default";
 //        }
-//        for (WxMpProperties.MpConfig conf : configs) {
+//        for (WxMpConfig conf : configs) {
 //            System.out.println(conf.getName().equals(confName));
 //            if (conf.getName().equals(confName)) {
 //                return conf;
@@ -81,8 +81,8 @@ public class WechatService {
 //    /**
 //     * 通过配置名称获取confName 旧版从配置文件获取
 //     */
-//    public static String getAppIdByConfName(WxMpProperties wxMpProperties, String confName) {
-//        WxMpProperties.MpConfig mpConfig = getConfigByName(wxMpProperties, confName);
+//    public static String getAppIdByConfName(WxMpConfig wxMpProperties, String confName) {
+//        WxMpConfig mpConfig = getConfigByName(wxMpProperties, confName);
 //        if (mpConfig == null) {
 //            throw new RuntimeException("配置参数APPID设置错误");
 //        }
@@ -93,7 +93,7 @@ public class WechatService {
      * 通过配置名称获取confName 1.1.0313从数据库和配置文件里获取
      */
     public static String getAppIdByConfName(String confName) {
-        WxMpProperties.MpConfig mpConfig = getConfigByName(confName);
+        WxMpConfig mpConfig = getConfigByName(confName);
         if (mpConfig == null) {
             throw new RuntimeException("配置参数APPID设置错误");
         }
@@ -124,7 +124,7 @@ public class WechatService {
      * 配置设置参数
      * */
     public static void setConfig(WxMpService service) {
-        List<WxMpProperties.MpConfig> configs = getConfigList();
+        List<WxMpConfig> configs = getConfigList();
         service.setMultiConfigStorages(configs.stream().map(a -> {
             WxMpDefaultConfigImpl configStorage = new WxMpDefaultConfigImpl();
             configStorage.setAppId(a.getAppId());
@@ -138,9 +138,9 @@ public class WechatService {
     /**
      * 从数据库加载配置信息
      */
-    public static List<WxMpProperties.MpConfig> getConfigList() {
+    public static List<WxMpConfig> getConfigList() {
 
-        List<WxMpProperties.MpConfig> configs = new ArrayList<>();
+        List<WxMpConfig> configs = new ArrayList<>();
         // 从数据库获取公众号配置：
         Map<String, Object> settings = stSettingService.listOptionByCode(SettingCodeEnum.WX_MP_SETTING);
         if (settings == null) {
@@ -149,7 +149,7 @@ public class WechatService {
         try {
             String wxAppId = settings.get(SettingNameEnum.WX_MP_APP_ID.getCode()).toString();
             if (!StringUtils.isBlank(wxAppId)) {
-                WxMpProperties.MpConfig defaultConf = new WxMpProperties.MpConfig();
+                WxMpConfig defaultConf = new WxMpConfig();
                 defaultConf.setName("default");
                 defaultConf.setAppId(wxAppId);
                 defaultConf.setSecret(settings.get(SettingNameEnum.WX_MP_SECRET.getCode()).toString());
