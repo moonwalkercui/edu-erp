@@ -42,13 +42,13 @@ public class WxMpConfiguration {
     }
 
 //    /**
-//     * 定义一个微信服务bean，主要是加载微信配置
+//     * 定义一个微信服务bean，主要是加载微信配置 20220401去掉该bean
 //     * */
 //    @Bean
 //    public WxMpService wxMpService() {
-//        List<WxMpProperties.MpConfig> configs = WechatService.getConfigList();
+//        List<WxMpConfig.MpConfig> configs = WechatService.getConfigList();
 //
-//        List<WxMpProperties.MpConfig> propConfigs = this.properties.getConfigs();
+//        List<WxMpConfig.MpConfig> propConfigs = this.properties.getConfigs();
 //        if(propConfigs != null && propConfigs.size() > 0) {
 //            configs.addAll(propConfigs);
 //        }

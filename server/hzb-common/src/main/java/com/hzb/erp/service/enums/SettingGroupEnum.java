@@ -9,8 +9,8 @@ import lombok.Getter;
 public enum SettingGroupEnum {
 
     NORMAL_SETTING("normal_setting", "系统设置"),
-    sms_setting("sms_setting", "短信设置"),
-    wx_mp_setting("wx_mp_setting", "微信公众号设置");
+    SMS_SETTING("sms_setting", "短信设置"),
+    WX_MP_SETTING("wx_mp_setting", "微信公众号设置");
 
     private String code;
     private String desc;
