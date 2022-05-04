@@ -27,7 +27,7 @@ import java.util.UUID;
 
 /**
  * @author Ryan
- * description 通用服务
+ * description 文件服务
  **/
 @Service
 @Slf4j

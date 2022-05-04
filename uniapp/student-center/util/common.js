@@ -465,23 +465,23 @@ function getRequestHeader() {
 function getRedpoint(cb) {
 	get('sCenter/student/redpoint',{}, res => {
 		if(!handleResponseMsg(res)) return;
-		uni.hideTabBarRedDot({
-		  index: 2
-		})
-		uni.hideTabBarRedDot({
-		  index: 3
-		})
-		if(res.homework_count && res.homework_count > 0) {
-			uni.showTabBarRedDot({
-			   index: 2,
-			})
-		}
-		var ucenterCount= parseInt(res.evaluate_count) + parseInt ( res.grade_count );
-		if( ucenterCount > 0) {
-			uni.showTabBarRedDot({
-			   index: 3,
-			})
-		}
+		// uni.hideTabBarRedDot({
+		//   index: 2
+		// })
+		// uni.hideTabBarRedDot({
+		//   index: 3
+		// })
+		// if(res.homework_count && res.homework_count > 0) {
+		// 	uni.showTabBarRedDot({
+		// 	   index: 2,
+		// 	})
+		// }
+		// var ucenterCount= parseInt(res.evaluate_count) + parseInt ( res.grade_count );
+		// if( ucenterCount > 0) {
+		// 	uni.showTabBarRedDot({
+		// 	   index: 3,
+		// 	})
+		// }
 		cb && cb(res)
 	})
 }
@@ -529,8 +529,8 @@ export {
 	handleResponseMsg,
 	rmoney,
 	getRequestHeader,
-	getRedpoint,
 	setAccessToken,
 	getAccessToken,
 	removeAccessToken,
+	getRedpoint,
 }

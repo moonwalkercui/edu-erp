@@ -43,9 +43,9 @@
 		data() {
 			return {
 				showTerm: false,
-				username: '15666323771',
-				password: '123',
-				relation: 'self',
+				username: '',
+				password: '',
+				relation: '',
 				acid: '',
 			}
 		},

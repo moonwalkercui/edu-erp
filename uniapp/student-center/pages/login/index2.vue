@@ -35,7 +35,7 @@ export default {
 	data() {
 		return {
 			username: '15666323771',
-			password: '123',
+			password: '111111',
 			redirectUrl: '',
 			inWeixin: false,
 		}

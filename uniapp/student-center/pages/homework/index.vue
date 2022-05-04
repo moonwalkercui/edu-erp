@@ -31,7 +31,6 @@
 			this.handleReq()
 		},
 		onShow() {
-			this.$common.getRedpoint()
 		},
 		methods: {
 			handleReq() {

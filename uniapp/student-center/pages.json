@@ -10,6 +10,12 @@
 			}
 		},
 		{
+			"path": "pages/shop/index",
+			"style": {
+				"navigationBarTitleText": "在线购课"
+			}
+		},
+		{
 			"path": "pages/lesson/index",
 			"style": {
 				"navigationBarTitleText": "课次列表"
@@ -42,7 +48,13 @@
 		{
 			"path": "pages/center/contract-record",
 			"style": {
-				"navigationBarTitleText": "购买记录"
+				"navigationBarTitleText": "报名记录"
+			}
+		},
+		{
+			"path": "pages/center/classes",
+			"style": {
+				"navigationBarTitleText": "我的班级"
 			}
 		},
 		{
@@ -154,6 +166,15 @@
 				"navigationBarTitleText": "发布作业"
 			}
 		}
+        ,{
+            "path" : "pages/lesson/trial",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "试听卡",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -181,10 +202,10 @@
 				"selectedIconPath": "static/c1.png",
 				"text": "课表"
 			}, {
-				"pagePath": "pages/homework/index",
+				"pagePath": "pages/shop/index",
 				"iconPath": "static/w2.png",
 				"selectedIconPath": "static/w1.png",
-				"text": "作业"
+				"text": "选课"
 			}, {
 				"pagePath": "pages/center/index",
 				"iconPath": "static/me2.png",

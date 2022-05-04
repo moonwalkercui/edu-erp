@@ -28,9 +28,9 @@ public class SmsManagerImpl implements SmsManager {
 //    @Autowired
 //    private Cache cache;
 
-    private static final String ALI_ACCESS_KEY = "LTAI5tLMp6QxQsNjMJHUq2T9";
-    private static final String ALI_ACCESS_SECRET = "Hi3FtFZ32s0IBbi6KicKeeGuZlwu9t";
-    private static final String ALI_SIGN_NAME = "双惠德";
+    private static final String ALI_ACCESS_KEY = "";
+    private static final String ALI_ACCESS_SECRET = "";
+    private static final String ALI_SIGN_NAME = "";
     private static final String ALI_REGION_ID = "cn-hangzhou";
 
 //    @Autowired
