@@ -15,6 +15,9 @@ logging:
     root: warn
 
 system:
+  # 前端的站点网址
   domain: http://erp2.hzb-it.com
-  staticDir: /eduerpdata/static/
+  # 前端站点的存放目录,本目录用于图片等资源上传
+  staticDir: /www/wwwroot/com/
+  # 日志存放目录
   logDir: /eduerpdata/logs/

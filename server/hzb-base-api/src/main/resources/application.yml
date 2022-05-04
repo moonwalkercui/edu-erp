@@ -5,7 +5,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: demo
   jackson:
     time-zone: CST
   application:
@@ -80,16 +80,16 @@ system:
   isDemo: false
   # 带http的域名
   domain:
-  # 静态文件目录
+  # 静态文件存放目录 即前端站点的存放目录
   staticDir:
-  # 日志文件夹
+  # 日志存放目录
   logDir:
   # 上传文件夹
   uploadDir: ${system.staticDir}uploads/
   # 上传图片最大size 10MB
   uploadImgMaxSize: 10485760
-  # 上传文件src路径前缀
-  uploadFileUrlPrefix: ${system.domain}/app/static/uploads/
+  # 上传文件后返回的静态资源src前缀，原来是通过springboot获取${system.domain}/app/static/uploads/，新版本改为通过前端同一目录下获取静态资源
+  uploadFileUrlPrefix: ${system.domain}/uploads/
   # 刷新token秒数 离token过期前秒数
   jwtTokenRefreshSec: 14400
   # token过期秒数
@@ -112,7 +112,6 @@ system:
     - /wx/portal/**
     - /wx/login/**
     - /wx/jsapi/**
-    #    - /wx/menu/**
   # 黑名单的ip,禁止访问该系统
   blackList:
   #  - 127.0
