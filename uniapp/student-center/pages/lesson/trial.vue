@@ -2,39 +2,87 @@
 	<view>
 		<uni-nav-bar left-icon="arrow-left" right-icon="reload" title="领取试听卡" @clickLeft="clickLeft"
 			@clickRight="clickRight" />
-		<view class="u-m-t-20">
-			<u-divider bg-color="#f4f4f4" :font-size="12">领取试听卡后可以到课表中预约课程</u-divider>
-		</view>
-		<view class="u-margin-30 bg-white boder-radius-md">
-			<view class="meituan" v-for="(item,index) in list" :key="index">
-				<view class="content">
-					<view class="left">
-						<view class="sum">
-							<text class="num">1</text>次
+
+		<u-subsection :list="nav" :current="currentNav" @change="changeNav"></u-subsection>
+		<view v-if="currentNav === 0">
+			<view class="u-m-t-20">
+				<u-divider bg-color="#f4f4f4" :font-size="12">领取试听卡后可以到课表中预约课程</u-divider>
+			</view>
+			<view class="u-margin-30 bg-white boder-radius-md">
+				<view class="meituan" v-for="(item,index) in list" :key="index">
+					<view class="content">
+						<view class="left">
+							<view class="sum">
+								<text class="num">1</text>次
+							</view>
+							<view class="type">
+								<u-tag text="试听卡" type="warning" shape="circle" />
+							</view>
 						</view>
-						<view class="type">试听卡</view>
+						<view class="center">
+							<view class="title">名师钢琴课XXX</view>
+							<view class="valid-date">剩余: 15</view>
+							<view class="valid-date">有效期: 2022.05.05</view>
+						</view>
+						<view class="right">
+							<!-- <view size="mini" class="immediate-use" :round="true">立即领取</view> -->
+							<view size="mini" class="immediate-use none" :round="true">已领完</view>
+						</view>
 					</view>
-					<view class="center">
-						<view class="title">名师钢琴课</view>
-						<view class="valid-date">头像</view>
-						<view class="valid-date">余量: 15</view>
-					</view>
-					<view class="right">
-						<view size="mini" class="immediate-use" :round="true">立即领取</view>
+					<view class="tips">
+						<view class="circle-left"></view>
+						<view class="circle-right"></view>
+						<view>名额有限、领完为止</view>
+						<view class="rule" @tap="xxx122">
+							<text>查看规则</text>
+							<u-icon name="arrow-right" color="" :size="20" @click="showRule"></u-icon>
+						</view>
 					</view>
 				</view>
-				<view class="tips">
-					<view class="circle-left"></view>
-					<view class="circle-right"></view>
-					<view>有效期: 2022-05-30</view>
-					<view class="rule" @tap="xxx122">
-						<text>查看规则</text>
-						<u-icon name="arrow-right" color="" :size="20" @click="showRule"></u-icon>
-					</view>
+				<view class="u-p-40" v-if="list.length === 0">
+					<u-empty text="暂无试听卡" mode="list"></u-empty>
 				</view>
 			</view>
 		</view>
-	
+
+		<view v-if="currentNav === 1">
+			<view class="u-margin-30 bg-white boder-radius-md">
+				<view class="meituan" v-for="(item,index) in myList" :key="index">
+					<view class="content">
+						<view class="left">
+							<view class="sum">
+								<text class="num">1</text>次
+							</view>
+							<view class="type">
+								<u-tag text="试听卡" type="warning" shape="circle" />
+							</view>
+						</view>
+						<view class="center">
+							<view class="title">名师钢琴课XXX</view>
+							<view class="valid-date">剩余: 15</view>
+							<view class="valid-date">有效期: 2022.05.05</view>
+						</view>
+						<view class="right">
+							<!-- <view size="mini" class="immediate-use" :round="true">立即领取</view> -->
+							<view size="mini" class="immediate-use none" :round="true">已领完</view>
+						</view>
+					</view>
+					<view class="tips">
+						<view class="circle-left"></view>
+						<view class="circle-right"></view>
+						<view>名额有限、领完为止</view>
+						<view class="rule" @tap="xxx122">
+							<text>查看规则</text>
+							<u-icon name="arrow-right" color="" :size="20" @click="showRule"></u-icon>
+						</view>
+					</view>
+				</view>
+				<view class="u-p-40" v-if="myList.length === 0">
+					<u-empty text="未领取试听卡" mode="list"></u-empty>
+				</view>
+			</view>
+		</view>
+
 	</view>
 </template>
 
@@ -42,15 +90,30 @@
 	export default {
 		data() {
 			return {
-				list: [1,2,3,4],
+				nav: [{
+						name: '未领取'
+					},
+					{
+						name: '已领取'
+					}
+				],
+				currentNav: 0,
+				list: [1, 2, 3, 4],
+				myList: [],
 			}
 		},
 		onLoad() {
-			// this.handleReq()
+			this.handleReq()
 		},
 		methods: {
-			showRule() {
+			handleReq() {
 				
+			},
+			showRule() {
+
+			},
+			changeNav(index) {
+				this.currentNav = index;
 			},
 			clickRight() {
 				this.list = [];
@@ -76,10 +139,10 @@
 
 	.meituan {
 		background-color: #ffffff;
-		width: 700rpx;
-		// border: 10rpx;
+		width: 100%;
 		color: $u-type-warning;
 		font-size: 28rpx;
+
 		.content {
 			display: flex;
 			align-items: center;
@@ -87,12 +150,15 @@
 			border-top: 4rpx dashed #ffffff;
 			background-color: #ff9900;
 			color: #ffffff;
+
 			.left {
 				flex: 1;
 				text-align: center;
+
 				.sum {
 					font-size: 28rpx;
 					font-weight: bold;
+
 					.num {
 						font-size: 60rpx;
 						font-weight: bold;
@@ -104,19 +170,22 @@
 				flex: 2;
 				margin-left: 40rpx;
 				color: #ffffff;
+
 				.title {
 					font-size: 32rpx;
 					font-weight: bold;
 					color: $u-main-color;
 					margin-bottom: 20rpx;
 				}
-				.valid-date{
-					font-size: 26rpx;
+
+				.valid-date {
+					font-size: 24rpx;
 				}
 			}
 
 			.right {
 				margin-left: 30rpx;
+
 				.immediate-use {
 					padding: 0 20rpx;
 					height: 50rpx;
@@ -127,6 +196,11 @@
 					font-size: 24rpx;
 					border: none;
 					word-break: keep-all;
+
+					&.none {
+						background-color: #999999;
+						color: #ffffff;
+					}
 				}
 			}
 		}
@@ -174,5 +248,4 @@
 			}
 		}
 	}
-
 </style>

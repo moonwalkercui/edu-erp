@@ -21,6 +21,8 @@
 			</view>
 		</view>
 		
+		<u-count-to :start-val="30" :end-val="500"></u-count-to>
+		
 		<view class="u-m-t-20">
 			<u-cell-group>
 				<u-cell-item icon="heart-fill" :icon-style="{color: '#ff745b'}" title="报名记录" @click="contractrecord"></u-cell-item>
