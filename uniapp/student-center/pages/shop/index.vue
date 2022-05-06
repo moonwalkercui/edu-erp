@@ -10,7 +10,7 @@
 	</view>
 </template>
 <script>
-	import courseList from './courseList.vue'
+	import courseList from './components/courseList.vue'
 	export default {
 		components: {
 			courseList

@@ -12,13 +12,20 @@
 		{
 			"path": "pages/shop/courseDetail",
 			"style": {
-				"navigationBarTitleText": "课程详情"
+				"navigationBarTitleText": "课程详情",
+				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/shop/index",
 			"style": {
 				"navigationBarTitleText": "在线购课"
+			}
+		},
+		{
+			"path": "pages/shop/comment",
+			"style": {
+				"navigationBarTitleText": "课程评价"
 			}
 		},
 		{
