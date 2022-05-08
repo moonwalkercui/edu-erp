@@ -1,8 +1,8 @@
 package com.hzb.erp.adminCenter.controller;
 
 
-import com.hzb.erp.annotation.Log;
-import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.base.annotation.Log;
+import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.configuration.SystemConfig;
 import com.hzb.erp.common.entity.StaffOrginfo;
 import com.hzb.erp.common.entity.Student;
@@ -23,7 +23,7 @@ import com.hzb.erp.common.service.UserService;
 import com.hzb.erp.security.Util.SecurityUtils;
 import com.hzb.erp.security.Util.UserAuthUtil;
 import com.hzb.erp.service.ImportExportService;
-import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.service.enums.SettingNameEnum;
 import com.hzb.erp.utils.*;
 import io.swagger.annotations.Api;

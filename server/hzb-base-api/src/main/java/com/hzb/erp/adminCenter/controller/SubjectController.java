@@ -1,8 +1,8 @@
 package com.hzb.erp.adminCenter.controller;
 
 
-import com.hzb.erp.annotation.Log;
-import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.base.annotation.Log;
+import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.pojo.dto.CommonParamDTO;
 import com.hzb.erp.common.pojo.dto.SubjectSaveDTO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;

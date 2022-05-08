@@ -1,14 +1,14 @@
 package com.hzb.erp.adminCenter.controller;
 
 
-import com.hzb.erp.annotation.Log;
+import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.common.enums.FinanceStateEnum;
 import com.hzb.erp.common.enums.FinanceTypeEnum;
 import com.hzb.erp.common.pojo.dto.FinanceParamDTO;
 import com.hzb.erp.common.pojo.dto.IdsAndContentDTO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
 import com.hzb.erp.common.service.FinanceRecordService;
-import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.utils.EnumTools;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;

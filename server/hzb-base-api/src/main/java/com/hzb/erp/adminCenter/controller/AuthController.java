@@ -3,7 +3,7 @@ package com.hzb.erp.adminCenter.controller;
 import com.hzb.erp.common.entity.rbac.SysRole;
 import com.hzb.erp.common.service.RbacService;
 import com.hzb.erp.security.Util.JwtUserDetails;
-import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;

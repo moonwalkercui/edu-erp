@@ -1,7 +1,7 @@
 package com.hzb.erp.adminCenter.controller;
 
-import com.hzb.erp.annotation.Log;
-import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.base.annotation.Log;
+import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.pojo.dto.AdvertisementParamDTO;
 import com.hzb.erp.common.pojo.dto.AdvertisementSaveDTO;
 import com.hzb.erp.common.service.AdvertisementService;

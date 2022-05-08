@@ -2,7 +2,7 @@ package com.hzb.erp.adminCenter.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.hzb.erp.annotation.Log;
+import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.common.entity.Holiday;
 import com.hzb.erp.common.service.HolidayService;
 import com.hzb.erp.utils.JsonResponse;

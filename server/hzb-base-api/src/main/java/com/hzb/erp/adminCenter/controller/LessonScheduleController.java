@@ -1,8 +1,8 @@
 package com.hzb.erp.adminCenter.controller;
 
 
-import com.hzb.erp.annotation.Log;
-import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.base.annotation.Log;
+import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.entity.LessonSchedule;
 import com.hzb.erp.common.entity.LessonScheduleSetting;
 import com.hzb.erp.common.enums.LessonTypeEnum;
