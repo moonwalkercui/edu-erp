@@ -1,4 +1,75 @@
-## 数据增量变动sql 20220425
+## 数据增量变动sql
+- 2022.5.8 在线购课
+
+```
+ALTER TABLE `course` ADD COLUMN `for_sale` tinyint(1) NULL DEFAULT 0 COMMENT '是否上架中';
+ALTER TABLE `course` ADD COLUMN `recommend` tinyint(1) NULL DEFAULT 0 COMMENT '是否推荐';
+ALTER TABLE `course` ADD COLUMN `cover` varchar(255) NULL COMMENT '封面';
+ALTER TABLE `course` ADD COLUMN `close_date` date NULL DEFAULT NULL COMMENT '报名截止日期';
+ALTER TABLE `course` ADD COLUMN `teacher_info` varchar(255) NULL COMMENT '师资信息';
+ALTER TABLE `course` ADD COLUMN `service_info` varchar(255) NULL COMMENT '服务说明';
+ALTER TABLE `subject` ADD COLUMN `sort_num` int NULL DEFAULT 0 COMMENT '排序值';
+
+
+
+-- ----------------------------
+-- Table structure for course_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `course_comment`;
+CREATE TABLE `course_comment`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `course_id` bigint(20) UNSIGNED NOT NULL COMMENT '所属课程',
+  `student_id` bigint(20) UNSIGNED NOT NULL COMMENT '学生id',
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '章节标题',
+  `score` tinyint(4) NULL DEFAULT 5 COMMENT '打分',
+  `state` tinyint(1) NULL DEFAULT 0 COMMENT '发布状态',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `course_id`(`course_id`) USING BTREE,
+  INDEX `student_id`(`student_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程评价' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for course_images
+-- ----------------------------
+DROP TABLE IF EXISTS `course_image`;
+CREATE TABLE `course_images`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `course_id` bigint(20) UNSIGNED NOT NULL COMMENT '所属课程',
+  `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '图片地址',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程介绍图片' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for course_section
+-- ----------------------------
+DROP TABLE IF EXISTS `course_section`;
+CREATE TABLE `course_section`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `course_id` bigint(20) UNSIGNED NOT NULL COMMENT '所属课程',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '章节标题',
+  `lesson_count` int(10) NOT NULL COMMENT '计划课时数',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程大纲' ROW_FORMAT = Dynamic;
+
+
+```
+
+## 数据增量变动sql
 - 2022.4.25 实现预约功能
 - 2022.3.28 实现系统设置管理定时任务
 - 2022.3.17 实现微信配置的数据库存储

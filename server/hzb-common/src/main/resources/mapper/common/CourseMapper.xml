@@ -30,6 +30,9 @@
             <if test="param.subjectId !=null ">
                 AND t1.subject_id = #{param.subjectId}
             </if>
+            <if test="param.recommend !=null ">
+                AND t1.recommend = #{param.recommend}
+            </if>
             <if test="param.linkId !=null ">
                 AND t1.id in (select linked_id from course_link where course_id = #{param.linkId})
             </if>
@@ -46,6 +49,9 @@
                 AND t1.name like concat('%', #{param.name}, '%')
             </if>
 
+            <if test="param.forSale !=null and param.forSale">
+                AND t1.for_sale = 1 and ((t1.close_date is not null and t1.close_date >= CURDATE()) or t1.close_date is null)
+            </if>
             AND t1.deleted != 1
         </where>
         order by t1.id desc

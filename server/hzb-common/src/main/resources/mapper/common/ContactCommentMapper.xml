@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.CourseCommentMapper">
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.CourseCommentVO">
+        select t1.id,t1.course_id, t1.content, t1.add_time, t1.score, t2.name as student_name, t2.head_img, t2.name course_name
+        from course_comment t1
+        left join student t2 on t1.student_id = t2.id
+        left join course t3 on t3.id = t1.course_id
+        <where>
+            <if test="param.courseId != null">
+                t1.course_id = #{param.courseId}
+            </if>
+            <if test="param.state != null">
+                AND t1.state = #{param.state}
+            </if>
+            AND t1.deleted != 1
+        </where>
+        order by t1.id desc
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+    </select>
+</mapper>

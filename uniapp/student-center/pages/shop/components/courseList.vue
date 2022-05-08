@@ -1,19 +1,25 @@
 <template>
 	<view>
-		<view class="u-margin-30 u-p-20 bg-white boder-radius-md u-flex" v-for="(item,index) in list" :key="index" @click="showDetail(item)">
-			<view style="width: 35%;" class="u-p-r-20" v-if="item.img">
-				<u-image width="100%" height="200rpx" :src="item.img"></u-image>
+		<view class="u-margin-30 u-p-20 bg-white boder-radius-md u-flex" v-for="(item,index) in list" :key="index" @click="showDetail(item.id)">
+			<view style="width: 35%;" class="u-p-r-20" v-if="item.cover">
+				<u-lazy-load height="200" :image="item.cover"></u-lazy-load>
 			</view>
 			<view class="u-flex-1 u-font-13">
-				<view> <text class="u-font-md text-bold u-m-r-10">{{item.title}} </text><u-tag :text="item.type" type="warning" size="mini" /></view>
+				<view>
+					<u-tag :text="item.lessonType" type="warning" size="mini" v-if="item.lessonType=='大班课'" />
+					<u-tag :text="item.lessonType" type="error" size="mini" v-if="item.lessonType=='小班课'" />
+					<u-tag :text="item.lessonType" type="success" size="mini" v-if="item.lessonType=='一对一'" />
+					<text class="u-font-md text-bold u-m-l-10">{{item.name}}</text>
+				</view>
 			<!-- 	<view class="u-m-t-10">
 					<u-tag :text="item.type" type="warning" size="mini" />
 				</view> -->
-				<view class="u-m-t-10 text-gray">难度: 五颗星</view>
-				<view class="u-m-t-10 text-gray">2022年5月1日-5月20日 · 五年级</view>
+				<view class="u-m-t-10 text-gray">{{item.lessonCount}}课时 · {{item.expireMonths}}个月有效期 </view>
+				<view class="u-m-t-10 text-gray">{{item.closeDate ? '报名截至日 ' + item.closeDate : ''}}</view>
 				<view class="u-flex u-m-t-10">
 					<view class="u-flex-2">
-						<u-avatar v-for="(tea,ind) in item.teachers" :key="ind" :src="item.img" size="48" class="u-m-r-10"></u-avatar>
+						<!-- <u-avatar v-for="(tea,ind) in item.teachers" :key="ind" :src="item.img" size="48" class="u-m-r-10"></u-avatar> -->
+						{{item.teacherInfo}}
 					</view>
 					<view class="u-flex-1 u-text-right" style="color: #ff6600;">
 						￥<text class="u-font-16 text-bold">{{item.price}}</text>
@@ -22,58 +28,51 @@
 			</view>
 		</view>
 		
-		<u-divider bg-color="#f3f4f6">没有更多了</u-divider>
+		<view class="u-padding-30 bg-white" v-if="list.length == 0">
+			<u-empty mode="list" text="~ 暂无课程 敬请期待 ~"></u-empty>
+		</view>
+		
 	</view>
 </template>
 
 <script>
+	import paginateMix from "@/mixins/paginateMixins.js"
 	export default {
+		mixins: [paginateMix],
 		data() {
 			return {
-				list: [{
-					title: '现货 原创jk制服',
-					img: '//img13.360buyimg.com/n7/jfs/t1/103005/7/17719/314825/5e8c19faEb7eed50d/5b81ae4b2f7f3bb7.jpg',
-					type: '小班课',
-					deliveryTime: '付款后7天内发货',
-					price: '128.05',
-					number: 1,
-					teachers: [1, 2, 3]
-				},
-				{
-					title: '现货 原创jk制服',
-					img: '',
-					type: '小班课',
-					deliveryTime: '付款后7天内发货',
-					price: '128.05',
-					number: 1,
-					teachers: [1, 2, 3]
-				},
-				{
-					title: '现货 原创jk制服',
-					img: '//img13.360buyimg.com/n7/jfs/t1/103005/7/17719/314825/5e8c19faEb7eed50d/5b81ae4b2f7f3bb7.jpg',
-					type: '小班课',
-					deliveryTime: '付款后7天内发货',
-					price: '128.05',
-					number: 1,
-					teachers: [1, 2, 3]
-				},
-				{
-					title: '现货 原创jk制服',
-					img: '//img13.360buyimg.com/n7/jfs/t1/103005/7/17719/314825/5e8c19faEb7eed50d/5b81ae4b2f7f3bb7.jpg',
-					type: '小班课',
-					deliveryTime: '付款后7天内发货',
-					price: '128.05',
-					number: 1,
-					teachers: [1, 2, 3]
-				}],
+				recommend: '',
+				subjectId: '',
+				list: [],
 			}
 		},
 		methods: {
-			
-			showDetail() {
+			showDetail(id) {
 				uni.navigateTo({
-					url: '/pages/shop/courseDetail'
+					url: '/pages/shop/courseDetail?id=' + id
 				});
+			},
+			handleReq() {
+				this.$http.get('sCenter/shop/list', {
+					subjectId: this.subjectId,
+					recommend: this.recommend,
+					page: this.pageData.page
+				}, res => {
+					if(!res) return;
+					if (!this.$common.handleResponseMsg(res)) return;
+					this.list = this.list.concat(res.records)
+					this.pageData.page = parseInt(res.page);
+					this.pageData.lastPage = parseInt(res.pageCount);
+				})
+			},
+			handleReload(param) {
+				if(param) {
+					this.recommend = param.recommend
+					this.subjectId = param.subjectId
+				}
+				this.list = []
+				this.pageData.page = 1
+				this.handleReq()
 			}
 		}
 	}

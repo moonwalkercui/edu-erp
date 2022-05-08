@@ -3,10 +3,10 @@
 		<uni-nav-bar left-icon="arrow-left" right-icon="reload" title="在线购课" @clickLeft="clickLeft"
 			@clickRight="clickRight" />
 
-		<u-tabs name="cate_name" count="cate_count" :list="list" active-color="#2ac79f" inactive-color="#606266"
+		<u-tabs count="count" :list="tabs" active-color="#2ac79f" inactive-color="#606266"
 			font-size="30" :current="current" @change="change"></u-tabs>
-		<courseList/>
-		
+		<courseList ref="courseList" />
+
 	</view>
 </template>
 <script>
@@ -17,36 +17,51 @@
 		},
 		data() {
 			return {
-				list: [{
+				tabs: [{
 					name: '推 荐'
-				}, {
-					name: '语 文'
-				}, {
-					name: '数 学',
-				}, {
-					name: '英 语',
-				}, {
-					name: '物 理',
-				}, {
-					name: '生 物',
 				}],
-				current: 0
+				current: 0,
+				selectId: '',
 			}
 		},
 		onLoad() {
+			this.getSubjectList()
+		},
+		onReachBottom() {
+			this.$refs.courseList.handleReachBottom()
 		},
 		onReady() {},
 		methods: {
+			getSubjectList() {
+				this.$http.get('sCenter/shop/subjectlist', {}, res => {
+					if (!this.$common.handleResponseMsg(res)) return;
+					var navData = [{
+						id: '',
+						name: '推 荐'
+					}];
+					for(const item of res.data) {
+						navData.push({
+							id: item.id,
+							name: item.name,
+							count: 1
+						});
+					}
+					this.tabs = navData
+				})
+			},
 			change(index) {
 				this.current = index;
+				this.selectId = this.tabs[index].id;
+				this.handelReq()
 			},
-			handleReq() {
-
+			handelReq() {
+				this.$refs.courseList.handleReload({
+					recommend: this.current == 0 ? 1 : "",
+					subjectId: this.current == 0 ? '' : this.selectId
+				});
 			},
 			clickRight() {
-				this.list = [];
-				this.pageData.page = 1
-				this.handleReq()
+				this.$refs.courseList.handleReload();
 			},
 			clickLeft() {
 				uni.navigateBack()

@@ -7,22 +7,28 @@
 			</view>
 		</u-sticky>
 		<u-back-top :scroll-top="scrollTop" top="600"></u-back-top>
-		<view class="arrow-back">
+		<view class="arrow-back" @click="handleBack">
 			<u-icon name="arrow-left" color="#dddddd" size="36"></u-icon>
 		</view>
 
-		<u-image width="100%" height="400rpx" :src="info.img"></u-image>
+		<u-image width="100%" height="400rpx" :src="info.cover"></u-image>
 		<view class="u-p-30 bg-white u-border-bottom">
-			<view class="u-font-13">
-				<view> <text class="u-font-md text-bold u-m-r-10">{{info.title}} </text>
-					<u-tag :text="info.type" type="warning" size="mini" />
+			<view class="u-flex-1 u-font-13">
+				<view>
+					<u-tag :text="info.lessonType" type="warning" size="mini" v-if="info.lessonType=='大班课'" />
+					<u-tag :text="info.lessonType" type="error" size="mini" v-if="info.lessonType=='小班课'" />
+					<u-tag :text="info.lessonType" type="success" size="mini" v-if="info.lessonType=='一对一'" />
+					<text class="u-font-md text-bold u-m-l-10">{{info.name}}</text>
 				</view>
-				<view class="u-m-t-10 text-gray">难度: 五颗星</view>
-				<view class="u-m-t-10 text-gray">2022年5月1日-5月20日 · 五年级</view>
+			<!-- 	<view class="u-m-t-10">
+					<u-tag :text="info.type" type="warning" size="mini" />
+				</view> -->
+				<view class="u-m-t-10 text-gray">{{info.lessonCount}}课时 · {{info.expireMonths}}个月有效期 </view>
+				<view class="u-m-t-10 text-gray">{{info.closeDate ? '报名截至日 ' + info.closeDate : ''}}</view>
 				<view class="u-flex u-m-t-10">
 					<view class="u-flex-2">
-						<u-avatar v-for="(tea,ind) in info.teachers" :key="ind" :src="info.img" size="48"
-							class="u-m-r-10"></u-avatar>
+						<!-- <u-avatar v-for="(tea,ind) in info.teachers" :key="ind" :src="info.img" size="48" class="u-m-r-10"></u-avatar> -->
+						{{info.teacherInfo}}
 					</view>
 					<view class="u-flex-1 u-text-right" style="color: #ff6600;">
 						￥<text class="u-font-16 text-bold">{{info.price}}</text>
@@ -30,58 +36,57 @@
 				</view>
 			</view>
 		</view>
-		<view class="u-p-30 bg-white text-mini u-border-bottom">
-			<u-tag text="服务" type="warning" size="mini" /><text class="u-m-l-10">自主调班、支持退课、及时答疑</text>
+		<view class="u-p-30 u-m-b-10 bg-white text-mini u-border-bottom">
+			<u-tag text="服务" type="warning" size="mini" /><text class="u-m-l-10">{{info.serviceInfo ? info.serviceInfo : '名师指导、专业教育、快乐学习'}}</text>
 		</view>
+		<!-- 老师 -->
+		<!-- <view class="u-p-30 u-m-b-10 bg-white u-flex" id="dagang">
+			<view class="u-m-r-30 u-flex" style="width: 260rpx;" v-for="(tea,tindex) in info.teachers" :key="tindex">
+				<view class="u-m-r-10">
+					<u-avatar :src="tea.img"></u-avatar>
+				</view>
+				<view>
+					<view class="u-font-12">王老师</view>
+					<view class="u-font-12 text-gray">班主任</view>
+				</view>
+			</view>
+		</view> -->
 		<!-- 课程大纲 -->
-		<view class="u-p-30 u-p-b-0 bg-white " id="dagang">
-			<view class=" u-p-b-20 u-font-md u-flex">
+		<view class="u-p-30 u-p-b-0 bg-white" id="dagang">
+			<view class="u-font-md u-flex">
 				<view class="u-flex-3 text-bold">课程大纲</view>
 				<view class="u-flex-1 u-text-right text-mini text-gray ">共18课时</view>
 			</view>
-			<view class="u-padding-bottom-20 ">
-				<u-cell-group>
-					<u-cell-item v-for="(sec,secInd) in sections" :key="secInd">
-						<view slot="title" class="text-black">想象写作</view>
-						<view slot="label">
-							<text class="text-mini"> 5月27日 周五 18:00</text>
-						</view>
-						<view></view>
-					</u-cell-item>
-
-				</u-cell-group>
-			</view>
+		</view>
+		<view class="u-m-b-10">
+			<u-cell-group>
+				<u-cell-item v-for="(sec,secInd) in sectionList" :key="secInd" :arrow="false">
+					<view slot="title" style="max-width: 520rpx;">{{sec.title}}</view>
+					<view slot="label">第{{secInd+1}}部分</view>
+					<text class="text-mini" style="min-width: 80rpx;"> {{sec.lessonCount}}节 </text>
+				</u-cell-item>
+			</u-cell-group>
 		</view>
 		<!-- 评价 -->
-		<view class="bg-white">
+		<view class="bg-white u-m-b-10">
 			<view class="u-p-30 u-p-b-0 u-font-md u-flex u-border-bottom" id="pingjia">
 				<view class="u-flex-3 text-bold">课程评价(1002)</view>
 				<view class="u-flex-1 u-text-right text-mini text-orange">好评率 97%</view>
 			</view>
-			<view class="comment " v-for="(res, index) in commentList" :key="res.id">
+			<view class="comment " v-for="(com, index) in commentList" :key="com.id">
 				<view class="left">
-					<image :src="res.url" mode="aspectFill"></image>
+					<image :src="com.headImg" mode="aspectFill"></image>
 				</view>
 				<view class="right">
 					<view class="top">
-						<view class="name">{{ res.name }}</view>
-						<view class="like" :class="{ highlight: res.isLike }">
-							<u-icon v-if="res.isLike" name="thumb-up-fill" :size="30" @click="getLike(index)"></u-icon>
+						<view class="name">{{ com.studentName }}</view>
+						<view class="like" >
+							<u-rate :count="5" v-model="com.score" :disabled="true" active-color="#ffaa00" inactive-color="#dfdfdf"></u-rate>
 						</view>
 					</view>
-					<view class="content">{{ res.contentText }}</view>
-					<view class="reply-box">
-						<view class="item" v-for="(item, index) in res.replyList" :key="item.index">
-							<view class="username">{{ item.name }}</view>
-							<view class="text">{{ item.contentStr }}</view>
-						</view>
-						<view class="all-reply" @tap="toAllReply" v-if="res.replyList != undefined">
-							共{{ res.allReply }}条回复
-							<u-icon class="more" name="arrow-right" :size="26"></u-icon>
-						</view>
-					</view>
+					<view class="content">{{ com.content }}</view>
 					<view class="bottom">
-						{{ res.date }}
+						{{ com.addDate }}
 					</view>
 				</view>
 			</view>
@@ -93,32 +98,11 @@
 		</view>
 		<!-- 课程详情 -->
 		<view class="bg-white " id="xiangqing">
-			<view class="u-p-l-30 u-p-r-30 u-p-b-20 u-font-md u-flex u-border-bottom">
+			<view class="u-p-30 u-p-b-20 u-font-md u-flex u-border-bottom">
 				<view class="u-flex-3 text-bold">课程详情</view>
 			</view>
-			<view class="u-padding-bottom-20 ">
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
-				<u-image width="100%" height="750rpx" :src="info.img"></u-image>
+			<view class="u-padding-bottom-20" style="line-height: 0;">
+				<image v-for="(img, imageIndex) in info.imageList" :key="imageIndex" mode="widthFix" style="width: 100%; height: auto;" :src="img.imageUrl"></u-image>
 			</view>
 		</view>
 
@@ -129,17 +113,10 @@
 	export default {
 		data() {
 			return {
+				id: '',
 				scrollTop: 0,
 				navOpacity: 0,
-				info: {
-					title: '现货 原创jk制服',
-					img: '//img13.360buyimg.com/n7/jfs/t1/103005/7/17719/314825/5e8c19faEb7eed50d/5b81ae4b2f7f3bb7.jpg',
-					type: '小班课',
-					deliveryTime: '付款后7天内发货',
-					price: '128.05',
-					number: 1,
-					teachers: [1, 2, 3]
-				},
+				info: {},
 				list: [{
 					name: '课程'
 				}, {
@@ -150,24 +127,9 @@
 					name: '详情',
 				}],
 				current: 0,
-				sections: [1, 2, 2, 2, 2, 2, 2, 2, 2],
 
-				commentList: [{
-						id: 1,
-						name: '叶轻眉',
-						date: '12-25 18:58',
-						contentText: '我不信伊朗会没有后续反应，美国肯定会为今天的事情付出代价的',
-						url: 'https://cdn.uviewui.com/uview/template/SmilingDog.jpg',
-					},
-					{
-						id: 2,
-						name: '叶轻眉1',
-						date: '01-25 13:58',
-						contentText: '我不信伊朗会没有后续反应，美国肯定会为今天的事情付出代价的',
-						url: 'https://cdn.uviewui.com/uview/template/niannian.jpg',
-					}
-				],
-
+				sectionList: [],
+				commentList: [],
 
 				elIdNames: ['dingbu', 'dagang', 'pingjia', 'xiangqing'],
 				elTop: [0, 0, 0, 0],
@@ -175,21 +137,29 @@
 		},
 		onPageScroll(e) {
 			this.handlePageScroll(e)
-
 		},
-		onLoad() {
-			setTimeout(() => {
-				this.getElTops();
-			}, 500)
+		onLoad(option) {
+			this.id = option.id
+			this.handleRequest();
 		},
 		methods: {
 
-			moreComment() {
-				uni.navigateTo({
-					url: '/pages/shop/comment'
+			handleRequest() {
+				this.$http.get('sCenter/shop/courseInfo', {
+					id: this.id,
+				}, res => {
+					this.info = res.data
+					this.commentList = res.data.commentList
+					this.sectionList = res.data.sectionList
+					this.getElTops();
 				})
 			},
-
+			
+			moreComment() {
+				uni.navigateTo({
+					url: '/pages/shop/comment?courseId=' + this.id
+				})
+			},
 
 			// 以下是视图方法
 			async getElTops() {
@@ -226,7 +196,9 @@
 				this.current = index;
 				this.scrollEl(this.elIdNames[index])
 			},
-
+			handleBack() {
+				uni.navigateBack()
+			}
 		}
 	}
 </script>

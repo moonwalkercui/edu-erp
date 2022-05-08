@@ -11,7 +11,7 @@
             </if>
             AND t1.deleted != 1
         </where>
-        order by t1.id desc
+        order by sort_num desc, t1.id desc
     </select>
 
 </mapper>

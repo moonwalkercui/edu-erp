@@ -28,13 +28,17 @@
 </template>
 
 <script>
+	import paginateMix from "@/mixins/paginateMixins.js"
 	export default {
+		mixins: [paginateMix],
 		data() {
 			return {
+				courseId: '',
 				commentList: []
 			};
 		},
-		onLoad() {
+		onLoad(option) {
+			this.courseId = option.courseId
 			this.handleReq();
 		},
 		methods: {
@@ -47,6 +51,15 @@
 
 			// 评论列表
 			handleReq() {
+				this.$http.get('sCenter/shop/commentList', {
+					id: this.id,
+				}, res => {
+					// if(!res) return;
+					// if (!this.$common.handleResponseMsg(res)) return;
+					// this.list = this.list.concat(res.records)
+					// this.pageData.page = parseInt(res.page);
+					// this.pageData.lastPage = parseInt(res.pageCount);
+				})
 				this.commentList = [{
 						id: 1,
 						name: '叶轻眉',

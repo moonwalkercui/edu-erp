@@ -1,5 +1,6 @@
 package com.hzb.erp.common.pojo.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hzb.erp.common.enums.LessonTypeEnum;
 import com.hzb.erp.common.enums.SwitchEnum;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,6 +8,8 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * <p>
@@ -54,4 +57,21 @@ public class CourseVO {
 
     @ApiModelProperty(value = "关联课程数量")
     private String linkCount;
+
+    @ApiModelProperty(value = "是否上架")
+    private Boolean forSale;
+
+    @ApiModelProperty(value = "封面图")
+    private String cover;
+
+    @ApiModelProperty(value = "报名截止日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate closeDate;
+
+    @ApiModelProperty(value = "师资信息")
+    private String teacherInfo;
+
+    @ApiModelProperty(value = "服务说明")
+    private String serviceInfo;
+
 }
