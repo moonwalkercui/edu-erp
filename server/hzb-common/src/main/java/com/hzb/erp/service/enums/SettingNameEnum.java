@@ -50,6 +50,11 @@ public enum SettingNameEnum {
     SMS_SIGN_NAME("sms_sign_name", "短信签名", "", "str"),
 
     /**
+     * 验证码短信模板ID
+     */
+    SMS_CODE_TEMPLATE("sms_code_template", "验证码短信模板ID", "", "str"),
+
+    /**
      * 公众号AppId
      */
     WX_MP_APP_ID("wx_mp_app_id", "公众号AppId", "", "str"),
