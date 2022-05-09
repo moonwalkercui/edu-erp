@@ -1,14 +1,14 @@
 <template>
 	<view id="dingbu">
 		<u-sticky :enable="true" h5-nav-height="0">
-			<view :style="{ opacity: navOpacity }" class="top-tabs">
+			<view :style="{ opacity: navOpacity }" class="top-tabs" v-if="scrollTop>60">
 				<u-tabs :list="list" :is-scroll="false" active-color="#2ac79f" inactive-color="#606266" font-size="24"
 					:current="current" @change="change"></u-tabs>
 			</view>
 		</u-sticky>
 		<u-back-top :scroll-top="scrollTop" top="600"></u-back-top>
 		<view class="arrow-back" @click="handleBack">
-			<u-icon name="arrow-left" color="#dddddd" size="36"></u-icon>
+			<u-icon name="arrow-left" color="#dddddd" size="32"></u-icon>
 		</view>
 
 		<u-image width="100%" height="400rpx" :src="info.cover"></u-image>
@@ -105,12 +105,16 @@
 				<image v-for="(img, imageIndex) in info.imageList" :key="imageIndex" mode="widthFix" style="width: 100%; height: auto;" :src="img.imageUrl"></u-image>
 			</view>
 		</view>
-
+		<submitBar :courseInfo="info"/>
 	</view>
 </template>
 
 <script>
+	import submitBar from './components/submitBar.vue'
 	export default {
+		components: {
+			submitBar
+		},
 		data() {
 			return {
 				id: '',
@@ -141,6 +145,7 @@
 		onLoad(option) {
 			this.id = option.id
 			this.handleRequest();
+		
 		},
 		methods: {
 
@@ -167,7 +172,6 @@
 					const res = await this.$u.getRect('#' + this.elIdNames[i]);
 					this.elTop[i] = res.top
 				}
-				console.log('tops', this.elTop)
 			},
 			scrollEl(elId) {
 				this.$u.getRect('#' + elId).then(res => {
@@ -214,8 +218,8 @@
 
 	.arrow-back {
 		position: absolute;
-		left: 30rpx;
-		top: 100rpx;
+		left: 20rpx;
+		top: 30rpx;
 		z-index: 99;
 	}
 </style>

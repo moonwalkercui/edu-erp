@@ -43,10 +43,11 @@
 						navData.push({
 							id: item.id,
 							name: item.name,
-							count: 1
+							count: 0
 						});
 					}
 					this.tabs = navData
+					this.change(0)
 				})
 			},
 			change(index) {

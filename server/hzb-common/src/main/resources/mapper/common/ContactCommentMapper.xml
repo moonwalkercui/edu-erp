@@ -17,8 +17,8 @@
             AND t1.deleted != 1
         </where>
         order by t1.id desc
-        <if test="limit != null">
-            limit #{limit}
+        <if test="param.limit != null">
+            limit #{param.limit}
         </if>
     </select>
 </mapper>

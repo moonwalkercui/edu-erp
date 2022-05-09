@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hzb.erp.common.entity.CourseComment;
 import com.hzb.erp.common.pojo.dto.CourseCommentParamDTO;
 import com.hzb.erp.common.pojo.vo.CourseCommentVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ public interface CourseCommentMapper extends BaseMapper<CourseComment> {
 
     IPage<CourseCommentVO> getList(Page<Object> objectPage, CourseCommentParamDTO param);
 
-    List<CourseCommentVO> getList(CourseCommentParamDTO param, Integer limit);
+    List<CourseCommentVO> getList(@Param("param") CourseCommentParamDTO param);
 
 }

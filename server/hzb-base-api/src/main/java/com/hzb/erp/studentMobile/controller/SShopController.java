@@ -12,6 +12,7 @@ import com.hzb.erp.common.pojo.dto.CourseCommentParamDTO;
 import com.hzb.erp.common.pojo.dto.CourseParamDTO;
 import com.hzb.erp.common.pojo.vo.CourseSectionVO;
 import com.hzb.erp.common.pojo.vo.CourseVO;
+import com.hzb.erp.common.service.CourseCommentService;
 import com.hzb.erp.common.service.CourseService;
 import com.hzb.erp.common.service.SubjectService;
 import com.hzb.erp.studentMobile.pojo.vo.CourseInfoVO;
@@ -44,6 +45,8 @@ public class SShopController {
     private CourseService courseService;
     @Autowired
     private SubjectService subjectService;
+    @Autowired
+    private CourseCommentService courseCommentService;
     @Autowired
     private CourseSectionMapper courseSectionMapper;
     @Autowired
@@ -105,7 +108,8 @@ public class SShopController {
         CourseCommentParamDTO paramDTO = new CourseCommentParamDTO();
         paramDTO.setCourseId(id);
         paramDTO.setState(true);
-        info.setCommentList(courseCommentMapper.getList(paramDTO, 2));
+        paramDTO.setLimit(2);
+        info.setCommentList(courseCommentMapper.getList(paramDTO));
 
         // 介绍图片
         QueryWrapper<CourseImage> qw2 = new QueryWrapper<>();
@@ -113,6 +117,19 @@ public class SShopController {
         info.setImageList(courseImageMapper.selectList(qw2));
 
         return JsonResponseUtil.data(info);
+    }
+
+    @ApiOperation("评价列表")
+    @GetMapping("/commentList")
+    public Object commentList(@RequestParam(value = "page", defaultValue = "") Integer page,
+                              @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+                              @RequestParam(value = "courseId", defaultValue = "") Long courseId) {
+        CourseCommentParamDTO param = new CourseCommentParamDTO();
+        param.setPage(page);
+        param.setPageSize(pageSize);
+        param.setCourseId(courseId);
+        param.setState(true);
+        return JsonResponseUtil.paginate(courseCommentService.getList(param));
     }
 
 }
