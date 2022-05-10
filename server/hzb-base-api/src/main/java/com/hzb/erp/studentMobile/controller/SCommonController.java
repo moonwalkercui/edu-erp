@@ -4,27 +4,25 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hzb.erp.common.configuration.SystemConfig;
-import com.hzb.erp.common.entity.Advertisement;
-import com.hzb.erp.common.entity.Help;
-import com.hzb.erp.common.entity.User;
-import com.hzb.erp.common.entity.WxAccess;
+import com.hzb.erp.common.entity.*;
 import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
 import com.hzb.erp.common.service.AdvertisementService;
 import com.hzb.erp.common.service.HelpService;
+import com.hzb.erp.common.service.SettingOptionService;
 import com.hzb.erp.common.service.UserService;
 import com.hzb.erp.security.Util.SecurityUtils;
 import com.hzb.erp.service.FileService;
-import com.hzb.erp.studentMobile.service.StudentAuthService;
 import com.hzb.erp.service.bo.UploadResultBO;
 import com.hzb.erp.service.bo.UploadValidateBO;
 import com.hzb.erp.studentMobile.pojo.dto.ChangePasswordFormDTO;
 import com.hzb.erp.studentMobile.pojo.vo.UserVo;
+import com.hzb.erp.studentMobile.service.StudentAuthService;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
-
 import com.hzb.erp.wechat.service.WxAccessService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -60,7 +59,10 @@ public class SCommonController {
 
     @Autowired
     private WxAccessService wxAccessService;
+    @Autowired
+    private SettingOptionService settingOptionService;
 
+    @ApiOperation("上传图片")
     @PostMapping("/upload")
     @ResponseBody
     public UploadResultBO upload(@RequestParam("file") MultipartFile file) throws FileUploadException {
@@ -70,6 +72,7 @@ public class SCommonController {
         return fileService.upload(file, validateBO, null);
     }
 
+    @ApiOperation("广告列表")
     @GetMapping("/advertisement")
     @ResponseBody
     public List<Advertisement> advertisement() {
@@ -78,6 +81,16 @@ public class SCommonController {
         return advertisementService.list(qw);
     }
 
+    @ApiOperation("获取系统参数")
+    @GetMapping("/systemSettings")
+    @ResponseBody
+    public List<SettingOption> systemSettings(@RequestParam(value = "codes", required = true) String[] codes) {
+        QueryWrapper<SettingOption> qw = new QueryWrapper<>();
+        qw.in("code", Arrays.asList(codes));
+        return settingOptionService.list(qw);
+    }
+
+    @ApiOperation("帮助列表")
     @GetMapping("/help")
     @ResponseBody
     public IPage<Help> help(@RequestParam(value = "page", defaultValue = "") Integer page,
@@ -87,12 +100,14 @@ public class SCommonController {
         return helpService.page(new Page<Help>(page, pageSize), qw);
     }
 
+    @ApiOperation("帮助信息")
     @GetMapping("/helpInfo")
     @ResponseBody
     public Help helpInfo(@RequestParam(value = "id") Long id) {
         return helpService.getById(id);
     }
 
+    @ApiOperation("获取当前登录学生信息")
     @GetMapping("/getCurrentUserInfo")
     @ResponseBody
     public UserVo getCurrentUserInfo() {
@@ -110,6 +125,7 @@ public class SCommonController {
         return currentUser;
     }
 
+    @ApiOperation("更新当前登录学生信息")
     @PostMapping("/updateUserInfo")
     @ResponseBody
     public JsonResponse updateUserInfo(@Valid @RequestBody UserVo dto, BindingResult result) {
@@ -126,6 +142,7 @@ public class SCommonController {
         }
     }
 
+    @ApiOperation("修改密码")
     @PostMapping("/changePw")
     @ResponseBody
     public JsonResponse changePw(@Valid @RequestBody ChangePasswordFormDTO dto, BindingResult result) {

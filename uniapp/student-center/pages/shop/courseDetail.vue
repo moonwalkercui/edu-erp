@@ -137,6 +137,8 @@
 
 				elIdNames: ['dingbu', 'dagang', 'pingjia', 'xiangqing'],
 				elTop: [0, 0, 0, 0],
+				hotline: '',
+				shoppingGuide: '',
 			}
 		},
 		onPageScroll(e) {
@@ -145,10 +147,15 @@
 		onLoad(option) {
 			this.id = option.id
 			this.handleRequest();
-		
+			this.systemSetting()
 		},
 		methods: {
-
+			systemSetting() {
+				this.$common.systemSettings(['hotline','shopping_guide']).then(res =>{
+					this.hotline = res.hotline
+					this.shopping_guide = res.shopping_guide
+				})
+			},
 			handleRequest() {
 				this.$http.get('sCenter/shop/courseInfo', {
 					id: this.id,

@@ -498,6 +498,25 @@ function removeAccessToken() {
 	db.del(consts.ACCESS_TOKEN_NAME)
 }
 
+function systemSettings(codes) {
+	return new Promise((resove, reject)=>{
+		get('sCenter/systemSettings',{codes}, res => {
+			var list = []
+			if(res && res.length > 0) {
+				for(var option of res) {
+					for(var code of codes) {
+						if(option.code === code) {
+							list[code] = option.value
+							break
+						}
+					}
+				}
+			}
+			resove(list)
+		})
+	})
+}
+
 export {
 	deepCopy,
 	jumpToLogin,
@@ -533,4 +552,5 @@ export {
 	getAccessToken,
 	removeAccessToken,
 	getRedpoint,
+	systemSettings,
 }
