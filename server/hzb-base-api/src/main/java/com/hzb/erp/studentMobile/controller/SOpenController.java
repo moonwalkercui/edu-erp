@@ -1,9 +1,7 @@
 package com.hzb.erp.studentMobile.controller;
 
-import com.hzb.erp.common.configuration.SystemConfig;
 import com.hzb.erp.common.service.UserService;
 import com.hzb.erp.security.Util.SecurityUtils;
-import com.hzb.erp.service.FileService;
 import com.hzb.erp.service.SmsManager;
 import com.hzb.erp.service.enums.SmsSceneType;
 import com.hzb.erp.studentMobile.pojo.dto.ForgetPasswordDTO;
@@ -26,11 +24,6 @@ import javax.validation.Valid;
 @RequestMapping("/sCenter/open")
 @Api(value = "开放接口", tags = "开放接口")
 public class SOpenController {
-    @Autowired
-    private SystemConfig systemConfig;
-
-    @Autowired
-    private FileService fileService;
 
     @Autowired
     private UserService userService;

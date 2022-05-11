@@ -97,17 +97,7 @@
 				<u-empty v-if="courseList.length == 0" mode="list" text="未报名课程"></u-empty>
 			</view>
 		</view>
-
-
-		<u-modal v-model="adShow" :title="adInfo.title" :mask-close-able="true" confirm-text="关闭" width="90%"
-			:confirm-style="{fontSize: '28rpx'}" :title-style="{paddingTop: '30rpx'}">
-			<view class="slot-content">
-				<u-image style="margin-top: 30rpx;" v-if="adInfo.cover" width="100%" height="300rpx"
-					:src="adInfo.cover"></u-image>
-				<view class="u-padding-20 u-font-14">{{adInfo.content}}</view>
-			</view>
-		</u-modal>
-
+		<Popup :show.sync="adShow" :image="popupCover" @ClickNav="clickNav"/>
 	</view>
 </template>
 
@@ -115,9 +105,11 @@
 	import SpecialBanner from "../../components/special-banner/special-banner.vue"
 	import * as db from '@/util/db.js' //引入common
 	import * as consts from '@/util/consts.js' //引入common
+	import Popup from './components/popup.vue'
 	export default {
 		components: {
-			SpecialBanner
+			SpecialBanner,
+			Popup,
 		},
 		data() {
 			return {
@@ -134,6 +126,7 @@
 				tipsList: [],
 
 				adShow: false,
+				popupCover: '',
 				adInfo: {
 					title: '',
 					content: '',
@@ -218,12 +211,18 @@
 					var banners = [];
 					var tips = [];
 					var tipsList = [];
+					var popupInfo;
 					for (var ad of res) {
 						if (ad.type == "学生端首页Banner") {
 							banners.push(ad)
 						} else if (ad.type == '学生端首页提示') {
 							tips.push(ad.title)
 							tipsList.push(ad)
+						} else if (ad.type == '学生端首页提示') {
+							popupInfo = {
+								id: ad.id,
+								cover: ad.cover
+							}
 						}
 					}
 					if (tips.length == 0) {
@@ -236,6 +235,16 @@
 					this.banners = banners
 					this.tips = tips
 					this.tipsList = tipsList
+					
+					if(popupInfo) {
+						var key = "home-popup-read#" + popupInfo.id;
+						var read = uni.getStorageSync(key)
+						if (read == '' || !read) {
+							this.adShow = true
+							this.popupCover = popupInfo.cover
+							uni.setStorageSync(key, true)
+						}
+					}
 				})
 			},
 			getCourse() {
@@ -286,6 +295,9 @@
 				uni.navigateTo({
 					url: "/pages/student/index"
 				})
+			},
+			clickNav() {
+				console.log('点击广告')
 			},
 		}
 	}
