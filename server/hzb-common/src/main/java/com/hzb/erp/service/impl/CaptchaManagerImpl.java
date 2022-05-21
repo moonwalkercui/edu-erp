@@ -1,4 +1,4 @@
-package com.hzb.erp.wechat.service.impl;
+package com.hzb.erp.service.impl;
 
 import com.hzb.erp.service.CaptchaManager;
 import com.hzb.erp.service.cache.CaptchaCache;
