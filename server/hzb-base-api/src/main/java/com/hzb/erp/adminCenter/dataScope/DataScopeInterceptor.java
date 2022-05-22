@@ -134,7 +134,7 @@ public class DataScopeInterceptor implements InnerInterceptor {
 
             String sqlStr = makeCondition(entityName, aliasName);
             if (StringUtils.isBlank(sqlStr)) {
-                System.out.println("sqlStr为空");
+                // System.out.println("sqlStr为空");
                 return sql;
             }
 
@@ -142,9 +142,9 @@ public class DataScopeInterceptor implements InnerInterceptor {
             Expression sqlSegment = new AndExpression(plainSelect.getWhere(), parseRes);
             plainSelect.setWhere(sqlSegment);
 
-            System.out.println("==============buildSql===================");
-            System.out.println(plainSelect);
-            System.out.println("==============buildSql===================");
+//            System.out.println("==============buildSql===================");
+//            System.out.println(plainSelect);
+//            System.out.println("==============buildSql===================");
 
             return plainSelect.toString();
 

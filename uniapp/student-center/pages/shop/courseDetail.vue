@@ -36,8 +36,8 @@
 				</view>
 			</view>
 		</view>
-		<view class="u-p-30 u-m-b-10 bg-white text-mini u-border-bottom">
-			<u-tag text="服务" type="warning" size="mini" /><text class="u-m-l-10">{{info.serviceInfo ? info.serviceInfo : '名师指导、专业教育、快乐学习'}}</text>
+		<view class="u-p-30 u-m-b-10 bg-white text-mini u-border-bottom" v-if="info.serviceInfo">
+			<u-tag text="服务" type="warning" size="mini" /><text class="u-m-l-10">{{info.serviceInfo}}</text>
 		</view>
 		<!-- 老师 -->
 		<!-- <view class="u-p-30 u-m-b-10 bg-white u-flex" id="dagang">
@@ -137,8 +137,7 @@
 
 				elIdNames: ['dingbu', 'dagang', 'pingjia', 'xiangqing'],
 				elTop: [0, 0, 0, 0],
-				hotline: '',
-				shoppingGuide: '',
+
 			}
 		},
 		onPageScroll(e) {
@@ -147,15 +146,8 @@
 		onLoad(option) {
 			this.id = option.id
 			this.handleRequest();
-			this.systemSetting()
 		},
 		methods: {
-			systemSetting() {
-				this.$common.systemSettings(['hotline','shopping_guide']).then(res =>{
-					this.hotline = res.hotline
-					this.shopping_guide = res.shopping_guide
-				})
-			},
 			handleRequest() {
 				this.$http.get('sCenter/shop/courseInfo', {
 					id: this.id,

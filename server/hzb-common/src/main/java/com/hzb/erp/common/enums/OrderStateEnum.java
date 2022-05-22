@@ -6,15 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 公告类型
+ * 订单状态
+ * @author cui
  */
 @Getter
 @AllArgsConstructor
-public enum AdvertisementTypeEnum implements BaseEnum {
-    POPUP(0, "学生端首页弹出"),
-    TIP(1, "学生端首页公告"),
-    BANNER(2, "学生端首页Banner"),
-    ARTICLE(3, "普通公告");
+public enum OrderStateEnum implements BaseEnum {
+    UNPAID(0, "未支付"),
+    PAID(1, "已付款"),
+    CANCELED(99, "已取消");
     @EnumValue
     private final int code;
     @JsonValue

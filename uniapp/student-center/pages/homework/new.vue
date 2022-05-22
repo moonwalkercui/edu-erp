@@ -83,7 +83,6 @@
 				this.makeUploadList(lists)
 			},
 			onRemove(index, lists, name) {
-				console.log("remove")
 				this.makeUploadList(lists)
 			},
 			makeUploadList(lists) {

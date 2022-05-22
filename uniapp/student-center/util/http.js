@@ -318,3 +318,27 @@ export const uploadImage = (num, callback) => {
 		}
 	});
 }
+
+/* 调起支付 */
+export const payment = (param, success) => {
+	post("wxpay/createOrder", param, (res) => {
+		if(!common.handleResponseMsg(res)) return;
+		console.log('res', res)
+		wx.requestPayment({
+			"appId": res.appId,
+			"nonceStr": res.nonceStr,
+			"package": res.package,
+			"paySign": res.paySign,
+			"signType": res.signType,
+			"timeStamp": res.timeStamp,
+			success: function(res) {
+				success && success()
+				console.log('success:' + JSON.stringify(res));
+			},
+			fail: function(err) {
+				common.showMsg("未完成支付")
+				console.log('fail:' + JSON.stringify(err));
+			}
+		});
+	})
+}

@@ -75,6 +75,15 @@ public enum SettingNameEnum {
     WX_MP_AES_KEY("wx_mp_aes_key", "公众号AesKey", "", "str"),
 
     /**
+     * 微信支付相关
+     */
+    WX_PAY_MCHID("wx_pay_mchid", "微信支付商户号", "", "str"),
+    WX_PAY_MCHKEY("wx_pay_mchkey", "微信支付商户密钥", "", "str"),
+    WX_PAY_SUBAPPID("wx_pay_subappid", "服务商模式子商户公众账号ID", "", "str"),
+    WX_PAY_SUBMCHID("wx_pay_submchid", "服务商模式子商户号", "", "str"),
+    WX_PAY_KEYPATH("wx_pay_keypath", "apiclient_cert.p12文件的绝对路径", "", "str"),
+
+    /**
      * 每天上课提醒时间
      */
     LESSON_REMIND_TIME("lesson_remind_time", "每天上课提醒时间", "19:31", "time"),

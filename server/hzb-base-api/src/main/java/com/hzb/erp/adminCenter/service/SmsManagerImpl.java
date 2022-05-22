@@ -90,6 +90,9 @@ public class SmsManagerImpl implements SmsManager {
         return SmsCodeCache.valid(mobile, code, sceneEnum);
     }
 
+    /**
+    * 验证短信发送频率，并缓存验证码
+    * */
     @Override
     public void limitValid(String mobile) {
         long remainingSec = SmsSendLimitCache.remainingSec(mobile);

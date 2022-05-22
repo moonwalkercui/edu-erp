@@ -15,30 +15,31 @@ import com.hzb.erp.common.pojo.vo.CourseVO;
 import com.hzb.erp.common.service.CourseCommentService;
 import com.hzb.erp.common.service.CourseService;
 import com.hzb.erp.common.service.SubjectService;
+import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
 import com.hzb.erp.studentMobile.pojo.vo.CourseInfoVO;
 import com.hzb.erp.studentMobile.service.StudentAuthService;
+import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * 在线购课控制器
+ *
  * @author Ryan 541720500@qq.com
- * description
  */
 @RestController
 @RequestMapping("/sCenter/shop")
-@Api(value = "在线购课", tags = "在线购课")
+@Api(value = "在线购课控制器", tags = "在线购课")
 public class SShopController {
 
     @Autowired
@@ -95,8 +96,8 @@ public class SShopController {
         qw1.eq("course_id", id);
         List<CourseSection> sections = courseSectionMapper.selectList(qw1);
         List<CourseSectionVO> courseSectionVOS = new ArrayList<>();
-        if(sections!= null && sections.size() > 0) {
-            for(CourseSection sect : sections) {
+        if (sections != null && sections.size() > 0) {
+            for (CourseSection sect : sections) {
                 CourseSectionVO vo = new CourseSectionVO();
                 BeanUtils.copyProperties(sect, vo);
                 courseSectionVOS.add(vo);
@@ -130,6 +131,14 @@ public class SShopController {
         param.setCourseId(courseId);
         param.setState(true);
         return JsonResponseUtil.paginate(courseCommentService.getList(param));
+    }
+
+    @ApiOperation("订单确认并支付")
+    @GetMapping("/orderConfirm")
+    public Object orderConfirm(@Valid @RequestBody OrderConfirmDTO dto, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
+
+        return null;
     }
 
 }

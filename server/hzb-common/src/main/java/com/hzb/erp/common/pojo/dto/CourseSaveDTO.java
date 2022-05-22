@@ -41,6 +41,11 @@ public class CourseSaveDTO extends PaginateDTO {
     @NotNull(message = "未输入有效月数")
     @Min(value = 1, message = "有效月数不能小于1")
     private Integer expireMonths;
+
+    // 提示信息
     private String info;
+
+    // 是否可预约
+    private Boolean bookable;
 
 }

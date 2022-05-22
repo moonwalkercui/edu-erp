@@ -53,7 +53,7 @@
 			// 评论列表
 			handleReq() {
 				this.$http.get('sCenter/shop/commentList', {
-					id: this.courseId,
+					courseId: this.courseId,
 					page: this.pageData.page
 				}, res => {
 					if(!res) return;

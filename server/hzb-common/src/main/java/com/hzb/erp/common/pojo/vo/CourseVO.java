@@ -74,4 +74,7 @@ public class CourseVO {
     @ApiModelProperty(value = "服务说明")
     private String serviceInfo;
 
+    @ApiModelProperty(value = "是否可预约")
+    private Boolean bookable;
+
 }

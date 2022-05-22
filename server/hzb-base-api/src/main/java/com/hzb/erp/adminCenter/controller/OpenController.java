@@ -6,8 +6,10 @@ import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.service.AdvertisementService;
 import com.hzb.erp.service.CaptchaManager;
 import com.hzb.erp.service.SmsManager;
+import com.hzb.erp.service.cache.SmsCodeCache;
 import com.hzb.erp.service.cache.SmsSendLimitCache;
 import com.hzb.erp.service.dto.SmsSendDTO;
+import com.hzb.erp.service.enums.SmsSceneType;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
@@ -71,14 +73,17 @@ public class OpenController {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("code", code);
         dto.setDataMap(dataMap);
+        // 缓存验证码用于验证
+        SmsCodeCache.put(code, dto.getMobile(), SmsSceneType.STUDENT_REGISTER);
 
-        boolean sendResult = smsManager.sendCode(dto);
-        if(sendResult) {
-            if(systemConfig.getIsDemo()!=null && systemConfig.getIsDemo()) {
-                return JsonResponseUtil.success("模拟发送短信：" + code);
-            }
+        if(systemConfig.getIsDemo()!=null && systemConfig.getIsDemo()) {
+            // 超时验证
+            smsManager.limitValid(dto.getMobile());
+            return JsonResponseUtil.success("模拟发送短信验证码：" + code);
+        }
+
+        if(smsManager.sendCode(dto)) {
             return JsonResponseUtil.success("短信已发送");
-
         } else {
             return JsonResponseUtil.error("短信发送出错");
         }

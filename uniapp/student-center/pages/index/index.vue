@@ -123,7 +123,6 @@
 				banners: [],
 
 				tips: [],
-				tipsList: [],
 
 				adShow: false,
 				popupCover: '',
@@ -135,18 +134,18 @@
 				
 				navs: [
 					{
-						label: "班级",
-						icon: "banji",
-						color: '#dc5d5d',
-						count: 0,
-						page: '/pages/center/classes'
-					},
-					{
 						label: "试听卡",
 						icon: "menu_check",
-						color: '#5085ff',
+						color: '#dc5d5d',
 						count: 0,
 						page: "/pages/lesson/trial"
+					},
+					{
+						label: "班级",
+						icon: "banji",
+						color: '#5085ff',
+						count: 0,
+						page: '/pages/center/classes'
 					},
 					{
 						label: "作业",
@@ -208,35 +207,20 @@
 			getBanners() {
 				this.$http.get('sCenter/advertisement', {}, res => {
 					if (!this.$common.handleResponseMsg(res)) return;
-					var banners = [];
-					var tips = [];
-					var tipsList = [];
-					var popupInfo;
-					for (var ad of res) {
-						if (ad.type == "学生端首页Banner") {
-							banners.push(ad)
-						} else if (ad.type == '学生端首页提示') {
-							tips.push(ad.title)
-							tipsList.push(ad)
-						} else if (ad.type == '学生端首页提示') {
-							popupInfo = {
-								id: ad.id,
-								cover: ad.cover
-							}
+					this.banners = res.banner
+					
+					var tips = []
+					if (res.tip) {
+						for(const tip of res.tip) {
+							tips.push(tip.title)
 						}
 					}
-					if (tips.length == 0) {
-						tips = ["欢迎使用"]
-						tipsList = [{
-							title: "欢迎使用",
-							content: ''
-						}]
-					}
-					this.banners = banners
 					this.tips = tips
-					this.tipsList = tipsList
-					
-					if(popupInfo) {
+					if(res.popup) {
+						var popupInfo = {
+							id: res.popup.id,
+							cover: res.popup.cover
+						}
 						var key = "home-popup-read#" + popupInfo.id;
 						var read = uni.getStorageSync(key)
 						if (read == '' || !read) {
@@ -284,12 +268,9 @@
 				}
 			},
 			clickTip(index) {
-				this.adShow = true;
-				this.adInfo = {
-					title: this.tipsList[index].title,
-					content: this.tipsList[index].content,
-					cover: this.tipsList[index].cover,
-				}
+				uni.navigateTo({
+					url: "/pages/advertisment/index"
+				})
 			},
 			studentManage() {
 				uni.navigateTo({

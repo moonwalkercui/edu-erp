@@ -10,6 +10,12 @@
 			}
 		},
 		{
+			"path": "pages/advertisment/index",
+			"style": {
+				"navigationBarTitleText": "公告列表"
+			}
+		},
+		{
 			"path": "pages/shop/courseDetail",
 			"style": {
 				"navigationBarTitleText": "课程详情",
@@ -20,6 +26,12 @@
 			"path": "pages/shop/index",
 			"style": {
 				"navigationBarTitleText": "在线购课"
+			}
+		},
+		{
+			"path": "pages/shop/orderConfirm",
+			"style": {
+				"navigationBarTitleText": "订单确认"
 			}
 		},
 		{

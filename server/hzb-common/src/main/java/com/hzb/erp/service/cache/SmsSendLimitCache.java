@@ -23,7 +23,7 @@ public class SmsSendLimitCache {
             .build();
 
     /**
-     * 短信可发送的剩余秒数
+     * 短信可发送的剩余秒数 并缓存验证码
      * 0表示立即可以发送，大于0表示还有多少秒可发送
      */
     public static long remainingSec(String mobile) {

@@ -36,9 +36,6 @@ public class SHomeworkController {
     @Autowired
     private HomeworkRecordService homeworkRecordService;
 
-    @Autowired
-    private StudentService studentService;
-
     @ApiOperation("作业信息")
     @GetMapping("/info")
     public HomeworkVO info(@RequestParam("id") Long id) {

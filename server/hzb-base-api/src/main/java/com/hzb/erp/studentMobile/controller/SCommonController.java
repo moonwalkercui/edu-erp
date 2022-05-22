@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hzb.erp.common.configuration.SystemConfig;
 import com.hzb.erp.common.entity.*;
+import com.hzb.erp.common.enums.AdvertisementTypeEnum;
 import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
+import com.hzb.erp.common.pojo.dto.GradeParamDTO;
 import com.hzb.erp.common.service.AdvertisementService;
 import com.hzb.erp.common.service.HelpService;
 import com.hzb.erp.common.service.SettingOptionService;
@@ -32,7 +34,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ryan 541720500@qq.com
@@ -72,13 +76,37 @@ public class SCommonController {
         return fileService.upload(file, validateBO, null);
     }
 
-    @ApiOperation("广告列表")
+    @ApiOperation("首页公告")
     @GetMapping("/advertisement")
     @ResponseBody
-    public List<Advertisement> advertisement() {
-        QueryWrapper<Advertisement> qw = new QueryWrapper<>();
-        qw.eq("state", 1).orderByDesc("sort_num");
-        return advertisementService.list(qw);
+    public Map<String, Object> advertisement() {
+        QueryWrapper<Advertisement> qw1 = new QueryWrapper<>();
+        qw1.eq("state", 1).eq("type", AdvertisementTypeEnum.BANNER.getCode())
+                .ne("cover", null)
+                .orderByDesc("sort_num").orderByAsc("id").last("limit 10");
+        QueryWrapper<Advertisement> qw2 = new QueryWrapper<>();
+        qw2.eq("state", 1).eq("type", AdvertisementTypeEnum.TIP.getCode())
+                .orderByDesc("sort_num").orderByAsc("id").last("limit 10");
+        QueryWrapper<Advertisement> qw3 = new QueryWrapper<>();
+        qw3.eq("state", 1).eq("type", AdvertisementTypeEnum.POPUP.getCode())
+                .orderByDesc("sort_num").orderByAsc("id").last("limit 1");
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("banner", advertisementService.list(qw1));
+        res.put("tip", advertisementService.list(qw2));
+        res.put("popup", advertisementService.getOne(qw3));
+        return res;
+    }
+
+    @ApiOperation("公告列表")
+    @GetMapping("/advertisementList")
+    @ResponseBody
+    public Object advertisementList(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize) {
+        QueryWrapper<Advertisement> qw1 = new QueryWrapper<>();
+        qw1.eq("state", 1).orderByDesc("sort_num").orderByAsc("id");
+        Page<Advertisement> ipage  = new Page<>(page, pageSize);
+        return JsonResponseUtil.paginate(advertisementService.page(ipage, qw1));
     }
 
     @ApiOperation("获取系统参数")
