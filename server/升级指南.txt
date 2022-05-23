@@ -2,6 +2,7 @@
 - 2022.5.8 在线购课
 
 ```
+ALTER TABLE `student` DROP COLUMN `wx_access_id`;
 ALTER TABLE `course` ADD COLUMN `for_sale` tinyint(1) NULL DEFAULT 0 COMMENT '是否上架中';
 ALTER TABLE `course` ADD COLUMN `recommend` tinyint(1) NULL DEFAULT 0 COMMENT '是否推荐';
 ALTER TABLE `course` ADD COLUMN `cover` varchar(255) NULL COMMENT '封面';
@@ -9,8 +10,6 @@ ALTER TABLE `course` ADD COLUMN `close_date` date NULL DEFAULT NULL COMMENT '报
 ALTER TABLE `course` ADD COLUMN `teacher_info` varchar(255) NULL COMMENT '师资信息';
 ALTER TABLE `course` ADD COLUMN `service_info` varchar(255) NULL COMMENT '服务说明';
 ALTER TABLE `subject` ADD COLUMN `sort_num` int NULL DEFAULT 0 COMMENT '排序值';
-
-
 
 -- ----------------------------
 -- Table structure for course_comment

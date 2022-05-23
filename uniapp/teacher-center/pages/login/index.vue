@@ -38,8 +38,8 @@ import Cookies from "@/util/js.cookie.js"
 export default {
 	data() {
 		return {
-			username: 'admin',
-			password: '123',
+			username: '',
+			password: '',
 		}
 	},
 	onLoad() {

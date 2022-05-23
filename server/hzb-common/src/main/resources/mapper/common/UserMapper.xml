@@ -28,4 +28,12 @@
     <select id="getWxOpenid" resultType="java.lang.String">
         select t1.openid from wx_access t1 where t1.id = (select wx_access_id from user where id = #{id})
     </select>
+
+    <select id="getByOpenid" resultType="com.hzb.erp.common.entity.User">
+        select t1.* from `user` t1
+        where t1.wx_access_id = (select id from wx_access where openid = #{openid})
+          and t1.wx_access_id is not null
+        limit 1
+    </select>
+
 </mapper>

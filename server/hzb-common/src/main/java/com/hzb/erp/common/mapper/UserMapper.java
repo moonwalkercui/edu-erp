@@ -17,6 +17,8 @@ public interface UserMapper extends BaseMapper<User> {
     IPage<UserVO> getList(Page<Object> objectPage, StudentParamDTO param);
 
     String getWxOpenid(Long id);
+
+    User getByOpenid(String openid);
 }
 
 

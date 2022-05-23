@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view v-if="show">
 		<u-modal v-model="show" :showTitle="false" :mask="false" :mask-close-able="false" width="600rpx" :closeable="true"
 			close-icon="close-circle" :showConfirmButton="false">
 			<view class="content">

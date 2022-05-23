@@ -2,12 +2,15 @@ package com.hzb.erp.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.hzb.erp.common.enums.OrderItemTypeEnum;
 import com.hzb.erp.common.enums.OrderStateEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -21,6 +24,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "订单实体", description = "订单实体")
+@TableName(value = "shop_order")
 public class Order extends AutoFillEntity {
 
     @ApiModelProperty(value = "主键")
@@ -30,9 +34,6 @@ public class Order extends AutoFillEntity {
     @ApiModelProperty(value = "订单号")
     private String sn;
 
-    @ApiModelProperty(value = "课程id")
-    private Long courseId;
-
     @ApiModelProperty(value = "家长端账号ID")
     private Long userId;
 
@@ -41,9 +42,6 @@ public class Order extends AutoFillEntity {
 
     @ApiModelProperty(value = "支付金额")
     private BigDecimal payMoney;
-
-    @ApiModelProperty(value = "第三方支付交易号")
-    private String thirdTradeNum;
 
     @ApiModelProperty(value = "备注")
     private String remark;

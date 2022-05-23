@@ -71,6 +71,7 @@
 </template>
 
 <script>
+	import wechat from '@/util/wechat.js'
 	export default {
 		data() {
 			return {
@@ -92,22 +93,43 @@
 			payOrder() {
 				this.disabled = true
 				this.disabled = false
+				wechat.wxpay({
+					"appId": 11,
+					"nonceStr": 22,
+					"package": 33,
+					"paySign": 44,
+					"signType": 55,
+					"timeStamp": 66,
+				}, (res) => {
+					console.log('3333', res1)
+				})
+				return;
 				
-				uni.login({
-				  provider: 'weixin',
-				  success: function (loginRes) {
-				    console.log(loginRes.authResult);
-				  }
-				});
-				
-				// this.$http.payment(this.orderInfo, () => {
-				// 	this.$common.showAlert("支付结果", `支付成功! 请到历史订单查看支付结果.`, () => {
-				// 		uni.switchTab({
-				// 			url: "/pages/index/index"
-				// 		})
-				// 	}, false, '', '返回首页')
-				// })
-				
+				this.$http.post('sCenter/shop/orderConfirm', this.orderInfo, res => {
+					if (!this.$common.handleResponseMsg(res)) return;
+					console.log('111', res)
+					this.$http.post('sCenter/shop/createOrder', res, res1 => {
+						if (res1 && res1.errCode > 0) {
+							uni.showToast({
+								title: res1.msg,
+								icon: 'error',
+								duration: 10000
+							});
+							return
+						}
+						console.log('222', res1)
+						wechat.wxpay({
+							"appId": res1.appId,
+							"nonceStr": res1.nonceStr,
+							"package": res1.package,
+							"paySign": res1.paySign,
+							"signType": res1.signType,
+							"timeStamp": res1.timeStamp,
+						}, (res) => {
+							console.log('3333', res1)
+						})
+					})
+				})
 			},
 			clickLeft() {
 				uni.navigateBack()

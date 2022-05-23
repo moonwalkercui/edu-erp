@@ -1,25 +1,28 @@
 package com.hzb.erp.studentMobile.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.hzb.erp.common.entity.CourseImage;
-import com.hzb.erp.common.entity.CourseSection;
-import com.hzb.erp.common.entity.Student;
-import com.hzb.erp.common.entity.Subject;
+import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
+import com.github.binarywang.wxpay.exception.WxPayException;
+import com.github.binarywang.wxpay.service.WxPayService;
+import com.hzb.erp.common.entity.*;
 import com.hzb.erp.common.mapper.CourseCommentMapper;
 import com.hzb.erp.common.mapper.CourseImageMapper;
 import com.hzb.erp.common.mapper.CourseSectionMapper;
+import com.hzb.erp.common.mapper.UserMapper;
 import com.hzb.erp.common.pojo.dto.CourseCommentParamDTO;
 import com.hzb.erp.common.pojo.dto.CourseParamDTO;
 import com.hzb.erp.common.pojo.vo.CourseSectionVO;
 import com.hzb.erp.common.pojo.vo.CourseVO;
 import com.hzb.erp.common.service.CourseCommentService;
 import com.hzb.erp.common.service.CourseService;
+import com.hzb.erp.common.service.OrderService;
 import com.hzb.erp.common.service.SubjectService;
 import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
 import com.hzb.erp.studentMobile.pojo.vo.CourseInfoVO;
 import com.hzb.erp.studentMobile.service.StudentAuthService;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponseUtil;
+import com.hzb.erp.utils.RequestUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -54,6 +57,12 @@ public class SShopController {
     private CourseCommentMapper courseCommentMapper;
     @Autowired
     private CourseImageMapper courseImageMapper;
+    @Autowired
+    private WxPayService wxService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private UserMapper userMapper;
 
     @ApiOperation("购课课程列表")
     @GetMapping("/list")
@@ -133,12 +142,30 @@ public class SShopController {
         return JsonResponseUtil.paginate(courseCommentService.getList(param));
     }
 
-    @ApiOperation("订单确认并支付")
-    @GetMapping("/orderConfirm")
-    public Object orderConfirm(@Valid @RequestBody OrderConfirmDTO dto, BindingResult result) {
+    @ApiOperation("订单确认返回订单支付信息")
+    @PostMapping("/orderConfirm")
+    public Order orderConfirm(@Valid @RequestBody OrderConfirmDTO dto, BindingResult result) throws WxPayException {
         CommonUtil.handleValidMessage(result);
-
-        return null;
+        Student student = StudentAuthService.getCurrentStudent();
+        dto.setUserId(student.getUserId());
+        dto.setStudentId(student.getId());
+        return orderService.makeOrder(dto);
     }
 
+    @ApiOperation(value = "统一下单，并组装所需支付参数")
+    @PostMapping("/createOrder")
+    public Object createOrder(@RequestBody Order order) {
+        Student student = StudentAuthService.getCurrentStudent();
+        String openid = userMapper.getWxOpenid(student.getUserId());
+        WxPayUnifiedOrderRequest orderRequestParam = com.hzb.erp.wechat.service.WxPayService.buildParamByOrder(order, openid,"JSAPI");
+        Object res;
+        try{
+            res = this.wxService.createOrder(orderRequestParam);
+            System.out.println("=================支付参数:==============");
+            System.out.println(res);
+        } catch (WxPayException e) {
+            return JsonResponseUtil.error(e.getMessage());
+        }
+        return res;
+    }
 }

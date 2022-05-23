@@ -86,8 +86,8 @@ public class Student extends AutoFillEntity {
     @ApiModelProperty(value = "红点标记点评最后查看时间")
     private LocalDateTime redpointEvaluate;
 
-    @ApiModelProperty(value = "微信登录记录表id")
-    private Long wxAccessId;
+//    @ApiModelProperty(value = "微信登录记录表id")
+//    private Long wxAccessId;
 
     private Long schoolId;
 

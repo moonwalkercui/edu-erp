@@ -41,6 +41,8 @@ export default {
 				'onVoicePlayEnd',
 				'uploadVoice',
 				'downloadVoice',
+				'downloadVoice',
+				'chooseWXPay',
 			]
 		});
 		//配置完成后，再执行分享等功能  
@@ -190,5 +192,30 @@ export default {
 				});
 			});
 		}, url);
-	}
+	},
+	
+	// 发起支付
+	wxpay: function(payParam, cb) {
+		if (!this.isWechat()) {
+			return;
+		}
+		this.initJssdk(function(signData) {
+			console.log('jsapiconfig', signData)
+			jweixin.ready(function() {
+				jweixin.chooseWXPay({
+					appId: payParam.appId,
+					timestamp: payParam.timestamp, // 支付签名时间戳，注意微信 jssdk 中的所有使用 timestamp 字段均为小写。但最新版的支付后台生成签名使用的 timeStamp 字段名需大写其中的 S 字符
+					nonceStr: payParam.nonceStr, // 支付签名随机串，不长于 32 位
+					package: payParam.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+					signType: payParam.signType, // 微信支付V3的传入 RSA ,微信支付V2的传入格式与V2统一下单的签名格式保持一致
+					paySign: payParam.paySign, // 支付签名
+					success: function (res) {
+						// 支付成功后的回调函数
+						cb(res); 
+				    }
+				});
+			});
+		});
+	},
+	
 }

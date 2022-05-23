@@ -59,8 +59,8 @@
 	export default {
 		data() {
 			return {
-				mobile: debug ? '15666323771' : '',
-				password:  debug ? '111111' :'',
+				mobile: '',
+				password: '',
 				inWeixin: false,
 			}
 		},

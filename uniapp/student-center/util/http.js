@@ -20,7 +20,6 @@ export const post = (method, data, callback, complete) => {
 		success: (response) => {
 			refreshTokenAndStore(response);
 			uni.hideLoading();
-			console.log('acb', response.data)
 			if(handleErrorCode(response.data) == false) return;
 			if(needLogin(response.data)) {return}
 			if (callback) {
@@ -28,8 +27,6 @@ export const post = (method, data, callback, complete) => {
 			} else {
 				common.handleResponseMsg(response.data)
 			}
-	
-			console.log('响应>>>>>>', response.data)
 		},
 		complete: (response) => {
 			complete ? complete() : "";
@@ -141,7 +138,6 @@ export const uploadAvatar = (path, cb) => {
 // 是否需要登录
 function needLogin(responseData) {
 	if(responseData.errCode > 2000 && responseData.errCode <= 2100) {
-		console.log('需要登录了', responseData.errCode)
 		uni.showToast({
 			title: responseData.msg || "登录状态失效, 需重新登录",
 			icon: 'none',
@@ -317,28 +313,4 @@ export const uploadImage = (num, callback) => {
 			}
 		}
 	});
-}
-
-/* 调起支付 */
-export const payment = (param, success) => {
-	post("wxpay/createOrder", param, (res) => {
-		if(!common.handleResponseMsg(res)) return;
-		console.log('res', res)
-		wx.requestPayment({
-			"appId": res.appId,
-			"nonceStr": res.nonceStr,
-			"package": res.package,
-			"paySign": res.paySign,
-			"signType": res.signType,
-			"timeStamp": res.timeStamp,
-			success: function(res) {
-				success && success()
-				console.log('success:' + JSON.stringify(res));
-			},
-			fail: function(err) {
-				common.showMsg("未完成支付")
-				console.log('fail:' + JSON.stringify(err));
-			}
-		});
-	})
 }
