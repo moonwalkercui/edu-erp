@@ -2,12 +2,16 @@ package com.hzb.erp.common.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.*;
 import com.hzb.erp.common.enums.OrderItemTypeEnum;
 import com.hzb.erp.common.enums.OrderStateEnum;
 import com.hzb.erp.common.mapper.*;
 import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
+import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
+import com.hzb.erp.common.pojo.vo.OrderVo;
 import com.hzb.erp.common.service.CourseService;
 import com.hzb.erp.common.service.OrderService;
 import com.hzb.erp.utils.RequestUtil;
@@ -95,6 +99,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (order!=null) {
             orderMapper.updateById(order);
         }
+    }
+
+    @Override
+    public IPage<OrderVo> getList(OrderListParamDTO param) {
+        IPage<OrderVo> records = baseMapper.getList(new Page<>(param.getPage(), param.getPageSize()), param);
+        if(records.getRecords()!=null) {
+            for(OrderVo vo : records.getRecords()) {
+                vo.setItemList(orderItemMapper.getList(vo.getId()));
+            }
+        }
+        return records;
     }
 
     /**

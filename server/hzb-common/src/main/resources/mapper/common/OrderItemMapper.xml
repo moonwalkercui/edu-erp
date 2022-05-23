@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzb.erp.common.mapper.OrderItemMapper">
-
     <select id="getNamesByOrderId" resultType="java.lang.String">
-        select group_concat(t1.name) from course t1 where t1.id in (
-            select t2.id from order_item t2 where t2.order_id = #{orderId}
-        )
+        select group_concat(t2.item_name) from order_item t2 where t2.order_id = #{orderId}
+    </select>
+    <select id="getList" resultType="com.hzb.erp.common.entity.OrderItem" parameterType="java.lang.Long">
+        select t1.*
+        from order t1
+        where t1.order_id = #{orderId}
     </select>
 </mapper>

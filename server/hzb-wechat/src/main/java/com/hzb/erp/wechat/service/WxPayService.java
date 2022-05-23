@@ -34,7 +34,7 @@ public class WxPayService {
         try {
             HttpServletRequest request = RequestUtil.getRequest();
             URL requestUrl = new URL(request.getRequestURL().toString());
-            notifyUrl = requestUrl.getHost() + "/wx/pay/handelNotify"; // todo通知接口
+            notifyUrl = requestUrl.getHost() + "/wx/pay/handleNotify"; // todo通知接口
             createIp = IpUtil.getIpAddr(request);
 
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class WxPayService {
         BigDecimal payMoney = new BigDecimal("0.01"); // 测试用1分钱 todo
 
         orderRequest.setOpenid(openid);
-        orderRequest.setBody(StringUtils.isBlank(itemNames) ? "购买"+order.getSn() : itemNames);
+        orderRequest.setBody(StringUtils.isBlank(itemNames) ? "订单号"+order.getSn() : itemNames);
         orderRequest.setOutTradeNo(order.getSn());
         orderRequest.setTotalFee((new BigDecimal(100).multiply(payMoney).intValue()));
         orderRequest.setSpbillCreateIp(createIp);

@@ -1,45 +1,33 @@
-package com.hzb.erp.common.entity;
+package com.hzb.erp.common.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hzb.erp.common.enums.OrderItemTypeEnum;
+import com.hzb.erp.common.entity.OrderItem;
 import com.hzb.erp.common.enums.OrderStateEnum;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
- * 订单实体
+ * 订单VO
  * </p>
  *
- * @author Ryan
+ * @author 541720500@qq.com
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "订单实体", description = "订单实体")
-@TableName(value = "shop_order")
-public class Order extends AutoFillEntity {
+public class OrderVo {
 
     @ApiModelProperty(value = "主键")
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "订单号")
     private String sn;
 
-    @ApiModelProperty(value = "家长端账号ID")
-    private Long userId;
-
-    @ApiModelProperty(value = "学生ID")
-    private Long studentId;
+    @ApiModelProperty(value = "学生姓名")
+    private String studentName;
 
     @ApiModelProperty(value = "支付金额")
     private BigDecimal payMoney;
@@ -56,5 +44,12 @@ public class Order extends AutoFillEntity {
     @ApiModelProperty(value = "支付时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime payTime;
+
+    @ApiModelProperty(value = "支付时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime addTime;
+
+    @ApiModelProperty(value = "购买内容")
+    private List<OrderItem> itemList;
 
 }

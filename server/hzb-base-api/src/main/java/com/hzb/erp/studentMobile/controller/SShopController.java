@@ -11,12 +11,10 @@ import com.hzb.erp.common.mapper.CourseSectionMapper;
 import com.hzb.erp.common.mapper.UserMapper;
 import com.hzb.erp.common.pojo.dto.CourseCommentParamDTO;
 import com.hzb.erp.common.pojo.dto.CourseParamDTO;
+import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
 import com.hzb.erp.common.pojo.vo.CourseSectionVO;
 import com.hzb.erp.common.pojo.vo.CourseVO;
-import com.hzb.erp.common.service.CourseCommentService;
-import com.hzb.erp.common.service.CourseService;
-import com.hzb.erp.common.service.OrderService;
-import com.hzb.erp.common.service.SubjectService;
+import com.hzb.erp.common.service.*;
 import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
 import com.hzb.erp.studentMobile.pojo.vo.CourseInfoVO;
 import com.hzb.erp.studentMobile.service.StudentAuthService;
@@ -61,6 +59,8 @@ public class SShopController {
     private WxPayService wxService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private OrderRefundService orderRefundService;
     @Autowired
     private UserMapper userMapper;
 
@@ -167,5 +167,29 @@ public class SShopController {
             return JsonResponseUtil.error(e.getMessage());
         }
         return res;
+    }
+
+    @ApiOperation("订单列表")
+    @GetMapping("/orderList")
+    public Object orderList(@RequestParam(value = "page", defaultValue = "") Integer page,
+                       @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+                       @RequestParam(value = "state", defaultValue = "") Integer state) {
+        OrderListParamDTO param = new OrderListParamDTO();
+        Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return null;
+        }
+        param.setPage(page);
+        param.setPageSize(pageSize);
+        param.setStudentId(student.getId());
+        param.setState(state);
+        return JsonResponseUtil.paginate(orderService.getList(param));
+    }
+
+    @ApiOperation(value = "申请退款")
+    @PostMapping("/orderRefund")
+    public Object orderRefund(Long orderId) {
+//        orderRefundService.handleRefund(orderId);
+        return JsonResponseUtil.success("已申请退款");
     }
 }

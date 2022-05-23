@@ -1,8 +1,11 @@
 package com.hzb.erp.common.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.Order;
 import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
+import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
+import com.hzb.erp.common.pojo.vo.OrderVo;
 
 
 /**
@@ -27,4 +30,9 @@ public interface OrderService extends IService<Order> {
      * @param totalFee 支付金额（分）
      * */
     void paySuccessNotify(String openid, String outTradeNo, String transactionId, Integer totalFee);
+
+    /**
+    * 分页查询
+    * */
+    IPage<OrderVo> getList(OrderListParamDTO param);
 }
