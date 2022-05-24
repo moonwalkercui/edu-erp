@@ -1,5 +1,6 @@
 package com.hzb.erp.common.service;
 
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.Order;
@@ -35,4 +36,12 @@ public interface OrderService extends IService<Order> {
     * 分页查询
     * */
     IPage<OrderVo> getList(OrderListParamDTO param);
+
+    /**
+     * 订单号生成规则
+     * */
+    static String makeOrderSn() {
+        return IdUtil.simpleUUID();
+    }
+
 }

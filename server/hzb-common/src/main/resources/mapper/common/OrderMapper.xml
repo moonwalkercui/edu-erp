@@ -6,14 +6,20 @@
         select
             t1.id,t1.sn,t1.pay_money,t1.remark,t1.refunded,t1.state,t1.pay_time,t1.add_time,
             t2.name studentName
-        from `order` t1
+        from shop_order t1
         left join student t2 on t2.id = t1.student_id
         <where>
             <if test="param.studentId != null">
                 AND t1.student_id = #{param.studentId}
             </if>
-            <if test="param.state != null">
-                AND t1.state = #{param.state}
+            <if test="param.courseId != null">
+                AND t1.course_id = #{param.courseId}
+            </if>
+            <if test="param.state != null and param.state.size()>0">
+                AND t1.state in
+                <foreach collection="param.state" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
             </if>
             <if test="param.sn != null and param.sn.trim() != ''">
                 AND t1.sn like concat( #{param.sn}, '%')

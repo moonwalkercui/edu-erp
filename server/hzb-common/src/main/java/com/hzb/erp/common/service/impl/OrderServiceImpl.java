@@ -11,9 +11,11 @@ import com.hzb.erp.common.enums.OrderStateEnum;
 import com.hzb.erp.common.mapper.*;
 import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
 import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
+import com.hzb.erp.common.pojo.dto.StudentCourseSaveDTO;
 import com.hzb.erp.common.pojo.vo.OrderVo;
 import com.hzb.erp.common.service.CourseService;
 import com.hzb.erp.common.service.OrderService;
+import com.hzb.erp.common.service.StudentCourseService;
 import com.hzb.erp.utils.RequestUtil;
 import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -40,11 +44,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final OrderItemMapper orderItemMapper;
     private final OrderMapper orderMapper;
     private final PaymentMapper paymentMapper;
+    private final StudentMapper studentMapper;
+    private final StudentCourseService studentCourseService;
 
     @Override
     public Order makeOrder(OrderConfirmDTO dto) {
 
-        String sn = makeOrderSn();
+        // 创建订单
+        String sn = OrderService.makeOrderSn();
         Order order = new Order();
         order.setSn(sn);
         order.setUserId(dto.getUserId());
@@ -55,6 +62,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setState(OrderStateEnum.UNPAID);
         this.baseMapper.insert(order);
 
+        // 创建订单购买内容记录
         Course course = courseMapper.selectById(dto.getCourseId());
         OrderItem orderItem = new OrderItem();
         orderItem.setOrderId(order.getId());
@@ -64,6 +72,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderItem.setQuantity(course.getLessonCount());
         orderItem.setItemType(OrderItemTypeEnum.COURSE);
         orderItemMapper.insert(orderItem);
+
+        // 创建学生课程中间数据
+        Student student = studentMapper.selectById(dto.getStudentId());
+        StudentCourseSaveDTO studentCourseSaveDTO = new StudentCourseSaveDTO();
+        studentCourseSaveDTO.setStudentId(dto.getStudentId());
+        studentCourseSaveDTO.setStudentName(student.getName());
+        studentCourseSaveDTO.setCourseId(dto.getCourseId());
+        studentCourseSaveDTO.setCourseAmount(order.getPayMoney());
+        studentCourseSaveDTO.setPaidAmount(order.getPayMoney());
+        studentCourseSaveDTO.setCountLessonTotal(course.getLessonCount());
+        studentCourseSaveDTO.setDiscount(dto.getDiscount() == null ? BigDecimal.ZERO : dto.getDiscount());
+        studentCourseSaveDTO.setExpireDate(LocalDate.now().plusMonths(course.getExpireMonths() == null ? 12 : course.getExpireMonths()));
+        studentCourseSaveDTO.setStartDate(LocalDate.now());
+        studentCourseSaveDTO.setRemark(dto.getRemark());
+        // 创建学生课程中间数据，并记录财务数据
+        studentCourseService.addOne(studentCourseSaveDTO, null);
 
         return order;
     }
@@ -99,6 +123,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (order!=null) {
             orderMapper.updateById(order);
         }
+
     }
 
     @Override
@@ -112,10 +137,5 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return records;
     }
 
-    /**
-    * 订单号生成规则
-    * */
-    private String makeOrderSn() {
-        return IdUtil.simpleUUID();
-    }
+
 }

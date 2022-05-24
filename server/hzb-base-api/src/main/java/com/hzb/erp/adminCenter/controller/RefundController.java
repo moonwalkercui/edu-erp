@@ -45,7 +45,7 @@ public class RefundController {
     @Log(description = "发起退款", type = "退款管理")
     @PostMapping("/save")
     @PreventMultiSubmit
-    public JsonResponse saveStudent(@Valid @RequestBody RefundSaveDTO dto, BindingResult result) {
+    public JsonResponse save(@Valid @RequestBody RefundSaveDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);
         if (refundService.saveOrUpdateByDTO(dto, UserAuthService.getCurrentUserId())) {
             studentLessonCountLogService.addOneByRefund(dto.getStudentId(), dto.getStudentCourseId(), dto.getRefundLessonCount(), UserAuthService.getCurrentUserId());

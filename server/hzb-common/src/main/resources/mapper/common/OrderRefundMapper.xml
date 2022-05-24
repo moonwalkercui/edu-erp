@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.OrderRefundMapper">
+
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.OrderRefundVo">
+        select
+            t1.id,t1.refund_sn,t1.refund_money,t1.remark,t1.verify_time,t1.verify_remark,
+            t1.wx_refund_id,t1.add_time,t1.reason,t1.state,
+            t2.name studentName,
+            t3.sn order_sn,
+            t4.name verify_name
+        from shop_order_refund t1
+        left join shop_order t3 on t3.id = t1.order_id
+        left join student t2 on t2.id = t1.student_id
+        left join staff t4 on t4.id = t1.verify_id
+        <where>
+            <if test="param.studentId != null">
+                AND t1.student_id = #{param.studentId}
+            </if>
+            <if test="param.orderSn != null and param.orderSn.trim() != ''">
+                AND t3.sn like concat( #{param.orderSn}, '%')
+            </if>
+            <if test="param.state != null and param.state.size()>0">
+                AND t1.state in
+                <foreach collection="param.state" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="param.sn != null and param.sn.trim() != ''">
+                AND t1.refund_sn like concat( #{param.sn}, '%')
+            </if>
+            <if test="param.reasonType != null">
+                AND t1.reason_type = #{param.reasonType}
+            </if>
+            and t1.deleted = 0
+        </where>
+        order by t1.id desc
+    </select>
+</mapper>

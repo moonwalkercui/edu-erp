@@ -5,20 +5,19 @@ import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.hzb.erp.common.entity.*;
+import com.hzb.erp.common.enums.OrderStateEnum;
 import com.hzb.erp.common.mapper.CourseCommentMapper;
 import com.hzb.erp.common.mapper.CourseImageMapper;
 import com.hzb.erp.common.mapper.CourseSectionMapper;
 import com.hzb.erp.common.mapper.UserMapper;
-import com.hzb.erp.common.pojo.dto.CourseCommentParamDTO;
-import com.hzb.erp.common.pojo.dto.CourseParamDTO;
-import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
+import com.hzb.erp.common.pojo.dto.*;
 import com.hzb.erp.common.pojo.vo.CourseSectionVO;
 import com.hzb.erp.common.pojo.vo.CourseVO;
 import com.hzb.erp.common.service.*;
-import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
 import com.hzb.erp.studentMobile.pojo.vo.CourseInfoVO;
 import com.hzb.erp.studentMobile.service.StudentAuthService;
 import com.hzb.erp.utils.CommonUtil;
+import com.hzb.erp.utils.EnumTools;
 import com.hzb.erp.utils.JsonResponseUtil;
 import com.hzb.erp.utils.RequestUtil;
 import io.swagger.annotations.Api;
@@ -172,8 +171,8 @@ public class SShopController {
     @ApiOperation("订单列表")
     @GetMapping("/orderList")
     public Object orderList(@RequestParam(value = "page", defaultValue = "") Integer page,
-                       @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
-                       @RequestParam(value = "state", defaultValue = "") Integer state) {
+                            @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+                            @RequestParam(value = "state", defaultValue = "") String[] state) {
         OrderListParamDTO param = new OrderListParamDTO();
         Student student = StudentAuthService.getCurrentStudent();
         if (student == null) {
@@ -182,14 +181,24 @@ public class SShopController {
         param.setPage(page);
         param.setPageSize(pageSize);
         param.setStudentId(student.getId());
-        param.setState(state);
+        List<Integer> value = new ArrayList<>();
+        for (String s : state) {
+            OrderStateEnum enumClass = EnumTools.getByDist(s, OrderStateEnum.class);
+            if (enumClass != null) {
+                value.add(enumClass.getCode());
+            }
+        }
+        param.setState(value);
         return JsonResponseUtil.paginate(orderService.getList(param));
     }
 
     @ApiOperation(value = "申请退款")
     @PostMapping("/orderRefund")
-    public Object orderRefund(Long orderId) {
-//        orderRefundService.handleRefund(orderId);
-        return JsonResponseUtil.success("已申请退款");
+    public Object orderRefund(OrderRefundDTO dto) {
+        Student student = StudentAuthService.getCurrentStudent();
+        dto.setUserId(student.getUserId());
+        dto.setStudentId(student.getId());
+        orderRefundService.handleRefund(dto);
+        return JsonResponseUtil.success("退款申请成功");
     }
 }

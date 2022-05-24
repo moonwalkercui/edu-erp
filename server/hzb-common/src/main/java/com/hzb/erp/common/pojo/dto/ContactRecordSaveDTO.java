@@ -3,7 +3,6 @@ package com.hzb.erp.common.pojo.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hzb.erp.common.enums.*;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

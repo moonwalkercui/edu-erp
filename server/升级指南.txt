@@ -2,6 +2,7 @@
 - 2022.5.8 在线购课
 
 ```
+INSERT INTO `dict`(`id`, `name`, `code`, `remark`) VALUES (3, '退款类型', 'refund_type', '退款类型选项')
 ALTER TABLE `student` DROP COLUMN `wx_access_id`;
 ALTER TABLE `course` ADD COLUMN `for_sale` tinyint(1) NULL DEFAULT 0 COMMENT '是否上架中';
 ALTER TABLE `course` ADD COLUMN `recommend` tinyint(1) NULL DEFAULT 0 COMMENT '是否推荐';
