@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 public class OrderRefundDTO{
@@ -29,5 +30,8 @@ public class OrderRefundDTO{
 
     @ApiModelProperty(value = "退款原因备注")
     private String reason;
+
+    private LocalDate endDate;
+    private LocalDate startDate;
 
 }

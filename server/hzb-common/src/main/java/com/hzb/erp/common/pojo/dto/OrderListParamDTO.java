@@ -2,6 +2,7 @@ package com.hzb.erp.common.pojo.dto;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -11,4 +12,6 @@ public class OrderListParamDTO extends PaginateDTO {
     private String sn;
     private Long studentId;
     private Long courseId;
+    private LocalDate endDate;
+    private LocalDate startDate;
 }

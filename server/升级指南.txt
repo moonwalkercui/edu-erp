@@ -3,6 +3,7 @@
 
 ```
 INSERT INTO `dict`(`id`, `name`, `code`, `remark`) VALUES (3, '退款类型', 'refund_type', '退款类型选项')
+ALTER TABLE `student_course` ADD COLUMN `from_trial` tinyint(1) NULL DEFAULT 0 COMMENT '是否来自于体验卡';
 ALTER TABLE `student` DROP COLUMN `wx_access_id`;
 ALTER TABLE `course` ADD COLUMN `for_sale` tinyint(1) NULL DEFAULT 0 COMMENT '是否上架中';
 ALTER TABLE `course` ADD COLUMN `recommend` tinyint(1) NULL DEFAULT 0 COMMENT '是否推荐';
@@ -10,6 +11,7 @@ ALTER TABLE `course` ADD COLUMN `cover` varchar(255) NULL COMMENT '封面';
 ALTER TABLE `course` ADD COLUMN `close_date` date NULL DEFAULT NULL COMMENT '报名截止日期';
 ALTER TABLE `course` ADD COLUMN `teacher_info` varchar(255) NULL COMMENT '师资信息';
 ALTER TABLE `course` ADD COLUMN `service_info` varchar(255) NULL COMMENT '服务说明';
+ALTER TABLE `course` ADD COLUMN `storage` int(11) NULL DEFAULT 0 COMMENT '库存名额';
 ALTER TABLE `subject` ADD COLUMN `sort_num` int NULL DEFAULT 0 COMMENT '排序值';
 
 -- ----------------------------

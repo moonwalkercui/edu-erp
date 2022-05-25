@@ -19,7 +19,7 @@ import com.hzb.erp.studentMobile.service.StudentAuthService;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.EnumTools;
 import com.hzb.erp.utils.JsonResponseUtil;
-import com.hzb.erp.utils.RequestUtil;
+import com.hzb.erp.wechat.service.WxPaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -62,6 +62,8 @@ public class SShopController {
     private OrderRefundService orderRefundService;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private WxPaymentService wxPaymentService;
 
     @ApiOperation("购课课程列表")
     @GetMapping("/list")
@@ -156,7 +158,7 @@ public class SShopController {
     public Object createOrder(@RequestBody Order order) {
         Student student = StudentAuthService.getCurrentStudent();
         String openid = userMapper.getWxOpenid(student.getUserId());
-        WxPayUnifiedOrderRequest orderRequestParam = com.hzb.erp.wechat.service.WxPayService.buildParamByOrder(order, openid,"JSAPI");
+        WxPayUnifiedOrderRequest orderRequestParam = wxPaymentService.buildPayParamByOrder(order, openid,"JSAPI");
         Object res;
         try{
             res = this.wxService.createOrder(orderRequestParam);

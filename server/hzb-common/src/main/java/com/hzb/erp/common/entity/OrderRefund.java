@@ -44,6 +44,9 @@ public class OrderRefund implements Serializable {
     @ApiModelProperty(value = "学生端账号id")
     private Long studentId;
 
+    @ApiModelProperty(value = "物品名称")
+    private String itemNames;
+
     @ApiModelProperty(value = "退款金额")
     private BigDecimal refundMoney;
 

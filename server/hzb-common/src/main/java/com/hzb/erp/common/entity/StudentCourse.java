@@ -89,4 +89,7 @@ public class StudentCourse extends AutoFillEntity {
     @ApiModelProperty(value = "消课优先级")
     private Integer priority;
 
+    @ApiModelProperty(value = "是否来自于体验卡")
+    private Boolean fromTrial;
+
 }

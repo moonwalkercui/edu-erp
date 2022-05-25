@@ -3,6 +3,7 @@ package com.hzb.erp.common.pojo.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -15,4 +16,6 @@ public class OrderRefundParamDTO extends PaginateDTO {
     private String refundSn;
     private Long studentId;
     private Long reasonType;
+    private LocalDate endDate;
+    private LocalDate startDate;
 }

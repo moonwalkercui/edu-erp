@@ -10,6 +10,7 @@ import com.github.binarywang.wxpay.bean.result.*;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.hzb.erp.common.service.OrderService;
+import com.hzb.erp.wechat.service.WxPaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -27,32 +28,21 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Slf4j
 public class WxPayController {
-  private final WxPayService wxPayService;
-  private final OrderService orderService;
+  private final WxPaymentService wxPaymentService;
 
   @ApiOperation(value = "支付回调通知处理")
-  @PostMapping("/handleNotify")
-  public String parseOrderNotifyResult(@RequestBody String xmlData) throws WxPayException {
-    final WxPayOrderNotifyResult notifyResult = this.wxPayService.parseOrderNotifyResult(xmlData);
-    log.info("==============支付回调===================");
-    log.info(String.valueOf(notifyResult));
-    notifyResult.checkResult(wxPayService, notifyResult.getSignType(), true);
-    log.info("==============支付成功===================");
-    orderService.paySuccessNotify(notifyResult.getOpenid(), notifyResult.getOutTradeNo(), notifyResult.getTransactionId(), notifyResult.getTotalFee());
-    log.info("==============支付回调结束===================");
-    // 支付成功
-//    if (trade_status.equals(AlipayTradeStatus.TRADE_SUCCESS.getStatus()) || trade_status.equals(AlipayTradeStatus.TRADE_FINISHED.getStatus())) {
-//      // 处理支付成功逻辑
-//      try {
-//      } catch (Exception e) {
-//        log.error("支付宝回调业务处理报错,params");
-//      }
-//    } else {
-//      log.error("没有处理支付宝回调业务");
-//    }
+  @PostMapping("/payNotify")
+  public String payNotify(@RequestBody String xmlData) throws WxPayException {
+    wxPaymentService.payNotify(xmlData);
     return WxPayNotifyResponse.success("成功");
   }
 
+  @ApiOperation(value = "退款回调通知处理")
+  @PostMapping("/refundNotify")
+  public String refundNotify(@RequestBody String xmlData) throws WxPayException {
+    wxPaymentService.refundNotify(xmlData);
+    return WxPayNotifyResponse.success("成功");
+  }
 
 //  /**
 //   * 调用统一下单接口，并组装生成支付所需参数对象.
@@ -150,7 +140,6 @@ public class WxPayController {
 //  public WxPayRefundResult refund(@RequestBody WxPayRefundRequest request) throws WxPayException {
 //    return this.wxPayService.refund(request);
 //  }
-//
 //  /**
 //   * <pre>
 //   * 微信支付-查询退款

@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.*;
 import com.hzb.erp.common.enums.OrderItemTypeEnum;
 import com.hzb.erp.common.enums.OrderStateEnum;
+import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.*;
 import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
 import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
@@ -49,6 +50,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public Order makeOrder(OrderConfirmDTO dto) {
+        // 减少库存
+        Course course = courseMapper.selectById(dto.getCourseId());
+        int storage = course.getStorage();
+        if(storage == 0) {
+            throw new BizException("已没有名额");
+        }
+        // 减少名额
+        course.setStorage(storage - 1);
+        courseMapper.updateById(course);
 
         // 创建订单
         String sn = OrderService.makeOrderSn();
@@ -63,7 +73,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         this.baseMapper.insert(order);
 
         // 创建订单购买内容记录
-        Course course = courseMapper.selectById(dto.getCourseId());
         OrderItem orderItem = new OrderItem();
         orderItem.setOrderId(order.getId());
         orderItem.setItemId(dto.getCourseId());
@@ -88,7 +97,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         studentCourseSaveDTO.setRemark(dto.getRemark());
         // 创建学生课程中间数据，并记录财务数据
         studentCourseService.addOne(studentCourseSaveDTO, null);
-
         return order;
     }
 
@@ -136,6 +144,5 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         return records;
     }
-
 
 }

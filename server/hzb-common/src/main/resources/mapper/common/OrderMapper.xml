@@ -24,6 +24,9 @@
             <if test="param.sn != null and param.sn.trim() != ''">
                 AND t1.sn like concat( #{param.sn}, '%')
             </if>
+            <if test="param.startDate != null and param.endDate != null">
+                AND ( t1.add_time &gt;= #{param.startDate} and t1.add_time &lt;= #{param.endDate} )
+            </if>
             and t1.deleted = 0
         </where>
         order by t1.id desc

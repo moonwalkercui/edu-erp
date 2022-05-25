@@ -62,4 +62,7 @@ public class Course extends AutoFillEntity {
     @ApiModelProperty(value = "是否上架")
     private Boolean forSale;
 
+    @ApiModelProperty(value = "库存名额")
+    private Integer storage;
+
 }

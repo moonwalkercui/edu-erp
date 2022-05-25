@@ -7,6 +7,10 @@ import com.hzb.erp.common.pojo.dto.IdsAndContentDTO;
 import com.hzb.erp.common.pojo.dto.OrderRefundDTO;
 import com.hzb.erp.common.pojo.dto.OrderRefundParamDTO;
 import com.hzb.erp.common.pojo.vo.OrderRefundVo;
+import org.apache.poi.hpsf.Decimal;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>
@@ -30,10 +34,20 @@ public interface OrderRefundService extends IService<OrderRefund> {
     /**
      * 同意退款
      * */
-    Boolean handleApprove(IdsAndContentDTO dto, Long staffId);
+    List<OrderRefund> handleApprove(IdsAndContentDTO dto, Long staffId);
 
     /**
      * 驳回退款
      * */
     Boolean handleReject(IdsAndContentDTO dto, Long staffId);
+
+
+    /**
+     * 微信退款后执行
+     * @param refundSn 本系统退款单号
+     * @param tradeNo 第三方退款编号
+     * @param refundMoney 退款金额
+     * */
+    void refundSuccessNotify(String refundSn, String tradeNo, BigDecimal refundMoney);
+
 }

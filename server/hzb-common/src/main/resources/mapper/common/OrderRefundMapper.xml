@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzb.erp.common.mapper.OrderRefundMapper">
 
-
     <select id="getList" resultType="com.hzb.erp.common.pojo.vo.OrderRefundVo">
         select
             t1.id,t1.refund_sn,t1.refund_money,t1.remark,t1.verify_time,t1.verify_remark,
@@ -32,6 +31,9 @@
             </if>
             <if test="param.reasonType != null">
                 AND t1.reason_type = #{param.reasonType}
+            </if>
+            <if test="param.startDate != null and param.endDate != null">
+                AND ( t1.add_time &gt;= #{param.startDate} and t1.add_time &lt;= #{param.endDate} )
             </if>
             and t1.deleted = 0
         </where>

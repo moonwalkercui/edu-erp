@@ -12,4 +12,9 @@ public interface OrderItemMapper extends BaseMapper<OrderItem> {
     String getNamesByOrderId(Long orderId);
 
     List<OrderItem> getList(Long orderId);
+
+    /**
+    * 获取购买的课程id列表
+    * */
+    List<Long> getCourseIdsByOrderId(Long orderId);
 }
