@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.CourseComment;
 import com.hzb.erp.common.pojo.dto.CourseCommentParamDTO;
+import com.hzb.erp.common.pojo.dto.OrderEvaluateDTO;
 import com.hzb.erp.common.pojo.vo.CourseCommentVO;
 
 /**
@@ -15,4 +16,9 @@ import com.hzb.erp.common.pojo.vo.CourseCommentVO;
  */
 public interface CourseCommentService extends IService<CourseComment> {
     IPage<CourseCommentVO> getList(CourseCommentParamDTO param);
+
+    /**
+    * 订单评价
+    * */
+    void createByOrder(OrderEvaluateDTO dto);
 }

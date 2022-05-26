@@ -9,6 +9,9 @@ import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.hzb.erp.common.entity.Order;
 import com.hzb.erp.common.entity.OrderRefund;
+import com.hzb.erp.common.enums.OrderRefundStateEnum;
+import com.hzb.erp.common.enums.OrderStateEnum;
+import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.OrderItemMapper;
 import com.hzb.erp.common.service.OrderRefundService;
 import com.hzb.erp.common.service.OrderService;
@@ -42,6 +45,10 @@ public class WxPaymentServiceImpl implements WxPaymentService {
 
     @Override
     public WxPayUnifiedOrderRequest buildPayParamByOrder(Order order, String openid, String tradeType) {
+        Order findOrder = orderService.getById(order.getId());
+        if(!findOrder.getState().equals(OrderStateEnum.UNPAID)) {
+            throw new BizException(findOrder.getState().getDist() + "的订单无法支付");
+        }
         String notifyUrl;
         String createIp;
         try {
@@ -69,6 +76,11 @@ public class WxPaymentServiceImpl implements WxPaymentService {
 
     @Override
     public WxPayRefundRequest buildRefundParamByOrderRefund(OrderRefund orderRefund) {
+        OrderRefund findRefund = orderRefundService.getById(orderRefund.getId());
+        if(!findRefund.getState().equals(OrderRefundStateEnum.APPLY)) {
+            throw new BizException(findRefund.getState().getDist() + "的退款单无法退款");
+        }
+
         String notifyUrl;
         String createIp;
         try {
@@ -81,7 +93,6 @@ public class WxPaymentServiceImpl implements WxPaymentService {
         WxPayRefundRequest refundRequest = new WxPayRefundRequest();
         refundRequest.setNotifyUrl(notifyUrl);
         // todo
-
         return refundRequest;
     }
 

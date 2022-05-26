@@ -55,6 +55,10 @@
 				})
 			},
 			submitOrder() {
+				if(this.courseInfo.storage <= 0) {
+					this.$common.showMsg("名额不足无法报名");
+					return
+				}
 				uni.setStorageSync("order-confirm-course", this.courseInfo)
 				uni.redirectTo({
 					url: "/pages/shop/orderConfirm"

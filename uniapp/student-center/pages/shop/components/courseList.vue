@@ -14,8 +14,8 @@
 			<!-- 	<view class="u-m-t-10">
 					<u-tag :text="item.type" type="warning" size="mini" />
 				</view> -->
-				<view class="u-m-t-10 text-gray">{{item.lessonCount}}课时 · {{item.expireMonths}}个月有效期 </view>
-				<view class="u-m-t-10 text-gray">{{item.closeDate ? '报名截至日 ' + item.closeDate : ''}}</view>
+				<view class="u-m-t-10 text-gray">{{item.lessonCount}}课时 · {{item.expireMonths}}个月</view>
+				<view class="u-m-t-10 text-gray">{{item.closeDate ? '报名截至' + item.closeDate : ''}} · 剩余{{item.storage}}</view>
 				<view class="u-flex u-m-t-10">
 					<view class="u-flex-2">
 						<!-- <u-avatar v-for="(tea,ind) in item.teachers" :key="ind" :src="item.img" size="48" class="u-m-r-10"></u-avatar> -->

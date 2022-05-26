@@ -26,6 +26,9 @@ public class CourseComment extends AutoFillEntity {
     @ApiModelProperty(value = "学生id")
     private Long studentId;
 
+    @ApiModelProperty(value = "所属订单id")
+    private Long orderId;
+
     @ApiModelProperty(value = "评价内容")
     private String content;
 

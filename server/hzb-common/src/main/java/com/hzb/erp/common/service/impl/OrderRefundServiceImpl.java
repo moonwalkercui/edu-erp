@@ -1,5 +1,6 @@
 package com.hzb.erp.common.service.impl;
 
+import cn.hutool.core.util.BooleanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -53,6 +54,9 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundMapper, Order
         Order order = orderMapper.selectById(dto.getOrderId());
         if(order == null) {
             throw new BizException("未查询到订单");
+        }
+        if(BooleanUtil.isTrue(order.getRefunded())) {
+            throw new BizException("已退款的订单无法重复退款");
         }
         if(dto.getRefundMoney().compareTo(order.getPayMoney()) > 0) {
             throw new BizException("退款金额有误");
@@ -123,6 +127,11 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundMapper, Order
         }
         if ( handleList.size() == 0 ) {
             throw new BizException("没有可审核的条目");
+        }
+        for (OrderRefund item : handleList) {
+            Order order = orderMapper.selectById(item.getOrderId());
+            order.setRefunded(false);
+            orderMapper.updateById(order);
         }
         return updateBatchById(handleList);
     }

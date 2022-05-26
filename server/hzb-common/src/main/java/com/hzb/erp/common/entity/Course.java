@@ -65,4 +65,7 @@ public class Course extends AutoFillEntity {
     @ApiModelProperty(value = "库存名额")
     private Integer storage;
 
+    @ApiModelProperty(value = "封面图")
+    private String cover;
+
 }

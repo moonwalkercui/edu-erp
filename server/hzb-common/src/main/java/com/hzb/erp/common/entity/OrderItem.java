@@ -55,4 +55,7 @@ public class OrderItem implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime addTime;
 
+    @ApiModelProperty(value = "图片")
+    private String cover;
+
 }

@@ -68,6 +68,7 @@ public class TCourseController {
         param.setName(name);
         param.setPage(page);
         param.setPageSize(pageSize);
+        param.setWithFavRate(true);
 
         return page != null && page > 0 ?
                 JsonResponseUtil.paginate(courseService.getList(param)) :

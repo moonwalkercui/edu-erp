@@ -47,9 +47,16 @@
 					</u-form-item>
 				</view>
 			</u-form>
-		</view>	
+		</view>
+		
 		<view class="u-margin-30 bg-white boder-radius-md" style="overflow: hidden;">
 			<u-cell-group title="">
+				<u-cell-item title="学生姓名" :arrow="false">
+					<text class="text-black"> {{studentInfo.name}}
+						<u-icon class="u-m-l-10" name="woman" color="#ff557f" size="28" v-if="studentInfo.gender == '女'"></u-icon>
+						<u-icon class="u-m-l-10" name="man" color="#2979ff" size="28" v-if="studentInfo.gender == '男'"></u-icon>
+					</text>
+				</u-cell-item>
 				<u-cell-item title="支付方式" :arrow="false">
 					<text class="text-black">微信支付</text>
 				</u-cell-item>
@@ -82,51 +89,55 @@
 					courseId: '',
 					remark: ''
 				},
+				orderCreated: {},
+				studentInfo: {}
 			}
 		},
 		onLoad() {
 			this.courseInfo = uni.getStorageSync("order-confirm-course")
+			this.studentInfo = uni.getStorageSync("current-student-info")
 			this.orderInfo.courseId = this.courseInfo.id
 			this.orderInfo.price = this.courseInfo.price
+			this.orderInfo.studentId = this.studentInfo.id
 		},
 		methods: {
 			payOrder() {
 				this.disabled = true
 				this.disabled = false
-				wechat.wxpay({
-					"appId": 11,
-					"nonceStr": 22,
-					"package": 33,
-					"paySign": 44,
-					"signType": 55,
-					"timeStamp": 66,
-				}, (res) => {
-					console.log('3333', res1)
-				})
-				return;
-				
-				this.$http.post('sCenter/shop/orderConfirm', this.orderInfo, res => {
-					if (!this.$common.handleResponseMsg(res)) return;
-					console.log('111', res)
-					this.$http.post('sCenter/shop/createOrder', res, res1 => {
-						if (res1 && res1.errCode > 0) {
-							uni.showToast({
-								title: res1.msg,
-								icon: 'error',
-								duration: 10000
-							});
-							return
-						}
-						console.log('222', res1)
-						wechat.wxpay({
-							"appId": res1.appId,
-							"nonceStr": res1.nonceStr,
-							"package": res1.package,
-							"paySign": res1.paySign,
-							"signType": res1.signType,
-							"timeStamp": res1.timeStamp,
-						}, (res) => {
-							console.log('3333', res1)
+				if(this.orderCreated.sn) {
+					// 如果已经生成订单，则直接支付即可
+					this.wxpay()
+				} else {
+					this.$http.post('sCenter/shop/orderConfirm', this.orderInfo, res => {
+						if (!this.$common.handleResponseMsg(res)) return;
+						console.log('订单信息', res)
+						this.orderCreated = res
+						this.wxpay()
+					})
+				}
+			},
+			wxpay() {
+				this.$http.post('sCenter/shop/createOrder', this.orderCreated, res1 => {
+					if (res1 && res1.errCode > 0) {
+						uni.showToast({
+							title: res1.msg,
+							icon: 'error',
+							duration: 10000
+						});
+						return
+					}
+					console.log('wxpayparam', res1)
+					wechat.wxpay({
+						"appId": res1.appId,
+						"nonceStr": res1.nonceStr,
+						"package": res1.package,
+						"paySign": res1.paySign,
+						"signType": res1.signType,
+						"timeStamp": res1.timeStamp,
+					}, (res2) => {
+						console.log('支付结果', res1)
+						uni.redirectTo({
+							url: "/pages/shop/payResult"
 						})
 					})
 				})

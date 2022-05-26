@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.Order;
 import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
 import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
-import com.hzb.erp.common.pojo.vo.OrderVo;
+import com.hzb.erp.common.pojo.vo.OrderVO;
 
 
 /**
@@ -35,7 +35,7 @@ public interface OrderService extends IService<Order> {
     /**
     * 分页查询
     * */
-    IPage<OrderVo> getList(OrderListParamDTO param);
+    IPage<OrderVO> getList(OrderListParamDTO param);
 
     /**
      * 订单号生成规则

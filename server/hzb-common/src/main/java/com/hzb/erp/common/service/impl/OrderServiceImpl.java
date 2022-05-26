@@ -1,6 +1,5 @@
 package com.hzb.erp.common.service.impl;
 
-import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,20 +12,15 @@ import com.hzb.erp.common.mapper.*;
 import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
 import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
 import com.hzb.erp.common.pojo.dto.StudentCourseSaveDTO;
-import com.hzb.erp.common.pojo.vo.OrderVo;
-import com.hzb.erp.common.service.CourseService;
+import com.hzb.erp.common.pojo.vo.OrderVO;
 import com.hzb.erp.common.service.OrderService;
 import com.hzb.erp.common.service.StudentCourseService;
-import com.hzb.erp.utils.RequestUtil;
-import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -79,6 +73,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderItem.setItemName(course.getName());
         orderItem.setPrice(dto.getPrice());
         orderItem.setQuantity(course.getLessonCount());
+        orderItem.setCover(course.getCover());
         orderItem.setItemType(OrderItemTypeEnum.COURSE);
         orderItemMapper.insert(orderItem);
 
@@ -135,10 +130,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public IPage<OrderVo> getList(OrderListParamDTO param) {
-        IPage<OrderVo> records = baseMapper.getList(new Page<>(param.getPage(), param.getPageSize()), param);
+    public IPage<OrderVO> getList(OrderListParamDTO param) {
+        IPage<OrderVO> records = baseMapper.getList(new Page<>(param.getPage(), param.getPageSize()), param);
         if(records.getRecords()!=null) {
-            for(OrderVo vo : records.getRecords()) {
+            for(OrderVO vo : records.getRecords()) {
                 vo.setItemList(orderItemMapper.getList(vo.getId()));
             }
         }

@@ -19,4 +19,5 @@ public interface CourseCommentMapper extends BaseMapper<CourseComment> {
 
     List<CourseCommentVO> getList(@Param("param") CourseCommentParamDTO param);
 
+    Double getFavRate(Long coureId);
 }

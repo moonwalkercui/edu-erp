@@ -1,5 +1,6 @@
 package com.hzb.erp.common.pojo.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hzb.erp.common.enums.LessonTypeEnum;
 import com.hzb.erp.common.enums.SwitchEnum;
@@ -76,5 +77,12 @@ public class CourseVO {
 
     @ApiModelProperty(value = "是否可预约")
     private Boolean bookable;
+
+    @ApiModelProperty(value = "名额")
+    private Integer storage;
+
+    @ApiModelProperty(value = "好评率")
+    @TableField(exist = false)
+    private Double favRate;
 
 }

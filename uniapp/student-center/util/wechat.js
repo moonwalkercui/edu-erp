@@ -212,7 +212,14 @@ export default {
 					success: function (res) {
 						// 支付成功后的回调函数
 						cb(res); 
-				    }
+				    },
+					fail: function(err) {
+						uni.showToast({
+							title: err.errMsg || JSON.stringify(err),
+							icon: 'none',
+							duration: 30000
+						});
+					}
 				});
 			});
 		});

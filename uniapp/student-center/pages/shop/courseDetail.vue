@@ -23,9 +23,9 @@
 			<!-- 	<view class="u-m-t-10">
 					<u-tag :text="info.type" type="warning" size="mini" />
 				</view> -->
-				<view class="u-m-t-10 text-gray">{{info.lessonCount}}课时 · {{info.expireMonths}}个月有效期 </view>
-				<view class="u-m-t-10 text-gray">{{info.closeDate ? '报名截至日 ' + info.closeDate : ''}}</view>
-				<view class="u-flex u-m-t-10">
+				<view class="u-m-t-20 ">{{info.lessonCount}}课时 · {{info.expireMonths}}个月有效期 </view>
+				<view class="u-m-t-20 ">剩余名额{{info.storage}} · {{info.closeDate ? '报名截至' + info.closeDate : ''}}</view>
+				<view class="u-flex u-m-t-20">
 					<view class="u-flex-2">
 						<!-- <u-avatar v-for="(tea,ind) in info.teachers" :key="ind" :src="info.img" size="48" class="u-m-r-10"></u-avatar> -->
 						{{info.teacherInfo}}
@@ -71,7 +71,7 @@
 		<view class="bg-white u-m-b-10">
 			<view class="u-p-30 u-p-b-0 u-font-md u-flex u-border-bottom" id="pingjia">
 				<view class="u-flex-3 text-bold">课程评价(1002)</view>
-				<view class="u-flex-1 u-text-right text-mini text-orange">好评率 97%</view>
+				<view class="u-flex-1 u-text-right text-mini text-orange">好评率 {{info.favRate}}%</view>
 			</view>
 			<view class="comment " v-for="(com, index) in commentList" :key="com.id">
 				<view class="left">

@@ -29,6 +29,18 @@
 			}
 		},
 		{
+			"path": "pages/shop/myOrder",
+			"style": {
+				"navigationBarTitleText": "我的订单"
+			}
+		},
+		{
+			"path": "pages/shop/payResult",
+			"style": {
+				"navigationBarTitleText": "支付结果"
+			}
+		},
+		{
 			"path": "pages/shop/orderConfirm",
 			"style": {
 				"navigationBarTitleText": "订单确认"

@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzb.erp.common.mapper.OrderItemMapper">
     <select id="getNamesByOrderId" resultType="java.lang.String">
-        select group_concat(t2.item_name) from order_item t2 where t2.order_id = #{orderId}
+        select group_concat(t2.item_name) from shop_order_item t2 where t2.order_id = #{orderId}
     </select>
     <select id="getList" resultType="com.hzb.erp.common.entity.OrderItem" parameterType="java.lang.Long">
-        select t1.*
+        select t1.id,t1.item_id,t1.item_name,t1.price,t1.quantity,t1.add_time,t1.cover
         from shop_order_item t1
         where t1.order_id = #{orderId}
     </select>

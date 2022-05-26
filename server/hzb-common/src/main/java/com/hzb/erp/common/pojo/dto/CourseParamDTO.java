@@ -14,4 +14,5 @@ public class CourseParamDTO extends PaginateDTO {
     private String name;
     private Boolean forSale;
     private Boolean recommend;
+    private Boolean withFavRate;
 }

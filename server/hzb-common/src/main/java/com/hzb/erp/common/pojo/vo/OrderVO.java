@@ -18,7 +18,7 @@ import java.util.List;
  * @author 541720500@qq.com
  */
 @Data
-public class OrderVo {
+public class OrderVO {
 
     @ApiModelProperty(value = "主键")
     private Long id;
@@ -51,5 +51,13 @@ public class OrderVo {
 
     @ApiModelProperty(value = "购买内容")
     private List<OrderItem> itemList;
+
+    @ApiModelProperty(value = "是否可以退款")
+    private Boolean cancelAble;
+
+    // 2小时内可以退款
+    public Boolean getCancelAble() {
+        return payTime != null && payTime.plusMinutes(240).isAfter(LocalDateTime.now());
+    }
 
 }

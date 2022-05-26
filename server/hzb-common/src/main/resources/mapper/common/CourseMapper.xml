@@ -18,15 +18,16 @@
         </where>
     </select>
 
-
     <select id="getList" resultType="com.hzb.erp.common.pojo.vo.CourseVO">
         SELECT t1.*,
         t2.name subject_name,
         (select count(0) from course_link where course_id = t1.id group by course_id) link_count
+        <if test="param.withFavRate !=null and param.withFavRate ">
+            , ( select avg(t2.score) * 20 from course_comment t2 where t2.course_id = t1.id) fav_rate
+        </if>
         FROM course t1
         LEFT JOIN subject t2 ON t2.id = t1.subject_id
         <where>
-
             <if test="param.subjectId !=null ">
                 AND t1.subject_id = #{param.subjectId}
             </if>

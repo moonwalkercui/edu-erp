@@ -21,4 +21,7 @@
             limit #{param.limit}
         </if>
     </select>
+    <select id="getFavRate" resultType="java.lang.Double" parameterType="java.lang.Long">
+        select avg(t2.score) * 20 from course_comment t2 where t2.course_id = #{courseId}
+    </select>
 </mapper>

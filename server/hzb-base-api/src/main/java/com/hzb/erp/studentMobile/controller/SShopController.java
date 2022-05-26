@@ -22,6 +22,7 @@ import com.hzb.erp.utils.JsonResponseUtil;
 import com.hzb.erp.wechat.service.WxPaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.math3.geometry.euclidean.oned.Interval;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -29,8 +30,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 在线购课控制器
@@ -68,7 +71,7 @@ public class SShopController {
     @ApiOperation("购课课程列表")
     @GetMapping("/list")
     public Object list(@RequestParam(value = "page", defaultValue = "") Integer page,
-                       @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+                       @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                        @RequestParam(value = "recommend", defaultValue = "") Boolean recommend,
                        @RequestParam(value = "subjectId", defaultValue = "") Long subjectId) {
         CourseParamDTO param = new CourseParamDTO();
@@ -82,6 +85,7 @@ public class SShopController {
         param.setRecommend(recommend);
         param.setForSale(true);
         param.setState(Collections.singletonList(1));
+        param.setWithFavRate(true);
         return JsonResponseUtil.paginate(courseService.getList(param));
     }
 
@@ -100,7 +104,6 @@ public class SShopController {
         CourseInfoVO info = new CourseInfoVO();
         CourseVO course = courseService.getInfo(id);
         BeanUtils.copyProperties(course, info);
-
         // 大纲
         QueryWrapper<CourseSection> qw1 = new QueryWrapper<>();
         qw1.eq("course_id", id);
@@ -121,6 +124,10 @@ public class SShopController {
         paramDTO.setState(true);
         paramDTO.setLimit(2);
         info.setCommentList(courseCommentMapper.getList(paramDTO));
+
+        double favRate = courseCommentMapper.getFavRate(info.getId());
+        favRate = (double) Math.round(favRate * 100) / 100;
+        info.setFavRate(favRate);
 
         // 介绍图片
         QueryWrapper<CourseImage> qw2 = new QueryWrapper<>();
@@ -145,10 +152,13 @@ public class SShopController {
 
     @ApiOperation("订单确认返回订单支付信息")
     @PostMapping("/orderConfirm")
-    public Order orderConfirm(@Valid @RequestBody OrderConfirmDTO dto, BindingResult result) throws WxPayException {
+    public Object orderConfirm(@Valid @RequestBody OrderConfirmDTO dto, BindingResult result) throws WxPayException {
         CommonUtil.handleValidMessage(result);
         Student student = StudentAuthService.getCurrentStudent();
         dto.setUserId(student.getUserId());
+        if(!dto.getStudentId().equals(student.getId())) {
+            return JsonResponseUtil.error("学生账号异常，请到首页切换学生");
+        }
         dto.setStudentId(student.getId());
         return orderService.makeOrder(dto);
     }
@@ -183,15 +193,31 @@ public class SShopController {
         param.setPage(page);
         param.setPageSize(pageSize);
         param.setStudentId(student.getId());
-        List<Integer> value = new ArrayList<>();
-        for (String s : state) {
-            OrderStateEnum enumClass = EnumTools.getByDist(s, OrderStateEnum.class);
-            if (enumClass != null) {
-                value.add(enumClass.getCode());
-            }
-        }
-        param.setState(value);
+        param.setState(state == null ? null : Arrays.stream(state).map(Integer::valueOf).collect(Collectors.toList()));
         return JsonResponseUtil.paginate(orderService.getList(param));
+    }
+
+    @ApiOperation("获取未评价数")
+    @GetMapping("/orderCountUnevaluate")
+    public Long orderCountUnevaluate() {
+        Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return 0L;
+        }
+        QueryWrapper<Order> qw = new QueryWrapper<>();
+        qw.eq("state", OrderStateEnum.PAID.getCode());
+        qw.eq("student_id", student.getId());
+        return orderService.count(qw);
+    }
+
+    @ApiOperation("订单评价")
+    @PostMapping("/orderEvaluate")
+    public Object orderEvaluate(@Valid @RequestBody OrderEvaluateDTO dto, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
+        Student student = StudentAuthService.getCurrentStudent();
+        dto.setStudentId(student.getUserId());
+        courseCommentService.createByOrder(dto);
+        return JsonResponseUtil.success("已评价");
     }
 
     @ApiOperation(value = "申请退款")

@@ -29,5 +29,6 @@ public class OrderConfirmDTO {
     private Long userId;
 
     @ApiModelProperty(value = "学生ID")
+    @NotNull(message = "缺少选择学生")
     private Long studentId;
 }

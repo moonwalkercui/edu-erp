@@ -14,6 +14,7 @@ import lombok.Getter;
 public enum OrderStateEnum implements BaseEnum {
     UNPAID(0, "未支付"),
     PAID(1, "已付款"),
+    EVALUATE(10, "已评价"),
     CANCELED(99, "已取消");
     @EnumValue
     private final int code;

@@ -21,8 +21,14 @@
 			</view>
 		</view>
 		
-		<u-count-to :start-val="30" :end-val="500"></u-count-to>
-		
+		<!-- <u-count-to :start-val="30" :end-val="500"></u-count-to> -->
+		<view class="u-m-t-20">
+			<u-cell-group>
+				<u-cell-item icon="shopping-cart-fill" :icon-style="{color: '#d07ce5'}" title="我的订单" @click="myOrder">
+					<u-badge :absolute="false" :count="unevaluateCount" slot="right-icon"></u-badge>
+				</u-cell-item>
+			</u-cell-group>
+		</view>
 		<view class="u-m-t-20">
 			<u-cell-group>
 				<u-cell-item icon="heart-fill" :icon-style="{color: '#ff745b'}" title="报名记录" @click="contractrecord"></u-cell-item>
@@ -49,11 +55,13 @@
 				},
 				counts: {},
 				current_student: {},
+				unevaluateCount: 0,
 			}
 		},
 		onShow() {
 			this.getStudentInfo();
 			this.current_student = uni.getStorageSync("current-student-info")
+			this.countUnevaluate()
 		},
 		methods: {
 			getStudentInfo() {
@@ -78,6 +86,11 @@
 					url: '/pages/center/contract-record'
 				});
 			},
+			myOrder() {
+				uni.navigateTo({
+					url: '/pages/shop/myOrder'
+				});
+			},
 			signrecord() {
 				uni.navigateTo({
 					url: '/pages/lesson/sign-record'
@@ -91,6 +104,14 @@
 			studentManage() {
 				uni.navigateTo({
 					url: "/pages/student/index"
+				})
+			},
+			// 待评价的数量
+			countUnevaluate() {
+				this.$http.get('sCenter/shop/orderCountUnevaluate', {}, res => {
+					if(!res) return;
+					if (!this.$common.handleResponseMsg(res)) return;
+					this.unevaluateCount = res
 				})
 			},
 		},
