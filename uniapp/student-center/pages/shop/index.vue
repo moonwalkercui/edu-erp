@@ -1,12 +1,8 @@
 <template>
 	<view>
-		<uni-nav-bar left-icon="arrow-left" right-icon="reload" title="在线购课" @clickLeft="clickLeft"
-			@clickRight="clickRight" />
-
 		<u-tabs count="count" :list="tabs" active-color="#2ac79f" inactive-color="#606266"
 			font-size="30" :current="current" @change="change"></u-tabs>
 		<courseList ref="courseList" />
-
 	</view>
 </template>
 <script>
@@ -61,12 +57,6 @@
 					subjectId: this.current == 0 ? '' : this.selectId
 				});
 			},
-			clickRight() {
-				this.$refs.courseList.handleReload();
-			},
-			clickLeft() {
-				uni.navigateBack()
-			}
 		}
 	}
 </script>

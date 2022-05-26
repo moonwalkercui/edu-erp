@@ -59,13 +59,14 @@ public class WxPaymentServiceImpl implements WxPaymentService {
             throw new RuntimeException(e.getMessage());
         }
 
-        String itemNames = orderItemMapper.getNamesByOrderId(order.getId());
+        // String itemNames = orderItemMapper.getNamesByOrderId(order.getId());
 
         WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
 //        BigDecimal payMoney = order.getPayMoney() == null ? BigDecimal.ZERO : order.getPayMoney();
-        BigDecimal payMoney = new BigDecimal("0.01"); // 测试用1分钱 todo
+        BigDecimal payMoney = new BigDecimal("0.1"); // 测试用1毛钱 todo
         orderRequest.setOpenid(openid);
-        orderRequest.setBody(StringUtils.isBlank(itemNames) ? "订单号"+order.getSn() : itemNames);
+//        orderRequest.setBody(StringUtils.isBlank(itemNames) ? "订单号"+order.getSn() : itemNames);
+        orderRequest.setBody("订单号"+order.getSn());
         orderRequest.setOutTradeNo(order.getSn());
         orderRequest.setTotalFee((new BigDecimal(100).multiply(payMoney).intValue()));
         orderRequest.setSpbillCreateIp(createIp);
@@ -92,6 +93,7 @@ public class WxPaymentServiceImpl implements WxPaymentService {
         }
         WxPayRefundRequest refundRequest = new WxPayRefundRequest();
         refundRequest.setNotifyUrl(notifyUrl);
+        refundRequest.setSignType("MD5");
         // todo
         return refundRequest;
     }
@@ -114,13 +116,20 @@ public class WxPaymentServiceImpl implements WxPaymentService {
         orderRefundService.refundSuccessNotify(reqInfo.getOutRefundNo(), reqInfo.getRefundId(), new BigDecimal(reqInfo.getTotalFee() / 100));
     }
 
+    /**
+     * 支付回调地址
+     */
     private String getPayNotifyUrl(HttpServletRequest request) throws MalformedURLException {
         URL requestUrl = new URL(request.getRequestURL().toString());
-        return requestUrl.getHost() + "/wx/pay/handleNotify";
+        return request.getScheme() + "://" + requestUrl.getHost() + "/wx/pay/handleNotify";
     }
 
+    /**
+     * 退款回调地址
+     */
     private String getRefundNotifyUrl(HttpServletRequest request) throws MalformedURLException {
         URL requestUrl = new URL(request.getRequestURL().toString());
-        return requestUrl.getHost() + "/wx/pay/refundNotify";
+
+        return request.getScheme() + "://" + requestUrl.getHost() + "/wx/pay/refundNotify";
     }
 }

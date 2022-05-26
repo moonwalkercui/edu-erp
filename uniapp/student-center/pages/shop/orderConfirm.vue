@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-nav-bar left-icon="arrow-left" title="订单确认" @clickLeft="clickLeft" />
+		<uni-nav-bar left-icon="arrow-left" title="请确认订单信息" @clickLeft="clickLeft" />
 
 		<view class="u-margin-30 bg-white boder-radius-md" style="border: 8rpx solid #9ee8d0">
 			<view class="u-padding-20 u-font-md u-flex">
@@ -49,7 +49,7 @@
 			</u-form>
 		</view>
 		
-		<view class="u-margin-30 bg-white boder-radius-md" style="overflow: hidden;">
+		<view class="u-margin-30 bg-white boder-radius-md" style="overflow: hidden;z-index: 100;">
 			<u-cell-group title="">
 				<u-cell-item title="学生姓名" :arrow="false">
 					<text class="text-black"> {{studentInfo.name}}
@@ -126,20 +126,37 @@
 						});
 						return
 					}
-					console.log('wxpayparam', res1)
-					wechat.wxpay({
-						"appId": res1.appId,
-						"nonceStr": res1.nonceStr,
-						"package": res1.package,
-						"paySign": res1.paySign,
-						"signType": res1.signType,
-						"timeStamp": res1.timeStamp,
-					}, (res2) => {
-						console.log('支付结果', res1)
+					const payParam = {
+						appId: res1.appId,
+						nonceStr: res1.nonceStr,
+						package: res1.packageValue,
+						paySign: res1.paySign,
+						signType: res1.signType,
+						timeStamp: res1.timeStamp
+					}
+					console.log('支付参数:', payParam)
+					/* #ifdef MP-WEIXIN */
+					console.log('执行小程序支付方法')
+					wx.requestPayment({
+						...payParam,
+						success: function(res) {
+							uni.redirectTo({
+								url: "/pages/shop/payResult"
+							})
+						},
+						fail: function(err) {
+							common.showMsg("未完成支付")
+						}
+					});
+					/* #endif */
+					/* #ifdef H5 */
+					console.log('执行H5支付方法')
+					wechat.wxpay(payParam, (res2) => {
 						uni.redirectTo({
 							url: "/pages/shop/payResult"
 						})
 					})
+					/* #endif */
 				})
 			},
 			clickLeft() {

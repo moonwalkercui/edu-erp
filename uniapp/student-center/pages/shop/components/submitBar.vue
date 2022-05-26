@@ -90,7 +90,7 @@
 		border: solid 2rpx #f2f2f2;
 		background-color: #ffffff;
 		padding: 16rpx 30rpx;
-
+		z-index: 100;
 		.left {
 			flex: 1;
 			display: flex;

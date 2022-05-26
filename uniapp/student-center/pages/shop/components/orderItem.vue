@@ -2,8 +2,8 @@
 	<view class="order">
 		<view class="top">
 			<view class="left">
-				<view class="store">{{ orderInfo.sn }}</view>
 				<u-icon name="arrow-right" color="rgb(203,203,203)" :size="26"></u-icon>
+				<view class="store">单号:{{ orderInfo.sn }}</view>
 			</view>
 			<view class="right">{{orderInfo.state}}</view>
 		</view>
@@ -14,7 +14,7 @@
 			<view class="content">
 				<view class="title u-line-2">{{ item.itemName }}</view>
 				<view class="type">{{ item.itemType }}</view>
-				<view class="delivery-time">添加时间:{{ item.addTime }}</view>
+				<!-- <view class="delivery-time">添加时间:{{ item.addTime }}</view> -->
 			</view>
 			<view class="right">
 				<view class="price">
@@ -24,12 +24,14 @@
 				<view class="number">x1</view>
 			</view>
 		</view>
-	    <view class="total">
-			合计:
-			<text class="total-price">
-				￥{{ priceInt(orderInfo.payMoney) }}.
-				<text class="decimal">{{ priceDecimal(orderInfo.payMoney) }}</text>
-			</text>
+	    <view class="total u-flex">
+			<view class="u-flex-1"><text class="u-font-12 text-gray u-m-r-30">{{ orderInfo.addTime }}</text>	</view>
+			<view class="u-text-right u-flex-1">
+				<text class="total-price">
+					￥{{ priceInt(orderInfo.payMoney) }}.
+					<text class="decimal">{{ priceDecimal(orderInfo.payMoney) }}</text>
+				</text>
+			</view>
 		</view> 
 		<view class="bottom">
 			<!-- <view class="more">
@@ -95,7 +97,7 @@
 				.store {
 					margin: 0 10rpx;
 					font-size: 20rpx;
-					font-weight: bold;
+					color: #bbbbbb;
 				}
 			}
 
@@ -155,21 +157,18 @@
 
 		.total {
 			margin-top: 20rpx;
-			text-align: right;
 			font-size: 24rpx;
-
 			.total-price {
-				font-size: 32rpx;
+				font-size: 28rpx;
 			}
 		}
 
 		.bottom {
 			display: flex;
-			margin-top: 40rpx;
+			margin-top: 20rpx;
 			padding: 0 10rpx;
 			justify-content: flex-end;
 			align-items: center;
-
 			.btn {
 				line-height: 52rpx;
 				width: 160rpx;

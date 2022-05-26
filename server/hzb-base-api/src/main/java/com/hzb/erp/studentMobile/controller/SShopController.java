@@ -17,12 +17,10 @@ import com.hzb.erp.common.service.*;
 import com.hzb.erp.studentMobile.pojo.vo.CourseInfoVO;
 import com.hzb.erp.studentMobile.service.StudentAuthService;
 import com.hzb.erp.utils.CommonUtil;
-import com.hzb.erp.utils.EnumTools;
 import com.hzb.erp.utils.JsonResponseUtil;
 import com.hzb.erp.wechat.service.WxPaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.math3.geometry.euclidean.oned.Interval;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -125,7 +123,7 @@ public class SShopController {
         paramDTO.setLimit(2);
         info.setCommentList(courseCommentMapper.getList(paramDTO));
 
-        double favRate = courseCommentMapper.getFavRate(info.getId());
+        double favRate = courseCommentMapper.getFavRate(id);
         favRate = (double) Math.round(favRate * 100) / 100;
         info.setFavRate(favRate);
 
@@ -163,12 +161,14 @@ public class SShopController {
         return orderService.makeOrder(dto);
     }
 
-    @ApiOperation(value = "统一下单，并组装所需支付参数")
+    @ApiOperation(value = "统一下单组装所需支付参数")
     @PostMapping("/createOrder")
     public Object createOrder(@RequestBody Order order) {
         Student student = StudentAuthService.getCurrentStudent();
         String openid = userMapper.getWxOpenid(student.getUserId());
         WxPayUnifiedOrderRequest orderRequestParam = wxPaymentService.buildPayParamByOrder(order, openid,"JSAPI");
+        System.out.println("=================支付提交对象实体==============");
+        System.out.println(orderRequestParam);
         Object res;
         try{
             res = this.wxService.createOrder(orderRequestParam);
