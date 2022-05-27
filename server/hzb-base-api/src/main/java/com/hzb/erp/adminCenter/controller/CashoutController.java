@@ -133,8 +133,8 @@ public class CashoutController {
         }
     }
 
-    @ApiOperation("认款通过")
-    @Log(description = "认款通过", type = "请款管理")
+    @ApiOperation("审核通过")
+    @Log(description = "审核通过", type = "请款管理")
     @PostMapping("/pass")
     public JsonResponse pass(@RequestBody List<Long> ids) {
         if (cashoutService.changeState(ids, VerifyStateEnum.APPROVE, null, UserAuthService.getCurrentUserId())) {
@@ -144,8 +144,8 @@ public class CashoutController {
         }
     }
 
-    @ApiOperation("认款驳回")
-    @Log(description = "认款驳回", type = "请款管理")
+    @ApiOperation("审核驳回")
+    @Log(description = "审核驳回", type = "请款管理")
     @PostMapping("/reject")
     public JsonResponse reject(@RequestBody IdsAndContentDTO dto) {
         if (cashoutService.changeState(dto.getIds(), VerifyStateEnum.REJECT, dto.getContent(), UserAuthService.getCurrentUserId())) {

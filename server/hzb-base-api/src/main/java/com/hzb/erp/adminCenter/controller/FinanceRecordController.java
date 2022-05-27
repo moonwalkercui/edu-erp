@@ -74,8 +74,8 @@ public class FinanceRecordController {
         return JsonResponseUtil.paginate(financeRecordService.getList(param));
     }
 
-    @ApiOperation("认款通过")
-    @Log(description = "认款通过", type = "财务管理")
+    @ApiOperation("审核通过")
+    @Log(description = "审核通过", type = "财务管理")
     @PostMapping("/pass")
     public JsonResponse pass(@RequestBody List<Long> ids) {
         if (financeRecordService.changeState(ids, FinanceStateEnum.PASS, null, UserAuthService.getCurrentUserId())) {
@@ -86,8 +86,8 @@ public class FinanceRecordController {
         }
     }
 
-    @ApiOperation("认款驳回")
-    @Log(description = "认款驳回", type = "财务管理")
+    @ApiOperation("审核驳回")
+    @Log(description = "审核驳回", type = "财务管理")
     @PostMapping("/reject")
     public JsonResponse reject(@RequestBody IdsAndContentDTO dto) {
         if (financeRecordService.changeState(dto.getIds(), FinanceStateEnum.REJECT, dto.getContent(), UserAuthService.getCurrentUserId())) {

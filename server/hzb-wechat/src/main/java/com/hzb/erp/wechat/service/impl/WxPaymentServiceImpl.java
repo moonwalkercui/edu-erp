@@ -121,7 +121,7 @@ public class WxPaymentServiceImpl implements WxPaymentService {
      */
     private String getPayNotifyUrl(HttpServletRequest request) throws MalformedURLException {
         URL requestUrl = new URL(request.getRequestURL().toString());
-        return request.getScheme() + "://" + requestUrl.getHost() + "/wx/pay/handleNotify";
+        return request.getScheme() + "://" + requestUrl.getHost() + "/app/wx/pay/payNotify";
     }
 
     /**
@@ -130,6 +130,6 @@ public class WxPaymentServiceImpl implements WxPaymentService {
     private String getRefundNotifyUrl(HttpServletRequest request) throws MalformedURLException {
         URL requestUrl = new URL(request.getRequestURL().toString());
 
-        return request.getScheme() + "://" + requestUrl.getHost() + "/wx/pay/refundNotify";
+        return request.getScheme() + "://" + requestUrl.getHost() + "/app/wx/pay/refundNotify";
     }
 }

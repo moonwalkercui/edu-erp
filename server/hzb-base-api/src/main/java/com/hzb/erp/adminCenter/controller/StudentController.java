@@ -318,9 +318,6 @@ public class StudentController {
     @Log(description = "修改学员端密码", type = "学员管理")
     @PostMapping("/changeUserPassword")
     public JsonResponse changeUserPassword(@Valid @RequestBody ChangePasswordDTO dto, BindingResult result) {
-        if (systemConfig.getIsDemo()) {
-            return JsonResponseUtil.error("DEMO版此处不能操作"); // todo 发行
-        }
         CommonUtil.handleValidMessage(result);
         dto.setPasswordEncode(SecurityUtils.passwordEncode(dto.getPassword()));
         if (userService.changPassword(dto)) {

@@ -119,9 +119,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         payment.setWxOpenid(openid);
         payment.setWxTradeId(transactionId);
 
-        totalFee = totalFee == null ? 0 : totalFee;
-        payment.setPayMoney(new BigDecimal(totalFee / 100));
-
+        BigDecimal payMoney = totalFee == null ? BigDecimal.ZERO : new BigDecimal(totalFee);
+        payment.setPayMoney(payMoney.divide(new BigDecimal(100), BigDecimal.ROUND_HALF_UP));
         paymentMapper.insert(payment);
         if (order!=null) {
             orderMapper.updateById(order);

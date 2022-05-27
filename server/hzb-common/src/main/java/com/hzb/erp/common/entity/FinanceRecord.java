@@ -54,16 +54,16 @@ public class FinanceRecord implements Serializable {
     @ApiModelProperty(value = "经办日期")
     private LocalDateTime addTime;
 
-    @ApiModelProperty(value = "认款确认状态")
+    @ApiModelProperty(value = "审核确认状态")
     private FinanceStateEnum verifyState;
 
-    @ApiModelProperty(value = "认款人")
+    @ApiModelProperty(value = "审核人")
     private Long verifyStaff;
 
-    @ApiModelProperty(value = "认款时间")
+    @ApiModelProperty(value = "审核时间")
     private LocalDateTime verifyTime;
 
-    @ApiModelProperty(value = "认款备注")
+    @ApiModelProperty(value = "审核备注")
     private String verifyRemark;
 
 }

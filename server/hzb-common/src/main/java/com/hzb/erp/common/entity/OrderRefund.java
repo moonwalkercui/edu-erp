@@ -2,7 +2,6 @@ package com.hzb.erp.common.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hzb.erp.common.enums.OrderItemTypeEnum;
 import com.hzb.erp.common.enums.OrderRefundStateEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

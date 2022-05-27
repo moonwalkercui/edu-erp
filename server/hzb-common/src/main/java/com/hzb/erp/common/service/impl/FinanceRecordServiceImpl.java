@@ -60,7 +60,7 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Boolean changeState(List<Long> ids, FinanceStateEnum state, String remark, Long staffId) {
         List<FinanceRecord> list = this.listByIds(ids);
         for (FinanceRecord item : list) {
@@ -88,14 +88,29 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
     private void transactionAfterChangeState(FinanceRecord item, FinanceStateEnum state, Long staffId) {
 
         if (FinanceTypeEnum.COURSE.equals(item.getItemType())) {
+            // 课程报名审核处理
             handleCourseVerify(item, state);
             operationRecordService.addOne(item.getItemId(), OprationTypeEnum.StudentCourse, state.getDist(), "报名认款审核:" + state.getDist(), staffId);
+
         } else if (FinanceTypeEnum.REFUND.equals(item.getItemType())) {
+            // 课程退款审核处理
             handleRefundVerify(item, state);
             operationRecordService.addOne(item.getItemId(), OprationTypeEnum.Refund, state.getDist(), "退课退课审核:" + state.getDist(), staffId);
+
         } else if (FinanceTypeEnum.SUPPLEMENT.equals(item.getItemType())) {
+            // 课费补缴审核处理
             handleSupplementVerify(item, state);
             operationRecordService.addOne(item.getItemId(), OprationTypeEnum.StudentCourse, state.getDist(), "缴纳欠费认款:" + state.getDist(), staffId);
+
+        } else if (FinanceTypeEnum.ORDER.equals(item.getItemType())) {
+            // 购课订单
+            handleOrderVerify(item, state);
+            operationRecordService.addOne(item.getItemId(), OprationTypeEnum.ORDER, state.getDist(), "在线购课认款:" + state.getDist(), staffId);
+
+        } else if (FinanceTypeEnum.ORDER_REFUND.equals(item.getItemType())) {
+            // 购课订单退款
+            handleOrderRefundVerify(item, state);
+            operationRecordService.addOne(item.getItemId(), OprationTypeEnum.ORDER_REFUND, state.getDist(), "订单退款审核:" + state.getDist(), staffId);
         }
     }
 
@@ -178,9 +193,33 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
         } else {
             // 驳回
         }
-
     }
 
+    /**
+     * 购课订单
+     */
+    private void handleOrderVerify(FinanceRecord item, FinanceStateEnum state) {
+        if (FinanceStateEnum.PASS.equals(state)) {
+            // 通过 什么也不做
+        } else {
+            // 驳回 微信支付完的，不允许驳回
+            throw new BizException("微信已支付订单无法驳回");
+        }
+    }
+
+    /**
+     * 购课订单退款
+     */
+    private void handleOrderRefundVerify(FinanceRecord item, FinanceStateEnum state) {
+        if (FinanceStateEnum.PASS.equals(state)) {
+            // 通过 走微信退款
+
+        } else {
+            // 驳回后 用户的订单状态改成未退款状态，与申请退款逆向
+
+        }
+
+    }
     /**
      * 课时变动日志
      */
@@ -208,10 +247,10 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
             put("operatorName", "经手人");
             put("remark", "备注说明");
             put("addTime", "提交时间");
-            put("verifyState", "认款状态");
-            put("verifyStaffName", "认款人");
-            put("verifyTime", "认款时间");
-            put("verifyRemark", "认款备注");
+            put("verifyState", "审核状态");
+            put("verifyStaffName", "审核人");
+            put("verifyTime", "审核时间");
+            put("verifyRemark", "审核备注");
         }};
         importExportService.exportExcel(header, list, "款项记录表");
     }

@@ -78,7 +78,7 @@ public class StaffController {
     @PreventMultiSubmit
     public JsonResponse save(@Valid @RequestBody StaffSaveDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);
-        if (systemConfig.getIsDemo()) {
+        if (systemConfig.getIsDemo() && dto.getId() == 1) {
             return JsonResponseUtil.error("DEMO版此处不能操作"); // todo 发行
         }
         dto.setCreator(UserAuthService.getCurrentUserId());
@@ -136,7 +136,7 @@ public class StaffController {
     public JsonResponse changePassword(@Valid @RequestBody ChangePasswordDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);
 
-        if (systemConfig.getIsDemo()) {
+        if (systemConfig.getIsDemo() && dto.getId() == 1 ) {
             return JsonResponseUtil.error("DEMO版此处不能操作"); // todo 发行
         }
         dto.setPasswordEncode(SecurityUtils.passwordEncode(dto.getPassword()));
@@ -151,7 +151,7 @@ public class StaffController {
     @Log(description = "重置密码", type = "员工管理")
     @GetMapping("/resetPassword")
     public JsonResponse resetPassword(@RequestParam(value = "password") String password) {
-        if (systemConfig.getIsDemo()) {
+        if (systemConfig.getIsDemo() && UserAuthService.getCurrentUserId() == 1) {
             return JsonResponseUtil.error("DEMO版此处不能操作"); // todo 发行
         }
         ChangePasswordDTO dto = new ChangePasswordDTO();

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.util.Date;
 
-
 @Api("微信支付")
 @RestController
 @RequestMapping("/wx/pay")
@@ -30,6 +29,9 @@ import java.util.Date;
 public class WxPayController {
   private final WxPaymentService wxPaymentService;
 
+  /**
+  * 这个url需要改动，需要同时修改：com.hzb.erp.wechat.service.impl.WxPaymentServiceImpl#getPayNotifyUrl(javax.servlet.http.HttpServletRequest)
+  * */
   @ApiOperation(value = "支付回调通知处理")
   @PostMapping("/payNotify")
   public String payNotify(@RequestBody String xmlData) throws WxPayException {
@@ -37,6 +39,9 @@ public class WxPayController {
     return WxPayNotifyResponse.success("成功");
   }
 
+  /**
+   * 这个url需要改动，需要同时修改：com.hzb.erp.wechat.service.impl.WxPaymentServiceImpl#getRefundNotifyUrl(javax.servlet.http.HttpServletRequest)
+   * */
   @ApiOperation(value = "退款回调通知处理")
   @PostMapping("/refundNotify")
   public String refundNotify(@RequestBody String xmlData) throws WxPayException {

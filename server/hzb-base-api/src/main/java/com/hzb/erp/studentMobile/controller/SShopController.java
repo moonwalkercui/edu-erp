@@ -21,6 +21,7 @@ import com.hzb.erp.utils.JsonResponseUtil;
 import com.hzb.erp.wechat.service.WxPaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/sCenter/shop")
 @Api(value = "在线购课控制器", tags = "在线购课")
+@Slf4j
 public class SShopController {
 
     @Autowired
@@ -167,13 +169,13 @@ public class SShopController {
         Student student = StudentAuthService.getCurrentStudent();
         String openid = userMapper.getWxOpenid(student.getUserId());
         WxPayUnifiedOrderRequest orderRequestParam = wxPaymentService.buildPayParamByOrder(order, openid,"JSAPI");
-        System.out.println("=================支付提交对象实体==============");
-        System.out.println(orderRequestParam);
+        log.info("=============支付提交对象实体==============");
+        log.info(orderRequestParam.toString());
         Object res;
         try{
             res = this.wxService.createOrder(orderRequestParam);
-            System.out.println("=================支付参数:==============");
-            System.out.println(res);
+            log.info("=================支付参数:==============");
+            log.info(res.toString());
         } catch (WxPayException e) {
             return JsonResponseUtil.error(e.getMessage());
         }
