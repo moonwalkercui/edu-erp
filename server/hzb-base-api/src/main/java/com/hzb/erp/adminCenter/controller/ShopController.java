@@ -1,6 +1,5 @@
 package com.hzb.erp.adminCenter.controller;
 
-import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.common.entity.OrderRefund;
@@ -12,7 +11,6 @@ import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
 import com.hzb.erp.common.pojo.dto.OrderRefundParamDTO;
 import com.hzb.erp.common.service.OrderRefundService;
 import com.hzb.erp.common.service.OrderService;
-import com.hzb.erp.security.Util.UserAuthUtil;
 import com.hzb.erp.utils.EnumTools;
 import com.hzb.erp.utils.JsonResponseUtil;
 import com.hzb.erp.wechat.service.WxPaymentService;
@@ -112,15 +110,17 @@ public class ShopController {
         return JsonResponseUtil.paginate(orderRefundService.getList(param));
     }
 
-    @ApiOperation("退款审核通过")
-    @Log(description = "退款审核通过", type = "退款管理")
-    @PostMapping("/refundApprove")
-    public Object refundApprove(@RequestBody IdsAndContentDTO dto) {
-        List<OrderRefund> handleList = orderRefundService.handleApprove(dto, UserAuthUtil.getCurrentUserId());;
-        for(OrderRefund orderRefund : handleList) {
+    @ApiOperation("微信退款")
+    @Log(description = "微信退款", type = "运营管理")
+    @PostMapping("/refundByWx")
+    public Object refundByWx(@RequestBody IdsAndContentDTO dto) {
+        List<OrderRefund> list = orderRefundService.listByIds(dto.getIds());
+        for (OrderRefund item : list) {
             try {
-                this.wxPayService.refund(wxPaymentService.buildRefundParamByOrderRefund(orderRefund));
+                wxPayService.refund(wxPaymentService.buildRefundParamByOrderRefund(item));
             } catch ( WxPayException e) {
+                item.setState(OrderRefundStateEnum.FAIL);
+                orderRefundService.updateById(item);
                 log.error("【微信退款异常】" + e.getMessage());
                 throw new BizException("【微信退款异常】" + e.getMessage());
             }
@@ -128,11 +128,4 @@ public class ShopController {
         return JsonResponseUtil.success("微信退款已发起，结果请关注微信账户平台");
     }
 
-    @ApiOperation("退款审核驳回")
-    @Log(description = "退款审核驳回", type = "退款管理")
-    @PostMapping("/refundReject")
-    public Object refundReject(@RequestBody IdsAndContentDTO dto) {
-        orderRefundService.handleReject(dto, UserAuthUtil.getCurrentUserId());
-        return JsonResponseUtil.success("退款驳回完成");
-    }
 }

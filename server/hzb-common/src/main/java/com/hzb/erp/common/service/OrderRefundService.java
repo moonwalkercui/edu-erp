@@ -32,17 +32,6 @@ public interface OrderRefundService extends IService<OrderRefund> {
     IPage<OrderRefundVo> getList(OrderRefundParamDTO param);
 
     /**
-     * 同意退款
-     * */
-    List<OrderRefund> handleApprove(IdsAndContentDTO dto, Long staffId);
-
-    /**
-     * 驳回退款
-     * */
-    Boolean handleReject(IdsAndContentDTO dto, Long staffId);
-
-
-    /**
      * 微信退款后执行
      * @param refundSn 本系统退款单号
      * @param tradeNo 第三方退款编号

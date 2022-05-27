@@ -22,9 +22,11 @@ public class CommonConst {
      */
     public static final String ORG_NAME_PATH_SEPARATOR = " ";
 
+    public static final int VERIFY_REJECT_CODE = -1;
     public static final int VERIFY_READY_CODE = 1;
     public static final int VERIFY_PASS_CODE = 2;
-    public static final int VERIFY_REJECT_CODE = -1;
+    public static final int SUCCESS_CODE = 100;
+    public static final int FAIL_CODE = 101;
 
 
     public static final String TEACHER_IDENTITY_NAME = "teacher";

@@ -79,7 +79,6 @@ public class FinanceRecordController {
     @PostMapping("/pass")
     public JsonResponse pass(@RequestBody List<Long> ids) {
         if (financeRecordService.changeState(ids, FinanceStateEnum.PASS, null, UserAuthService.getCurrentUserId())) {
-//            financeRecordService.makeLessonCountLog(ids, FinanceStateEnum.PASS);
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error("操作出错");

@@ -68,7 +68,7 @@ public class StudentLessonCountLogServiceImpl extends ServiceImpl<StudentLessonC
 
     @Override
     public Boolean addOneByRefundReject(Long studentId, Long studentCourseId, Integer count, Long staffId) {
-        if (count == 0) {
+        if (count==null || count == 0) {
             return null;
         }
         StudentCourse sc = studentCourseService.getById(studentCourseId);

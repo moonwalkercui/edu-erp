@@ -78,8 +78,8 @@ public class WxPaymentServiceImpl implements WxPaymentService {
     @Override
     public WxPayRefundRequest buildRefundParamByOrderRefund(OrderRefund orderRefund) {
         OrderRefund findRefund = orderRefundService.getById(orderRefund.getId());
-        if(!findRefund.getState().equals(OrderRefundStateEnum.APPLY)) {
-            throw new BizException(findRefund.getState().getDist() + "的退款单无法退款");
+        if (!(OrderRefundStateEnum.PASS.equals(findRefund.getState())) || OrderRefundStateEnum.FAIL.equals(findRefund.getState())) {
+            throw new BizException("未经财务审核的微信退款无法发起");
         }
 
         String notifyUrl;
