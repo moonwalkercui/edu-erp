@@ -11,6 +11,7 @@ import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.*;
 import com.hzb.erp.common.pojo.dto.OrderConfirmDTO;
 import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
+import com.hzb.erp.common.pojo.dto.OrderRefundParamDTO;
 import com.hzb.erp.common.pojo.dto.StudentCourseSaveDTO;
 import com.hzb.erp.common.pojo.vo.OrderVO;
 import com.hzb.erp.common.service.OrderService;
@@ -37,6 +38,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final UserMapper userMapper;
     private final CourseMapper courseMapper;
     private final OrderItemMapper orderItemMapper;
+    private final OrderRefundMapper orderRefundMapper;
     private final OrderMapper orderMapper;
     private final PaymentMapper paymentMapper;
     private final StudentMapper studentMapper;
@@ -125,7 +127,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (order!=null) {
             orderMapper.updateById(order);
         }
-
     }
 
     @Override
@@ -134,6 +135,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if(records.getRecords()!=null) {
             for(OrderVO vo : records.getRecords()) {
                 vo.setItemList(orderItemMapper.getList(vo.getId()));
+                OrderRefundParamDTO dto = new OrderRefundParamDTO();
+                dto.setOrderId(vo.getId());
+                vo.setRefundList(orderRefundMapper.getList(dto));
             }
         }
         return records;

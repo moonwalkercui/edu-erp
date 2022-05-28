@@ -28,7 +28,7 @@ public class OrderRefundVo {
     private String studentName;
 
     @ApiModelProperty(value = "退款金额")
-    private BigDecimal money;
+    private BigDecimal refundMoney;
 
     @ApiModelProperty(value = "原因类型")
     private String reasonTypeText;

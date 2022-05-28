@@ -42,6 +42,7 @@ public class CommonService {
                 OprationTypeEnum.class,
                 DataScopeTypeEnum.class,
                 DateRangeNameEnum.class,
+                OrderStateEnum.class,
                 VerifyStateEnum.class
         );
         Map<String, Map<Object, String>> list = new HashMap<>();

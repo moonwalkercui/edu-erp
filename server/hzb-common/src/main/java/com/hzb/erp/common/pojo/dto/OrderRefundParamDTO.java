@@ -14,6 +14,7 @@ public class OrderRefundParamDTO extends PaginateDTO {
     private String orderSn;
     @ApiModelProperty(value = "退款单号")
     private String refundSn;
+    private Long orderId;
     private Long studentId;
     private Long reasonType;
     private LocalDate endDate;

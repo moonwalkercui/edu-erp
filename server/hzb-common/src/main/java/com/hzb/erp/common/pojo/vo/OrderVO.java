@@ -2,6 +2,7 @@ package com.hzb.erp.common.pojo.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hzb.erp.common.entity.OrderItem;
+import com.hzb.erp.common.entity.OrderRefund;
 import com.hzb.erp.common.enums.OrderStateEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,6 +30,9 @@ public class OrderVO {
     @ApiModelProperty(value = "学生姓名")
     private String studentName;
 
+    @ApiModelProperty(value = "电话")
+    private String mobile;
+
     @ApiModelProperty(value = "支付金额")
     private BigDecimal payMoney;
 
@@ -51,6 +55,9 @@ public class OrderVO {
 
     @ApiModelProperty(value = "购买内容")
     private List<OrderItem> itemList;
+
+    @ApiModelProperty(value = "退款信息")
+    private List<OrderRefundVo> refundList;
 
     @ApiModelProperty(value = "是否可以退款")
     private Boolean cancelAble;
