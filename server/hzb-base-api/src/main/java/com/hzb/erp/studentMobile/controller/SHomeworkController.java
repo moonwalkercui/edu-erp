@@ -50,7 +50,7 @@ public class SHomeworkController {
     @ApiOperation("作业列表")
     @GetMapping("/list")
     public PaginationVO list(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                             @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize) {
+                             @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
         HomeworkParamDTO param = new HomeworkParamDTO();
         param.setPage(page);
         param.setPageSize(pageSize);

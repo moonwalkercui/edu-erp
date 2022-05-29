@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.util.Date;
 
+/**
+* 微信支付相关控制器
+* 该控制器实现了其他微信业务逻辑，有需要的可以自行解除注释
+* */
 @Api("微信支付")
 @RestController
 @RequestMapping("/wx/pay")
@@ -30,7 +34,7 @@ public class WxPayController {
   private final WxPaymentService wxPaymentService;
 
   /**
-  * 这个url需要改动，需要同时修改：com.hzb.erp.wechat.service.impl.WxPaymentServiceImpl#getPayNotifyUrl(javax.servlet.http.HttpServletRequest)
+  * 这个url地址需要改动，需要同时修改：com.hzb.erp.wechat.service.impl.WxPaymentServiceImpl#getPayNotifyUrl(javax.servlet.http.HttpServletRequest)
   * */
   @ApiOperation(value = "支付回调通知处理")
   @PostMapping("/payNotify")
@@ -40,7 +44,7 @@ public class WxPayController {
   }
 
   /**
-   * 这个url需要改动，需要同时修改：com.hzb.erp.wechat.service.impl.WxPaymentServiceImpl#getRefundNotifyUrl(javax.servlet.http.HttpServletRequest)
+   * 这个url地址需要改动，需要同时修改：com.hzb.erp.wechat.service.impl.WxPaymentServiceImpl#getRefundNotifyUrl(javax.servlet.http.HttpServletRequest)
    * */
   @ApiOperation(value = "退款回调通知处理")
   @PostMapping("/refundNotify")

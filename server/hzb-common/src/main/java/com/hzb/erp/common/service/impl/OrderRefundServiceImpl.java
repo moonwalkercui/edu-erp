@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.Course;
 import com.hzb.erp.common.entity.Order;
+import com.hzb.erp.common.entity.OrderItem;
 import com.hzb.erp.common.entity.OrderRefund;
+import com.hzb.erp.common.enums.OrderItemTypeEnum;
 import com.hzb.erp.common.enums.OrderRefundStateEnum;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.CourseMapper;
@@ -20,6 +22,7 @@ import com.hzb.erp.common.pojo.vo.OrderRefundVo;
 import com.hzb.erp.common.service.OrderRefundService;
 import com.hzb.erp.common.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +39,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundMapper, OrderRefund> implements OrderRefundService {
 
     private final OrderMapper orderMapper;
@@ -134,21 +138,23 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundMapper, Order
     @Override
     public void refundSuccessNotify(String refundSn, String tradeNo, BigDecimal refundMoney) {
         QueryWrapper<OrderRefund> qw = new QueryWrapper<>();
-        qw.eq("sn", refundSn);
+        qw.eq("refund_sn", refundSn);
         OrderRefund orderRefund = baseMapper.selectOne(qw);
         orderRefund.setState(OrderRefundStateEnum.PASS);
         orderRefund.setVerifyTime(LocalDateTime.now());
         this.baseMapper.updateById(orderRefund);
 
-        List<Long> courseIds = orderItemMapper.getCourseIdsByOrderId(orderRefund.getOrderId());
-        // 增加库存名额
-        List<Course> courseList = courseMapper.selectBatchIds(courseIds);
-        if(courseList != null && courseList.size() > 0) {
-            for (Course course : courseList) {
+        List<OrderItem> itemList = orderItemMapper.getList(orderRefund.getOrderId());
+
+        for(OrderItem item : itemList) {
+            // 恢复课程的库存
+            if(OrderItemTypeEnum.COURSE.equals(item.getItemType())) {
+                Course course = courseMapper.selectById(item.getItemId());
                 int storage = course.getStorage() == null ? 0 : course.getStorage();
                 course.setStorage(storage + 1);
                 courseMapper.updateById(course);
             }
         }
+
     }
 }

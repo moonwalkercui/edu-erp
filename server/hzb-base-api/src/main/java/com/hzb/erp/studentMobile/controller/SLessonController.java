@@ -60,7 +60,7 @@ public class SLessonController {
     @ApiOperation("课表")
     @GetMapping("/list")
     public Object list(@RequestParam(value = "page", defaultValue = "") Integer page, // 若为null则是查全部
-                       @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+                       @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
                        @RequestParam(value = "isToday", defaultValue = "false") Boolean isToday,
                        @RequestParam(value = "bookable", defaultValue = "false") Boolean bookable, // 是否是可预约列表
                        @RequestParam(value = "date", defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
@@ -110,7 +110,7 @@ public class SLessonController {
     @GetMapping("/signRecord")
     public PaginationVO rollCallRecord(
             @RequestParam(value = "page", defaultValue = "") Integer page,
-            @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+            @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
             @RequestParam(value = "courseId", defaultValue = "") Long courseId) {
 
         LessonStudentParamDTO param = new LessonStudentParamDTO();
@@ -143,7 +143,7 @@ public class SLessonController {
     @ApiOperation("点评记录")
     @GetMapping("/evaluateLog")
     public PaginationVO evaluateLog(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                    @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize) {
+                                    @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
         Student student = StudentAuthService.getCurrentStudent();
         if (student == null) {
             return null;

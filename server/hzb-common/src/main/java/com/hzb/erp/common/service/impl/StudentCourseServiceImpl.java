@@ -235,9 +235,9 @@ public class StudentCourseServiceImpl extends ServiceImpl<StudentCourseMapper, S
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addOne(StudentCourseSaveDTO postData, Long operator) {
+    public StudentCourse addOne(StudentCourseSaveDTO postData, Long operator) {
 
-        BigDecimal discount = postData.getDiscount() == null ? new BigDecimal("0") : postData.getDiscount().abs();
+        BigDecimal discount = postData.getDiscount() == null ? BigDecimal.ZERO : postData.getDiscount().abs();
         postData.setCourseAmount(postData.getCourseAmount().abs());
 
         StudentCourse sc = new StudentCourse();
@@ -275,19 +275,22 @@ public class StudentCourseServiceImpl extends ServiceImpl<StudentCourseMapper, S
             studentService.changeStage(Collections.singletonList(student.getId()), StudentStageEnum.STUDYING, false);
         }
 
-        // 财务记录
-        FinanceRecord record = new FinanceRecord();
-        record.setTitle(course.getName());
-        record.setAmount(sc.getPaidAmount());
-        record.setItemType(FinanceTypeEnum.COURSE);
-        record.setItemId(sc.getId());
-        record.setOperator(operator);
-        record.setPayer(sc.getStudentId());
-        record.setRemark(sc.getRemark());
-        record.setAddTime(LocalDateTime.now());
-        record.setVerifyState(FinanceStateEnum.APPLY);
-        financeRecordMapper.insert(record);
-
+        // 有应收金额的才写财务记录
+        if(postData.getCourseAmount().compareTo(BigDecimal.ZERO) > 0) {
+            // 财务记录
+            FinanceRecord record = new FinanceRecord();
+            record.setTitle(course.getName());
+            record.setAmount(sc.getPaidAmount());
+            record.setItemType(FinanceTypeEnum.COURSE);
+            record.setItemId(sc.getId());
+            record.setOperator(operator);
+            record.setPayer(sc.getStudentId());
+            record.setRemark(sc.getRemark());
+            record.setAddTime(LocalDateTime.now());
+            record.setVerifyState(FinanceStateEnum.APPLY);
+            financeRecordMapper.insert(record);
+        }
+        return sc;
     }
 
     @Override

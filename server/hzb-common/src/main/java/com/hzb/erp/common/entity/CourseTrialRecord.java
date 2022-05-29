@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -31,6 +32,12 @@ public class CourseTrialRecord implements Serializable {
 
     @ApiModelProperty(value="学生id")
     private Long studentId;
+
+    @ApiModelProperty(value="学生id")
+    private Long userId;
+
+    @ApiModelProperty(value="过期时间")
+    private LocalDate expiredDate;
 
     @ApiModelProperty(value="生成的学生课程关联记录")
     private Long studentCourseId;

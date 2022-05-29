@@ -2,6 +2,7 @@ package com.hzb.erp.adminCenter.controller;
 
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.hzb.erp.base.annotation.Log;
+import com.hzb.erp.common.configuration.SystemConfig;
 import com.hzb.erp.common.entity.OrderRefund;
 import com.hzb.erp.common.enums.OrderRefundStateEnum;
 import com.hzb.erp.common.enums.OrderStateEnum;
@@ -22,6 +23,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import com.github.binarywang.wxpay.service.WxPayService;
 
+import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,9 @@ public class ShopController {
 
     @Autowired
     private WxPaymentService wxPaymentService;
+
+    @Resource
+    private SystemConfig systemConfig;
 
     @ApiOperation("订单列表")
     @GetMapping("/orderList")
@@ -85,9 +90,9 @@ public class ShopController {
     @GetMapping("/refundList")
     public Object refundList(@RequestParam(value = "page", defaultValue = "") Integer page,
                              @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
-                             @RequestParam(value = "sn", defaultValue = "") String refundSn,
-                             @RequestParam(value = "studentId", defaultValue = "") Long studentId,
+                             @RequestParam(value = "refundSn", defaultValue = "") String refundSn,
                              @RequestParam(value = "orderSn", defaultValue = "") String orderSn,
+                             @RequestParam(value = "studentId", defaultValue = "") Long studentId,
                              @RequestParam(value = "startDate", defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                              @RequestParam(value = "endDate", defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
                              @RequestParam(value = "state", defaultValue = "") String[] state) {
@@ -110,11 +115,16 @@ public class ShopController {
         return JsonResponseUtil.paginate(orderRefundService.getList(param));
     }
 
-    @ApiOperation("微信退款")
-    @Log(description = "微信退款", type = "运营管理")
-    @PostMapping("/refundByWx")
-    public Object refundByWx(@RequestBody IdsAndContentDTO dto) {
-        List<OrderRefund> list = orderRefundService.listByIds(dto.getIds());
+    @ApiOperation("执行退款")
+    @Log(description = "执行退款", type = "运营管理")
+    @PostMapping("/executeRefund")
+    public Object executeRefund(@RequestBody List<Long> ids) {
+
+        if (!systemConfig.getIsDemo()) {
+            return JsonResponseUtil.error("DEMO版此处不能操作"); // todo 发行
+        }
+
+        List<OrderRefund> list = orderRefundService.listByIds(ids);
         for (OrderRefund item : list) {
             try {
                 wxPayService.refund(wxPaymentService.buildRefundParamByOrderRefund(item));

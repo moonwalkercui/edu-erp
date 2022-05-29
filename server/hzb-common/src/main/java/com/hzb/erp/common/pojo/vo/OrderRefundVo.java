@@ -22,10 +22,16 @@ public class OrderRefundVo {
     private Long id;
 
     @ApiModelProperty(value = "退款单号")
-    private String sn;
+    private String refundSn;
+
+    @ApiModelProperty(value = "订单单号")
+    private String orderSn;
 
     @ApiModelProperty(value = "学生姓名")
     private String studentName;
+
+    @ApiModelProperty(value = "手机号")
+    private String mobile;
 
     @ApiModelProperty(value = "退款金额")
     private BigDecimal refundMoney;
@@ -39,8 +45,12 @@ public class OrderRefundVo {
     @ApiModelProperty(value = "状态")
     private OrderRefundStateEnum state;
 
-    @ApiModelProperty(value = "审核人")
-    private Long verifyId;
+    @ApiModelProperty(value = "申请时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime addTime;
+
+    @ApiModelProperty(value = "审核人姓名")
+    private String verifyName;
 
     @ApiModelProperty(value = "审核时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -48,5 +58,12 @@ public class OrderRefundVo {
 
     @ApiModelProperty(value = "审核备注")
     private String verifyRemark;
+
+    @ApiModelProperty(value = "执行退款人姓名")
+    private String operatorName;
+
+    @ApiModelProperty(value = "执行退款时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime operationTime;
 
 }

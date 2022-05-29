@@ -223,8 +223,9 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
             orderRefund.setState(OrderRefundStateEnum.REJECT);
             closeOrderRefund = true;
         }
-        orderRefund.setVerifyId(staffId);
+        orderRefund.setVerifyStaff(staffId);
         orderRefund.setVerifyRemark(item.getRemark());
+        orderRefund.setVerifyTime(LocalDateTime.now());
         orderRefundMapper.updateById(orderRefund);
 
         if(closeOrderRefund) {

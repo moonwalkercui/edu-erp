@@ -41,7 +41,10 @@ public class Order extends AutoFillEntity {
     @ApiModelProperty(value = "学生ID")
     private Long studentId;
 
-    @ApiModelProperty(value = "支付金额")
+    @ApiModelProperty(value = "订单金额")
+    private BigDecimal orderMoney;
+
+    @ApiModelProperty(value = "实际支付金额")
     private BigDecimal payMoney;
 
     @ApiModelProperty(value = "备注")

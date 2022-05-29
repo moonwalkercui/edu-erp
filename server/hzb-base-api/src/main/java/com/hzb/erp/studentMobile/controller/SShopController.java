@@ -71,7 +71,7 @@ public class SShopController {
     @ApiOperation("购课课程列表")
     @GetMapping("/list")
     public Object list(@RequestParam(value = "page", defaultValue = "") Integer page,
-                       @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                       @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
                        @RequestParam(value = "recommend", defaultValue = "") Boolean recommend,
                        @RequestParam(value = "subjectId", defaultValue = "") Long subjectId) {
         CourseParamDTO param = new CourseParamDTO();
@@ -140,7 +140,7 @@ public class SShopController {
     @ApiOperation("评价列表")
     @GetMapping("/commentList")
     public Object commentList(@RequestParam(value = "page", defaultValue = "") Integer page,
-                              @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+                              @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
                               @RequestParam(value = "courseId", defaultValue = "") Long courseId) {
         CourseCommentParamDTO param = new CourseCommentParamDTO();
         param.setPage(page);
@@ -185,7 +185,7 @@ public class SShopController {
     @ApiOperation("订单列表")
     @GetMapping("/orderList")
     public Object orderList(@RequestParam(value = "page", defaultValue = "") Integer page,
-                            @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+                            @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
                             @RequestParam(value = "state", defaultValue = "") String[] state) {
         OrderListParamDTO param = new OrderListParamDTO();
         Student student = StudentAuthService.getCurrentStudent();

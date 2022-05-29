@@ -102,7 +102,7 @@ public class SCommonController {
     @GetMapping("/advertisementList")
     @ResponseBody
     public Object advertisementList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize) {
+                                @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
         QueryWrapper<Advertisement> qw1 = new QueryWrapper<>();
         qw1.eq("state", 1).orderByDesc("sort_num").orderByAsc("id");
         Page<Advertisement> ipage  = new Page<>(page, pageSize);
@@ -122,7 +122,7 @@ public class SCommonController {
     @GetMapping("/help")
     @ResponseBody
     public IPage<Help> help(@RequestParam(value = "page", defaultValue = "") Integer page,
-                            @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize) {
+                            @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
         QueryWrapper<Help> qw = new QueryWrapper<>();
         qw.eq("state", 1).orderByDesc("sort_num");
         return helpService.page(new Page<Help>(page, pageSize), qw);

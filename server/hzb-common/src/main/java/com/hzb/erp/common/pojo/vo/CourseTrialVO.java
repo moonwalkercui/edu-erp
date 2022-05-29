@@ -1,74 +1,54 @@
-package com.hzb.erp.common.entity;
+package com.hzb.erp.common.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import io.swagger.annotations.ApiModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import lombok.Data;
 
 /**
- * CourseTrial课程体验卡
- * @author Ryan
+ * 联系记录查询DTO
  */
-@ApiModel(value="com.hzb.erp.CourseTrial课程体验卡")
 @Data
-public class CourseTrial extends AutoFillEntity {
-    /**
-     * 主键
-     */
+public class CourseTrialVO {
+
     @ApiModelProperty(value="主键")
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 课程
-     */
     @ApiModelProperty(value="课程")
     private Long courseId;
 
-    /**
-     * 名称
-     */
+    @ApiModelProperty(value="课程")
+    private String courseName;
+
     @ApiModelProperty(value="名称")
     private String title;
 
-    /**
-     * 发行数量
-     */
     @ApiModelProperty(value="发行数量")
     private Integer quantity;
 
-    /**
-     * 剩余数量
-     */
     @ApiModelProperty(value="剩余数量")
     private Integer remainingQuantity;
 
-    /**
-     * 课时数
-     */
     @ApiModelProperty(value="课时数")
     private Integer lessonCount;
 
-    /**
-     * 领取后有效天数
-     */
     @ApiModelProperty(value="领取后有效天数")
     private Integer expireDays;
 
-    /**
-     * 发行结束日期
-     */
     @ApiModelProperty(value="发行结束日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    /**
-     * 发布状态
-     */
     @ApiModelProperty(value="发布状态")
     private Boolean state;
+
+    @ApiModelProperty(value = "编辑时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime editTime;
+
+    @ApiModelProperty(value = "编辑者")
+    private String editorName;
 
 }

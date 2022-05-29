@@ -5,16 +5,19 @@
     <select id="getList" resultType="com.hzb.erp.common.pojo.vo.OrderRefundVo">
         select
             t1.id,t1.refund_sn,t1.refund_money,t1.item_names,t1.verify_time,t1.verify_remark,
-            t1.wx_refund_id,t1.add_time,t1.reason,t1.state,
-            t2.name studentName,
+            t1.wx_refund_id,t1.add_time,t1.reason,t1.state,t1.operator_name,t1.operation_time,
+            t3.sn order_sn,
+            t2.name student_name,
+            t6.mobile,
             t3.sn order_sn,
             t4.name verify_name,
             t5.name reason_type_text
         from shop_order_refund t1
         left join shop_order t3 on t3.id = t1.order_id
         left join student t2 on t2.id = t1.student_id
-        left join staff t4 on t4.id = t1.verify_id
+        left join staff t4 on t4.id = t1.verify_staff
         left join dict_item t5 on t5.id = t1.reason_type
+        left join `user` t6 on t6.id = t1.user_id
         <where>
             <if test="param.orderId != null">
                 AND t1.order_id = #{param.orderId}

@@ -58,8 +58,8 @@ public class OrderRefund implements Serializable {
     @ApiModelProperty(value = "状态")
     private OrderRefundStateEnum state;
 
-    @ApiModelProperty(value = "审核人")
-    private Long verifyId;
+    @ApiModelProperty(value = "审核人ID")
+    private Long verifyStaff;
 
     @ApiModelProperty(value = "审核时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -75,5 +75,15 @@ public class OrderRefund implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime addTime;
+
+    @ApiModelProperty(value = "执行退款人ID")
+    private Long operatorId;
+
+    @ApiModelProperty(value = "执行退款人姓名")
+    private String operatorName;
+
+    @ApiModelProperty(value = "执行退款时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime operationTime;
 
 }

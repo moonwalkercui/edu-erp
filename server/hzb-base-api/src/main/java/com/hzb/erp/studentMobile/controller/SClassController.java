@@ -34,7 +34,7 @@ public class SClassController {
     @ApiOperation("课程列表")
     @GetMapping("/list")
     public Object list(@RequestParam(value = "page", defaultValue = "") Integer page,
-                       @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize) {
+                       @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
         ClassParamDTO param = new ClassParamDTO();
         param.setPage(page);
         param.setPageSize(pageSize);

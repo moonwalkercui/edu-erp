@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -62,7 +63,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setSn(sn);
         order.setUserId(dto.getUserId());
         order.setStudentId(dto.getStudentId());
-        order.setPayMoney(dto.getPrice());
+        order.setOrderMoney(dto.getPrice());
         order.setRemark(dto.getRemark());
         order.setRefunded(false);
         order.setState(OrderStateEnum.UNPAID);
@@ -85,7 +86,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         studentCourseSaveDTO.setStudentId(dto.getStudentId());
         studentCourseSaveDTO.setStudentName(student.getName());
         studentCourseSaveDTO.setCourseId(dto.getCourseId());
-        studentCourseSaveDTO.setCourseAmount(order.getPayMoney());
+        studentCourseSaveDTO.setCourseAmount(order.getOrderMoney());
         studentCourseSaveDTO.setPaidAmount(order.getPayMoney());
         studentCourseSaveDTO.setCountLessonTotal(course.getLessonCount());
         studentCourseSaveDTO.setDiscount(dto.getDiscount() == null ? BigDecimal.ZERO : dto.getDiscount());
@@ -109,6 +110,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (order!=null) {
             payment.setOrderId(order.getId());
             order.setState(OrderStateEnum.PAID);
+            order.setPayTime(LocalDateTime.now());
+            orderMapper.updateById(order);
         } else {
             log.error("【！！！严重异常！！！】支付回调未找到订单Sn：" + orderSn);
         }
@@ -124,9 +127,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         BigDecimal payMoney = totalFee == null ? BigDecimal.ZERO : new BigDecimal(totalFee);
         payment.setPayMoney(payMoney.divide(new BigDecimal(100), BigDecimal.ROUND_HALF_UP));
         paymentMapper.insert(payment);
-        if (order!=null) {
-            orderMapper.updateById(order);
-        }
+
     }
 
     @Override

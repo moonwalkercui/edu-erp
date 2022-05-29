@@ -33,6 +33,9 @@ public class OrderVO {
     @ApiModelProperty(value = "电话")
     private String mobile;
 
+    @ApiModelProperty(value = "订单金额")
+    private BigDecimal orderMoney;
+
     @ApiModelProperty(value = "支付金额")
     private BigDecimal payMoney;
 

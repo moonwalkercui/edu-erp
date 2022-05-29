@@ -104,7 +104,7 @@ public class SStudentController {
     @GetMapping("/list")
     public Object list(
             @RequestParam(value = "page", defaultValue = "") Integer page,
-            @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+            @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
             @RequestParam(value = "classId", defaultValue = "") Long classId
     ) {
         return tStudentController.list(null, pageSize, false, classId, "");
@@ -113,7 +113,7 @@ public class SStudentController {
     @ApiOperation("成绩单列表")
     @GetMapping("/gradeRecord")
     public PaginationVO gradeRecord(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                    @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize) {
+                                    @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
         GradeParamDTO param = new GradeParamDTO();
         param.setPage(page);
         param.setPageSize(pageSize);
