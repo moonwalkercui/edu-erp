@@ -1,6 +1,7 @@
 package com.hzb.erp.service;
 
 
+import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.service.dto.SmsSendDTO;
 
 /**
@@ -9,7 +10,7 @@ import com.hzb.erp.service.dto.SmsSendDTO;
 public interface SmsManager {
 
     /**
-     * 发送手机短信验证码
+     * 发送手机短信验证码,有频繁检查
      *
      * @param smsSendDTO
      */
@@ -23,7 +24,7 @@ public interface SmsManager {
     boolean send(SmsSendDTO smsSendDTO);
 
     /**
-     * 验证手机验证码
+     * 验证手机验证码是否正确
      *
      * @param scene  业务场景
      * @param mobile 手机号码
@@ -33,13 +34,16 @@ public interface SmsManager {
     boolean valid(String scene, String mobile, String code);
 
     /**
-     * 在缓存中记录验证码
+     * 验证发送是否过于频繁
      *
-     * @param scene  业务场景
      * @param mobile 手机号码
-     * @param code   手机验证码
      */
-    void record(String scene, String mobile, String code);
+    void limitValid(String mobile) throws BizException;
 
+    /**
+     * 生成一个验证码
+     *
+     * @return 验证码
+     */
     String makeSmsCode();
 }

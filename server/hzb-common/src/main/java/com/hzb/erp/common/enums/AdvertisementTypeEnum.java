@@ -11,9 +11,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AdvertisementTypeEnum implements BaseEnum {
-    TIP(1, "学生端首页提示"),
+    POPUP(0, "学生端首页弹出"),
+    TIP(1, "学生端首页公告"),
     BANNER(2, "学生端首页Banner"),
-    ARTICLE(3, "普通文章");
+    ARTICLE(3, "普通公告");
     @EnumValue
     private final int code;
     @JsonValue

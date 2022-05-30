@@ -33,5 +33,4 @@ public class WxJsapiController{
         }
         return jsapiSignature;
     }
-
 }

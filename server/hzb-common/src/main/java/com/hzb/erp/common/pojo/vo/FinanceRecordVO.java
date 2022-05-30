@@ -47,17 +47,17 @@ public class FinanceRecordVO implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime addTime;
 
-    @ApiModelProperty(value = "认款确认状态")
+    @ApiModelProperty(value = "审核确认状态")
     private FinanceStateEnum verifyState;
 
-    @ApiModelProperty(value = "认款人")
+    @ApiModelProperty(value = "审核人")
     private String verifyStaffName;
 
-    @ApiModelProperty(value = "认款时间")
+    @ApiModelProperty(value = "审核时间")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime verifyTime;
 
-    @ApiModelProperty(value = "认款备注")
+    @ApiModelProperty(value = "审核备注")
     private String verifyRemark;
 
 }

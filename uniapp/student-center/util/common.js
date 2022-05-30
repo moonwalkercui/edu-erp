@@ -465,23 +465,23 @@ function getRequestHeader() {
 function getRedpoint(cb) {
 	get('sCenter/student/redpoint',{}, res => {
 		if(!handleResponseMsg(res)) return;
-		uni.hideTabBarRedDot({
-		  index: 2
-		})
-		uni.hideTabBarRedDot({
-		  index: 3
-		})
-		if(res.homework_count && res.homework_count > 0) {
-			uni.showTabBarRedDot({
-			   index: 2,
-			})
-		}
-		var ucenterCount= parseInt(res.evaluate_count) + parseInt ( res.grade_count );
-		if( ucenterCount > 0) {
-			uni.showTabBarRedDot({
-			   index: 3,
-			})
-		}
+		// uni.hideTabBarRedDot({
+		//   index: 2
+		// })
+		// uni.hideTabBarRedDot({
+		//   index: 3
+		// })
+		// if(res.homework_count && res.homework_count > 0) {
+		// 	uni.showTabBarRedDot({
+		// 	   index: 2,
+		// 	})
+		// }
+		// var ucenterCount= parseInt(res.evaluate_count) + parseInt ( res.grade_count );
+		// if( ucenterCount > 0) {
+		// 	uni.showTabBarRedDot({
+		// 	   index: 3,
+		// 	})
+		// }
 		cb && cb(res)
 	})
 }
@@ -496,6 +496,25 @@ function getAccessToken() {
 function removeAccessToken() {
 	Cookies.remove(consts.ACCESS_TOKEN_NAME)
 	db.del(consts.ACCESS_TOKEN_NAME)
+}
+
+function systemSettings(codes) {
+	return new Promise((resove, reject)=>{
+		get('sCenter/systemSettings',{codes}, res => {
+			var list = []
+			if(res && res.length > 0) {
+				for(var option of res) {
+					for(var code of codes) {
+						if(option.code === code) {
+							list[code] = option.value
+							break
+						}
+					}
+				}
+			}
+			resove(list)
+		})
+	})
 }
 
 export {
@@ -529,8 +548,9 @@ export {
 	handleResponseMsg,
 	rmoney,
 	getRequestHeader,
-	getRedpoint,
 	setAccessToken,
 	getAccessToken,
 	removeAccessToken,
+	getRedpoint,
+	systemSettings,
 }

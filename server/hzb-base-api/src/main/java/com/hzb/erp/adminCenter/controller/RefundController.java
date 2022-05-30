@@ -1,8 +1,8 @@
 package com.hzb.erp.adminCenter.controller;
 
 
-import com.hzb.erp.annotation.Log;
-import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.base.annotation.Log;
+import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.pojo.dto.RefundSaveDTO;
 import com.hzb.erp.common.service.RefundService;
 import com.hzb.erp.common.service.StudentCourseService;
@@ -10,7 +10,7 @@ import com.hzb.erp.common.service.StudentLessonCountLogService;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
-import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class RefundController {
     @Log(description = "发起退款", type = "退款管理")
     @PostMapping("/save")
     @PreventMultiSubmit
-    public JsonResponse saveStudent(@Valid @RequestBody RefundSaveDTO dto, BindingResult result) {
+    public JsonResponse save(@Valid @RequestBody RefundSaveDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);
         if (refundService.saveOrUpdateByDTO(dto, UserAuthService.getCurrentUserId())) {
             studentLessonCountLogService.addOneByRefund(dto.getStudentId(), dto.getStudentCourseId(), dto.getRefundLessonCount(), UserAuthService.getCurrentUserId());

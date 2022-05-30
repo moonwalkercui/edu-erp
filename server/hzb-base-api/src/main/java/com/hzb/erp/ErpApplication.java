@@ -26,7 +26,7 @@ public class ErpApplication {
         String host = InetAddress.getLocalHost().getHostAddress();
         String port = env.getProperty("server.port");
         String version = env.getProperty("system.version");
-        log.info("\n--------------------------------------------------------------\n\t" +
+        log.warn("\n--------------------------------------------------------------\n\t" +
                         "Application '{}' is running! Access URLs:\n\t" +
                         "Local   : \thttp://localhost:{}\n\t" +
                         "External: \thttp://{}:{}\n\t" +

@@ -1,9 +1,11 @@
 package com.hzb.erp.wechat.service;
 
-import com.hzb.erp.wechat.config.WxMpConfig;
+import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.hzb.erp.common.enums.SettingCodeEnum;
 import com.hzb.erp.common.service.SettingService;
 import com.hzb.erp.service.enums.SettingNameEnum;
+import com.hzb.erp.utils.PropertyUtil;
+import com.hzb.erp.wechat.config.WxMpConfig;
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -29,10 +31,43 @@ public class WechatService {
     private final SettingService settingService;
     private static SettingService stSettingService;
     private final WxMpService wxService;
+    private static WxMpConfig configFromYml;
+    private static WxPayConfig payConfigFromYml;
 
     @PostConstruct
     public void init() {
         stSettingService = settingService;
+
+        // 从yml里读取微信配置，如果使用数据库配置，可以在配置文件yml里不配置。
+        String ymlName = "application.yml";
+        String wxAppId = PropertyUtil.getFromYml(ymlName, "wxAppId");
+        if (StringUtils.isNotBlank(wxAppId)) {
+
+            configFromYml = new WxMpConfig();
+            configFromYml.setName("default");
+
+            String wxSecret = PropertyUtil.getFromYml(ymlName, "wxSecret");
+            String wxToken = PropertyUtil.getFromYml(ymlName, "wxToken");
+            String wxAesKey = PropertyUtil.getFromYml(ymlName, "wxAesKey");
+            configFromYml.setAppId(wxAppId);
+            configFromYml.setSecret(wxSecret);
+            configFromYml.setToken(wxToken);
+            configFromYml.setAesKey(wxAesKey);
+
+            // 以下是支付相关，不需要支付功能的不用配置
+            String wxPayMchId = PropertyUtil.getFromYml(ymlName, "wxPayMchId");
+            String wxPayMchKey = PropertyUtil.getFromYml(ymlName, "wxPayMchKey");
+            String wxPaySubAppId = PropertyUtil.getFromYml(ymlName, "wxPaySubAppId");
+            String wxPaySubMchId = PropertyUtil.getFromYml(ymlName, "wxPaySubMchId");
+            String wxPayKeyPath = PropertyUtil.getFromYml(ymlName, "wxPayKeyPath");
+            payConfigFromYml = new WxPayConfig();
+            payConfigFromYml.setAppId(wxAppId);
+            payConfigFromYml.setMchId(wxPayMchId);
+            payConfigFromYml.setMchKey(wxPayMchKey);
+            payConfigFromYml.setSubAppId(wxPaySubAppId);
+            payConfigFromYml.setSubMchId(wxPaySubMchId);
+            payConfigFromYml.setKeyPath(wxPayKeyPath);
+        }
     }
 
     /**
@@ -46,7 +81,6 @@ public class WechatService {
             confName = "default";
         }
         for (WxMpConfig conf : configs) {
-            System.out.println(conf.getName().equals(confName));
             if (conf.getName().equals(confName)) {
                 return conf;
             }
@@ -107,7 +141,7 @@ public class WechatService {
         setConfig(this.wxService);
         String appid = WechatService.getAppIdByConfName(configName);
         String msgId = this.wxService.switchoverTo(appid).getTemplateMsgService().sendTemplateMsg(templateMessage);
-        System.out.println("========模板消息发送结果msgId：" + msgId);
+        //System.out.println("========模板消息发送结果msgId：" + msgId);
     }
 
     /**
@@ -117,12 +151,12 @@ public class WechatService {
         setConfig(this.wxService);
         String appid = WechatService.getAppIdByConfName(null);
         String msgId = this.wxService.switchoverTo(appid).getTemplateMsgService().sendTemplateMsg(templateMessage);
-        System.out.println("========模板消息发送结果msgId：" + msgId);
+        //System.out.println("========模板消息发送结果msgId：" + msgId);
     }
 
     /**
      * 配置设置参数
-     * */
+     */
     public static void setConfig(WxMpService service) {
         List<WxMpConfig> configs = getConfigList();
         service.setMultiConfigStorages(configs.stream().map(a -> {
@@ -146,23 +180,60 @@ public class WechatService {
         if (settings == null) {
             throw new RuntimeException("未找到微信公众号配置. Not Found Wechat Setting Named 'wx_mp_setting'.");
         }
-        try {
-            String wxAppId = settings.get(SettingNameEnum.WX_MP_APP_ID.getCode()).toString();
-            if (!StringUtils.isBlank(wxAppId)) {
-                WxMpConfig defaultConf = new WxMpConfig();
-                defaultConf.setName("default");
-                defaultConf.setAppId(wxAppId);
-                defaultConf.setSecret(settings.get(SettingNameEnum.WX_MP_SECRET.getCode()).toString());
-                defaultConf.setToken(settings.get(SettingNameEnum.WX_MP_TOKEN.getCode()).toString());
-                defaultConf.setAesKey(settings.get(SettingNameEnum.WX_MP_AES_KEY.getCode()).toString());
-                configs.add(defaultConf);
+        if (configFromYml != null && StringUtils.isNotBlank(configFromYml.getAppId())) {
+            configs.add(configFromYml);
+        } else {
+            try {
+                String wxAppId = settings.get(SettingNameEnum.WX_MP_APP_ID.getCode()).toString();
+                if (!StringUtils.isBlank(wxAppId)) {
+                    WxMpConfig defaultConf = new WxMpConfig();
+                    defaultConf.setName("default");
+                    defaultConf.setAppId(wxAppId);
+                    defaultConf.setSecret(settings.get(SettingNameEnum.WX_MP_SECRET.getCode()).toString());
+                    defaultConf.setToken(settings.get(SettingNameEnum.WX_MP_TOKEN.getCode()).toString());
+                    defaultConf.setAesKey(settings.get(SettingNameEnum.WX_MP_AES_KEY.getCode()).toString());
+                    configs.add(defaultConf);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("请检查数据表 setting_option 的微信配置项是否完整. Missing Wechat Setting Option In Table:setting_option");
             }
-        } catch (Exception e) {
-            throw new RuntimeException("请检查数据表 setting_option 的微信配置项是否完整. Missing Wechat Setting Option In Table:setting_option");
         }
-
+        System.out.println("==============获取微信配置================");
+        System.out.println(configs);
         return configs;
     }
 
+    /**
+     * 从数据库加载配置信息
+     */
+    public static WxPayConfig getPayConfig() {
+
+        // 从数据库获取公众号配置：
+        Map<String, Object> settings = stSettingService.listOptionByCode(SettingCodeEnum.WX_MP_SETTING);
+        if (settings == null) {
+            throw new RuntimeException("未找到微信公众号配置. Not Found Wechat Setting Named 'wx_mp_setting'.");
+        }
+        if (configFromYml != null && StringUtils.isNotBlank(configFromYml.getAppId())) {
+            return payConfigFromYml;
+        } else {
+            try {
+                String wxAppId = settings.get(SettingNameEnum.WX_MP_APP_ID.getCode()).toString();
+                if (!StringUtils.isBlank(wxAppId)) {
+                    WxPayConfig conf = new WxPayConfig();
+                    conf.setAppId(wxAppId);
+                    conf.setMchId(settings.get(SettingNameEnum.WX_PAY_MCHID.getCode()).toString());
+                    conf.setMchKey(settings.get(SettingNameEnum.WX_PAY_MCHKEY.getCode()).toString());
+                    conf.setSubAppId(settings.get(SettingNameEnum.WX_PAY_SUBAPPID.getCode()).toString());
+                    conf.setSubMchId(settings.get(SettingNameEnum.WX_PAY_SUBMCHID.getCode()).toString());
+                    conf.setKeyPath(settings.get(SettingNameEnum.WX_PAY_KEYPATH.getCode()).toString());
+                    return conf;
+                } else {
+                    return null;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("请检查数据表 setting_option 的微信配置项是否完整. Missing Wechat Setting Option In Table:setting_option");
+            }
+        }
+    }
 
 }

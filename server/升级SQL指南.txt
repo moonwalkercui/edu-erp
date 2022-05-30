@@ -1,0 +1,269 @@
+## 数据增量变动sql
+
+####  1.2.0601 在线购课
+
+```
+DROP TABLE IF EXISTS `course_trial`;
+CREATE TABLE `course_trial`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `course_id` bigint(20) UNSIGNED NOT NULL COMMENT '课程',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+  `quantity` int(11) NOT NULL DEFAULT 0 COMMENT '发行数量',
+  `remaining_quantity` int(11) NULL DEFAULT NULL COMMENT '剩余数量',
+  `lesson_count` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '课时数',
+  `expire_days` int(11) NOT NULL COMMENT '领取后有效天数',
+  `end_date` date NOT NULL COMMENT '发行结束日期',
+  `state` tinyint(1) NULL DEFAULT 1 COMMENT '启用状态',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `course_id`(`course_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程体验卡' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for course_trial_record
+-- ----------------------------
+DROP TABLE IF EXISTS `course_trial_record`;
+CREATE TABLE `course_trial_record`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `trial_id` bigint(20) UNSIGNED NOT NULL COMMENT '卡ID',
+  `student_id` bigint(20) NOT NULL COMMENT '学生ID',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '学生账号id',
+  `student_course_id` bigint(20) NULL DEFAULT NULL COMMENT '生成的学生课程关联ID',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '领取时间',
+  `expired_date` date NULL DEFAULT NULL COMMENT '到期时间',
+  `lesson_count` int(11) NULL DEFAULT NULL COMMENT '领取到数量',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `student_id`(`student_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程体验卡领取记录' ROW_FORMAT = Fixed;
+
+-- ----------------------------
+-- Table structure for shop_order
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_order`;
+CREATE TABLE `shop_order`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `sn` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '订单号',
+  `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户',
+  `student_id` bigint(20) UNSIGNED NOT NULL COMMENT '学生id',
+  `order_money` decimal(10, 2) NOT NULL COMMENT '订单金额',
+  `pay_money` decimal(10, 2) NULL DEFAULT NULL COMMENT '支付金额',
+  `state` tinyint(4) NOT NULL DEFAULT 0 COMMENT '订单状态',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `pay_time` datetime(0) NULL DEFAULT NULL COMMENT '支付时间',
+  `refunded` tinyint(1) NULL DEFAULT 0 COMMENT '是否已退款',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `sn`(`sn`) USING BTREE,
+  INDEX `student_id`(`student_id`, `state`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 106 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for shop_order_item
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_order_item`;
+CREATE TABLE `shop_order_item`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `order_id` bigint(50) UNSIGNED NOT NULL COMMENT '订单号',
+  `item_id` bigint(20) UNSIGNED NOT NULL COMMENT '课程id',
+  `item_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+  `item_type` tinyint(4) NULL DEFAULT NULL COMMENT '购买物品类型 1 课程',
+  `price` decimal(10, 2) NULL DEFAULT NULL COMMENT '购买价格',
+  `quantity` int(10) UNSIGNED NULL DEFAULT NULL COMMENT '购买数量',
+  `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 81 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单关联物品列表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for shop_order_refund
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_order_refund`;
+CREATE TABLE `shop_order_refund`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `refund_sn` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '退款编号',
+  `order_id` bigint(20) UNSIGNED NOT NULL COMMENT '订单id',
+  `user_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '学生端账号id',
+  `student_id` bigint(20) NULL DEFAULT NULL COMMENT '学生id',
+  `item_names` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '物品名称',
+  `refund_money` decimal(10, 2) UNSIGNED NOT NULL COMMENT '退款金额',
+  `reason_type` tinyint(4) NULL DEFAULT NULL COMMENT '原因类型',
+  `reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '原因描述',
+  `state` tinyint(4) NOT NULL COMMENT '状态',
+  `verify_staff` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '审核人',
+  `verify_time` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
+  `verify_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审核备注',
+  `wx_refund_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信退款id',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '申请时间',
+  `operator_id` bigint(20) NULL DEFAULT NULL COMMENT '执行退款人ID',
+  `operation_time` datetime(0) NULL DEFAULT NULL COMMENT '执行退款时间',
+  `operator_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '执行退款人姓名',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `sn`(`refund_sn`) USING BTREE,
+  INDEX `user_id`(`user_id`) USING BTREE,
+  INDEX `bill_id`(`order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for shop_payment
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_payment`;
+CREATE TABLE `shop_payment`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `order_id` int(11) NOT NULL COMMENT '订单id',
+  `user_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '手机端账号id',
+  `order_sn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '订单编号',
+  `wx_trade_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '微信交易号',
+  `wx_openid` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '微信支付者openid',
+  `pay_money` decimal(11, 2) NOT NULL COMMENT '支付金额',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '支付记录表' ROW_FORMAT = Dynamic;
+
+INSERT INTO `dict`(`id`, `name`, `code`, `remark`) VALUES (3, '退款类型', 'refund_type', '退款类型选项')
+ALTER TABLE `student_course` ADD COLUMN `from_trial` tinyint(1) NULL DEFAULT 0 COMMENT '是否来自于体验卡';
+ALTER TABLE `student` DROP COLUMN `wx_access_id`;
+ALTER TABLE `course` ADD COLUMN `for_sale` tinyint(1) NULL DEFAULT 0 COMMENT '是否上架中';
+ALTER TABLE `course` ADD COLUMN `recommend` tinyint(1) NULL DEFAULT 0 COMMENT '是否推荐';
+ALTER TABLE `course` ADD COLUMN `cover` varchar(255) NULL COMMENT '封面';
+ALTER TABLE `course` ADD COLUMN `close_date` date NULL DEFAULT NULL COMMENT '报名截止日期';
+ALTER TABLE `course` ADD COLUMN `teacher_info` varchar(255) NULL COMMENT '师资信息';
+ALTER TABLE `course` ADD COLUMN `service_info` varchar(255) NULL COMMENT '服务说明';
+ALTER TABLE `course` ADD COLUMN `storage` int(11) NULL DEFAULT 0 COMMENT '库存名额';
+ALTER TABLE `subject` ADD COLUMN `sort_num` int NULL DEFAULT 0 COMMENT '排序值';
+
+-- ----------------------------
+-- Table structure for course_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `course_comment`;
+CREATE TABLE `course_comment`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `course_id` bigint(20) UNSIGNED NOT NULL COMMENT '所属课程',
+  `student_id` bigint(20) UNSIGNED NOT NULL COMMENT '学生id',
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '章节标题',
+  `score` tinyint(4) NULL DEFAULT 5 COMMENT '打分',
+  `state` tinyint(1) NULL DEFAULT 0 COMMENT '发布状态',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `course_id`(`course_id`) USING BTREE,
+  INDEX `student_id`(`student_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程评价' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for course_images
+-- ----------------------------
+DROP TABLE IF EXISTS `course_image`;
+CREATE TABLE `course_images`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `course_id` bigint(20) UNSIGNED NOT NULL COMMENT '所属课程',
+  `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '图片地址',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程介绍图片' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for course_section
+-- ----------------------------
+DROP TABLE IF EXISTS `course_section`;
+CREATE TABLE `course_section`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `course_id` bigint(20) UNSIGNED NOT NULL COMMENT '所属课程',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '章节标题',
+  `lesson_count` int(10) NOT NULL COMMENT '计划课时数',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程大纲' ROW_FORMAT = Dynamic;
+
+
+```
+
+#### 1.1.0425 数据增量变动sql
+- 2022.4.25 实现预约功能
+- 2022.3.28 实现系统设置管理定时任务
+- 2022.3.17 实现微信配置的数据库存储
+
+```
+ALTER TABLE `org` DROP COLUMN `ship_routes`;
+ALTER TABLE `org` ADD COLUMN `name_path` varchar(255) NULL COMMENT '机构名路径' AFTER `id_path`;
+ALTER TABLE `course` ADD COLUMN `bookable` tinyint(1) NULL DEFAULT 0 COMMENT '是否可以预约';
+ALTER TABLE `lesson` ADD COLUMN `bookable` tinyint(1) NULL DEFAULT 0 COMMENT '是否开放预约';
+ALTER TABLE `appointment` ADD COLUMN `course_id` bigint(20) NOT NULL COMMENT '所属课程';
+ALTER TABLE `staff_orginfo` ADD COLUMN `id_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'id全路径' ;
+ALTER TABLE `student` ADD COLUMN `grade` year NULL COMMENT '年级';
+ALTER TABLE `student` ADD COLUMN `join_date` date NULL DEFAULT NULL COMMENT '入学日期';
+ALTER TABLE `lesson_student` ADD COLUMN `add_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+
+INSERT INTO `setting`(`id`, `name`, `code`, `remark`, `sort_num`) VALUES (4, '微信公众号设置', 'wx_mp_setting', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (10, 4, '公众号AppId', 'wx_mp_app_id', 'app_idAAAAA', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (11, 4, '公众号Secret', 'wx_mp_secret', 'secret', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (12, 4, '公众号Token', 'wx_mp_token', 'token', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (13, 4, '公众号AesKey', 'wx_mp_aes_key', 'aes_key', 'str', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (14, 1, '每天上课提醒时间', 'lesson_remind_time', '18:30', 'time', NULL, 0);
+INSERT INTO `setting_option`(`id`, `setting_id`, `name`, `code`, `value`, `value_type`, `info`, `sort_num`) VALUES (15, 1, '每天上课次数预警时间', 'lesson_count_warning_time', '7:00', 'time', NULL, 0);
+
+CREATE TABLE `quartz_job` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `job_name` varchar(255) DEFAULT NULL COMMENT '任务名称',
+  `group_name` varchar(255) DEFAULT NULL COMMENT '任务分组',
+  `job_class` varchar(255) DEFAULT NULL COMMENT '执行类路径',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `cron_expression` varchar(255) DEFAULT NULL COMMENT 'cron表达式',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='定时任务';
+
+
+DROP TABLE IF EXISTS `appointment`;
+CREATE TABLE `appointment`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `lesson_id` bigint(20) NOT NULL COMMENT '试听课次',
+  `student_id` bigint(20) NOT NULL COMMENT '学员id',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '预约时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `verify_state` tinyint(2) NULL DEFAULT 1 COMMENT '审核状态',
+  `verify_time` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
+  `verify_staff` bigint(20) NULL DEFAULT NULL COMMENT '审核人',
+  `verify_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审核内容',
+  `course_id` bigint(20) NULL DEFAULT NULL COMMENT '所属课程',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `student_id`(`student_id`) USING BTREE,
+  INDEX `lesson_id`(`lesson_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '试听预约记录' ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发送标题',
+  `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发送内容',
+  `to_id` bigint(20) NOT NULL COMMENT '接收人ID 0所有',
+  `from_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '发送人ID',
+  `to_type` tinyint(4) NULL DEFAULT NULL COMMENT '接受者类型  1 老师 2 学生',
+  `from_type` tinyint(4) NULL DEFAULT NULL COMMENT '发送者类型 0 系统 1 老师 2 学生',
+  `send_time` datetime(0) NULL DEFAULT NULL COMMENT '发送时间',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `deleted` tinyint(1) NULL DEFAULT NULL COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '站内信' ROW_FORMAT = Dynamic;
+
+
+```

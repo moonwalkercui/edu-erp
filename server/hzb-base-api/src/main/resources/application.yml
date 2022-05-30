@@ -5,7 +5,7 @@ server:
 
 spring:
   profiles:
-    active: demo
+    active: dev
   jackson:
     time-zone: CST
   application:
@@ -115,3 +115,9 @@ system:
   # 黑名单的ip,禁止访问该系统
   blackList:
   #  - 127.0
+# 微信配置，可删除，默认数据库读取，如果不设置数据库，可以使用该配置，本配置权重高于数据库
+wxConfig:
+  wxAppId: 111
+  wxSecret: 122
+  wxToken: 133
+  wxAesKey: 144

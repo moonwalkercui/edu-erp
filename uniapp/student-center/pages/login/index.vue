@@ -28,7 +28,7 @@
 
 			<view class="u-margin-30 u-text-right text-gray">
 				<text>登录密码请向老师获取，或</text>
-				<text class="text-black" @click="forget">找回密码</text>
+				<text class="text-black" @click="forget">找回密码</text> 
 			</view>
 
 			<button @click="submit" :style="[inputStyle]" class="submitbtn">登 录</button>
@@ -55,11 +55,12 @@
 <script>
 	import {domainUrl} from "@/util/config.js"
 	import wechat from "@/util/wechat.js"
+	import {debug} from "@/util/config.js"
 	export default {
 		data() {
 			return {
-				mobile: '15666323771',
-				password: '111111',
+				mobile: '',
+				password: '',
 				inWeixin: false,
 			}
 		},

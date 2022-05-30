@@ -69,29 +69,22 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
     private LessonStudentMapper lessonStudentMapper;
     @Autowired
     private CourseService courseService;
-
     @Autowired
     private StudentLessonCountLogService studentLessonCountLogService;
-
     @Resource
     private LessonMapper lessonMapper;
-
     @Autowired
     private ImportExportService importExportService;
-
     @Autowired
     private StudentCourseService studentCourseService;
-
     @Autowired
     private TeachEvaluationService teachEvaluationService;
     @Autowired
     private LessonScheduleMapper lessonScheduleMapper;
     @Autowired
     private MessageService messageService;
-
     @Autowired
     private SettingService settingService;
-
     @Autowired
     private AppointmentService appointmentService;
 

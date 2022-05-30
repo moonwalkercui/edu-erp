@@ -3,16 +3,15 @@ package com.hzb.erp.common.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hzb.erp.common.enums.OprationTypeEnum;
+import com.hzb.erp.common.enums.*;
+import com.hzb.erp.common.mapper.OrderMapper;
+import com.hzb.erp.common.mapper.OrderRefundMapper;
 import com.hzb.erp.common.mapper.StudentCourseMapper;
 import com.hzb.erp.service.ImportExportService;
 import com.hzb.erp.service.NotificationService;
 import com.hzb.erp.service.notification.NoticeCodeEnum;
 import com.hzb.erp.service.notification.bo.NewContractBO;
 import com.hzb.erp.common.entity.*;
-import com.hzb.erp.common.enums.FinanceStateEnum;
-import com.hzb.erp.common.enums.FinanceTypeEnum;
-import com.hzb.erp.common.enums.VerifyStateEnum;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.FinanceRecordMapper;
 import com.hzb.erp.common.pojo.dto.FinanceParamDTO;
@@ -53,14 +52,17 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
     private ImportExportService importExportService;
     @Autowired
     private OperationRecordService operationRecordService;
-
+    @Autowired
+    private OrderRefundMapper orderRefundMapper;
+    @Autowired
+    private OrderMapper orderMapper;
     @Override
     public IPage<FinanceRecordVO> getList(FinanceParamDTO param) {
         return this.baseMapper.getList(new Page<>(param.getPage(), param.getPageSize()), param);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Boolean changeState(List<Long> ids, FinanceStateEnum state, String remark, Long staffId) {
         List<FinanceRecord> list = this.listByIds(ids);
         for (FinanceRecord item : list) {
@@ -88,14 +90,29 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
     private void transactionAfterChangeState(FinanceRecord item, FinanceStateEnum state, Long staffId) {
 
         if (FinanceTypeEnum.COURSE.equals(item.getItemType())) {
+            // 课程报名审核处理
             handleCourseVerify(item, state);
             operationRecordService.addOne(item.getItemId(), OprationTypeEnum.StudentCourse, state.getDist(), "报名认款审核:" + state.getDist(), staffId);
+
         } else if (FinanceTypeEnum.REFUND.equals(item.getItemType())) {
+            // 课程退款审核处理
             handleRefundVerify(item, state);
             operationRecordService.addOne(item.getItemId(), OprationTypeEnum.Refund, state.getDist(), "退课退课审核:" + state.getDist(), staffId);
+
         } else if (FinanceTypeEnum.SUPPLEMENT.equals(item.getItemType())) {
+            // 课费补缴审核处理
             handleSupplementVerify(item, state);
             operationRecordService.addOne(item.getItemId(), OprationTypeEnum.StudentCourse, state.getDist(), "缴纳欠费认款:" + state.getDist(), staffId);
+
+        } else if (FinanceTypeEnum.ORDER.equals(item.getItemType())) {
+            // 购课订单
+            handleOrderVerify(item, state);
+            operationRecordService.addOne(item.getItemId(), OprationTypeEnum.ORDER, state.getDist(), "在线购课认款:" + state.getDist(), staffId);
+
+        } else if (FinanceTypeEnum.ORDER_REFUND.equals(item.getItemType())) {
+            // 购课订单退款
+            handleOrderRefundVerify(item, state, staffId);
+            operationRecordService.addOne(item.getItemId(), OprationTypeEnum.ORDER_REFUND, state.getDist(), "订单退款审核:" + state.getDist(), staffId);
         }
     }
 
@@ -170,7 +187,7 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
     }
 
     /**
-     * 处理续费逻辑 暂无
+     * 处理续费逻辑 暂无 todo
      */
     private void handleSupplementVerify(FinanceRecord item, FinanceStateEnum state) {
         if (FinanceStateEnum.PASS.equals(state)) {
@@ -178,9 +195,46 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
         } else {
             // 驳回
         }
-
     }
 
+    /**
+     * 购课订单
+     */
+    private void handleOrderVerify(FinanceRecord item, FinanceStateEnum state) {
+        if (FinanceStateEnum.PASS.equals(state)) {
+            // 订单款项审核通过后 什么也不做
+        } else {
+            // 订单款项驳回 微信支付完的，不允许驳回。如果需要退款的，需要学生端端操作退款
+            throw new BizException("微信已支付订单无法驳回");
+        }
+    }
+
+    /**
+     * 购课订单退款
+     */
+    private void handleOrderRefundVerify(FinanceRecord item, FinanceStateEnum state, Long staffId) {
+        OrderRefund orderRefund = orderRefundMapper.selectById(item.getItemId());
+        boolean closeOrderRefund = false;
+        if (FinanceStateEnum.PASS.equals(state)) {
+            // 通过后，就可以在订单退款管理里操作退款了
+            orderRefund.setState(OrderRefundStateEnum.PASS);
+        } else {
+            // 驳回后 用户的订单状态改成未退款状态 申请退款见 com.hzb.erp.common.service.impl.OrderRefundServiceImpl.handleRefund
+            orderRefund.setState(OrderRefundStateEnum.REJECT);
+            closeOrderRefund = true;
+        }
+        orderRefund.setVerifyStaff(staffId);
+        orderRefund.setVerifyRemark(item.getRemark());
+        orderRefund.setVerifyTime(LocalDateTime.now());
+        orderRefundMapper.updateById(orderRefund);
+
+        if(closeOrderRefund) {
+            Order order = orderMapper.selectById(orderRefund.getOrderId());
+            order.setRefunded(false);
+            orderMapper.updateById(order);
+        }
+
+    }
     /**
      * 课时变动日志
      */
@@ -208,10 +262,10 @@ public class FinanceRecordServiceImpl extends ServiceImpl<FinanceRecordMapper, F
             put("operatorName", "经手人");
             put("remark", "备注说明");
             put("addTime", "提交时间");
-            put("verifyState", "认款状态");
-            put("verifyStaffName", "认款人");
-            put("verifyTime", "认款时间");
-            put("verifyRemark", "认款备注");
+            put("verifyState", "审核状态");
+            put("verifyStaffName", "审核人");
+            put("verifyTime", "审核时间");
+            put("verifyRemark", "审核备注");
         }};
         importExportService.exportExcel(header, list, "款项记录表");
     }

@@ -22,7 +22,7 @@ public enum DataScopeEntityEnum {
     TEACH_EVALUATION("teach_evaluation", "学评教表", "teacher_id"),
     CASHOUT("cashout", "请款表", "creator"),
     GRADE("grade", "成绩表", "creator"),
-    FINANCE_RECORD("finance_record", "财务认款表", "operator"),
+    FINANCE_RECORD("finance_record", "财务审核表", "operator"),
     SYS_LOG("sys_log", "系统日志表", "operator"),
     HOLIDAY("holiday", "节假日表", "creator"),
     LESSON_STUDENT("lesson_student", "教评学", "counselor"),

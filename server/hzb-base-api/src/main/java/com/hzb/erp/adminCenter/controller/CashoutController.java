@@ -1,8 +1,8 @@
 package com.hzb.erp.adminCenter.controller;
 
 
-import com.hzb.erp.annotation.Log;
-import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.base.annotation.Log;
+import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.enums.VerifyStateEnum;
 import com.hzb.erp.common.mapper.CashoutMapper;
 import com.hzb.erp.common.pojo.dto.CashoutParamDTO;
@@ -11,7 +11,7 @@ import com.hzb.erp.common.pojo.dto.IdsAndContentDTO;
 import com.hzb.erp.common.pojo.vo.CashoutVO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
 import com.hzb.erp.common.service.CashoutService;
-import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.EnumTools;
 import com.hzb.erp.utils.JsonResponse;
@@ -133,8 +133,8 @@ public class CashoutController {
         }
     }
 
-    @ApiOperation("认款通过")
-    @Log(description = "认款通过", type = "请款管理")
+    @ApiOperation("审核通过")
+    @Log(description = "审核通过", type = "请款管理")
     @PostMapping("/pass")
     public JsonResponse pass(@RequestBody List<Long> ids) {
         if (cashoutService.changeState(ids, VerifyStateEnum.APPROVE, null, UserAuthService.getCurrentUserId())) {
@@ -144,8 +144,8 @@ public class CashoutController {
         }
     }
 
-    @ApiOperation("认款驳回")
-    @Log(description = "认款驳回", type = "请款管理")
+    @ApiOperation("审核驳回")
+    @Log(description = "审核驳回", type = "请款管理")
     @PostMapping("/reject")
     public JsonResponse reject(@RequestBody IdsAndContentDTO dto) {
         if (cashoutService.changeState(dto.getIds(), VerifyStateEnum.REJECT, dto.getContent(), UserAuthService.getCurrentUserId())) {

@@ -2,8 +2,8 @@ package com.hzb.erp.adminCenter.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.hzb.erp.annotation.Log;
-import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.base.annotation.Log;
+import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.entity.GradeRecord;
 import com.hzb.erp.common.entity.Student;
 import com.hzb.erp.common.exception.BizException;

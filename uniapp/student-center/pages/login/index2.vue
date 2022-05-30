@@ -34,8 +34,8 @@ import wechat from "@/util/wechat.js"
 export default {
 	data() {
 		return {
-			username: '15666323771',
-			password: '123',
+			username: '',
+			password: '',
 			redirectUrl: '',
 			inWeixin: false,
 		}

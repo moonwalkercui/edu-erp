@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.OrderMapper">
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.OrderVO">
+        select
+            t1.id,t1.sn,t1.order_money,t1.pay_money,t1.remark,t1.refunded,t1.state,t1.pay_time,t1.add_time,
+            t2.name studentName, t3.mobile mobile
+        from shop_order t1
+        left join student t2 on t2.id = t1.student_id
+        left join `user` t3 on t3.id = t1.user_id
+        <where>
+            <if test="param.studentId != null">
+                AND t1.student_id = #{param.studentId}
+            </if>
+            <if test="param.courseId != null">
+                AND t1.id = (select order_id from shop_order_item where item_id = #{param.courseId} and item_type=1 )
+            </if>
+            <if test="param.state != null and param.state.size()>0">
+                AND t1.state in
+                <foreach collection="param.state" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="param.sn != null and param.sn.trim() != ''">
+                AND t1.sn like concat( #{param.sn}, '%')
+            </if>
+            <if test="param.startDate != null and param.endDate != null">
+                AND ( t1.add_time &gt;= #{param.startDate} and t1.add_time &lt;= #{param.endDate} )
+            </if>
+            and t1.deleted = 0
+        </where>
+        order by t1.id desc
+    </select>
+
+</mapper>

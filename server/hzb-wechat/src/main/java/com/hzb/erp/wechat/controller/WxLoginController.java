@@ -75,7 +75,6 @@ public class WxLoginController {
 
             WxOAuth2AccessToken accessToken = wxService.getOAuth2Service().getAccessToken(code);
             WxOAuth2UserInfo user = wxService.getOAuth2Service().getUserInfo(accessToken, null);
-
             log.info("获取到微信用户信息：" + user.toString());
 
             WxAccess wxAccess = wxAccessService.getOrSaveRecord(user);
@@ -92,14 +91,14 @@ public class WxLoginController {
             JwtUserDetails userDetails = null;
             String viewPath = null;
             if ("student".equals(state)) {
-                User parent = userService.getByWxAccessId(wxAccess.getId());
-                log.info("获取到User对象：" + parent);
+                User wxuser = userService.getByWxAccessId(wxAccess.getId());
+                log.info("获取到User对象：" + wxuser);
 
-                if (parent == null) {
-                    view.addObject("url", "/s/#/pages/login/index");
+                if (wxuser == null) {
+                    view.addObject("url", "/s/#/pages/login/register");
                     throw new RuntimeException("您的微信未绑定家长端账号，请先注册!");
                 } else {
-                    userDetails = userUserDetailsService.loadUserByUsername(parent.getMobile());
+                    userDetails = userUserDetailsService.loadUserByUsername(wxuser.getMobile());
                     if (userDetails != null) {
                         SecurityUtils.setStudentRole(userDetails);
                         SecurityUtils.checkUserDetails(userDetails);

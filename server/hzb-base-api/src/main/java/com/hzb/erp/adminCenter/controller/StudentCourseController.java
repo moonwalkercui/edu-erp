@@ -1,15 +1,15 @@
 package com.hzb.erp.adminCenter.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hzb.erp.annotation.Log;
-import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.base.annotation.Log;
+import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.mapper.StudentCourseMapper;
 import com.hzb.erp.common.pojo.dto.PayOverdueDTO;
 import com.hzb.erp.common.pojo.dto.StudentCourseParamDTO;
 import com.hzb.erp.common.pojo.dto.StudentCourseSaveDTO;
 import com.hzb.erp.common.pojo.vo.StudentCourseVO;
 import com.hzb.erp.common.service.*;
-import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;

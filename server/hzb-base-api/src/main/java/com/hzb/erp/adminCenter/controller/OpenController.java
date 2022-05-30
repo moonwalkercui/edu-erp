@@ -1,22 +1,29 @@
 package com.hzb.erp.adminCenter.controller;
 
-import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.configuration.SystemConfig;
+import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.service.AdvertisementService;
 import com.hzb.erp.service.CaptchaManager;
 import com.hzb.erp.service.SmsManager;
+import com.hzb.erp.service.cache.SmsCodeCache;
+import com.hzb.erp.service.cache.SmsSendLimitCache;
 import com.hzb.erp.service.dto.SmsSendDTO;
+import com.hzb.erp.service.enums.SmsSceneType;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Ryan
@@ -63,18 +70,24 @@ public class OpenController {
         CommonUtil.handleValidMessage(result);
 
         String code = smsManager.makeSmsCode();
-        dto.setContent(code);
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("code", code);
+        dto.setDataMap(dataMap);
+        // 缓存验证码用于验证
+        SmsCodeCache.put(code, dto.getMobile(), SmsSceneType.STUDENT_REGISTER);
 
-        return smsManager.sendCode(dto) ?
-                JsonResponseUtil.success(code) :
-                JsonResponseUtil.error("短信发送出错");
+        if(systemConfig.getIsDemo()!=null && systemConfig.getIsDemo()) {
+            // 超时验证
+            smsManager.limitValid(dto.getMobile());
+            return JsonResponseUtil.success("模拟发送短信验证码：" + code);
+        }
+
+        if(smsManager.sendCode(dto)) {
+            return JsonResponseUtil.success("短信已发送");
+        } else {
+            return JsonResponseUtil.error("短信发送出错");
+        }
     }
-
-//    @ApiOperation("验证验证码")
-//    @GetMapping("/captureValid")
-//    public void capture(@RequestParam(value = "uuid") String uuid, @RequestParam(value = "code") String code) {
-//        System.out.println(captchaManager.valid(code, uuid));
-//    }
 
     @ApiOperation("获取uuid")
     @GetMapping("/getUuid")

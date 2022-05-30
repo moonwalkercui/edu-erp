@@ -50,6 +50,11 @@ public enum SettingNameEnum {
     SMS_SIGN_NAME("sms_sign_name", "短信签名", "", "str"),
 
     /**
+     * 验证码短信模板ID
+     */
+    SMS_CODE_TEMPLATE("sms_code_template", "验证码短信模板ID", "", "str"),
+
+    /**
      * 公众号AppId
      */
     WX_MP_APP_ID("wx_mp_app_id", "公众号AppId", "", "str"),
@@ -70,6 +75,15 @@ public enum SettingNameEnum {
     WX_MP_AES_KEY("wx_mp_aes_key", "公众号AesKey", "", "str"),
 
     /**
+     * 微信支付相关
+     */
+    WX_PAY_MCHID("wx_pay_mchid", "微信支付商户号", "", "str"),
+    WX_PAY_MCHKEY("wx_pay_mchkey", "微信支付商户密钥", "", "str"),
+    WX_PAY_SUBAPPID("wx_pay_subappid", "服务商模式子商户公众账号ID", "", "str"),
+    WX_PAY_SUBMCHID("wx_pay_submchid", "服务商模式子商户号", "", "str"),
+    WX_PAY_KEYPATH("wx_pay_keypath", "apiclient_cert.p12文件的绝对路径", "", "str"),
+
+    /**
      * 每天上课提醒时间
      */
     LESSON_REMIND_TIME("lesson_remind_time", "每天上课提醒时间", "19:31", "time"),
@@ -82,7 +96,12 @@ public enum SettingNameEnum {
     /**
      * 学员预约后自动加入到课时
      */
-    AUTO_JOIN_LESSON_BY_APPOINTMENT("auto_join_lesson_by_appointment", "学员预约后自动加入到课时", "true", "bool");
+    AUTO_JOIN_LESSON_BY_APPOINTMENT("auto_join_lesson_by_appointment", "学员预约后自动加入到课时", "true", "bool"),
+
+    /**
+     * 体验卡使用规则说明
+     */
+    COURSE_TRIAL_HELP("course_trial_help", "体验卡使用规则说明", "领取体验卡后可以到课时表里预约课程。", "str");
 
     private String code;
     private String desc;

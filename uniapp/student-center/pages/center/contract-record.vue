@@ -1,12 +1,12 @@
 <template>
 	<view>
-		<uni-nav-bar left-icon="arrow-left" left-text="" title="签约记录" @clickLeft="clickLeft"  right-icon="reload"  @clickRight="clickRight"/>
+		<uni-nav-bar left-icon="arrow-left" left-text="" title="报名记录" @clickLeft="clickLeft"  right-icon="reload"  @clickRight="clickRight"/>
 		<view class="u-demo-wrap" style="">
 			<u-cell-group title="">
 				<u-cell-item  v-for="(item,index) in list" :key="index" center :index="index" :arrow="false">
 					<view slot="title" class="text-black">{{item.courseName}}</view>
 					<view slot="label">科目: {{item.subjectName}}</view>
-					<view slot="label">签约日期: {{item.addTime}}</view>
+					<view slot="label">报名日期: {{item.addTime}}</view>
 					<view slot="label" :class="checkExpired(item.expireDate)">有效期: {{item.expireDate}}</view>
 					<view class="text-black line-height-md">
 						<view>金额: {{item.amount}}元</view>
@@ -16,7 +16,7 @@
 					</view>
 				</u-cell-item>
 			</u-cell-group>
-			<u-empty v-if="list.length == 0" mode="list" text="未签约课程"></u-empty>
+			<u-empty v-if="list.length == 0" mode="list" text="无报名课程"></u-empty>
 		</view>
 	</view>
 </template>

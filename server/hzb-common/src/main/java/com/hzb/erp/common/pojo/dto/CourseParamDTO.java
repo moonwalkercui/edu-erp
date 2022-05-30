@@ -12,4 +12,7 @@ public class CourseParamDTO extends PaginateDTO {
     //    private Integer state;
     private List<Integer> state;
     private String name;
+    private Boolean forSale;
+    private Boolean recommend;
+    private Boolean withFavRate;
 }

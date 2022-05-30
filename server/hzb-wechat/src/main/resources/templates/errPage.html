@@ -7,19 +7,19 @@
 </head>
 <body>
 <div style="text-align: center; padding: 50px;">
-    <h2 th:text="${msg}" style="font-size: 24px; color: cornflowerblue;"></h2>
-    <p style="color:gray; font-size: 14px;"><span>状态码</span><span th:text="${code}"></span></p>
+    <h2 th:text="${msg}" style="font-size: 20px; color: cornflowerblue; margin-bottom: 2em;"></h2>
+    <p style="color:gray; font-size: 14px; margin-bottom: 2em;"><span>状态码</span><span th:text="${code}"></span></p>
     <p>
         <a th:href="${url}" id="href"
            style="background: cornflowerblue; color: white; border-radius: 10px; line-height: 30px; text-decoration: none; width: 200px; font-size: 14px; display: inline-block">
-            <div>点击返回</div>
+            <div>点击跳转 <span id="wait">10</span></div>
         </a>
     </p>
 </div>
 <script type="text/javascript">
-  var wait = 5, url = document.getElementById('href').href;
+  var wait = document.getElementById('wait'), url = document.getElementById('href').href;
   var interval = setInterval(function () {
-    var time = --wait;
+    var time = --wait.innerHTML;
     if (time <= 0) {
       window.location.href = url;
       clearInterval(interval);

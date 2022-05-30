@@ -30,12 +30,21 @@ public class PropertyUtil {
         return "dev".equals(properties.get("active").toString());
     }
 
+    /**
+     * 自动根据当前激活环境读取配置
+     * */
     public static String get(String propertyName) {
         Properties properties = loadPropertiesByFileName("application.yml");
         String config = properties.getProperty("active");
         String fileName = "application-" + config + ".yml";
-        return loadPropertiesByFileName(fileName).get(propertyName).toString();
+        return getFromYml(fileName, propertyName);
     }
 
+    /**
+    * 从配置文件读取配置
+    * */
+    public static String getFromYml(String applicationYml, String propertyName ) {
+        return (String)loadPropertiesByFileName(applicationYml).get(propertyName);
+    }
 
 }

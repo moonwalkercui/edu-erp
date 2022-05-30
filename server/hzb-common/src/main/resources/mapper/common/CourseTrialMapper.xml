@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.CourseTrialMapper">
+
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.CourseTrialVO">
+        select
+        t1.id,t1.course_id,t1.quantity,t1.lesson_count,t1.title,
+        t1.expire_days,t1.end_date,t1.state,t1.editor,
+        t1.add_time,t1.edit_time,
+        t2.name editor_name,
+        t3.name course_name,
+        count(t4.id) record_count
+        from course_trial t1
+        left join staff t2 on t2.id = t1.editor
+        left join course t3 on t3.id = t1.course_id
+        left join course_trial_record t4 on t4.trial_id = t1.id
+        <where>
+            <if test="param.courseId != null">
+                AND t1.course_id = #{param.courseId}
+            </if>
+            <if test="param.title != null and param.title != ''">
+                AND t1.title like concat('%', #{param.title}, '%')
+            </if>
+            <if test="param.state != null">
+                AND t1.state = #{param.state}
+            </if>
+            <if test="param.excludeEnd != null and param.excludeEnd">
+                AND t1.end_date >= CURDATE()
+            </if>
+            and t1.deleted = 0
+        </where>
+        group by t1.id
+        order by t1.id desc
+    </select>
+</mapper>

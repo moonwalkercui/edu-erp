@@ -1,13 +1,13 @@
 package com.hzb.erp.adminCenter.controller;
 
 
-import com.hzb.erp.annotation.Log;
+import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.common.pojo.dto.ClassStudentAddDTO;
 import com.hzb.erp.common.service.ClassStudentService;
 import com.hzb.erp.common.service.LessonService;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
-import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -35,7 +35,7 @@ public interface StudentCourseService extends IService<StudentCourse> {
     /**
      * 添加
      */
-    void addOne(StudentCourseSaveDTO postData, Long operator);
+    StudentCourse addOne(StudentCourseSaveDTO postData, Long operator);
 
     /**
      * 编辑

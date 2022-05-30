@@ -20,7 +20,10 @@ export default {
 				this.pageData.page ++
 				this.handleReq(); // 引用页面需要有一个请求方法
 			} else {
-				common.showError("没有更多数据")
+				uni.showToast({
+					icon: 'none',
+					title: '没有更多数据'
+				})
 			}
 		}
 	}

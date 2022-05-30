@@ -45,9 +45,7 @@
 				this.handleReq()
 			},
 			clickLeft() {
-				uni.switchTab({
-					url: '/pages/center/index'
-				});
+				uni.navigateBack()
 			}
 		}
 	}

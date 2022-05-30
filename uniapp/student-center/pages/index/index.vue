@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<u-notice-bar mode="vertical" :list="tips" v-if="tips.length > 0" @click="clickTip"></u-notice-bar>
-		
+
 		<view class="u-margin-30 bg-white boder-radius-md" style="overflow: hidden;">
 			<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="300"
 				style="height: 360rpx;" indicator-active-color="#ff9900">
@@ -12,14 +12,25 @@
 			</swiper>
 		</view>
 		
-		<view class="u-flex u-p-30 bg-primary u-margin-30 boder-radius-md" @click="studentManage">
+		<view class="u-margin-30 boder-radius-md" style="overflow: hidden;">
+			<u-grid :col="5">
+				<u-grid-item v-for="(item,index) in navs" :key="index"
+					@click="handleNav(item.page)">
+					<u-badge :count="item.count"></u-badge>
+					<u-icon :name="item.icon" :color="item.color" :size="46" custom-prefix="custom-icon"></u-icon>
+					<view class="grid-text">{{item.label}}</view>
+				</u-grid-item>
+			</u-grid>
+		</view>
+
+		<view class="u-flex u-p-20 bg-primary u-margin-30 boder-radius-md" @click="studentManage">
 			<view class="u-m-r-10">
-				<u-avatar :src="avatar" size="100"></u-avatar>
+				<u-avatar :src="avatar" size="80"></u-avatar>
 			</view>
 			<view class="u-flex-1">
 				<view class="u-font-18 u-p-b-10 text-white">{{info.name||'请先添加学生'}}
-				<u-icon class="u-m-l-10" name="woman" color="#ff557f" size="28" v-if="info.gender == '女'"></u-icon>
-				<u-icon class="u-m-l-10" name="man" color="#2979ff" size="28" v-if="info.gender == '男'"></u-icon>
+					<u-icon class="u-m-l-10" name="woman" color="#ff557f" size="28" v-if="info.gender == '女'"></u-icon>
+					<u-icon class="u-m-l-10" name="man" color="#2979ff" size="28" v-if="info.gender == '男'"></u-icon>
 				</view>
 				<view class="u-font-14 u-tips-color text-white">{{info.age? info.age + '岁':''}}</view>
 			</view>
@@ -28,47 +39,10 @@
 				<u-icon name="arrow-right" color="#fff" size="28"></u-icon>
 			</view>
 		</view>
-		
-	<!-- 	<view class="u-m-30">
-			<button @click="studentManage" class="submitbtn orange" >添加学生</button>
-		</view>
- -->
-		<!-- <view class="u-margin-30 boder-radius-md" style="overflow: hidden;">
-			<u-grid :col="4">
-				<u-grid-item v-for="(item,index) in navs" :key="index"
-					@click="handleNav('/pages/index/articaldetail?gid=aboutus')">
-					<u-icon name="qiye" :size="56" color="#ff9900" custom-prefix="custom-icon"></u-icon>
-					<view class="grid-text">{{item.label}}</view>
-				</u-grid-item>
-			</u-grid>
-		</view> -->
 
-		<view class="u-margin-30 bg-white boder-radius-md">
-			<view class="u-padding-20 u-font-md u-flex">
-				<view class="u-flex-3">课程进度</view>
-				<view class="u-flex-1 u-text-right u-font-26 text-gray" @click="myCourse">全部</view>
-			</view>
-			<view class=" u-padding-bottom-20 ">
-				<u-cell-group>
-					<u-cell-item v-for="(item,index) in courseList" :key="index" @click="lessonSign(item)">
-						<view slot="title" class="text-bold">{{item.courseName}}</view>
-						<view slot="label">
-							<text class="text-mini">{{item.expireDate}}前有效</text>
-						</view>
-						<view>
-							<u-circle-progress 
-								:active-color="parseInt(item.countLessonComplete*100/item.countLessonTotal) >= 80 ? '#ff6600':  '#2ac79f'" 
-								:percent="parseInt(item.countLessonComplete*100/item.countLessonTotal)" width="110">
-								<view class="u-progress-content">
-									<text class="u-font-12"><text class="text-black">{{item.countLessonComplete}}</text>/{{item.countLessonTotal}}</text>
-								</view>
-							</u-circle-progress>
-						</view>
-					</u-cell-item>
-				</u-cell-group>
-				<u-empty v-if="courseList.length == 0" mode="list" text="未签约课程"></u-empty>
-			</view>
-		</view>
+		<!-- <view class="u-m-30">
+			<button @click="studentManage" class="submitbtn orange" >添加学生</button>
+		</view> -->
 
 		<u-card title="今日课表" :sub-title="lessonList.length>0 ? `今日${lessonList.length}节课` : '无课'" :padding="20">
 			<view class="" slot="body">
@@ -94,18 +68,36 @@
 				</view>
 				<u-empty v-if="lessonList.length == 0" mode="list" text="今日无课"></u-empty>
 			</view>
-
 		</u-card>
-
-		<u-modal v-model="adShow" :title="adInfo.title" :mask-close-able="true" confirm-text="关闭" width="90%"
-			:confirm-style="{fontSize: '28rpx'}" :title-style="{paddingTop: '30rpx'}">
-			<view class="slot-content">
-				<u-image style="margin-top: 30rpx;" v-if="adInfo.cover" width="100%" height="300rpx"
-					:src="adInfo.cover"></u-image>
-				<view class="u-padding-20 u-font-14">{{adInfo.content}}</view>
+		
+		<view class="u-margin-30 bg-white boder-radius-md">
+			<view class="u-padding-20 u-font-md u-flex">
+				<view class="u-flex-3">我的课程</view>
+				<view class="u-flex-1 u-text-right u-font-26 text-gray" @click="myCourse">全部</view>
 			</view>
-		</u-modal>
-
+			<view class=" u-padding-bottom-20 ">
+				<u-cell-group>
+					<u-cell-item v-for="(item,index) in courseList" :key="index" @click="lessonSign(item)">
+						<view slot="title" class="text-bold">{{item.courseName}}</view>
+						<view slot="label">
+							<text class="text-mini">{{item.expireDate}}前有效</text>
+						</view>
+						<view>
+							<u-circle-progress
+								:active-color="parseInt(item.countLessonComplete*100/item.countLessonTotal) >= 80 ? '#ff6600':  '#2ac79f'"
+								:percent="parseInt(item.countLessonComplete*100/item.countLessonTotal)" width="110">
+								<view class="u-progress-content">
+									<text class="u-font-12"><text
+											class="text-black">{{item.countLessonComplete}}</text>/{{item.countLessonTotal}}</text>
+								</view>
+							</u-circle-progress>
+						</view>
+					</u-cell-item>
+				</u-cell-group>
+				<u-empty v-if="courseList.length == 0" mode="list" text="未报名课程"></u-empty>
+			</view>
+		</view>
+		<Popup :show.sync="adShow" :image="popupCover" @ClickNav="clickNav"/>
 	</view>
 </template>
 
@@ -113,55 +105,70 @@
 	import SpecialBanner from "../../components/special-banner/special-banner.vue"
 	import * as db from '@/util/db.js' //引入common
 	import * as consts from '@/util/consts.js' //引入common
+	import Popup from './components/popup.vue'
 	export default {
 		components: {
-			SpecialBanner
+			SpecialBanner,
+			Popup,
 		},
 		data() {
 			return {
 				info: {
 					name: '未添加学生'
 				},
-				avatar:'',
-				// navs:[
-				// 	{
-				// 		label: "我的课程",
-				// 		icon: "icon01.png",
-				// 	},
-				// 	{
-				// 		label: "我的课程",
-				// 		icon: "icon01.png",
-				// 	},
-				// 	{
-				// 		label: "我的课程",
-				// 		icon: "icon01.png",
-				// 	},
-				// 	{
-				// 		label: "我的课程",
-				// 		icon: "icon01.png",
-				// 	},
-				// 	{
-				// 		label: "我的课程",
-				// 		icon: "icon01.png",
-				// 	},
-				// 	{
-				// 		label: "我的课程",
-				// 		icon: "icon01.png",
-				// 	},
-				// ],
+				avatar: '',
+				
 				lessonList: [],
 				courseList: [],
 				banners: [],
 
 				tips: [],
-				tipsList: [],
 
 				adShow: false,
+				popupCover: '',
 				adInfo: {
 					title: '',
 					content: '',
 					cover1: '',
 				},
+				
+				navs: [
+					{
+						label: "试听卡",
+						icon: "menu_check",
+						color: '#dc5d5d',
+						count: 0,
+						page: "/pages/lesson/trial"
+					},
+					{
+						label: "班级",
+						icon: "banji",
+						color: '#5085ff',
+						count: 0,
+						page: '/pages/center/classes'
+					},
+					{
+						label: "作业",
+						icon: "kecheng",
+						color: '#19c2ae',
+						count: 0,
+						page: "/pages/homework/index"
+					},
+					{
+						label: "成绩",
+						icon: "xuexichengji",
+						color: '#0fc1e8',
+						count: 0,
+						page: '/pages/center/grade'
+					},
+					{
+						label: "点评",
+						icon: "tiaodupingjia_1",
+						color: '#ea8c00',
+						count: 0,
+						page: '/pages/lesson/evaluate'
+					},
+				],
 			}
 		},
 		onLoad() {
@@ -170,13 +177,20 @@
 		onShow() {
 			this.getStudentInfo();
 			this.getLessons()
+			this.getRedpoint()
 			this.getCourse()
-			this.$common.getRedpoint()
 		},
 		methods: {
+			getRedpoint() {
+				this.$common.getRedpoint((counts) => {
+					this.navs[2].count = counts.homework_count || 0
+					this.navs[3].count = counts.grade_count || 0
+					this.navs[4].count = counts.evaluate_count || 0
+				})
+			},
 			getStudentInfo() {
-				this.$http.get('sCenter/student/info',{}, res => {
-					if(!this.$common.handleResponseMsg(res)) return;
+				this.$http.get('sCenter/student/info', {}, res => {
+					if (!this.$common.handleResponseMsg(res)) return;
 					this.info = res
 					this.avatar = res.headImg
 					uni.setStorageSync("current-student-info", res)
@@ -193,27 +207,28 @@
 			getBanners() {
 				this.$http.get('sCenter/advertisement', {}, res => {
 					if (!this.$common.handleResponseMsg(res)) return;
-					var banners = [];
-					var tips = [];
-					var tipsList = [];
-					for (var ad of res) {
-						if (ad.type == "学生端首页Banner") {
-							banners.push(ad)
-						} else if (ad.type == '学生端首页提示') {
-							tips.push(ad.title)
-							tipsList.push(ad)
+					this.banners = res.banner
+					
+					var tips = []
+					if (res.tip) {
+						for(const tip of res.tip) {
+							tips.push(tip.title)
 						}
 					}
-					if (tips.length == 0) {
-						tips = ["欢迎使用"]
-						tipsList = [{
-							title: "欢迎使用",
-							content: ''
-						}]
-					}
-					this.banners = banners
 					this.tips = tips
-					this.tipsList = tipsList
+					if(res.popup) {
+						var popupInfo = {
+							id: res.popup.id,
+							cover: res.popup.cover
+						}
+						var key = "home-popup-read#" + popupInfo.id;
+						var read = uni.getStorageSync(key)
+						if (read == '' || !read) {
+							this.adShow = true
+							this.popupCover = popupInfo.cover
+							uni.setStorageSync(key, true)
+						}
+					}
 				})
 			},
 			getCourse() {
@@ -253,50 +268,26 @@
 				}
 			},
 			clickTip(index) {
-				this.adShow = true;
-				this.adInfo = {
-					title: this.tipsList[index].title,
-					content: this.tipsList[index].content,
-					cover: this.tipsList[index].cover,
-				}
+				uni.navigateTo({
+					url: "/pages/advertisment/index"
+				})
 			},
 			studentManage() {
 				uni.navigateTo({
 					url: "/pages/student/index"
 				})
 			},
+			clickNav() {
+				console.log('点击广告')
+			},
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.main-icon {
-		padding: 8px;
-		border-radius: 30rpx;
-		margin-bottom: 10rpx;
-	}
-
-	.main-icon-blue {
-		background-color: #0083ff;
-	}
-
-	.main-icon-cyan {
-		background-color: #1dc8bf;
-	}
-
-	.main-icon-yellow {
-		background-color: #facf21;
-	}
-
-	.main-icon-orange {
-		background-color: #ff745b;
-	}
-
-	.main-icon-sky {
-		background-color: #17bcff;
-	}
-
-	.main-icon-ocean {
-		background-color: #6289ff;
+	.grid-text {
+		font-size: 24rpx;
+		margin-top: 8rpx;
+		color: $u-type-info;
 	}
 </style>

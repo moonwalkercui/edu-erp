@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p> 短信缓存 </p>
+ * <p> 短信验证码缓存 </p>
  */
 public class SmsCodeCache {
 
@@ -19,6 +19,13 @@ public class SmsCodeCache {
             .expireAfterWrite(600, TimeUnit.SECONDS)
             .build();
 
+    /**
+     * 缓存验证码
+     *
+     * @param code   验证码
+     * @param mobile 手机号
+     * @param scene  验证码使用场景
+     */
     public static void put(String code, String mobile, SmsSceneType scene) {
         caches.put(makeKey(mobile, scene), code);
     }

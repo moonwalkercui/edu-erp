@@ -17,9 +17,9 @@ import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType.EVENT;
 
 /**
  * wechat mp configuration
+ * https://github.com/Wechat-Group/WxJava/wiki
  * https://github.com/Wechat-Group/WxJava
  * https://gitee.com/binary/weixin-java-mp-demo-springboot
- * https://github.com/wechat-group/WxJava/wiki
  */
 @RequiredArgsConstructor
 @Configuration

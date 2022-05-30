@@ -1,8 +1,8 @@
 package com.hzb.erp.adminCenter.controller;
 
 
-import com.hzb.erp.annotation.Log;
-import com.hzb.erp.annotation.PreventMultiSubmit;
+import com.hzb.erp.base.annotation.Log;
+import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.configuration.SystemConfig;
 import com.hzb.erp.common.entity.StaffOrginfo;
 import com.hzb.erp.common.entity.Student;
@@ -23,7 +23,7 @@ import com.hzb.erp.common.service.UserService;
 import com.hzb.erp.security.Util.SecurityUtils;
 import com.hzb.erp.security.Util.UserAuthUtil;
 import com.hzb.erp.service.ImportExportService;
-import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.service.enums.SettingNameEnum;
 import com.hzb.erp.utils.*;
 import io.swagger.annotations.Api;
@@ -318,9 +318,6 @@ public class StudentController {
     @Log(description = "修改学员端密码", type = "学员管理")
     @PostMapping("/changeUserPassword")
     public JsonResponse changeUserPassword(@Valid @RequestBody ChangePasswordDTO dto, BindingResult result) {
-        if (systemConfig.getIsDemo()) {
-            return JsonResponseUtil.error("DEMO版此处不能操作"); // todo 发行
-        }
         CommonUtil.handleValidMessage(result);
         dto.setPasswordEncode(SecurityUtils.passwordEncode(dto.getPassword()));
         if (userService.changPassword(dto)) {

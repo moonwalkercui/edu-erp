@@ -17,7 +17,9 @@ public enum OprationTypeEnum implements BaseEnum {
     COURSE(1, "课程"),
     StudentCourse(2, "报名"),
     Refund(3, "退款退课"),
-    CASHOUT(4, "请款");
+    CASHOUT(4, "请款"),
+    ORDER(5, "购课订单"),
+    ORDER_REFUND(6, "订单退款");
 
     @EnumValue
     private final int code;

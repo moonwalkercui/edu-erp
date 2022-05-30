@@ -171,6 +171,7 @@
 				if (res.errCode != 0) {
 					return
 				}
+				
 				this.totalsec = res.data || 30
 
 				this.cursec = this.totalsec

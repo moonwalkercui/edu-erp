@@ -1,14 +1,14 @@
 package com.hzb.erp.adminCenter.controller;
 
 
-import com.hzb.erp.annotation.Log;
+import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.common.enums.FinanceStateEnum;
 import com.hzb.erp.common.enums.FinanceTypeEnum;
 import com.hzb.erp.common.pojo.dto.FinanceParamDTO;
 import com.hzb.erp.common.pojo.dto.IdsAndContentDTO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
 import com.hzb.erp.common.service.FinanceRecordService;
-import com.hzb.erp.service.UserAuthService;
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.utils.EnumTools;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
@@ -74,20 +74,19 @@ public class FinanceRecordController {
         return JsonResponseUtil.paginate(financeRecordService.getList(param));
     }
 
-    @ApiOperation("认款通过")
-    @Log(description = "认款通过", type = "财务管理")
+    @ApiOperation("审核通过")
+    @Log(description = "审核通过", type = "财务管理")
     @PostMapping("/pass")
     public JsonResponse pass(@RequestBody List<Long> ids) {
         if (financeRecordService.changeState(ids, FinanceStateEnum.PASS, null, UserAuthService.getCurrentUserId())) {
-//            financeRecordService.makeLessonCountLog(ids, FinanceStateEnum.PASS);
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error("操作出错");
         }
     }
 
-    @ApiOperation("认款驳回")
-    @Log(description = "认款驳回", type = "财务管理")
+    @ApiOperation("审核驳回")
+    @Log(description = "审核驳回", type = "财务管理")
     @PostMapping("/reject")
     public JsonResponse reject(@RequestBody IdsAndContentDTO dto) {
         if (financeRecordService.changeState(dto.getIds(), FinanceStateEnum.REJECT, dto.getContent(), UserAuthService.getCurrentUserId())) {

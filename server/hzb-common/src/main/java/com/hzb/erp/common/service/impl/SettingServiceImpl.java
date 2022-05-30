@@ -131,7 +131,6 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
         }
         SettingOption option = settingOptionService.getByCode(code);
         if (option == null) {
-
             SettingNameEnum findItem = null;
             for(SettingNameEnum enumItem: SettingNameEnum.values()) {
                 if(enumItem.getCode().equals(code)) {

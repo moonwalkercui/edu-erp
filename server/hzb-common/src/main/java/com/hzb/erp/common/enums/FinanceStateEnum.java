@@ -16,8 +16,8 @@ public enum FinanceStateEnum implements BaseEnum {
     /**
      * 注意该枚举各项和必须和 VerifyStateEnum 的code值一致.
      */
-    APPLY(CommonConst.VERIFY_READY_CODE, "认款中"),
-    PASS(CommonConst.VERIFY_PASS_CODE, "已认款"),
+    APPLY(CommonConst.VERIFY_READY_CODE, "审核中"),
+    PASS(CommonConst.VERIFY_PASS_CODE, "已审核"),
     REJECT(CommonConst.VERIFY_REJECT_CODE, "已拒绝");
 
     @EnumValue
