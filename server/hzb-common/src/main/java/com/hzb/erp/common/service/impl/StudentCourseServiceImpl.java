@@ -267,7 +267,7 @@ public class StudentCourseServiceImpl extends ServiceImpl<StudentCourseMapper, S
         sc.setAmount(postData.getCourseAmount());
         sc.setUnitPrice(course.getUnitPrice());
 
-        sc.setPayOff(sc.getAmount().compareTo(sc.getPaidAmount()) < 1);
+        sc.setPayOff(sc.getAmount() == null || sc.getAmount().compareTo(sc.getPaidAmount() == null ? BigDecimal.ZERO : sc.getPaidAmount()) < 1);
         this.save(sc);
 
         // 意向学员变在学学员
