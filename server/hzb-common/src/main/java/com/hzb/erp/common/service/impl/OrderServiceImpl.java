@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -80,21 +81,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderItem.setItemType(OrderItemTypeEnum.COURSE);
         orderItemMapper.insert(orderItem);
 
-        // 创建学生课程中间数据
-        Student student = studentMapper.selectById(dto.getStudentId());
-        StudentCourseSaveDTO studentCourseSaveDTO = new StudentCourseSaveDTO();
-        studentCourseSaveDTO.setStudentId(dto.getStudentId());
-        studentCourseSaveDTO.setStudentName(student.getName());
-        studentCourseSaveDTO.setCourseId(dto.getCourseId());
-        studentCourseSaveDTO.setCourseAmount(order.getOrderMoney());
-        studentCourseSaveDTO.setPaidAmount(order.getPayMoney());
-        studentCourseSaveDTO.setCountLessonTotal(course.getLessonCount());
-        studentCourseSaveDTO.setDiscount(dto.getDiscount() == null ? BigDecimal.ZERO : dto.getDiscount());
-        studentCourseSaveDTO.setExpireDate(LocalDate.now().plusMonths(course.getExpireMonths() == null ? 12 : course.getExpireMonths()));
-        studentCourseSaveDTO.setStartDate(LocalDate.now());
-        studentCourseSaveDTO.setRemark(dto.getRemark());
-        // 创建学生课程中间数据，并记录财务数据
-        studentCourseService.addOne(studentCourseSaveDTO, null);
         return order;
     }
 
@@ -128,6 +114,34 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         payment.setPayMoney(payMoney.divide(new BigDecimal(100), BigDecimal.ROUND_HALF_UP));
         paymentMapper.insert(payment);
 
+        // 其实order不会是null,但是作为微信支付回调，最大可能的记录一下
+        if (order!=null){
+            Student student = studentMapper.selectById(order.getStudentId());
+
+            QueryWrapper<OrderItem> qwOi = new QueryWrapper<>();
+            qwOi.eq("order_id", order.getId());
+            List<OrderItem> orderItems = orderItemMapper.selectList(qwOi);
+
+            for(OrderItem item : orderItems) {
+                if(OrderItemTypeEnum.COURSE.equals(item.getItemType())) {
+                    Course course = courseMapper.selectById(item.getItemId());
+                    StudentCourseSaveDTO studentCourseSaveDTO = new StudentCourseSaveDTO();
+                    studentCourseSaveDTO.setStudentId(order.getStudentId());
+                    studentCourseSaveDTO.setStudentName(student.getName());
+                    studentCourseSaveDTO.setCourseId(item.getItemId());
+                    studentCourseSaveDTO.setCourseAmount(item.getPrice());
+                    studentCourseSaveDTO.setPaidAmount(item.getPrice());
+                    studentCourseSaveDTO.setCountLessonTotal(item.getQuantity());
+                    studentCourseSaveDTO.setDiscount(BigDecimal.ZERO); // 打折金额 todo
+                    studentCourseSaveDTO.setExpireDate(LocalDate.now().plusMonths(course.getExpireMonths() == null ? 12 : course.getExpireMonths()));
+                    studentCourseSaveDTO.setStartDate(LocalDate.now());
+                    studentCourseSaveDTO.setRemark(order.getRemark());
+                    // 创建学生课程中间数据，并记录财务数据
+                    studentCourseService.addOne(studentCourseSaveDTO, null);
+                }
+            }
+
+        }
     }
 
     @Override
