@@ -112,6 +112,7 @@ system:
     - /wx/portal/**
     - /wx/login/**
     - /wx/jsapi/**
+    - /wx/pay/**
   # 黑名单的ip,禁止访问该系统
   blackList:
   #  - 127.0
