@@ -3,6 +3,130 @@
 ####  1.2.0601 在线购课
 
 ```
+DROP TABLE IF EXISTS `course_trial`;
+CREATE TABLE `course_trial`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `course_id` bigint(20) UNSIGNED NOT NULL COMMENT '课程',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+  `quantity` int(11) NOT NULL DEFAULT 0 COMMENT '发行数量',
+  `remaining_quantity` int(11) NULL DEFAULT NULL COMMENT '剩余数量',
+  `lesson_count` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '课时数',
+  `expire_days` int(11) NOT NULL COMMENT '领取后有效天数',
+  `end_date` date NOT NULL COMMENT '发行结束日期',
+  `state` tinyint(1) NULL DEFAULT 1 COMMENT '启用状态',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `course_id`(`course_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程体验卡' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for course_trial_record
+-- ----------------------------
+DROP TABLE IF EXISTS `course_trial_record`;
+CREATE TABLE `course_trial_record`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `trial_id` bigint(20) UNSIGNED NOT NULL COMMENT '卡ID',
+  `student_id` bigint(20) NOT NULL COMMENT '学生ID',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '学生账号id',
+  `student_course_id` bigint(20) NULL DEFAULT NULL COMMENT '生成的学生课程关联ID',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '领取时间',
+  `expired_date` date NULL DEFAULT NULL COMMENT '到期时间',
+  `lesson_count` int(11) NULL DEFAULT NULL COMMENT '领取到数量',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `student_id`(`student_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '课程体验卡领取记录' ROW_FORMAT = Fixed;
+
+-- ----------------------------
+-- Table structure for shop_order
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_order`;
+CREATE TABLE `shop_order`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `sn` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '订单号',
+  `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户',
+  `student_id` bigint(20) UNSIGNED NOT NULL COMMENT '学生id',
+  `order_money` decimal(10, 2) NOT NULL COMMENT '订单金额',
+  `pay_money` decimal(10, 2) NULL DEFAULT NULL COMMENT '支付金额',
+  `state` tinyint(4) NOT NULL DEFAULT 0 COMMENT '订单状态',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `pay_time` datetime(0) NULL DEFAULT NULL COMMENT '支付时间',
+  `refunded` tinyint(1) NULL DEFAULT 0 COMMENT '是否已退款',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `sn`(`sn`) USING BTREE,
+  INDEX `student_id`(`student_id`, `state`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 106 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for shop_order_item
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_order_item`;
+CREATE TABLE `shop_order_item`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `order_id` bigint(50) UNSIGNED NOT NULL COMMENT '订单号',
+  `item_id` bigint(20) UNSIGNED NOT NULL COMMENT '课程id',
+  `item_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+  `item_type` tinyint(4) NULL DEFAULT NULL COMMENT '购买物品类型 1 课程',
+  `price` decimal(10, 2) NULL DEFAULT NULL COMMENT '购买价格',
+  `quantity` int(10) UNSIGNED NULL DEFAULT NULL COMMENT '购买数量',
+  `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 81 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单关联物品列表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for shop_order_refund
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_order_refund`;
+CREATE TABLE `shop_order_refund`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `refund_sn` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '退款编号',
+  `order_id` bigint(20) UNSIGNED NOT NULL COMMENT '订单id',
+  `user_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '学生端账号id',
+  `student_id` bigint(20) NULL DEFAULT NULL COMMENT '学生id',
+  `item_names` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '物品名称',
+  `refund_money` decimal(10, 2) UNSIGNED NOT NULL COMMENT '退款金额',
+  `reason_type` tinyint(4) NULL DEFAULT NULL COMMENT '原因类型',
+  `reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '原因描述',
+  `state` tinyint(4) NOT NULL COMMENT '状态',
+  `verify_staff` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '审核人',
+  `verify_time` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
+  `verify_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审核备注',
+  `wx_refund_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信退款id',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '申请时间',
+  `operator_id` bigint(20) NULL DEFAULT NULL COMMENT '执行退款人ID',
+  `operation_time` datetime(0) NULL DEFAULT NULL COMMENT '执行退款时间',
+  `operator_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '执行退款人姓名',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `sn`(`refund_sn`) USING BTREE,
+  INDEX `user_id`(`user_id`) USING BTREE,
+  INDEX `bill_id`(`order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for shop_payment
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_payment`;
+CREATE TABLE `shop_payment`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `order_id` int(11) NOT NULL COMMENT '订单id',
+  `user_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '手机端账号id',
+  `order_sn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '订单编号',
+  `wx_trade_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '微信交易号',
+  `wx_openid` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '微信支付者openid',
+  `pay_money` decimal(11, 2) NOT NULL COMMENT '支付金额',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '支付记录表' ROW_FORMAT = Dynamic;
+
 INSERT INTO `dict`(`id`, `name`, `code`, `remark`) VALUES (3, '退款类型', 'refund_type', '退款类型选项')
 ALTER TABLE `student_course` ADD COLUMN `from_trial` tinyint(1) NULL DEFAULT 0 COMMENT '是否来自于体验卡';
 ALTER TABLE `student` DROP COLUMN `wx_access_id`;
