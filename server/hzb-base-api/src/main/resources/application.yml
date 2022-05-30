@@ -75,7 +75,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 
 system:
-  version: 1.1.0428
+  version: 1.2.0601
   # 是否是演示demo（会限制关键操作） 生产环境是false！！！
   isDemo: false
   # 带http的域名
@@ -117,7 +117,18 @@ system:
   #  - 127.0
 # 微信配置，可删除，默认数据库读取，如果不设置数据库，可以使用该配置，本配置权重高于数据库
 wxConfig:
-  wxAppId: 111
-  wxSecret: 122
-  wxToken: 133
-  wxAesKey: 144
+  wxAppId: 11
+  wxSecret: 11
+  wxToken: 11
+  wxAesKey: 11
+  # 以下是支付相关，不需要支付功能的不用配置
+  # 微信支付商户号
+  wxPayMchId: 11
+  # 微信支付商户密钥
+  wxPayMchKey: 11
+  # 服务商模式下的子商户公众账号ID
+  wxPaySubAppId:
+  # 服务商模式下的子商户号
+  wxPaySubMchId:
+  # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）,退款用
+  wxPayKeyPath: /sss/apiclient_cert.p12
