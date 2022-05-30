@@ -96,7 +96,12 @@ public enum SettingNameEnum {
     /**
      * 学员预约后自动加入到课时
      */
-    AUTO_JOIN_LESSON_BY_APPOINTMENT("auto_join_lesson_by_appointment", "学员预约后自动加入到课时", "true", "bool");
+    AUTO_JOIN_LESSON_BY_APPOINTMENT("auto_join_lesson_by_appointment", "学员预约后自动加入到课时", "true", "bool"),
+
+    /**
+     * 体验卡使用规则说明
+     */
+    COURSE_TRIAL_HELP("course_trial_help", "体验卡使用规则说明", "领取体验卡后可以到课时表里预约课程。", "str");
 
     private String code;
     private String desc;

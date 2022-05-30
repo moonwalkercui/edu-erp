@@ -1,5 +1,6 @@
 package com.hzb.erp.studentMobile.controller;
 
+import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.common.entity.Student;
 import com.hzb.erp.common.pojo.dto.CourseTrialParamDTO;
 import com.hzb.erp.common.pojo.dto.CourseTrialRecordParamDTO;
@@ -64,14 +65,11 @@ public class SCourseController {
     * */
     @ApiOperation("体验卡列表")
     @GetMapping("/trialList")
-    public Object trialList(@RequestParam(value = "page", defaultValue = "") Integer page,
-                            @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
+    public Object trialList() {
         CourseTrialParamDTO param = new CourseTrialParamDTO();
-        param.setPage(page);
-        param.setPageSize(pageSize);
         param.setState(true);
         param.setExcludeEnd(true);
-        return JsonResponseUtil.paginate(courseTrialService.getList(param));
+        return courseTrialService.getAll(param);
     }
 
     /**
@@ -79,22 +77,19 @@ public class SCourseController {
      * */
     @ApiOperation("我的体验卡列表")
     @GetMapping("/myTrialList")
-    public Object myTrialList(@RequestParam(value = "page", defaultValue = "") Integer page,
-                            @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
-        CourseTrialRecordParamDTO param = new CourseTrialRecordParamDTO();
+    public Object myTrialList() {
         Student student = StudentAuthService.getCurrentStudent();
         if (student == null) {
             return null;
         }
-        Long studentId = student.getId();
-        param.setStudentId(studentId);
-        param.setPage(page);
-        param.setPageSize(pageSize);
-        return JsonResponseUtil.paginate(courseTrialRecordService.getList(param));
+        CourseTrialRecordParamDTO param = new CourseTrialRecordParamDTO();
+        param.setStudentId(student.getId());
+        return courseTrialRecordService.getAll(param);
     }
 
     @ApiOperation("领取体验卡")
     @PostMapping("/catchTrial/{trialId}")
+    @Log(description = "领取体验卡", type = "学生端", isStaff = false)
     public Object catchTrial(@PathVariable(value = "trialId") Long trialId) {
         return courseTrialRecordService.getOne(trialId, StudentAuthService.getCurrentStudent())
                 ? JsonResponseUtil.success("领取成功")

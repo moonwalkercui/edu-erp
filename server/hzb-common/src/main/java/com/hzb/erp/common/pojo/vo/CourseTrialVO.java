@@ -28,9 +28,6 @@ public class CourseTrialVO {
     @ApiModelProperty(value="发行数量")
     private Integer quantity;
 
-    @ApiModelProperty(value="剩余数量")
-    private Integer remainingQuantity;
-
     @ApiModelProperty(value="课时数")
     private Integer lessonCount;
 
@@ -50,5 +47,8 @@ public class CourseTrialVO {
 
     @ApiModelProperty(value = "编辑者")
     private String editorName;
+
+    @ApiModelProperty(value = "已领取数")
+    private Integer recordCount;
 
 }

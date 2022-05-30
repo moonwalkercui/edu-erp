@@ -3,7 +3,7 @@
 <mapper namespace="com.hzb.erp.common.mapper.CourseTrialRecordMapper">
 
     <select id="getList" resultType="com.hzb.erp.common.pojo.vo.CourseTrialRecordVO">
-        select t1.id, t1.trial_id,t1.student_id,t1.add_time, t3.mobile,
+        select t1.id, t1.trial_id,t1.student_id,t1.add_time,t1.lesson_count,t1.expired_date,t3.mobile,
         t4.title trial_title,
         t2.name student_name,
         t5.name course_name

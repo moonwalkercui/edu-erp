@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -50,6 +51,11 @@ public class CourseTrialRecordServiceImpl extends ServiceImpl<CourseTrialRecordM
     }
 
     @Override
+    public List<CourseTrialRecordVO> getAll(CourseTrialRecordParamDTO param) {
+        return baseMapper.getList(param);
+    }
+
+    @Override
     @Transactional
     public boolean getOne(Long trialId, Student student) {
 
@@ -57,14 +63,14 @@ public class CourseTrialRecordServiceImpl extends ServiceImpl<CourseTrialRecordM
         if(courseTrial == null) {
             throw new BizException("未知体验卡");
         }
-        if(courseTrial.getRemainingQuantity() <=0) {
+        if(courseTrial.getQuantity() <=0) {
             throw new BizException("该体验卡已领完");
         }
         if(LocalDate.now().isAfter(courseTrial.getEndDate())) {
             throw new BizException("该体验卡已停止发行");
         }
 
-        courseTrial.setRemainingQuantity(courseTrial.getRemainingQuantity() - 1);
+        courseTrial.setQuantity(courseTrial.getQuantity() - 1);
         courseTrialMapper.updateById(courseTrial);
 
         Long studentId = student.getId();
@@ -89,9 +95,11 @@ public class CourseTrialRecordServiceImpl extends ServiceImpl<CourseTrialRecordM
         record.setStudentCourseId(studentCourse.getId());
         record.setTrialId(trialId);
         record.setStudentId(studentId);
+        record.setLessonCount(courseTrial.getLessonCount());
         record.setUserId(userId);
         record.setExpiredDate(LocalDate.now().plusDays(courseTrial.getExpireDays()));
         record.setAddTime(LocalDateTime.now());
+        this.baseMapper.insert(record);
 
         return true;
     }

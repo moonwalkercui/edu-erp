@@ -42,12 +42,6 @@ public class CourseTrial extends AutoFillEntity {
     private Integer quantity;
 
     /**
-     * 剩余数量
-     */
-    @ApiModelProperty(value="剩余数量")
-    private Integer remainingQuantity;
-
-    /**
      * 课时数
      */
     @ApiModelProperty(value="课时数")

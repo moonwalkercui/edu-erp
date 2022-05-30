@@ -47,5 +47,8 @@ public class CourseTrialRecord implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime addTime;
 
+    @ApiModelProperty(value="领取到的课时数")
+    private Integer lessonCount;
+
     private static final long serialVersionUID = 1L;
 }

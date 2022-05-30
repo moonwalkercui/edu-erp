@@ -125,9 +125,8 @@ public class SShopController {
         paramDTO.setLimit(2);
         info.setCommentList(courseCommentMapper.getList(paramDTO));
 
-        double favRate = courseCommentMapper.getFavRate(id);
-        favRate = (double) Math.round(favRate * 100) / 100;
-        info.setFavRate(favRate);
+        Double favRate = courseCommentMapper.getFavRate(id);
+        info.setFavRate( favRate == null ? 0 : (double) Math.round(favRate * 100) / 100);
 
         // 介绍图片
         QueryWrapper<CourseImage> qw2 = new QueryWrapper<>();

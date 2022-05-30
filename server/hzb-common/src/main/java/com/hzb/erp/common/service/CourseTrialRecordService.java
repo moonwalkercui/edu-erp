@@ -7,6 +7,8 @@ import com.hzb.erp.common.entity.Student;
 import com.hzb.erp.common.pojo.dto.CourseTrialRecordParamDTO;
 import com.hzb.erp.common.pojo.vo.CourseTrialRecordVO;
 
+import java.util.List;
+
 /**
  * <p>
  * 课程体验卡 服务类
@@ -16,6 +18,7 @@ import com.hzb.erp.common.pojo.vo.CourseTrialRecordVO;
  */
 public interface CourseTrialRecordService extends IService<CourseTrialRecord> {
     IPage<CourseTrialRecordVO> getList(CourseTrialRecordParamDTO param);
+    List<CourseTrialRecordVO> getAll(CourseTrialRecordParamDTO param);
 
     boolean getOne(Long trialId, Student student);
 }

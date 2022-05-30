@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -36,5 +37,12 @@ public class CourseTrialRecordVO {
     @ApiModelProperty(value = "领取时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime addTime;
+
+    @ApiModelProperty(value = "领取课时数")
+    private Integer lessonCount;
+
+    @ApiModelProperty(value = "过期时间")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate expiredDate;
 
 }
