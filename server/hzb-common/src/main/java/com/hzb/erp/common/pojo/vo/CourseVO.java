@@ -2,6 +2,7 @@ package com.hzb.erp.common.pojo.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hzb.erp.common.entity.CourseImage;
 import com.hzb.erp.common.enums.LessonTypeEnum;
 import com.hzb.erp.common.enums.SwitchEnum;
 import io.swagger.annotations.ApiModelProperty;
@@ -81,8 +82,20 @@ public class CourseVO {
     @ApiModelProperty(value = "名额")
     private Integer storage;
 
+    @ApiModelProperty(value = "销售量")
+    private Integer saleCount;
+
+    @ApiModelProperty(value = "历史销售额")
+    private BigDecimal saleAmount;
+
     @ApiModelProperty(value = "好评率")
     @TableField(exist = false)
     private Double favRate;
+
+    @ApiModelProperty(value = "是否推荐")
+    private Boolean recommend;
+
+    @ApiModelProperty(value = "图集")
+    private List<String> images;
 
 }

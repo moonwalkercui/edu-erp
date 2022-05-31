@@ -517,6 +517,38 @@ function systemSettings(codes) {
 	})
 }
 
+// 存储跳转地址
+function storeRedirectUrl(url) {
+	let openUrl;
+	if(url) {
+		openUrl = url
+	} else {
+		let routes = getCurrentPages(); // 获取当前打开过的页面路由数组
+		let curRoute = routes[routes.length - 1].route //获取当前页面路由
+		let curParam = routes[routes.length - 1].options; //获取路由参数
+		// 拼接参数
+		let param = ''
+		for (let key in curParam) {
+		    param += '&' + key + '=' + curParam[key]
+		}
+		openUrl = "/" + curRoute + "?" + param
+	}
+	uni.setStorageSync("redirect-url", openUrl)
+}
+// 一次性获取跳转地址
+function jumpRedirectUrl() {
+	var url = uni.getStorageSync("redirect-url")
+	if(url && url!='') {
+		uni.removeStorageSync("redirect-url")
+		uni.redirectTo({
+			url
+		})
+	}
+}
+// 清空跳转地址跳转地址
+function removeRedirectUrl() {
+	uni.removeStorageSync("redirect-url")
+}
 export {
 	deepCopy,
 	jumpToLogin,
@@ -553,4 +585,7 @@ export {
 	removeAccessToken,
 	getRedpoint,
 	systemSettings,
+	storeRedirectUrl,
+	removeRedirectUrl,
+	jumpRedirectUrl
 }

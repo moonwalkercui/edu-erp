@@ -81,10 +81,14 @@ export default {
 	},
 	onLoad() {
 		for (var i = 0; i < this.tabs.length; i++) {
-			this.dataList.push([])
-			this.loadStatus.push('loadmore')
+			this.$set(this.dataList, i, [])
+			this.$set(this.loadStatus, i, 'loadmore')
+			// this.dataList.push([])
+			// this.loadStatus.push('loadmore')
 			this.pageData.push({ page: 1, lastPage: 1 })
-			this.getDataList(i);
+			if(i>0) {
+				this.getDataList(i);
+			}
 		}
 	},
 	onShow() {
@@ -116,7 +120,8 @@ export default {
 		reload(idx) {
 			this.pageData[idx].page = 1;
 			this.pageData[idx].lastPage = 1;
-			this.dataList[idx] = []
+			//this.dataList[idx] = []
+			this.$set(this.dataList, idx, [])
 			this.getDataList(idx)
 		},
 		handleReq(idx) {

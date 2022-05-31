@@ -173,6 +173,7 @@
 		},
 		onLoad() {
 			this.getBanners()
+			this.$common.jumpRedirectUrl()
 		},
 		onShow() {
 			this.getStudentInfo();

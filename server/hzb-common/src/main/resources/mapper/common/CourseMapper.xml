@@ -21,12 +21,17 @@
     <select id="getList" resultType="com.hzb.erp.common.pojo.vo.CourseVO">
         SELECT t1.*,
         t2.name subject_name,
-        (select count(0) from course_link where course_id = t1.id group by course_id) link_count
+        (select count(1) from course_link where course_id = t1.id group by course_id) link_count,
+        count(t4.id) sale_count,
+        sum(t4.price) sale_amount
         <if test="param.withFavRate !=null and param.withFavRate ">
             , ( select avg(t2.score) * 20 from course_comment t2 where t2.course_id = t1.id) fav_rate
         </if>
         FROM course t1
         LEFT JOIN subject t2 ON t2.id = t1.subject_id
+        left join shop_order_item t4 on t4.item_id = t1.id and t4.item_type = 1 and t4.order_id in (
+            select id from shop_order where state in (1, 10)
+        )
         <where>
             <if test="param.subjectId !=null ">
                 AND t1.subject_id = #{param.subjectId}
@@ -55,6 +60,7 @@
             </if>
             AND t1.deleted != 1
         </where>
+        group by t1.id
         order by t1.id desc
     </select>
 
