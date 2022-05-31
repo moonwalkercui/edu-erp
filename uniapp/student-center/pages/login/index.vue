@@ -35,7 +35,7 @@
 			<button @click="register" class="submitbtn light" style="margin-top: 50rpx;">注册新账号</button>
 
 		</view>
-		<view class="buttom">
+		<view class="bottom">
 			<view class="loginType">
 				<view class="wechat item" @click="wxLogin" v-if="inWeixin">
 					<view class="icon"><u-icon size="100" name="weixin-fill" color="rgb(83,194,64)"></u-icon></view>
@@ -174,7 +174,7 @@
 				margin-top: 30rpx;
 			}
 		}
-		.buttom {
+		.bottom {
 			margin-top: 100rpx;
 			.loginType {
 				padding: 30rpx 100rpx ;

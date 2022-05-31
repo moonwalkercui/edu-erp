@@ -31,11 +31,15 @@
 				</view>
 			</u-popup>
 		</view>
+		<loginCheck ref="loginCheck" />
 	</view>
 </template>
-
 <script>
+	import loginCheck from '@/pages/center/components/loginCheck.vue'
 	export default {
+		components: {
+			loginCheck
+		},
 		props: ['courseInfo'],
 		data() {
 			return {
@@ -54,7 +58,10 @@
 					this.shoppingGuide = res.shopping_guide
 				})
 			},
-			submitOrder() {
+			async submitOrder() {
+				if(await this.$refs.loginCheck.needLogin()) {
+					return;
+				}
 				if(this.courseInfo.storage <= 0) {
 					this.$common.showMsg("名额不足无法报名");
 					return
@@ -129,4 +136,5 @@
 			}
 		}
 	}
+	
 </style>

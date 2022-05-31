@@ -1,11 +1,19 @@
 package com.hzb.erp.adminCenter.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.base.annotation.PreventMultiSubmit;
+import com.hzb.erp.common.entity.CourseImage;
+import com.hzb.erp.common.entity.CourseSection;
 import com.hzb.erp.common.enums.SwitchEnum;
+import com.hzb.erp.common.mapper.CourseImageMapper;
+import com.hzb.erp.common.mapper.CourseSectionMapper;
 import com.hzb.erp.common.pojo.dto.CourseParamDTO;
 import com.hzb.erp.common.pojo.dto.CourseSaveDTO;
+import com.hzb.erp.common.pojo.dto.CourseSectionDTO;
 import com.hzb.erp.common.pojo.vo.CourseVO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
 import com.hzb.erp.common.service.CourseService;
@@ -15,13 +23,16 @@ import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -37,6 +48,12 @@ public class CourseController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private CourseImageMapper courseImageMapper;
+
+    @Autowired
+    private CourseSectionMapper courseSectionMapper;
 
     @ApiOperation("课程信息")
     @GetMapping("/info")
@@ -71,7 +88,13 @@ public class CourseController {
         param.setPage(page);
         param.setPageSize(pageSize);
 
-        return JsonResponseUtil.paginate(courseService.getList(param));
+        IPage<CourseVO> res = courseService.getList(param);
+        for(CourseVO courseVO: res.getRecords()) {
+            QueryWrapper<CourseImage> qw = new QueryWrapper<>();
+            qw.eq("course_id", courseVO.getId());
+            courseVO.setImages(courseImageMapper.selectList(qw).stream().map(CourseImage::getImageUrl).collect(Collectors.toList()));
+        }
+        return JsonResponseUtil.paginate(res);
     }
 
     @ApiOperation("创建和修改课程")
@@ -141,6 +164,44 @@ public class CourseController {
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error("取消关联失败");
+        }
+    }
+
+    @ApiOperation("课程大纲列表")
+    @GetMapping("/courseSectionList")
+    public PaginationVO courseSectionList(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                             @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+                             @RequestParam(value = "courseId") Long courseId) {
+        IPage<CourseSection> ipage = new Page<>(page, pageSize);
+        QueryWrapper<CourseSection> qw = new QueryWrapper();
+        qw.eq("course_id", courseId);
+        return JsonResponseUtil.paginate(courseSectionMapper.selectPage(ipage, qw));
+    }
+
+
+    @ApiOperation("创建和修改课程大纲")
+    @Log(description = "创建和修改课程大纲", type = "课程管理")
+    @PostMapping("/saveCourseSection")
+    @PreventMultiSubmit
+    public Object saveCourseSection(@Valid @RequestBody CourseSectionDTO dto, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
+        CourseSection cs = new CourseSection();
+        BeanUtils.copyProperties(dto, cs);
+        if (courseSectionMapper.insert(cs) > 0) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+    @ApiOperation("删除课程大纲")
+    @Log(description = "删除课程大纲", type = "课程管理")
+    @GetMapping("/deleteCourseSection")
+    public Object deleteCourseSection(@RequestParam(value = "ids") Long[] ids) {
+        if (courseSectionMapper.deleteBatchIds(Arrays.asList(ids)) > 0) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("删除失败");
         }
     }
 }

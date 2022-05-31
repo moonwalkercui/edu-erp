@@ -1,5 +1,5 @@
 // 生产模式下 debug 须为false
-export const debug = true;
+export const debug = false;
 // 默认是和后端一个网址，所以使用了location的protocol和host，可以自行修改
 // export const domainUrl = debug ? 'http://erp2.hzb-it.com/' : (window.location.protocol +'//'+window.location.host + '/');  // 'http://localhost:8106/'
 export const domainUrl = debug ? 'http://localhost:8106/' : (window.location.protocol +'//'+window.location.host + '/');  // 'http://localhost:8106/'

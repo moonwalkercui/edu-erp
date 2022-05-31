@@ -137,7 +137,7 @@
 
 				elIdNames: ['dingbu', 'dagang', 'pingjia', 'xiangqing'],
 				elTop: [0, 0, 0, 0],
-
+				
 			}
 		},
 		onPageScroll(e) {

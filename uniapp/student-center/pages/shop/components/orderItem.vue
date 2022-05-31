@@ -15,21 +15,18 @@
 				<view class="title u-line-2">{{ item.itemName }}</view>
 				<view class="type">{{ item.itemType }}</view>
 				<!-- <view class="delivery-time">添加时间:{{ item.addTime }}</view> -->
-			</view>
-			<view class="right">
-				<view class="price">
-					￥{{ priceInt(item.price) }}
-					<text class="decimal">.{{ priceDecimal(item.price) }}</text>
+				<view class="right">
+					<view class="price">
+						￥{{ item.price }}
+					</view>
 				</view>
-				<view class="number">x1</view>
 			</view>
 		</view>
 	    <view class="total u-flex">
 			<view class="u-flex-1"><text class="u-font-12 text-gray u-m-r-30">{{ orderInfo.addTime }}</text>	</view>
 			<view class="u-text-right u-flex-1">
 				<text class="total-price">
-					￥{{ priceInt(orderInfo.payMoney) }}.
-					<text class="decimal">{{ priceDecimal(orderInfo.payMoney) }}</text>
+					￥{{ orderInfo.orderMoney }}
 				</text>
 			</view>
 		</view> 
@@ -55,14 +52,14 @@
 			// 价格小数
 			priceDecimal() {
 				return val => {
-					if (val !== parseInt(val)) return val.slice(-2);
+					if (val && val !== parseInt(val)) return val.slice(-2);
 					else return '00';
 				};
 			},
 			// 价格整数
 			priceInt() {
 				return val => {
-					if (val !== parseInt(val)) return val.split('.')[0];
+					if (val && val !== parseInt(val)) return val.split('.')[0];
 					else return val;
 				};
 			}
@@ -112,7 +109,7 @@
 
 			.left {
 				margin-right: 20rpx;
-
+				width: 200rpx ;
 				image {
 					width: 200rpx;
 					height: 200rpx;
@@ -121,6 +118,7 @@
 			}
 
 			.content {
+				flex: 1;
 				.title {
 					font-size: 28rpx;
 					line-height: 50rpx;
@@ -142,13 +140,11 @@
 				margin-left: 10rpx;
 				padding-top: 20rpx;
 				text-align: right;
-
 				.decimal {
 					font-size: 24rpx;
 					margin-top: 4rpx;
 				}
-
-				.number {
+				.price {
 					color: $u-tips-color;
 					font-size: 24rpx;
 				}
@@ -156,7 +152,6 @@
 		}
 
 		.total {
-			margin-top: 20rpx;
 			font-size: 24rpx;
 			.total-price {
 				font-size: 28rpx;

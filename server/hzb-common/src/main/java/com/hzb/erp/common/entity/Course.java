@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * <p>
@@ -67,5 +69,17 @@ public class Course extends AutoFillEntity {
 
     @ApiModelProperty(value = "封面图")
     private String cover;
+
+    @ApiModelProperty(value = "是否推荐")
+    private Boolean recommend;
+
+    @ApiModelProperty(value = "停售日期")
+    private LocalDate closeDate;
+
+    @ApiModelProperty(value = "师资说明")
+    private String teacherInfo;
+
+    @ApiModelProperty(value = "服务说明")
+    private String serviceInfo;
 
 }

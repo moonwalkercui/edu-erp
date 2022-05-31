@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.Course;
+import com.hzb.erp.common.entity.CourseImage;
 import com.hzb.erp.common.entity.CourseLink;
 import com.hzb.erp.common.enums.SwitchEnum;
+import com.hzb.erp.common.mapper.CourseImageMapper;
 import com.hzb.erp.common.mapper.CourseLinkMapper;
 import com.hzb.erp.common.mapper.CourseMapper;
 import com.hzb.erp.common.pojo.dto.CourseParamDTO;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +39,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Resource
     private CourseLinkMapper courseLinkMapper;
+
+    @Resource
+    private CourseImageMapper courseImageMapper;
 
     @Override
     public CourseVO getInfo(Long id) {
@@ -84,8 +90,19 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             }
             item.setUnitPrice(res);
         }
+        boolean res = this.saveOrUpdate(item);
+        QueryWrapper<CourseImage> qw = new QueryWrapper<>();
+        qw.eq("course_id", item.getId());
+        courseImageMapper.delete(qw);
 
-        return this.saveOrUpdate(item);
+        for(String url: courseSaveDTO.getImages()) {
+            CourseImage img = new CourseImage();
+            img.setCourseId(item.getId());
+            img.setImageUrl(url);
+            courseImageMapper.insert(img);
+        }
+
+        return res;
     }
 
     @Override

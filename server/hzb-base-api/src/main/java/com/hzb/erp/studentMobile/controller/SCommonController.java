@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hzb.erp.common.configuration.SystemConfig;
 import com.hzb.erp.common.entity.*;
 import com.hzb.erp.common.enums.AdvertisementTypeEnum;
+import com.hzb.erp.common.mapper.UserMapper;
 import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
 import com.hzb.erp.common.pojo.dto.GradeParamDTO;
 import com.hzb.erp.common.service.AdvertisementService;
@@ -63,8 +64,12 @@ public class SCommonController {
 
     @Autowired
     private WxAccessService wxAccessService;
+
     @Autowired
     private SettingOptionService settingOptionService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @ApiOperation("上传图片")
     @PostMapping("/upload")
@@ -202,6 +207,15 @@ public class SCommonController {
         } else {
             return JsonResponseUtil.error();
         }
+    }
+
+    @ApiOperation("检查当前登录用户是否绑定过微信，用于需要openid的业务常见，比如支付")
+    @PostMapping("/checkWxBinding")
+    @ResponseBody
+    public Object checkWxBinding() {
+        Student student = StudentAuthService.getCurrentStudent();
+        String openid = userMapper.getWxOpenid(student.getUserId());
+        return StringUtils.isNotBlank(openid);
     }
 
 }

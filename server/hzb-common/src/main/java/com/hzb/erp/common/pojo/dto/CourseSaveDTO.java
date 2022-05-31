@@ -8,6 +8,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class CourseSaveDTO extends PaginateDTO {
@@ -47,5 +49,14 @@ public class CourseSaveDTO extends PaginateDTO {
 
     // 是否可预约
     private Boolean bookable;
+
+    private Boolean forSale;
+    private Boolean recommend;
+    private String cover;
+    private LocalDate closeDate;
+    private String teacherInfo;
+    private String serviceInfo;
+    private Integer storage;
+    private List<String> images;
 
 }
