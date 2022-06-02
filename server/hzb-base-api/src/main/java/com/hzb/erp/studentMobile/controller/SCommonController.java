@@ -213,8 +213,8 @@ public class SCommonController {
     @PostMapping("/checkWxBinding")
     @ResponseBody
     public Object checkWxBinding() {
-        Student student = StudentAuthService.getCurrentStudent();
-        String openid = userMapper.getWxOpenid(student.getUserId());
+        Long uid = StudentAuthService.getCurrentUserId();
+        String openid = userMapper.getWxOpenid(uid);
         return StringUtils.isNotBlank(openid);
     }
 

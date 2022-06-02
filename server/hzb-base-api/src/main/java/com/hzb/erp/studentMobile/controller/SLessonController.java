@@ -65,6 +65,9 @@ public class SLessonController {
                        @RequestParam(value = "bookable", defaultValue = "false") Boolean bookable, // 是否是可预约列表
                        @RequestParam(value = "date", defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         LessonParamDTO param = buildParam(page, pageSize, isToday, date, bookable);
+        if (param == null) {
+            return null;
+        }
         return page != null && page > 0 ?
                 JsonResponseUtil.paginate(lessonService.getList(param)) :
                 lessonService.getAll(param);
@@ -132,6 +135,9 @@ public class SLessonController {
     @PostMapping("/sign/{lessonId}")
     public JsonResponse sign(@PathVariable("lessonId") Long lessonId) {
         Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
         Long studentId = student.getId();
         if (lessonService.studentSign(lessonId, studentId, lessonService.getSignStateByNow(lessonId))) {
             return JsonResponseUtil.success("签到完成");
@@ -166,6 +172,9 @@ public class SLessonController {
     public JsonResponse teachEvaluate(@Valid @RequestBody TeachEvaluateDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);
         Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
         if (lessonService.teachEvaluate(dto, student.getId())) {
             return JsonResponseUtil.success("已添加");
         } else {
@@ -178,6 +187,9 @@ public class SLessonController {
     @PostMapping("/appoint/{lessonId}")
     public JsonResponse appoint(@PathVariable("lessonId") Long lessonId) {
         Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
         Long studentId = student.getId();
         if (lessonService.studentAppoint(lessonId, studentId)) {
             return JsonResponseUtil.success("预约完成");
