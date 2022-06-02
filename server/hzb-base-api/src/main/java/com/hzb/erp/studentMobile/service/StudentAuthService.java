@@ -9,6 +9,7 @@ import com.hzb.erp.utils.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ public class StudentAuthService extends UserAuthUtil {
     /**
      * 从token里获取当前登录者信息
      */
+    @Nullable
     public static Student getCurrentStudent() {
         Long userId = getCurrentUserId();
         return stStudentService.getDefaultStudent(userId);

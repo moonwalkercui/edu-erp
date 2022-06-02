@@ -154,6 +154,9 @@ public class SShopController {
     public Object orderConfirm(@Valid @RequestBody OrderConfirmDTO dto, BindingResult result) throws WxPayException {
         CommonUtil.handleValidMessage(result);
         Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
         dto.setUserId(student.getUserId());
         if(!dto.getStudentId().equals(student.getId())) {
             return JsonResponseUtil.error("学生账号异常，请到首页切换学生");
@@ -165,8 +168,8 @@ public class SShopController {
     @ApiOperation(value = "统一下单组装所需支付参数")
     @PostMapping("/createOrder")
     public Object createOrder(@RequestBody Order order) {
-        Student student = StudentAuthService.getCurrentStudent();
-        String openid = userMapper.getWxOpenid(student.getUserId());
+        Long uid = StudentAuthService.getCurrentUserId();
+        String openid = userMapper.getWxOpenid(uid);
         WxPayUnifiedOrderRequest orderRequestParam = wxPaymentService.buildPayParamByOrder(order, openid,"JSAPI");
         log.info("=============支付提交对象实体==============");
         log.info(orderRequestParam.toString());
@@ -216,6 +219,9 @@ public class SShopController {
     public Object orderEvaluate(@Valid @RequestBody OrderEvaluateDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);
         Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
         dto.setStudentId(student.getUserId());
         courseCommentService.createByOrder(dto);
         return JsonResponseUtil.success("已评价");
@@ -225,6 +231,9 @@ public class SShopController {
     @PostMapping("/orderRefund")
     public Object orderRefund(OrderRefundDTO dto) {
         Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
         dto.setUserId(student.getUserId());
         dto.setStudentId(student.getId());
         orderRefundService.handleRefund(dto);

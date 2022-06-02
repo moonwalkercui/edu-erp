@@ -91,7 +91,11 @@ public class SCourseController {
     @PostMapping("/catchTrial/{trialId}")
     @Log(description = "领取体验卡", type = "学生端", isStaff = false)
     public Object catchTrial(@PathVariable(value = "trialId") Long trialId) {
-        return courseTrialRecordService.getOne(trialId, StudentAuthService.getCurrentStudent())
+        Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
+        return courseTrialRecordService.getOne(trialId, student)
                 ? JsonResponseUtil.success("领取成功")
                 : JsonResponseUtil.error("领取失败");
     }

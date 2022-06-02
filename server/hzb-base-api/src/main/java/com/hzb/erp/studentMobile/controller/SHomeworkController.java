@@ -69,6 +69,9 @@ public class SHomeworkController {
     @PostMapping("/deleteRecord/{id}")
     public JsonResponse deleteRecord(@PathVariable("id") Long id) {
         Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
         Long studentId = student.getId();
         if (homeworkRecordService.deleteByStudentId(id, studentId)) {
             return JsonResponseUtil.success("已删除");
@@ -83,6 +86,9 @@ public class SHomeworkController {
     public JsonResponse saveRecord(@Valid @RequestBody HomeworkRecordSaveDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);
         Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
         Long studentId = student.getId();
         dto.setStudentId(studentId);
         if (homeworkRecordService.saveRecord(dto)) {
