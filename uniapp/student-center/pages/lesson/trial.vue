@@ -135,6 +135,7 @@
 			},
 			getOne(id) {
 				this.$http.post(`sCenter/course/catchTrial/${id}`,{}, res => {
+					if(!this.$common.handleResponseMsg(res)) return;
 					this.$common.showMsg(res.msg, () => {
 						this.changeNav(1)
 					})
