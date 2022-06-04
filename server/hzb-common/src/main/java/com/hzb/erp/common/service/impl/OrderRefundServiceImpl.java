@@ -151,7 +151,7 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundMapper, Order
             if(OrderItemTypeEnum.COURSE.equals(item.getItemType())) {
                 Course course = courseMapper.selectById(item.getItemId());
                 int storage = course.getStorage() == null ? 0 : course.getStorage();
-                course.setStorage(storage + 1);
+                course.setStorage(storage + item.getQuantity());
                 courseMapper.updateById(course);
             }
         }

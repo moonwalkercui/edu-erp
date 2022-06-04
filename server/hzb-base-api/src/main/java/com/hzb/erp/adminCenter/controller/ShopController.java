@@ -3,13 +3,13 @@ package com.hzb.erp.adminCenter.controller;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.common.configuration.SystemConfig;
+import com.hzb.erp.common.entity.CourseComment;
 import com.hzb.erp.common.entity.OrderRefund;
 import com.hzb.erp.common.enums.OrderRefundStateEnum;
 import com.hzb.erp.common.enums.OrderStateEnum;
 import com.hzb.erp.common.exception.BizException;
-import com.hzb.erp.common.pojo.dto.IdsAndContentDTO;
-import com.hzb.erp.common.pojo.dto.OrderListParamDTO;
-import com.hzb.erp.common.pojo.dto.OrderRefundParamDTO;
+import com.hzb.erp.common.pojo.dto.*;
+import com.hzb.erp.common.service.CourseCommentService;
 import com.hzb.erp.common.service.OrderRefundService;
 import com.hzb.erp.common.service.OrderService;
 import com.hzb.erp.utils.EnumTools;
@@ -26,6 +26,7 @@ import com.github.binarywang.wxpay.service.WxPayService;
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,6 +47,9 @@ public class ShopController {
 
     @Autowired
     private OrderRefundService orderRefundService;
+
+    @Autowired
+    private CourseCommentService courseCommentService;
 
     @Autowired
     private WxPayService wxPayService;
@@ -136,6 +140,57 @@ public class ShopController {
             }
         }
         return JsonResponseUtil.success("微信退款已发起，结果请关注微信账户平台");
+    }
+
+
+    @ApiOperation("订单评价列表")
+    @GetMapping("/orderCommentList")
+    public Object orderCommentList(@RequestParam(value = "page", defaultValue = "") Integer page,
+                                   @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+                                   @RequestParam(value = "orderSn", defaultValue = "") String orderSn,
+                                   @RequestParam(value = "studentId", defaultValue = "") Long studentId,
+                                   @RequestParam(value = "studentId", defaultValue = "") Long courseId,
+                                   @RequestParam(value = "state", defaultValue = "") Boolean state) {
+        CourseCommentParamDTO param = new CourseCommentParamDTO();
+        param.setPage(page);
+        param.setPageSize(pageSize);
+        param.setCourseId(courseId);
+        param.setStudentId(studentId);
+        param.setOrderSn(orderSn);
+        param.setState(state);
+        return JsonResponseUtil.paginate(courseCommentService.getList(param));
+    }
+
+    @ApiOperation("批量显示课程评价")
+    @Log(description = "批量显示课程评价", type = "运营管理")
+    @PostMapping("/courseCommentShow")
+    public Object courseCommentShow(@RequestBody List<Long> ids) {
+        List<CourseComment> list = courseCommentService.listByIds(ids);
+        for (CourseComment item : list) {
+            item.setState(true);
+        }
+        courseCommentService.updateBatchById(list);
+        return JsonResponseUtil.success();
+    }
+
+    @ApiOperation("批量隐藏课程评价")
+    @Log(description = "批量隐藏课程评价", type = "运营管理")
+    @PostMapping("/courseCommentHide")
+    public Object courseCommentHide(@RequestBody List<Long> ids) {
+        List<CourseComment> list = courseCommentService.listByIds(ids);
+        for (CourseComment item : list) {
+            item.setState(false);
+        }
+        courseCommentService.updateBatchById(list);
+        return JsonResponseUtil.success();
+    }
+
+    @ApiOperation("批量删除课程评价")
+    @Log(description = "批量删除课程评价", type = "运营管理")
+    @PostMapping("/courseCommentDel")
+    public Object courseCommentDel(@RequestBody List<Long> ids) {
+        courseCommentService.removeByIds(ids);
+        return JsonResponseUtil.success();
     }
 
 }

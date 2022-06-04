@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -59,11 +60,9 @@ public class DateTool {
         } else {
             dayWeek -= 1;
         }
-        System.out.println("前时间是本周的第几天:" + dayWeek); // 输出要当前时间是本周的第几天
         // 计算本周开始的时间
         cal.add(Calendar.DAY_OF_MONTH, 1 - dayWeek);
         Date startDate = cal.getTime();
-        System.out.println("本周开始时间（周一）：" + sdf.format(startDate) + "==当前时间：" + sdf.format(date));
     }
 
     // 获取本月的开始日期
@@ -276,5 +275,26 @@ public class DateTool {
             endData = theDay.with(TemporalAdjusters.lastDayOfYear());
         }
         return new LocalDate[]{startData, endData};
+    }
+
+    /**
+    * 时间格式化
+    * @param dateTime 时间
+    * @param pattern yyyy-MM-dd HH:mm:ss
+    * */
+    public static String format(LocalDateTime dateTime, String pattern) {
+        if(dateTime == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return formatter.format(dateTime);
+    }
+
+    /**
+    * 默认格式化
+    * @param dateTime 时间
+    * */
+    public static String formatDefault(LocalDateTime dateTime) {
+        return format(dateTime, "yyyy-MM-dd HH:mm:ss");
     }
 }

@@ -68,9 +68,8 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
                         .addData(new WxMpTemplateData("keyword2", bo1.getDate() + " " + bo1.getStartTime()))
                         .addData(new WxMpTemplateData("keyword3", bo1.getClassroom()))
                         .addData(new WxMpTemplateData("remark", "请提前15分钟到课."));
-                System.out.println("=====bo1");
-                System.out.println(bo1);
-                content = bo1.getContent();
+                log.debug("=====bo1");
+                log.debug(bo1.toString());
                 break;
 
             case STUDENT_SIGN:
@@ -89,10 +88,9 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
                         .addData(new WxMpTemplateData("keyword2", "请登录学生端查看"))
                         .addData(new WxMpTemplateData("keyword3", bo2.getDate() + " " + bo2.getTime()))
                         .addData(new WxMpTemplateData("keyword4", bo2.getState()))
-                        .addData(new WxMpTemplateData("remark", ""));
-                System.out.println("=====bo2");
-                System.out.println(bo2);
-                content = bo2.getContent();
+                        .addData(new WxMpTemplateData("remark", "感谢您的使用！"));
+                log.debug("=====bo2");
+                log.debug(bo2.toString());
                 break;
 
             case STUDENT_LESSON_ONCHANGE:
@@ -109,9 +107,8 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
                         .addData(new WxMpTemplateData("keyword1", bo3.getLessonTitle()))
                         .addData(new WxMpTemplateData("keyword2", "课程状态变为" + bo3.getNewState()))
                         .addData(new WxMpTemplateData("remark", "原上课时间" + bo3.getDate() + " " + bo3.getStartTime()));
-                System.out.println("=====bo3");
-                System.out.println(bo3);
-                content = bo3.getContent();
+                log.debug("=====bo3");
+                log.debug(bo3.toString());
                 break;
 
             case STUDENT_NEW_CONTRACT:
@@ -128,9 +125,8 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
                         .addData(new WxMpTemplateData("keyword2", "已报名成功"))
                         .addData(new WxMpTemplateData("remark", "课时数：" + bo4.getLessonCount() + ", 金额：" + bo4.getAmount()));
 
-                System.out.println("=====bo4");
-                System.out.println(bo4);
-                content = bo4.getContent();
+                log.debug("=====bo4");
+                log.debug(bo4.toString());
                 break;
 
             case STUDENT_LESSON_COUNT_LESS:
@@ -147,9 +143,8 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
                         .addData(new WxMpTemplateData("keyword1", bo5.getStudentName()))
                         .addData(new WxMpTemplateData("keyword2", bo5.getLessonCount()))
                         .addData(new WxMpTemplateData("remark", "该课程过期时间" + bo5.getExpireDate()));
-                System.out.println("=====bo5");
-                System.out.println(bo5);
-                content = bo5.getContent();
+                log.debug("=====bo5");
+                log.debug(bo5.toString());
                 break;
 
             case TEACHER_STUDENT_LEAVE:
@@ -166,10 +161,59 @@ public class WxNoticeSenderImpl implements WxNoticeSender {
                         .addData(new WxMpTemplateData("keyword1", bo6.getStudentName()))
                         .addData(new WxMpTemplateData("keyword2", bo6.getLessonTitle()))
                         .addData(new WxMpTemplateData("keyword3", bo6.getDate() + " " + bo6.getStartTime()))
+                        .addData(new WxMpTemplateData("remark", "感谢您的使用！"));
+                log.debug("=====bo6");
+                log.debug(bo6.toString());
+                break;
+
+            case STUDENT_NEW_ORDER:
+
+//            {{first.DATA}}
+//            订单编号：{{keyword1.DATA}}
+//            完成时间：{{keyword2.DATA}}
+//            {{remark.DATA}}
+
+                NewOrderBO bo7 = (NewOrderBO) param;
+                templateMessage
+                        .addData(new WxMpTemplateData("first", bo7.getContent()))
+                        .addData(new WxMpTemplateData("keyword1", bo7.getOrderSn()))
+                        .addData(new WxMpTemplateData("keyword2", bo7.getOrderTime()))
+                        .addData(new WxMpTemplateData("remark", "祝您学习愉快！"));
+                log.debug("=====bo7");
+                log.debug(bo7.toString());
+                break;
+            case TEACHER_NEW_ORDER:
+
+//            {{first.DATA}}
+//            订单编号：{{keyword1.DATA}}
+//            完成时间：{{keyword2.DATA}}
+//            {{remark.DATA}}
+
+                NewOrderBO bo8 = (NewOrderBO) param;
+                templateMessage
+                        .addData(new WxMpTemplateData("first", bo8.getContent()))
+                        .addData(new WxMpTemplateData("keyword1", bo8.getOrderSn()))
+                        .addData(new WxMpTemplateData("keyword2", bo8.getOrderTime()))
                         .addData(new WxMpTemplateData("remark", " "));
-                System.out.println("=====bo6");
-                System.out.println(bo6);
-                content = bo6.getContent();
+                log.debug("=====bo8");
+                log.debug(bo8.toString());
+                break;
+
+            case TEACHER_NEW_APPOINTMENT:
+
+//            {{first.DATA}}
+//            课程名称：{{keyword1.DATA}}
+//            课程说明：{{keyword2.DATA}}
+//            {{remark.DATA}}
+
+                LessonChangeBO bo9 = (LessonChangeBO) param;
+                templateMessage
+                        .addData(new WxMpTemplateData("first", bo9.getContent()))
+                        .addData(new WxMpTemplateData("keyword1", bo9.getLessonTitle()))
+                        .addData(new WxMpTemplateData("keyword2", "预约成功"))
+                        .addData(new WxMpTemplateData("remark", " "));
+                log.debug("=====bo3");
+                log.debug(bo9.toString());
                 break;
 
             default:

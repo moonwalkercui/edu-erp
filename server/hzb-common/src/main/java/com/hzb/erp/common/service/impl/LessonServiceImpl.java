@@ -759,6 +759,13 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
                 lesson.getTeacherId(),
                 "你的课程有新的预约",
                 student.getName() + "(" + mobile + ") 预约了你的课程:" + lesson.descToString());
+
+        Staff toStaff = staffService.getById(lesson.getTeacherId());
+        LessonChangeBO bo = new LessonChangeBO();
+        bo.setLessonTitle(lesson.getTitle());
+        bo.setStudentName(student.getName());
+        bo.setContent(student.getName() + "预约了一节课，请注意安排。");
+        notificationService.sendToTeacher(NoticeCodeEnum.TEACHER_NEW_APPOINTMENT, bo, toStaff);
         return true;
     }
 }

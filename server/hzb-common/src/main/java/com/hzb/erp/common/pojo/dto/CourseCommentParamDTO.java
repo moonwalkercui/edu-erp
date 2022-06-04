@@ -8,4 +8,5 @@ public class CourseCommentParamDTO extends PaginateDTO {
     private Long studentId;
     private Boolean state;
     private Integer limit;
+    private String orderSn;
 }

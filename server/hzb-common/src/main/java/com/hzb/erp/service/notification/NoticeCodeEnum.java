@@ -47,8 +47,26 @@ public enum NoticeCodeEnum {
     /**
      * 课次状态变更通知给老师
      */
-    TEACHER_LESSON_ONCHANGE("teacherLessonOnChange", LessonChangeBO.class);
+    TEACHER_LESSON_ONCHANGE("teacherLessonOnChange", LessonChangeBO.class),
 
+    /**
+     * 学生预约成功提醒老师
+     */
+    TEACHER_NEW_APPOINTMENT("teacherNewAppointment", NoticeBO.class),
+
+    /**
+     * 购买课程通知学生
+     */
+    STUDENT_NEW_ORDER("studentNewOrder", NoticeBO.class),
+
+    /**
+     * 购买课程通知顾问
+     */
+    TEACHER_NEW_ORDER("teacherNewOrder", NoticeBO.class);
+
+    /**
+    * code用于提醒设置表setting_notice里的code
+    * */
     private final String code;
     private final Class<? extends NoticeBO> bo;
 }

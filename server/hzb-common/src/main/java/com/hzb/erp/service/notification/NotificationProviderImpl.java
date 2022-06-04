@@ -6,6 +6,7 @@ import com.hzb.erp.common.service.SettingNoticeService;
 import com.hzb.erp.service.notification.bo.ContactTypeBO;
 import com.hzb.erp.service.notification.bo.NoticeBO;
 import com.hzb.erp.service.notification.bo.ToEmailBO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
  * description 实现类
  */
 @Service
+@Slf4j
 public class NotificationProviderImpl implements NotificationProvider {
 
     @Autowired
@@ -40,8 +42,8 @@ public class NotificationProviderImpl implements NotificationProvider {
 
     private void doSend(SettingNotice one, NoticeBO param, ContactTypeBO contactType, NoticeCodeEnum code) {
 
-        System.out.println("======消息设置=======");
-        System.out.println(one.toString());
+        log.info("======消息设置=======");
+        log.info(one.toString());
 
         // 可以发送微信
         if (one.getWxOn() != null && one.getWxOn() && StringUtils.isNotBlank(one.getWxCode()) && StringUtils.isNotBlank(contactType.getWxOpenId())) {
