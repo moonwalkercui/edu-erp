@@ -50,7 +50,7 @@ public class WxPaymentServiceImpl implements WxPaymentService {
     public WxPayUnifiedOrderRequest buildPayParamByOrder(Order order, String openid, String tradeType) {
         Order findOrder = orderService.getById(order.getId());
         if(!findOrder.getState().equals(OrderStateEnum.UNPAID)) {
-            throw new BizException(findOrder.getState().getDist() + "的订单无法支付");
+            throw new BizException(findOrder.getState().getDist() + "的订单无法支付，请返回重试");
         }
         String notifyUrl;
         String createIp;
@@ -66,7 +66,7 @@ public class WxPaymentServiceImpl implements WxPaymentService {
         WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
         BigDecimal payMoney;
         if(systemConfig.getIsDemo()) {
-            payMoney = new BigDecimal("0.1"); // todo !!!!!!!!!!!!!!!!! DEMO演示模式会用1毛钱 ，注意 !!!!!!!!!!!!!!
+            payMoney = new BigDecimal("0.1"); // todo DEMO演示模式会用1毛钱 ，注意 !!!!!!!!!!!!!!
         } else {
             payMoney = order.getOrderMoney() == null ? BigDecimal.ZERO : order.getOrderMoney();
         }
@@ -120,6 +120,7 @@ public class WxPaymentServiceImpl implements WxPaymentService {
         log.info(String.valueOf(result));
         orderService.paySuccessNotify(result.getOpenid(), result.getOutTradeNo(), result.getTransactionId(), result.getTotalFee());
         log.info("==============支付回调结束===================");
+
     }
 
     @Override

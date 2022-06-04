@@ -15,14 +15,24 @@ import com.hzb.erp.common.pojo.dto.OrderRefundParamDTO;
 import com.hzb.erp.common.pojo.dto.StudentCourseSaveDTO;
 import com.hzb.erp.common.pojo.vo.OrderVO;
 import com.hzb.erp.common.service.OrderService;
+import com.hzb.erp.common.service.SettingService;
+import com.hzb.erp.common.service.StaffService;
 import com.hzb.erp.common.service.StudentCourseService;
+import com.hzb.erp.service.NotificationService;
+import com.hzb.erp.service.enums.SettingNameEnum;
+import com.hzb.erp.service.notification.NoticeCodeEnum;
+import com.hzb.erp.service.notification.bo.NewOrderBO;
+import com.hzb.erp.service.notification.bo.NoticeBO;
+import com.hzb.erp.utils.DateTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -45,6 +55,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final PaymentMapper paymentMapper;
     private final StudentMapper studentMapper;
     private final StudentCourseService studentCourseService;
+    private final NotificationService notificationService;
+    private final StaffService staffService;
+    private final SettingService settingService;
 
     @Override
     public Order makeOrder(OrderConfirmDTO dto) {
@@ -76,7 +89,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderItem.setItemId(dto.getCourseId());
         orderItem.setItemName(course.getName());
         orderItem.setPrice(dto.getPrice());
-        orderItem.setQuantity(course.getLessonCount());
+        orderItem.setQuantity(course.getLessonCount() == null ? 0 : course.getLessonCount());
         orderItem.setCover(course.getCover());
         orderItem.setItemType(OrderItemTypeEnum.COURSE);
         orderItemMapper.insert(orderItem);
@@ -122,6 +135,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             qwOi.eq("order_id", order.getId());
             List<OrderItem> orderItems = orderItemMapper.selectList(qwOi);
 
+            String courseNames = "";
+
             for(OrderItem item : orderItems) {
                 if(OrderItemTypeEnum.COURSE.equals(item.getItemType())) {
                     Course course = courseMapper.selectById(item.getItemId());
@@ -138,8 +153,35 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     studentCourseSaveDTO.setRemark(order.getRemark());
                     // 创建学生课程中间数据，并记录财务数据
                     studentCourseService.addOne(studentCourseSaveDTO, null);
+                    courseNames+= course.getName();
                 }
             }
+
+
+            // 给顾问老师发送通知
+            String timeStr = DateTool.formatDefault(order.getPayTime());
+            if(student.getCounselor() != null ) {
+                Staff toStaff = staffService.getById(student.getCounselor());
+                if(toStaff == null) {
+                    String defaultMobile = settingService.strValue(SettingNameEnum.ORDER_NOTICE_MOBILE.getCode());
+                    toStaff = staffService.getByMobile(defaultMobile);
+                }
+                if( toStaff != null ) {
+                    NewOrderBO bo = new NewOrderBO();
+                    bo.setOrderSn(order.getSn());
+                    bo.setOrderTime(timeStr);
+                    bo.setTeacherName(toStaff.getName());
+                    bo.setContent(student.getName() + "已购买课程" + courseNames + "，请尽快为其安排班级和课程。");
+                    notificationService.sendToTeacher(NoticeCodeEnum.TEACHER_NEW_ORDER, bo, toStaff);
+                }
+            }
+
+            NewOrderBO bo1 = new NewOrderBO();
+            bo1.setOrderSn(order.getSn());
+            bo1.setOrderTime(timeStr);
+            bo1.setStudentName(student.getName());
+            bo1.setContent("您已购买课程" + courseNames + "，请稍后注意排课信息。");
+            notificationService.sendToStudent(NoticeCodeEnum.STUDENT_NEW_ORDER, bo1, student);
 
         }
     }
@@ -156,6 +198,50 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             }
         }
         return records;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void autoCloseOrder() {
+
+        // 十分钟后未支付关闭订单
+        LocalDateTime time = LocalDateTime.now().plusMinutes(10L);
+        String timeStr = DateTool.formatDefault(time);
+
+        QueryWrapper<Order> qw = new QueryWrapper<>();
+        qw.le("add_time", timeStr);
+        qw.eq("state", OrderStateEnum.UNPAID.getCode());
+        List<Order> orders = baseMapper.selectList(qw);
+
+        for(Order item : orders) {
+            item.setState(OrderStateEnum.CANCELED);
+            item.setCancelTime(LocalDateTime.now());
+        }
+        this.updateBatchById(orders);
+
+        for(Order item : orders) {
+            this.afterCancelOrder(item);
+        }
+    }
+
+    /**
+    * 处理购买项的库存
+    * */
+    private void afterCancelOrder(Order order) {
+        QueryWrapper<OrderItem> qwOi = new QueryWrapper<>();
+        qwOi.eq("order_id", order.getId());
+        List<OrderItem> orderItems = orderItemMapper.selectList(qwOi);
+
+        for(OrderItem item : orderItems) {
+            if(OrderItemTypeEnum.COURSE.equals(item.getItemType())) {
+                Course course = courseMapper.selectById(item.getItemId());
+                int storage = course.getStorage();
+                // 增加库存
+                course.setStorage(storage + item.getQuantity());
+                courseMapper.updateById(course);
+            }
+        }
+
     }
 
 }

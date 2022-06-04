@@ -47,7 +47,7 @@ public class OrderItem implements Serializable {
     @ApiModelProperty(value = "支付金额")
     private BigDecimal price;
 
-    @ApiModelProperty(value = "第三方支付交易号")
+    @ApiModelProperty(value = "购买数量")
     private Integer quantity;
 
     @ApiModelProperty(value = "添加时间")

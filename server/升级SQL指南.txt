@@ -1,5 +1,11 @@
 ## 数据增量变动sql
 
+####  1.2.0601 debug
+```
+
+ALTER TABLE shop_order` ADD COLUMN `cancel_time` datetime NULL COMMENT '取消时间' AFTER `pay_time`;
+
+```
 ####  1.2.0601 在线购课
 
 ```

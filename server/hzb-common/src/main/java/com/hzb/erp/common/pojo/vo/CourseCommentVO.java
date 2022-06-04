@@ -25,6 +25,9 @@ public class CourseCommentVO {
     @ApiModelProperty(value = "学生姓名")
     private String studentName;
 
+    @ApiModelProperty(value = "订单号")
+    private String orderSn;
+
     @ApiModelProperty(value = "课程ID")
     private Long courseId;
 

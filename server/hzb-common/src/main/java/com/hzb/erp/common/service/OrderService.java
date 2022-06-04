@@ -19,7 +19,7 @@ import com.hzb.erp.common.pojo.vo.OrderVO;
 public interface OrderService extends IService<Order> {
 
     /**
-    * 创建订单
+    * 创建订单 当前版本一个订单支持购买一个课程
     * */
     Order makeOrder(OrderConfirmDTO dto);
 
@@ -44,4 +44,8 @@ public interface OrderService extends IService<Order> {
         return IdUtil.simpleUUID();
     }
 
+    /**
+    * 自动关闭订单
+    * */
+    void autoCloseOrder();
 }

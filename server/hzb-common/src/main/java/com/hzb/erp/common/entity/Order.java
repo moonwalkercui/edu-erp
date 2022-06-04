@@ -60,4 +60,9 @@ public class Order extends AutoFillEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime payTime;
 
+    @ApiModelProperty(value = "取消时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime cancelTime;
+
+
 }

@@ -1,5 +1,6 @@
 package com.hzb.erp.adminCenter.quartzJob;
 
+import com.hzb.erp.adminCenter.quartzJob.jobs.OrderCancelJob;
 import com.hzb.erp.quartz.JobRegisterEnum;
 import com.hzb.erp.adminCenter.quartzJob.jobs.LessonCountWarningJob;
 import com.hzb.erp.adminCenter.quartzJob.jobs.LessonEndingJob;
@@ -23,9 +24,14 @@ public enum JobRegisterEnumImpl implements JobRegisterEnum {
     /**
      * job枚举类包列表
      */
+    // 定时结课
     LESSON_ENDING_JOB(LessonEndingJob.class.getName(), "0 */5 * * * ?"),
+    // 定时上课提醒
     LESSON_REMIND_JOB(LessonRemindJob.class.getName(), "0 0 19 * * ?"),
-    LESSON_COUNT_WARNING_JOB(LessonCountWarningJob.class.getName(), "0 0 7 * * ?");
+    // 定时课时不足提醒
+    LESSON_COUNT_WARNING_JOB(LessonCountWarningJob.class.getName(), "0 0 7 * * ?"),
+    // 定时取消订单
+    ORDER_CANCEL_JOB(OrderCancelJob.class.getName(), "0 */1 * * * ?");
 
     /**
      * 类包路径

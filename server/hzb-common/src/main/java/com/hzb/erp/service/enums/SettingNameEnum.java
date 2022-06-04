@@ -101,7 +101,12 @@ public enum SettingNameEnum {
     /**
      * 体验卡使用规则说明
      */
-    COURSE_TRIAL_HELP("course_trial_help", "体验卡使用规则说明", "领取体验卡后可以到课时表里预约课程。", "str");
+    COURSE_TRIAL_HELP("course_trial_help", "体验卡使用规则说明", "领取体验卡后可以到课时表里预约课程。", "str"),
+
+    /**
+     * 新订单默认提醒手机号
+     */
+    ORDER_NOTICE_MOBILE("order_notice_mobile", "学员在线购课后，若无顾问则通知该账号。", "", "str");
 
     private String code;
     private String desc;
