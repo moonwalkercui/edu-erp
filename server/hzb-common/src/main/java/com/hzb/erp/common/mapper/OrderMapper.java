@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public interface OrderMapper extends BaseMapper<Order> {
 
     IPage<OrderVO> getList(Page<Object> objectPage, OrderListParamDTO param);
+    OrderVO getInfo(Long orderId);
 
 }
 

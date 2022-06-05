@@ -1,5 +1,6 @@
 package com.hzb.erp.common.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -16,7 +17,6 @@ import com.hzb.erp.common.pojo.dto.StudentCourseSaveDTO;
 import com.hzb.erp.common.pojo.vo.CourseTrialRecordVO;
 import com.hzb.erp.common.service.CourseTrialRecordService;
 import com.hzb.erp.common.service.StudentCourseService;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +56,7 @@ public class CourseTrialRecordServiceImpl extends ServiceImpl<CourseTrialRecordM
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean getOne(Long trialId, Student student) {
 
         CourseTrial courseTrial = courseTrialMapper.selectById(trialId);
@@ -68,6 +68,12 @@ public class CourseTrialRecordServiceImpl extends ServiceImpl<CourseTrialRecordM
         }
         if(LocalDate.now().isAfter(courseTrial.getEndDate())) {
             throw new BizException("该体验卡已停止发行");
+        }
+
+        QueryWrapper<CourseTrialRecord> qw = new QueryWrapper<>();
+        qw.eq("student_id", student.getId()).eq("trial_id", trialId).last("limit 1");
+        if(this.baseMapper.selectOne(qw) != null) {
+            throw new BizException("请勿重复领取");
         }
 
         courseTrial.setQuantity(courseTrial.getQuantity() - 1);

@@ -9,10 +9,7 @@ import com.hzb.erp.common.enums.AdvertisementTypeEnum;
 import com.hzb.erp.common.mapper.UserMapper;
 import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
 import com.hzb.erp.common.pojo.dto.GradeParamDTO;
-import com.hzb.erp.common.service.AdvertisementService;
-import com.hzb.erp.common.service.HelpService;
-import com.hzb.erp.common.service.SettingOptionService;
-import com.hzb.erp.common.service.UserService;
+import com.hzb.erp.common.service.*;
 import com.hzb.erp.security.Util.SecurityUtils;
 import com.hzb.erp.service.FileService;
 import com.hzb.erp.service.bo.UploadResultBO;
@@ -71,6 +68,10 @@ public class SCommonController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private DictService dictService;
+
+
     @ApiOperation("上传图片")
     @PostMapping("/upload")
     @ResponseBody
@@ -87,13 +88,16 @@ public class SCommonController {
     public Map<String, Object> advertisement() {
         QueryWrapper<Advertisement> qw1 = new QueryWrapper<>();
         qw1.eq("state", 1).eq("type", AdvertisementTypeEnum.BANNER.getCode())
-                .ne("cover", null)
+                .isNotNull("cover")
                 .orderByDesc("sort_num").orderByAsc("id").last("limit 10");
+
         QueryWrapper<Advertisement> qw2 = new QueryWrapper<>();
         qw2.eq("state", 1).eq("type", AdvertisementTypeEnum.TIP.getCode())
                 .orderByDesc("sort_num").orderByAsc("id").last("limit 10");
+
         QueryWrapper<Advertisement> qw3 = new QueryWrapper<>();
         qw3.eq("state", 1).eq("type", AdvertisementTypeEnum.POPUP.getCode())
+                .isNotNull("cover")
                 .orderByDesc("sort_num").orderByAsc("id").last("limit 1");
 
         Map<String, Object> res = new HashMap<>();
@@ -218,4 +222,9 @@ public class SCommonController {
         return StringUtils.isNotBlank(openid);
     }
 
+    @ApiOperation("字典列表")
+    @GetMapping("/dictList")
+    public Object advertisementList(@RequestParam(value = "code") String code) {
+        return dictService.listItemByCode(code);
+    }
 }

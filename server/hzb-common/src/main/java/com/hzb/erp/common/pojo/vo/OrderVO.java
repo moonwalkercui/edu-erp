@@ -64,10 +64,4 @@ public class OrderVO {
 
     @ApiModelProperty(value = "是否可以退款")
     private Boolean cancelAble;
-
-    // 2小时内可以退款
-    public Boolean getCancelAble() {
-        return payTime != null && payTime.plusMinutes(240).isAfter(LocalDateTime.now());
-    }
-
 }

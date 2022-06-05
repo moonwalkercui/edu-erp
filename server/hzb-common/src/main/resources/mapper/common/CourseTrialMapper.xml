@@ -25,7 +25,10 @@
                 AND t1.state = #{param.state}
             </if>
             <if test="param.excludeEnd != null and param.excludeEnd">
-                AND t1.end_date >= CURDATE()
+                AND t1.end_date &gt;= CURDATE()
+            </if>
+            <if test="param.excludeStudentId != null">
+                AND t1.id not in (select trial_id from course_trial_record where student_id = #{param.excludeStudentId})
             </if>
             and t1.deleted = 0
         </where>

@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzb.erp.common.mapper.DictItemMapper">
 
+    <select id="listItemByCode" resultType="com.hzb.erp.common.entity.DictItem">
+    SELECT t1.id, t1.name, t1.info FROM dict_item t1
+    where t1.dict_id = (select id from dict where code = #{code})
+    order by t1.sort_num desc
+    </select>
+
 </mapper>

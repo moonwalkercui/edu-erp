@@ -1,24 +1,24 @@
 <template>
 	<view class="order">
-		<view class="top">
+		<view class="top" @click="showInfo()">
 			<view class="left">
 				<u-icon name="arrow-right" color="rgb(203,203,203)" :size="26"></u-icon>
 				<view class="store">单号:{{ orderInfo.sn }}</view>
 			</view>
 			<view class="right">{{orderInfo.state}}</view>
 		</view>
-		<view class="item" v-for="(item, index) in orderInfo.itemList" :key="index">
-			<view class="left">
+		<view class="item" v-for="(item, index) in orderInfo.itemList" :key="index" @click="showInfo()">
+			<view class="left" v-if="item.cover">
 				<image :src="item.cover" mode="aspectFill"></image>
 			</view>
 			<view class="content">
 				<view class="title u-line-2">{{ item.itemName }}</view>
 				<view class="type">{{ item.itemType }}</view>
 				<!-- <view class="delivery-time">添加时间:{{ item.addTime }}</view> -->
-				<view class="right">
-					<view class="price">
-						￥{{ item.price }}
-					</view>
+			</view>
+			<view class="right">
+				<view class="price">
+					￥{{ item.price }}
 				</view>
 			</view>
 		</view>
@@ -34,9 +34,11 @@
 			<!-- <view class="more">
 				<u-icon name="more-dot-fill" color="rgb(203,203,203)"></u-icon>
 			</view> -->
-			<view class="exchange btn" v-if="orderInfo.state == '已付款' && orderInfo.cancelAble">申请退款</view>
+			<view class=" btn" v-if="orderInfo.state == '未支付'" @click="handleCancel()">取 消</view>
+			<view class=" btn" v-if="orderInfo.state == '已评价' || orderInfo.state == '未支付'  || orderInfo.state == '已取消'" @click="handleDelete()">删 除</view>
+			<view class=" btn" v-if="orderInfo.cancelAble" @click="handleRefund()">申请退款</view>
 			<view class="evaluate btn" v-if="orderInfo.state == '已付款'" @click="evaluate()">评 价</view>
-			<!-- <view class="exchange btn" v-if="orderInfo.state == '未付款'">重新付款</view> -->
+			<!-- <view class="exchange btn" v-if="orderInfo.state == '未支付'">重新付款</view> -->
 		</view>
 	</view>
 </template>
@@ -67,11 +69,42 @@
 		methods: {
 			evaluate() {
 				this.$emit('handleEvaluate', this.orderInfo.id)
+			},
+			handleCancel() {
+				this.$common.showAlert("请确认", `确认取消订单？`, () => {
+					this.$http.post(`sCenter/shop/orderCancel/${this.orderInfo.id}`, {}, res => {
+						if (!this.$common.handleResponseMsg(res)) return;
+						if (res.errCode == 0) {
+							this.$common.showMsg(res.msg)
+							this.$emit("afterCancel", this.orderInfo.id)
+						}
+					})
+				})
+			},
+			handleDelete() {
+				this.$common.showAlert("请确认", `确认删除订单？`, () => {
+					this.$http.post(`sCenter/shop/orderDelete/${this.orderInfo.id}`, {}, res => {
+						if (!this.$common.handleResponseMsg(res)) return;
+						if (res.errCode == 0) {
+							this.$common.showMsg(res.msg)
+							this.$emit("afterDelete", this.orderInfo.id)
+						}
+					})
+				})
+			},
+			handleRefund() {
+				uni.navigateTo({
+					url: `/pages/shop/orderRefund?orderId=${this.orderInfo.id}&orderSn=${this.orderInfo.sn}&payMoney=${this.orderInfo.payMoney}`
+				})
+			},
+			showInfo() {
+				uni.navigateTo({
+					url:'/pages/shop/orderInfo?orderId=' + this.orderInfo.id
+				})
 			}
 		}
 	}
 </script>
-
 
 <style lang="scss" scoped>
 	.order {

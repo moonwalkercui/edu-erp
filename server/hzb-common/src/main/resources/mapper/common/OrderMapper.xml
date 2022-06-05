@@ -33,4 +33,14 @@
         order by t1.id desc
     </select>
 
+    <select id="getInfo" resultType="com.hzb.erp.common.pojo.vo.OrderVO">
+        select
+            t1.id,t1.sn,t1.order_money,t1.pay_money,t1.remark,t1.refunded,t1.state,t1.pay_time,t1.add_time,
+            t2.name studentName, t3.mobile mobile
+        from shop_order t1
+        left join student t2 on t2.id = t1.student_id
+        left join `user` t3 on t3.id = t1.user_id
+        where t1.id = #{orderId}
+    </select>
+
 </mapper>
