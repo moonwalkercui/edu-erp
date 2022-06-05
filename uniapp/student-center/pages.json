@@ -35,6 +35,18 @@
 			}
 		},
 		{
+			"path": "pages/shop/orderRefund",
+			"style": {
+				"navigationBarTitleText": "退款申请"
+			}
+		},
+		{
+			"path": "pages/shop/orderInfo",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
+		},
+		{
 			"path": "pages/shop/payResult",
 			"style": {
 				"navigationBarTitleText": "支付结果"
@@ -207,7 +219,7 @@
             "path" : "pages/lesson/trial",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "试听卡",
+                "navigationBarTitleText": "体验卡",
                 "enablePullDownRefresh": false
             }
         }

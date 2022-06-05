@@ -20,5 +20,8 @@ public interface CourseTrialRecordService extends IService<CourseTrialRecord> {
     IPage<CourseTrialRecordVO> getList(CourseTrialRecordParamDTO param);
     List<CourseTrialRecordVO> getAll(CourseTrialRecordParamDTO param);
 
+    /**
+    * 领取体验卡
+    * */
     boolean getOne(Long trialId, Student student);
 }

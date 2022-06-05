@@ -66,9 +66,14 @@ public class SCourseController {
     @ApiOperation("体验卡列表")
     @GetMapping("/trialList")
     public Object trialList() {
+        Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return null;
+        }
         CourseTrialParamDTO param = new CourseTrialParamDTO();
         param.setState(true);
         param.setExcludeEnd(true);
+        param.setExcludeStudentId(student.getId());
         return courseTrialService.getAll(param);
     }
 

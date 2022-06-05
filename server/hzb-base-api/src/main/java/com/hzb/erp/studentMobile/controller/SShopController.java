@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
+import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.common.entity.*;
 import com.hzb.erp.common.enums.OrderStateEnum;
 import com.hzb.erp.common.mapper.CourseCommentMapper;
@@ -13,6 +14,7 @@ import com.hzb.erp.common.mapper.UserMapper;
 import com.hzb.erp.common.pojo.dto.*;
 import com.hzb.erp.common.pojo.vo.CourseSectionVO;
 import com.hzb.erp.common.pojo.vo.CourseVO;
+import com.hzb.erp.common.pojo.vo.OrderVO;
 import com.hzb.erp.common.service.*;
 import com.hzb.erp.studentMobile.pojo.vo.CourseInfoVO;
 import com.hzb.erp.studentMobile.service.StudentAuthService;
@@ -201,6 +203,12 @@ public class SShopController {
         return JsonResponseUtil.paginate(orderService.getList(param));
     }
 
+    @ApiOperation("订单详情")
+    @GetMapping("/orderInfo/{orderId}")
+    public OrderVO orderInfo(@PathVariable("orderId") Long orderId) {
+        return orderService.getInfo(orderId);
+    }
+
     @ApiOperation("获取未评价数")
     @GetMapping("/orderCountUnevaluate")
     public Long orderCountUnevaluate() {
@@ -215,6 +223,7 @@ public class SShopController {
     }
 
     @ApiOperation("订单评价")
+    @Log(description = "订单评价", type = "学生端", isStaff = false)
     @PostMapping("/orderEvaluate")
     public Object orderEvaluate(@Valid @RequestBody OrderEvaluateDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);
@@ -228,8 +237,10 @@ public class SShopController {
     }
 
     @ApiOperation(value = "申请退款")
+    @Log(description = "申请退款", type = "学生端", isStaff = false)
     @PostMapping("/orderRefund")
-    public Object orderRefund(OrderRefundDTO dto) {
+    public Object orderRefund(@Valid @RequestBody OrderRefundDTO dto, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
         Student student = StudentAuthService.getCurrentStudent();
         if (student == null) {
             return JsonResponseUtil.error("请先添加学生");
@@ -237,6 +248,45 @@ public class SShopController {
         dto.setUserId(student.getUserId());
         dto.setStudentId(student.getId());
         orderRefundService.handleRefund(dto);
-        return JsonResponseUtil.success("退款申请成功");
+        return JsonResponseUtil.success("退款申请已提交");
     }
+
+    @ApiOperation("取消订单")
+    @Log(description = "取消订单", type = "学生端", isStaff = false)
+    @PostMapping("/orderCancel/{orderId}")
+    public Object orderCancel(@PathVariable("orderId") Long orderId) {
+        Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
+        QueryWrapper<Order> qw = new QueryWrapper<>();
+        qw.eq("id", orderId).eq("student_id", student.getId());
+        Order order = orderService.getOne(qw);
+        if (orderService.cancel(order)) {
+            return JsonResponseUtil.success("已取消");
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+    @ApiOperation("删除订单")
+    @Log(description = "删除订单", type = "学生端", isStaff = false)
+    @PostMapping("/orderDelete/{orderId}")
+    public Object orderDelete(@PathVariable("orderId") Long orderId) {
+        Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
+
+        QueryWrapper<Order> qw = new QueryWrapper<>();
+        qw.eq("id", orderId).eq("student_id", student.getId());
+
+        if (orderService.remove(qw)) {
+            return JsonResponseUtil.success("已删除");
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+
 }

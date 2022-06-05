@@ -48,4 +48,19 @@ public interface OrderService extends IService<Order> {
     * 自动关闭订单
     * */
     void autoCloseOrder();
+
+    /**
+     * 取消订单
+     * */
+    boolean cancel(Order order);
+
+    /**
+    * 检查是否可以退款
+    * */
+    boolean checkCanRefund(OrderVO order);
+
+    /**
+    * 订单详情
+    * */
+    OrderVO getInfo(Long orderId);
 }

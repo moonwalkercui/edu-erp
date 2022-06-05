@@ -9,7 +9,7 @@
 					<scroll-view scroll-y style="height: 100%;width: 100%;" @scrolltolower="reachBottom">
 						<view class="page-box">
 							<view v-for="(ord, index) in orderLi" :key="index">
-								<orderItem :orderInfo="ord" :key="ord.id" @handleEvaluate="handleEvaluate"/>
+								<orderItem v-if="ord.state != '已删除'" :orderInfo="ord" :key="ord.id" @handleEvaluate="handleEvaluate" @afterDelete="afterDelete" @afterCancel="afterCancel"/>
 							</view>
 							<u-loadmore :status="loadStatus[oi]" bgColor="#f2f2f2" v-if="orderLi.length > 0"></u-loadmore>
 							<view class="centre" v-if="orderLi.length == 0">
@@ -157,6 +157,20 @@ export default {
 			}
 			this.popShow = true
 		},
+		afterDelete(orderId){
+			this.setState(orderId, '已删除')
+		},
+		afterCancel(orderId){
+			this.setState(orderId, '已取消')
+		},
+		setState(orderId, state) {
+			for(let item of this.dataList[this.current]) {
+				if(item.id == orderId) {
+					item.state = state
+					break;
+				}
+			}
+		},
 		orderEvaluate() {
 			if(!this.evaluateFrom[this.currentId]) {
 				return;
@@ -182,6 +196,7 @@ export default {
 				if (!this.$common.handleResponseMsg(res)) return;
 				this.$common.showMsg(res.msg)
 				this.popShow = false
+				this.setState(this.currentId, '已评价')
 				this.reload(3)
 				this.countUnevaluate()
 			})

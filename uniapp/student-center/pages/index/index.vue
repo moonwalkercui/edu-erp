@@ -1,7 +1,6 @@
 <template>
 	<view>
 		<u-notice-bar mode="vertical" :list="tips" v-if="tips.length > 0" @click="clickTip"></u-notice-bar>
-
 		<view class="u-margin-30 bg-white boder-radius-md" style="overflow: hidden;">
 			<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="300"
 				style="height: 360rpx;" indicator-active-color="#ff9900">
@@ -98,6 +97,7 @@
 			</view>
 		</view>
 		<Popup :show.sync="adShow" :image="popupCover" @ClickNav="clickNav"/>
+		<adDetail ref="adDetail"/>
 	</view>
 </template>
 
@@ -106,10 +106,12 @@
 	import * as db from '@/util/db.js' //引入common
 	import * as consts from '@/util/consts.js' //引入common
 	import Popup from './components/popup.vue'
+	import AdDetail from '@/pages/advertisment/components/adDetail.vue'
 	export default {
 		components: {
 			SpecialBanner,
 			Popup,
+			AdDetail,
 		},
 		data() {
 			return {
@@ -126,15 +128,10 @@
 
 				adShow: false,
 				popupCover: '',
-				adInfo: {
-					title: '',
-					content: '',
-					cover1: '',
-				},
 				
 				navs: [
 					{
-						label: "试听卡",
+						label: "体验卡",
 						icon: "menu_check",
 						color: '#dc5d5d',
 						count: 0,
@@ -261,12 +258,7 @@
 				});
 			},
 			showAdDetail(item) {
-				this.adShow = true;
-				this.adInfo = {
-					title: item.title,
-					content: item.content,
-					cover: item.cover,
-				}
+				this.$refs.adDetail.show(item);
 			},
 			clickTip(index) {
 				uni.navigateTo({

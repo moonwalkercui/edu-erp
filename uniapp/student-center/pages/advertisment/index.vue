@@ -12,39 +12,20 @@
 				<u-empty mode="list" text="暂无记录"></u-empty>
 			</view>
 		</view>
-		
-		<u-popup v-model="showBox" mode="bottom"  border-radius="14" height="1200rpx">
-			<view class="u-text-center" style="min-height: 1050rpx; overflow-y: scroll;">
-				<view class="u-font-14 u-p-30 text-bold">{{detail.title}}</view>
-				<view class="u-font-12 text-gray">{{detail.addTime}}</view>
-				<view class="u-p-30 ">
-					<u-image v-if="detail.cover && detail.cover!=''" style="width: 100%;" height="600rpx" :src="detail.cover"></u-image>
-					<view class="u-font-14 u-text-left u-m-t-20">
-						<text v-html="detail.content"></text>
-					</view>
-				</view>
-			</view>
-			<view class="u-text-center">
-				<u-button @click="showBox = false;" size="medium">知道了</u-button>
-			</view>
-		</u-popup>
+		<adDetail ref="adDetail"/>
 	</view>
 </template>
 <script>
 	import paginateMix from "@/mixins/paginateMixins.js"
+	import adDetail from "./components/adDetail.vue"
 	export default {
 		mixins: [paginateMix],
+		components: {
+			adDetail
+		},
 		data() {
 			return {
-				showBox: false,
-				checked: false,
 				list: [],
-				detail: {
-					content: '',
-					title: '',
-					addTime: '',
-					cover: null,
-				},
 			}
 		},
 		onLoad() {
@@ -61,8 +42,7 @@
 				})
 			},
 			showDetail(item) {
-				this.showBox = true;
-				this.detail = item
+				this.$refs.adDetail.show(item)
 			},
 			clickRight() {
 				this.list = [];

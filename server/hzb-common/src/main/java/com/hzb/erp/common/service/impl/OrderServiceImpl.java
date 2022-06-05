@@ -195,9 +195,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 OrderRefundParamDTO dto = new OrderRefundParamDTO();
                 dto.setOrderId(vo.getId());
                 vo.setRefundList(orderRefundMapper.getList(dto));
+                vo.setCancelAble(checkCanRefund(vo));
             }
         }
         return records;
+    }
+
+    @Override
+    public OrderVO getInfo(Long orderId) {
+        OrderVO vo = this.baseMapper.getInfo(orderId);
+        vo.setItemList(orderItemMapper.getList(vo.getId()));
+        OrderRefundParamDTO dto = new OrderRefundParamDTO();
+        dto.setOrderId(vo.getId());
+        vo.setRefundList(orderRefundMapper.getList(dto));
+        vo.setCancelAble(checkCanRefund(vo));
+        return vo;
     }
 
     @Override
@@ -222,6 +234,45 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         for(Order item : orders) {
             this.afterCancelOrder(item);
         }
+    }
+
+    @Override
+    public boolean cancel(Order order) {
+        if(order == null) {
+            throw new BizException("未知订单");
+        }
+        if(!OrderStateEnum.UNPAID.equals(order.getState())) {
+            throw new BizException("仅未支付订单可取消");
+        }
+        order.setState(OrderStateEnum.CANCELED);
+        order.setCancelTime(LocalDateTime.now());
+        this.updateById(order);
+        this.afterCancelOrder(order);
+        return true;
+    }
+
+    @Override
+    public boolean checkCanRefund(OrderVO ord) {
+        // 已经发起退款的,未支付的，取消的，都不能退款
+        if((ord.getRefunded() !=null && ord.getRefunded()) ||
+                OrderStateEnum.UNPAID.equals(ord.getState()) ||
+                OrderStateEnum.CANCELED.equals(ord.getState())) {
+            return false;
+        }
+        if(ord.getPayMoney() == null || BigDecimal.ZERO.compareTo(ord.getPayMoney()) >= 0 ) {
+            return false;
+        }
+        if( OrderStateEnum.PAID.equals(ord.getState()) || OrderStateEnum.EVALUATE.equals(ord.getState())) {
+            int limitHour = settingService.intValue(SettingNameEnum.ORDER_REFUND_LIMIT_HOUR.getCode());
+            if(ord.getPayTime() == null) {
+                return false;
+            }
+            // 0表示不限制
+            if (limitHour== 0 || ord.getPayTime().isAfter(LocalDateTime.now().minusHours(limitHour))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
