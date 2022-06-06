@@ -19,4 +19,6 @@ public class StudentParamDTO extends PaginateDTO {
     private Long userId;
     private Long courseId;
     private Integer grade;
+    // 微信昵称
+    private String nickname;
 }

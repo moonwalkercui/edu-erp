@@ -10,16 +10,21 @@
     </sql>
     <select id="getList" resultType="com.hzb.erp.common.pojo.vo.UserVO">
         SELECT t1.*, count(t2.id) student_count,
+        t3.nickname wx_nickname,
         group_concat(t2.name) student_names
         FROM user t1
         LEFT JOIN student t2 on t2.user_id = t1.id and t2.deleted = 0
+        LEFT JOIN wx_access t3 on t3.id = t1.wx_access_id
         <where>
-            <if test="param.keyword !=null and param.keyword != ''">
+            <if test="param.keyword != null and param.keyword.trim != ''">
                 AND (
                 t1.name like concat('%', #{param.keyword}, '%')
                 or t1.mobile = #{param.keyword}
                 or t1.id = (select user_id from student where name = #{param.keyword})
                 )
+            </if>
+            <if test="param.nickname != null and param.nickname.trim != ''">
+                t3.nickname like concat(#{param.nickname}, '%')
             </if>
         </where>
         group by t1.id

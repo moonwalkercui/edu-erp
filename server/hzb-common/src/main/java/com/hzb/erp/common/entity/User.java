@@ -33,6 +33,7 @@ public class User implements Serializable {
     /**
      * 微信id
      */
+    @TableField(value = "wx_access_id")
     private Long wxAccessId;
 
     /**

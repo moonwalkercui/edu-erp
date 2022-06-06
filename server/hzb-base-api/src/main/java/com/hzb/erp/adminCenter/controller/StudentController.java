@@ -11,10 +11,7 @@ import com.hzb.erp.common.enums.GenderEnum;
 import com.hzb.erp.common.enums.StudentStageEnum;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.StaffOrginfoMapper;
-import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
-import com.hzb.erp.common.pojo.dto.ParentInfoSaveDTO;
-import com.hzb.erp.common.pojo.dto.StudentBaseInfoDTO;
-import com.hzb.erp.common.pojo.dto.StudentParamDTO;
+import com.hzb.erp.common.pojo.dto.*;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
 import com.hzb.erp.common.pojo.vo.StudentVO;
 import com.hzb.erp.common.service.SettingService;
@@ -26,6 +23,7 @@ import com.hzb.erp.service.ImportExportService;
 import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.service.enums.SettingNameEnum;
 import com.hzb.erp.utils.*;
+import com.hzb.erp.wechat.service.WxAccessService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -72,7 +70,7 @@ public class StudentController {
     private SettingService settingService;
 
     @Autowired
-    private SystemConfig systemConfig;
+    private WxAccessService wxAccessService;
 
     @ApiOperation("学员信息")
     @GetMapping("/info")
@@ -280,10 +278,12 @@ public class StudentController {
     public PaginationVO userList(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+            @RequestParam(value = "nickname", defaultValue = "") String nickname,
             @RequestParam(value = "keyword", defaultValue = "") String keyword) {
         StudentParamDTO param = new StudentParamDTO();
         param.setPage(page);
         param.setPageSize(pageSize);
+        param.setNickname(nickname);
         param.setKeyword(keyword);
         return JsonResponseUtil.paginate(userService.getList(param));
     }
@@ -348,6 +348,42 @@ public class StudentController {
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error();
+        }
+    }
+
+    @ApiOperation("微信用户列表")
+    @GetMapping("/wxAccessList")
+    public PaginationVO wxAccessList(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+            @RequestParam(value = "nickname", defaultValue = "") String nickname) {
+        StudentParamDTO param = new StudentParamDTO();
+        param.setPage(page);
+        param.setPageSize(pageSize);
+        param.setNickname(nickname);
+        return JsonResponseUtil.paginate(wxAccessService.getList(param));
+    }
+
+    @ApiOperation("绑定微信")
+    @Log(description = "绑定微信", type = "学员管理")
+    @PostMapping("/bindWeixin")
+    public JsonResponse bindWeixin(@Valid @RequestBody WxAccessBindDTO dto, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
+        if (userService.bindWeixin(dto)) {
+            return JsonResponseUtil.success("绑定成功");
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+    @ApiOperation("绑定微信")
+    @Log(description = "绑定微信", type = "学员管理")
+    @PostMapping("/unbindWeixin/{userId}")
+    public JsonResponse unbindWeixin(@PathVariable Long userId) {
+        if (userService.unbindWeixin(userId)) {
+            return JsonResponseUtil.success("解绑成功");
+        } else {
+            return JsonResponseUtil.error("操作失败");
         }
     }
 }

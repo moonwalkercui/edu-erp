@@ -14,4 +14,5 @@ import lombok.Data;
 public class UserVO extends User {
     private Integer studentCount;
     private String studentNames;
+    private String wxNickname;
 }

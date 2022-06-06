@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.User;
 import com.hzb.erp.common.pojo.dto.StudentParamDTO;
 import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
+import com.hzb.erp.common.pojo.dto.WxAccessBindDTO;
 import com.hzb.erp.common.pojo.vo.UserVO;
 
 /**
@@ -33,4 +34,14 @@ public interface UserService extends IService<User> {
     boolean updatePwdByMob(String mobile, String passwordEncode);
 
     String getWxOpenid(Long id);
+
+    /**
+    * 学生登录账号绑定微信
+    * */
+    boolean bindWeixin(WxAccessBindDTO dto);
+
+    /**
+    * 解绑微信
+    * */
+    boolean unbindWeixin(Long userId);
 }

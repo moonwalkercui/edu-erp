@@ -21,7 +21,6 @@
 
     <select id="loadSelectorLabel" resultType="java.lang.String">
         select
-
         <choose>
             <when test='code == "staff"'>
                 group_concat(t1.name) from staff t1
@@ -49,6 +48,9 @@
             </when>
             <when test='code == "org"'>
                 group_concat(t1.name) from org t1
+            </when>
+            <when test='code == "wxaccess"'>
+                group_concat(t1.nickname) from wx_access t1
             </when>
             <otherwise>
             </otherwise>
