@@ -7,6 +7,7 @@ public class SubjectVO {
     private Long id;
     private String name;
     private String info;
+    private Integer sortNum;
     // 统计数据
 //    // 总人数
 //    private Integer studentCount;

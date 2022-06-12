@@ -1,9 +1,6 @@
 package com.hzb.erp.common.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -33,7 +30,7 @@ public class User implements Serializable {
     /**
      * 微信id
      */
-    @TableField(value = "wx_access_id")
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Long wxAccessId;
 
     /**

@@ -28,4 +28,7 @@ public class Subject extends AutoFillEntity {
     @ApiModelProperty(value = "简介")
     private String info;
 
+    @ApiModelProperty(value = "排序权重")
+    private Integer sortNum;
+
 }
