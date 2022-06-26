@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.MaterialRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.hzb.erp.common.entity.MaterialRecord">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="material_id" column="material_id" jdbcType="BIGINT"/>
+            <result property="amount" column="amount" jdbcType="INTEGER"/>
+            <result property="reason" column="reason" jdbcType="VARCHAR"/>
+            <result property="change_type" column="change_type" jdbcType="TINYINT"/>
+            <result property="change_target_id" column="change_target_id" jdbcType="BIGINT"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="creator" column="creator" jdbcType="BIGINT"/>
+            <result property="editor" column="editor" jdbcType="BIGINT"/>
+            <result property="add_time" column="add_time" jdbcType="TIMESTAMP"/>
+            <result property="edit_time" column="edit_time" jdbcType="TIMESTAMP"/>
+            <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,material_id,amount,
+        reason,change_type,change_target_id,
+        remark,creator,editor,
+        add_time,edit_time,deleted
+    </sql>
+</mapper>

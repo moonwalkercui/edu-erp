@@ -1,5 +1,11 @@
 -- 该文档针对老版本用户
 
+--
+
+ALTER TABLE `student` ADD COLUMN `credit` bigint(20) NULL COMMENT '学生积分';
+ALTER TABLE `course_comment` ADD COLUMN `order_id` bigint(20) NULL COMMENT '订单id';
+ALTER TABLE `subject` ADD COLUMN `sort_num` int(11) NULL COMMENT '排序值';
+
 -- 增量变动20220429  更新预约记录表和信息表，需要直接替换表
 DROP TABLE IF EXISTS `appointment`;
 CREATE TABLE `appointment`  (

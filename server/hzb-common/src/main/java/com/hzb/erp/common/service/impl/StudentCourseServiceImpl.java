@@ -187,10 +187,12 @@ public class StudentCourseServiceImpl extends ServiceImpl<StudentCourseMapper, S
 
     @Override
     public List<StudentCourse> getWarningList() {
+        // 剩余多少需要预警
         Integer warningCount = settingService.intValue(SettingNameEnum.LESSON_COUNT_LESS_WARNING_COUNT.getCode());
         if (warningCount == null || warningCount <= 0) {
             return null;
         }
+        // 预警次数够的
         Integer warningTimes = settingService.intValue(SettingNameEnum.LESSON_COUNT_LESS_WARNING_TIMES.getCode());
         if (warningTimes == null || warningTimes <= 0) {
             warningTimes = 0;

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.common.mapper.CreditExchangeMapper">
+
+    <resultMap id="BaseResultMap" type="com.hzb.erp.common.entity.CreditExchange">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="creator" column="creator" jdbcType="BIGINT"/>
+            <result property="editor" column="editor" jdbcType="BIGINT"/>
+            <result property="add_time" column="add_time" jdbcType="TIMESTAMP"/>
+            <result property="edit_time" column="edit_time" jdbcType="TIMESTAMP"/>
+            <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+            <result property="student_id" column="student_id" jdbcType="BIGINT"/>
+            <result property="user_id" column="user_id" jdbcType="BIGINT"/>
+            <result property="amount" column="amount" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,creator,editor,
+        add_time,edit_time,deleted,
+        student_id,user_id,amount
+    </sql>
+</mapper>

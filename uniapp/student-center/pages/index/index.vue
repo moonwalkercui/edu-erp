@@ -12,7 +12,7 @@
 		</view>
 		
 		<view class="u-margin-30 boder-radius-md" style="overflow: hidden;">
-			<u-grid :col="5">
+			<u-grid :col="4">
 				<u-grid-item v-for="(item,index) in navs" :key="index"
 					@click="handleNav(item.page)">
 					<u-badge :count="item.count"></u-badge>
@@ -159,11 +159,32 @@
 						page: '/pages/center/grade'
 					},
 					{
-						label: "点评",
+						label: "报名记录",
+						icon: "menu_hdbm",
+						color: '#8ad479',
+						count: 0,
+						page: '/pages/center/contract-record'
+					},
+					{
+						label: "点评记录",
 						icon: "tiaodupingjia_1",
 						color: '#ea8c00',
 						count: 0,
 						page: '/pages/lesson/evaluate'
+					},
+					{
+						label: "签到记录",
+						icon: "icon_commone_qiandaomian",
+						color: '#58b0ea',
+						count: 0,
+						page: '/pages/lesson/sign-record'
+					},
+					{
+						label: "积分兑换",
+						icon: "liwulipinjiangpin",
+						color: '#cc60da',
+						count: 0,
+						page: '/pages/credit/index'
 					},
 				],
 			}
