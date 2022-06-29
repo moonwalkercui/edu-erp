@@ -3,6 +3,7 @@ package com.hzb.erp.common.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hzb.erp.common.entity.CreditMall;
 import com.hzb.erp.common.entity.Material;
 import com.hzb.erp.common.mapper.MaterialMapper;
 import com.hzb.erp.common.pojo.dto.MaterialParamDTO;
@@ -11,6 +12,7 @@ import com.hzb.erp.common.service.MaterialService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -38,6 +40,15 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     @Override
     public MaterialVO getInfo(Long id) {
         return baseMapper.getInfo(id);
+    }
+
+    @Override
+    @Nullable
+    public Material getByCreditMall(CreditMall creditMall) {
+        if(creditMall.getMaterialId() == null) {
+            return null;
+        }
+        return baseMapper.selectById(creditMall.getMaterialId());
     }
 
 }

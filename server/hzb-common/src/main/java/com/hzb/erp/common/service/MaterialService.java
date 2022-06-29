@@ -2,6 +2,7 @@ package com.hzb.erp.common.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hzb.erp.common.entity.CreditMall;
 import com.hzb.erp.common.entity.Material;
 import com.hzb.erp.common.pojo.dto.MaterialParamDTO;
 import com.hzb.erp.common.pojo.vo.MaterialVO;
@@ -20,4 +21,9 @@ public interface MaterialService extends IService<Material> {
     Boolean saveOrUpdateByDTO(Material dto);
 
     MaterialVO getInfo(Long id);
+
+    /**
+    * 通过积分礼品获取物料信息
+    * */
+    Material getByCreditMall(CreditMall creditMall);
 }

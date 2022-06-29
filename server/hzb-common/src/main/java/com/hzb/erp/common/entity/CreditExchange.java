@@ -22,11 +22,11 @@ public class CreditExchange extends AutoFillEntity {
 
     @ApiModelProperty(value = "学生id")
     @TableField(value = "student_id")
-    private Long student_id;
+    private Long studentId;
 
     @ApiModelProperty(value = "学生账号id")
     @TableField(value = "user_id")
-    private Long user_id;
+    private Long userId;
 
     @ApiModelProperty(value = "兑换数量")
     @TableField(value = "amount")

@@ -84,6 +84,9 @@ public class StudentVO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate joinDate;
 
+    @ApiModelProperty(value = "当前积分")
+    private Integer credit;
+
     public Boolean getWarning() {
         return countLessonRemaining == null ? null : countLessonRemaining <= 5;
     }

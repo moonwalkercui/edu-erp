@@ -19,13 +19,17 @@ public class CreditMall extends AutoFillEntity {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @ApiModelProperty(value = "所属分校")
+    @TableField(value = "school_id")
+    private Long schoolId;
+
     @ApiModelProperty(value = "物料id")
     @TableField(value = "material_id")
-    private Long material_id;
+    private Long materialId;
 
     @ApiModelProperty(value = "分类id")
     @TableField(value = "category_id")
-    private Long category_id;
+    private Long categoryId;
 
     @ApiModelProperty(value = "礼品名称")
     @TableField(value = "name")
@@ -37,11 +41,11 @@ public class CreditMall extends AutoFillEntity {
 
     @ApiModelProperty(value = "历史兑换数量")
     @TableField(value = "sale_num")
-    private Integer sale_num;
+    private Integer saleNum;
 
     @ApiModelProperty(value = "预览次数")
     @TableField(value = "view_num")
-    private Integer view_num;
+    private Integer viewNum;
 
     @ApiModelProperty(value = "详情内容")
     @TableField(value = "content")

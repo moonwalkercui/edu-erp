@@ -11,9 +11,10 @@
     </sql>
     <select id="getList" resultType="com.hzb.erp.common.pojo.vo.CreditMallVO">
         select t1.*,
-        t2.cover cover, t2.storage
+        t2.cover cover, t2.storage, t3.name school_name
         from credit_mall t1
         left join material t2 on t2.id = t1.material_id
+        left join org t3 on t3.id = t1.school_id
         <where>
             t1.deleted = 0
             <if test="param.name != null and param.name != ''">
@@ -23,7 +24,7 @@
                 AND t1.category_id = #{param.categoryId}
             </if>
             <if test="param.canExchange != null and param.canExchange">
-                AND t1.state = 1 AND t2.storage > 0
+                AND t1.state = 1 And t2.state = 1  AND t2.storage > 0
             </if>
         </where>
         order by t1.id desc

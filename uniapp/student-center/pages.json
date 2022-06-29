@@ -22,6 +22,12 @@
 			}
 		},
 		{
+			"path": "pages/credit/record",
+			"style": {
+				"navigationBarTitleText": "礼品兑换记录"
+			}
+		},
+		{
 			"path": "pages/advertisment/index",
 			"style": {
 				"navigationBarTitleText": "公告列表"

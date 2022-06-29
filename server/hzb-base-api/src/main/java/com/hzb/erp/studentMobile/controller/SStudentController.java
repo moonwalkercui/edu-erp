@@ -67,13 +67,19 @@ public class SStudentController {
     @GetMapping("/info")
     public StudentVO studentInfo(@RequestParam(value = "id", defaultValue = "") Long id) {
         if (id == null) {
-            Student student = StudentAuthService.getCurrentStudent();
-            if (student == null) {
-                return null;
-            }
-            return studentMapper.getBaseInfo(student.getId());
+            return this.currentStudent();
         }
         return studentMapper.getBaseInfoByUid(id, StudentAuthService.getCurrentUserId());
+    }
+
+    @ApiOperation("当前登录学生信息")
+    @GetMapping("/currentStudent")
+    public StudentVO currentStudent() {
+        Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return null;
+        }
+        return studentMapper.getBaseInfo(student.getId());
     }
 
     @ApiOperation("未读数量")

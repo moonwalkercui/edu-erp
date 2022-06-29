@@ -1,7 +1,12 @@
 <template>
 	<view class="u-wrap">
-		<view class="u-search-box">
-			<u-search placeholder="搜索" v-model="keyword" :clearabled="true" :animation="true"></u-search>
+		<view class="u-search-box u-flex">
+			<view class="u-flex-1">
+				<u-search placeholder="搜索" v-model="keyword" :clearabled="true" :animation="true" :show-action="true" @search="handleReq" @custom="handleReq"></u-search>
+			</view>
+			<view class="u-text-right u-font-14 text-primary" style="width: 140rpx;">
+				<text  @click="showRecord()"><u-icon name="gift-fill"></u-icon> 兑换记录</text>
+			</view>
 		</view>
 		<view class="u-menu-wrap">
 			<scroll-view scroll-y scroll-with-animation class="u-tab-view menu-scroll-view" :scroll-top="scrollTop"
@@ -9,6 +14,9 @@
 				<view v-for="(item,index) in goods" :key="index" class="u-tab-item" :class="[current == index ? 'u-tab-item-active' : '']"
 				 @tap.stop="swichMenu(index)">
 					<text class="u-line-1">{{item.category}}</text>
+				</view>
+				<view v-if="goods.length==0" class="u-text-center">
+					<text class="u-line-1">暂无礼品</text>
 				</view>
 			</scroll-view>
 			<scroll-view :scroll-top="scrollRightTop" scroll-y scroll-with-animation class="right-box" @scroll="rightScroll">
@@ -24,6 +32,9 @@
 									<view class="item-menu-text">{{item1.name}}</view>
 									<view class="item-menu-price">{{item1.credit}} 积分</view>
 								</view>
+							</view>
+							<view class="u-padding-30 bg-white" v-if="item.list.length == 0" >
+								<u-empty mode="list" text="礼品被抢光"></u-empty>
 							</view>
 						</view>
 					</view>
@@ -59,18 +70,21 @@
 		},
 		methods: {
 			handleReq() {
-				this.$http.get('sCenter/credit/list', {}, res => {
+				this.$http.get('sCenter/credit/list', {keyword:this.keyword}, res => {
 					if (!this.$common.handleResponseMsg(res)) return;
 					this.goods = res
+					this.keyword = ''
 				})
-			},
-			handleSearch() {
-				
 			},
 			showDetail(item) {
 				uni.setStorageSync("credit-detail", item)
-				uni.redirectTo({
+				uni.navigateTo({
 					url: "/pages/credit/detail"
+				})
+			},
+			showRecord() {
+				uni.navigateTo({
+					url: "/pages/credit/record"
 				})
 			},
 			// 点击左边的栏目切换

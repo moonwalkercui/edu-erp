@@ -27,7 +27,7 @@ public class Material extends AutoFillEntity {
      */
     @ApiModelProperty(value = "所属学校")
     @TableField(value = "school_id")
-    private Long school_id;
+    private Long schoolId;
 
     /**
      * 物料名称
@@ -56,5 +56,9 @@ public class Material extends AutoFillEntity {
     @ApiModelProperty(value = "封面图")
     @TableField(value = "cover")
     private String cover;
+
+    @ApiModelProperty(value = "状态")
+    @TableField(value = "state")
+    private Boolean state;
 
 }

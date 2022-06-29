@@ -31,14 +31,11 @@
 		
 		<view class="u-margin-30 bg-white boder-radius-md" style="overflow: hidden;z-index: 100;">
 			<u-cell-group title="">
-				<u-cell-item title="学生姓名" :arrow="false">
-					<text class="text-black"> {{studentInfo.name}}
-						<u-icon class="u-m-l-10" name="woman" color="#ff557f" size="28" v-if="studentInfo.gender == '女'"></u-icon>
-						<u-icon class="u-m-l-10" name="man" color="#2979ff" size="28" v-if="studentInfo.gender == '男'"></u-icon>
-					</text>
+				<u-cell-item title="领取人与积分" :arrow="false">
+					<text class="text-black u-m-r-20"> {{studentInfo.name}} </text> 剩余<text class="text-black">{{mycredit}}</text>
 				</u-cell-item>
-				<u-cell-item title="我的积分" :arrow="false">
-					剩余<text class="text-black">{{mycredit}}</text>
+				<u-cell-item title="取货门店" :arrow="false">
+					<text class="text-black">{{info.schoolName}}</text>
 				</u-cell-item>
 				<u-cell-item title="取货方式" :arrow="false">
 					<text class="text-black">门店自取</text>
@@ -73,8 +70,9 @@
 		data() {
 			return {
 				disabled: false,
-				mycredit: 100,
+				mycredit: 0,
 				help: '',
+				studentInfo: {},
 				info: {},
 				order: {
 					id: '',
@@ -89,12 +87,19 @@
 		},
 		onLoad() {
 			this.info = uni.getStorageSync("credit-detail")
-			this.studentInfo = uni.getStorageSync("current-student-info")
 			this.order.id = this.info.id
-			this.valChange({value: 1})
+			this.getStudentInfo()
 			this.systemSetting()
 		},
 		methods: {
+			getStudentInfo() {
+				this.$http.get('sCenter/student/currentStudent',{}, res => {
+					if(!this.$common.handleResponseMsg(res)) return;
+					this.studentInfo = res
+					this.mycredit = res.credit
+					this.valChange({value: 1})
+				})
+			},
 			systemSetting() {
 				this.$common.systemSettings(['credit_mall_help']).then(res => {
 					this.help = res.credit_mall_help
@@ -109,7 +114,22 @@
 				}
 			},
 			handelConfirm() {
-				console.log(this.order)
+				if(this.order.num <= 0) {
+					this.$common.showMsg("数量有误")
+					return;
+				}
+				this.$common.showAlert("确认提示", `确认花费积分兑换该礼品？`, () => {
+					this.$http.post('sCenter/credit/exchange', this.order, res => {
+						if (!this.$common.handleResponseMsg(res)) return;
+						if (res.errCode == 0) {
+							this.$common.showMsg(res.msg, () => {
+								uni.switchTab({
+									url: "/pages/index/index"
+								})
+							})
+						}
+					})
+				})
 			},
 			clickLeft() {
 				uni.redirectTo({
