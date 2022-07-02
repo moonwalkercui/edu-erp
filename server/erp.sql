@@ -11,7 +11,7 @@
  Target Server Version : 50650
  File Encoding         : 65001
 
- Date: 02/07/2022 15:38:35
+ Date: 02/07/2022 15:44:14
 */
 
 SET NAMES utf8mb4;
@@ -5172,11 +5172,11 @@ INSERT INTO `setting_option` VALUES (15, 1, '每天上课次数预警时间', 'l
 INSERT INTO `setting_option` VALUES (16, 1, '学员预约后自动入课', 'auto_join_lesson_by_appointment', 'true', 'bool', '管理端可以取消预约', 0);
 INSERT INTO `setting_option` VALUES (19, 3, '验证码短信模板ID', 'sms_code_template', 'SMS_223835183', 'str', NULL, 0);
 INSERT INTO `setting_option` VALUES (22, 1, '体验卡使用规则说明', 'course_trial_help', '领取体验卡后可以到课时表里预约课程', 'str', NULL, 0);
-INSERT INTO `setting_option` VALUES (23, 4, '微信支付商户号', 'wx_pay_mchid', NULL, 'str', NULL, 0);
-INSERT INTO `setting_option` VALUES (24, 4, '微信支付商户密钥', 'wx_pay_mchkey', NULL, 'str', NULL, 0);
-INSERT INTO `setting_option` VALUES (25, 4, '服务商模式子商户公众账号ID', 'wx_pay_subappid', NULL, 'str', NULL, 0);
-INSERT INTO `setting_option` VALUES (26, 4, '服务商模式子商户号', 'wx_pay_submchid', NULL, 'str', NULL, 0);
-INSERT INTO `setting_option` VALUES (27, 4, 'apiclient_cert.p12文件的绝对路径', 'wx_pay_keypath', NULL, 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (23, 4, '微信支付商户号', 'wx_pay_mchid', '1', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (24, 4, '微信支付商户密钥', 'wx_pay_mchkey', '1', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (25, 4, '服务商模式子商户公众账号ID', 'wx_pay_subappid', '1', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (26, 4, '服务商模式子商户号', 'wx_pay_submchid', '1', 'str', NULL, 0);
+INSERT INTO `setting_option` VALUES (27, 4, 'apiclient_cert.p12文件的绝对路径', 'wx_pay_keypath', '1', 'str', NULL, 0);
 INSERT INTO `setting_option` VALUES (28, 1, '新订单默认提醒账号', 'order_notice_mobile', '学员在线购课后，若无顾问则通知该账号。', 'str', NULL, 0);
 INSERT INTO `setting_option` VALUES (29, 1, '在线支付后可申请退款的小时数(0表示不限制)', 'order_refund_limit_hour', '24', 'int', '在线支付后可申请退款的小时数(0表示不限制)', 0);
 
@@ -5648,16 +5648,6 @@ CREATE TABLE `sys_role`  (
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES (1, '超级管理员', 'superadmin');
-INSERT INTO `sys_role` VALUES (11, '行政', 'xingzheng');
-INSERT INTO `sys_role` VALUES (12, '1', '1');
-INSERT INTO `sys_role` VALUES (13, '导师', 'DD');
-INSERT INTO `sys_role` VALUES (14, '校长', 'xiaozhang');
-INSERT INTO `sys_role` VALUES (15, 'bai1111', '12345');
-INSERT INTO `sys_role` VALUES (16, '唐山市天', 'test');
-INSERT INTO `sys_role` VALUES (18, 'aaa', 'sss');
-INSERT INTO `sys_role` VALUES (19, 'jcx', 'ji');
-INSERT INTO `sys_role` VALUES (20, '111', 'CVBS');
-INSERT INTO `sys_role` VALUES (21, '123', '111');
 
 -- ----------------------------
 -- Table structure for sys_role_permission
