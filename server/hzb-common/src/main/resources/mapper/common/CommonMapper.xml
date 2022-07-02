@@ -17,6 +17,9 @@
         <if test='code == "role"'>
             SELECT t1.id, t1.name as label FROM sys_role t1
         </if>
+        <if test='code == "school"'>
+            SELECT t1.id, t1.name as label FROM org t1 where `level` = 2 and t1.deleted = 0 order by t1.id desc
+        </if>
     </select>
 
     <select id="loadSelectorLabel" resultType="java.lang.String">
@@ -46,11 +49,14 @@
             <when test='code == "lesson"'>
                 group_concat(t1.title) from `lesson` t1
             </when>
-            <when test='code == "org"'>
+            <when test='code == "org" or code == "school"'>
                 group_concat(t1.name) from org t1
             </when>
             <when test='code == "wxaccess"'>
                 group_concat(t1.nickname) from wx_access t1
+            </when>
+            <when test='code == "material"'>
+                group_concat(t1.name) from material t1
             </when>
             <otherwise>
             </otherwise>

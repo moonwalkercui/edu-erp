@@ -90,8 +90,12 @@
 			this.order.id = this.info.id
 			this.getStudentInfo()
 			this.systemSetting()
+			this.addViewNum(this.order.id)
 		},
 		methods: {
+			addViewNum(id) {
+				this.$http.post(`sCenter/student/addViewNum/${id}`)
+			},
 			getStudentInfo() {
 				this.$http.get('sCenter/student/currentStudent',{}, res => {
 					if(!this.$common.handleResponseMsg(res)) return;

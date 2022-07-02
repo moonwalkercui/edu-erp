@@ -15,4 +15,9 @@ public interface DictItemService extends IService<DictItem> {
      * 不存在则插入
      */
     void inexistThenInsert(String code, String name);
+
+    /**
+    * 获取名字
+    * */
+    String getNameById(Long id);
 }

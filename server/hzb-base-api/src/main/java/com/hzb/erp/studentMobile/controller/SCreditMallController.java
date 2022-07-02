@@ -34,6 +34,12 @@ public class SCreditMallController {
         return creditMallService.getAll(keyword);
     }
 
+    @ApiOperation("积分礼品列表")
+    @PostMapping("/addViewNum/{id}")
+    public int list(@PathVariable(value = "id") Long id) {
+        return creditMallService.addViewNum(id);
+    }
+
     @ApiOperation("兑换礼品")
     @PostMapping("/exchange")
     @Log(description = "兑换礼品", type = "学生端", isStaff = false)

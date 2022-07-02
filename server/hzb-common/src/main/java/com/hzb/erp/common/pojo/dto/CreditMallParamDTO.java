@@ -9,4 +9,6 @@ public class CreditMallParamDTO extends PaginateDTO {
     private Long categoryId;
     @ApiModelProperty(value = "是否只显示可兑换的")
     private Boolean canExchange;
+    private String stateText;
+    private Integer state;
 }

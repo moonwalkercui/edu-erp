@@ -68,6 +68,17 @@ public class EnumTools {
     }
 
     /**
+     * 通过dist找enum的code
+     */
+    public static <T extends BaseEnum> Integer getCodeByDist(String dist, Class<T> enumClass) {
+        if(StringUtils.isBlank(dist)) {
+            return null;
+        }
+        BaseEnum target = getByDist(dist, enumClass);
+        return target == null ? null : target.getCode();
+    }
+
+    /**
      * 通过code找enum
      */
     public static <T extends BaseEnum> T getByCode(int code, Class<T> enumClass) {

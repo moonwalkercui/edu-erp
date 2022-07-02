@@ -26,6 +26,9 @@
             <if test="param.canExchange != null and param.canExchange">
                 AND t1.state = 1 And t2.state = 1  AND t2.storage > 0
             </if>
+            <if test="param.state != null">
+                AND t1.state = #{param.state}
+            </if>
         </where>
         order by t1.id desc
     </select>

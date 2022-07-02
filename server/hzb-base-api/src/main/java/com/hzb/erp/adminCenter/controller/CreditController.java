@@ -1,16 +1,14 @@
 package com.hzb.erp.adminCenter.controller;
 
-
-import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.base.annotation.PreventMultiSubmit;
-import com.hzb.erp.common.pojo.dto.ClassParamDTO;
+import com.hzb.erp.common.entity.CreditMall;
+import com.hzb.erp.common.enums.SwitchEnum;
 import com.hzb.erp.common.pojo.dto.ClassSaveDTO;
-import com.hzb.erp.common.pojo.dto.StudentParamDTO;
-import com.hzb.erp.common.pojo.vo.ClassVO;
+import com.hzb.erp.common.pojo.dto.CreditMallParamDTO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
-import com.hzb.erp.common.service.ClassStudentService;
 import com.hzb.erp.common.service.ClazzService;
+import com.hzb.erp.common.service.CreditMallService;
 import com.hzb.erp.common.service.StudentService;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
@@ -32,68 +30,65 @@ import java.util.List;
  * @author 541720500@qq.com
  */
 @RestController
-@RequestMapping("/common/credit")
+@RequestMapping("/common/creditMall")
 @Api(value = "积分商城", tags = "积分商城")
 public class CreditController {
+
+    @Autowired
+    private CreditMallService creditMallService;
+
     @Autowired
     private ClazzService clazzService;
 
-    @Autowired
-    private StudentService studentService;
-
-    @ApiOperation("积分商城礼品列表")
+    @ApiOperation("积分商城积分礼品列表")
     @GetMapping("/gifts")
-    public PaginationVO gifts(ClassParamDTO param) {
-        return JsonResponseUtil.paginate(clazzService.getList(param));
+    public PaginationVO gifts(CreditMallParamDTO param) {
+        return JsonResponseUtil.paginate(creditMallService.getList(param));
     }
 
-    @ApiOperation("创建和修改班级")
-    @Log(description = "创建和修改班级", type = "班级管理")
+    @ApiOperation("创建和修改积分礼品")
+    @Log(description = "创建和修改积分礼品", type = "积分礼品管理")
     @PostMapping("/save")
     @PreventMultiSubmit
-    public JsonResponse save(@Valid @RequestBody ClassSaveDTO classSaveDTO, BindingResult result) {
+    public JsonResponse save(@Valid @RequestBody CreditMall saveDTO, BindingResult result) {
         CommonUtil.handleValidMessage(result);
-        if (clazzService.saveOrUpdateByDTO(classSaveDTO)) {
+        if (creditMallService.saveOrUpdateByDTO(saveDTO)) {
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error("提交失败");
         }
     }
 
-    @ApiOperation("删除班级")
-    @Log(description = "删除班级", type = "班级管理")
+    @ApiOperation("删除积分礼品")
+    @Log(description = "删除积分礼品", type = "积分礼品管理")
     @PostMapping("/delete")
     public JsonResponse delete(@RequestBody List<Long> ids) {
-        if (clazzService.removeByIds(ids)) {
+        if (creditMallService.removeByIds(ids)) {
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error("删除失败");
         }
     }
 
-    @ApiOperation("结业班级")
-    @Log(description = "结业班级")
-    @PostMapping("/over")
-    public JsonResponse over(@RequestBody List<Long> ids) {
-        if (clazzService.over(ids, UserAuthService.getCurrentUserId())) {
+    @ApiOperation("启用积分礼品")
+    @Log(description = "启用积分礼品", type = "积分礼品管理")
+    @PostMapping("/open")
+    public JsonResponse open(@RequestBody List<Long> ids) {
+        if (creditMallService.switchState(ids, SwitchEnum.YES)) {
             return JsonResponseUtil.success();
         } else {
-            return JsonResponseUtil.error("删除失败");
+            return JsonResponseUtil.error("操作失败");
         }
     }
 
-    @ApiOperation("班级学员列表")
-    @GetMapping("/studentList")
-    public PaginationVO studentList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                    @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
-                                    @RequestParam(value = "classId") Long classId,
-                                    @RequestParam(value = "keyword", defaultValue = "") String keyword) {
-        StudentParamDTO param = new StudentParamDTO();
-        param.setPage(page);
-        param.setPageSize(pageSize);
-        param.setKeyword(keyword);
-        param.setClassId(classId);
-        return JsonResponseUtil.paginate(studentService.getListByClassId(param));
+    @ApiOperation("禁用积分礼品")
+    @Log(description = "禁用积分礼品", type = "积分礼品管理")
+    @PostMapping("/close")
+    public JsonResponse close(@RequestBody List<Long> ids) {
+        if (creditMallService.switchState(ids, SwitchEnum.NO)) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
     }
-
 }

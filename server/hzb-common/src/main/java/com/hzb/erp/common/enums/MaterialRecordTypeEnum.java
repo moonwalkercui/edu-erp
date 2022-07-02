@@ -14,7 +14,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum MaterialRecordTypeEnum implements BaseEnum {
-    CREDIT_MALL(1, "积分商城兑换礼品");
+    IN(1, "入库"),
+    OUT(2, "出库"),
+    CREDIT_MALL(3, "积分商城兑换礼品");
 
     @EnumValue
     private final int code;

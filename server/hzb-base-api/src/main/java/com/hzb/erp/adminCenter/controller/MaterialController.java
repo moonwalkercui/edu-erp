@@ -1,11 +1,17 @@
 package com.hzb.erp.adminCenter.controller;
 
+import com.aliyuncs.utils.AuthUtils;
 import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.base.annotation.PreventMultiSubmit;
+import com.hzb.erp.common.entity.CreditMall;
 import com.hzb.erp.common.entity.Material;
+import com.hzb.erp.common.enums.SwitchEnum;
 import com.hzb.erp.common.pojo.dto.MaterialParamDTO;
+import com.hzb.erp.common.pojo.dto.MaterialStorageDTO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
 import com.hzb.erp.common.service.MaterialService;
+import com.hzb.erp.security.Util.JwtUserDetails;
+import com.hzb.erp.security.Util.UserAuthUtil;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
@@ -35,13 +41,7 @@ public class MaterialController {
 
     @ApiOperation("物料列表")
     @GetMapping("/list")
-    public PaginationVO list(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                             @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
-                             @RequestParam(value = "name", defaultValue = "") String name) {
-        MaterialParamDTO param = new MaterialParamDTO();
-        param.setPage(page);
-        param.setPageSize(pageSize);
-        param.setName(name);
+    public PaginationVO list(MaterialParamDTO param) {
         return JsonResponseUtil.paginate(materialService.getList(param));
     }
 
@@ -66,6 +66,54 @@ public class MaterialController {
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error("删除失败");
+        }
+    }
+
+    @ApiOperation("启用物料")
+    @Log(description = "启用物料", type = "物料管理")
+    @PostMapping("/open")
+    public JsonResponse open(@RequestBody List<Long> ids) {
+        if (materialService.switchState(ids, SwitchEnum.YES)) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+    @ApiOperation("禁用物料")
+    @Log(description = "禁用物料", type = "物料管理")
+    @PostMapping("/close")
+    public JsonResponse close(@RequestBody List<Long> ids) {
+        if (materialService.switchState(ids, SwitchEnum.NO)) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+    @ApiOperation("物料入库")
+    @Log(description = "物料入库", type = "物料管理")
+    @PostMapping("/handleIn")
+    public JsonResponse handleIn(@Valid @RequestBody MaterialStorageDTO dto, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
+        dto.setInStorage(true);
+        if (materialService.handleStorage(dto)) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+    @ApiOperation("物料出库")
+    @Log(description = "物料出库", type = "物料管理")
+    @PostMapping("/handleOut")
+    public JsonResponse handleOut(@Valid @RequestBody MaterialStorageDTO dto, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
+        dto.setInStorage(false);
+        if (materialService.handleStorage(dto)) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("操作失败");
         }
     }
 }

@@ -19,4 +19,6 @@ public class MaterialVO extends Material {
     @ApiModelProperty(value = "所属学校")
     private String schoolName;
 
+    @ApiModelProperty(value = "更新人")
+    private String editorName;
 }

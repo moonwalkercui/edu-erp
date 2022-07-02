@@ -5,4 +5,6 @@ import lombok.Data;
 @Data
 public class MaterialParamDTO extends PaginateDTO {
     private String name;
+    private String stateText;
+    private Integer state;
 }
