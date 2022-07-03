@@ -1,0 +1,135 @@
+server:
+  port: 8106
+  servlet:
+    context-path: /app
+
+spring:
+  profiles:
+    active: prod
+  jackson:
+    time-zone: CST
+  application:
+    name: EduErp
+  servlet:
+    multipart:
+      max-request-size: 20MB # 上传文件总的最大值
+      max-file-size: 10MB   # 单个文件的最大值
+  datasource:
+    hikari:
+      max-lifetime: 200000 # 设置为比数据库超时时间小的值，否则会有 Warning: Failed to validate connection
+  redis:
+    jedis:
+      pool:
+        max-active: 200
+        min-idle: 20
+        max-wait: 3000
+  mail:
+    host: smtp.163.com
+    username: hzbit_erp@163.com
+    password: 
+    port: 465
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        debug: true
+    protocol: smtps
+
+#  以下是quartz配置基于数据库的形式存储配置，默认采用内存形式
+#  quartz:
+#    job-store-type: jdbc # Job 存储器类型。默认为 memory 表示内存，可选 jdbc 使用数据库。
+#    jdbc:
+#      initialize-schema: always # always：自动生成数据库表 never：不自动生成表，可以使用sql生成数据库 quartz配置.sql
+#    properties:
+#      org:
+#        quartz:
+#          scheduler:
+#            instanceId: AUTO #默认主机名和时间戳生成实例ID,可以是任何字符串，但对于所有调度程序来说，必须是唯一的 对应qrtz_scheduler_state INSTANCE_NAME字段
+#          jobStore:
+#            class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+#            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate #我们仅为数据库制作了特定于数据库的代理
+#            useProperties: false #以指示JDBCJobStore将JobDataMaps中的所有值都作为字符串，因此可以作为名称 - 值对存储而不是在BLOB列中以其序列化形式存储更多复杂的对象。从长远来看，这是更安全的，因为您避免了将非String类序列化为BLOB的类版本问题。
+#            tablePrefix: qrtz_  #数据库表前缀
+#          threadPool: #连接池
+#            class: org.quartz.simpl.SimpleThreadPool
+#            threadCount: 10
+#            threadPriority: 5
+#            threadsInheritContextClassLoaderOfInitializingThread: true
+
+logging:
+  file:
+    path: ${system.logDir}
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  #    banner: false
+  type-enums-package: com.hzb.erp.common.enums
+  configuration:
+    auto-mapping-behavior: partial
+    map-underscore-to-camel-case: true
+
+system:
+  version: 1.3.0701
+  # 是否是演示demo（会限制关键操作） 生产环境是false！！！
+  isDemo: false
+  # 带http的域名
+  domain:
+  # 静态文件存放目录 即前端站点的存放目录
+  staticDir:
+  # 日志存放目录
+  logDir:
+  # 上传文件夹
+  uploadDir: ${system.staticDir}uploads/
+  # 上传图片最大size 10MB
+  uploadImgMaxSize: 10485760
+  # 上传文件后返回的静态资源src前缀，原来是通过springboot获取${system.domain}/app/static/uploads/，新版本改为通过前端同一目录下获取静态资源
+  uploadFileUrlPrefix: ${system.domain}/uploads/
+  # 刷新token秒数 离token过期前秒数
+  jwtTokenRefreshSec: 14400
+  # token过期秒数
+  jwtExpiredTtlSec: 28800
+  # 跨域域名设置 不设置表示不限域名
+  allowOrigin:
+  #  - ${system.domain}
+  # 配置放行策略 跳过security
+  securityIgnoringMatchers:
+    - /doc.html
+    - /swagger-ui.html
+    - /swagger/**
+    - /v2/api-docs
+    - /v2/api-docs-ext/**
+    - /swagger-resources/**
+    - /favicon.ico
+    - /webjars/**
+    - /common/open/**
+    - /sCenter/open/**
+    - /wx/portal/**
+    - /wx/login/**
+    - /wx/jsapi/**
+    - /wx/pay/**
+  # 黑名单的ip,禁止访问该系统
+  blackList:
+  #  - 127.0
+# 微信配置，可删除，默认数据库读取，如果不设置数据库，可以使用该配置，本配置权重高于数据库
+wxConfig:
+  wxAppId:
+  wxSecret:
+  wxToken:
+  wxAesKey:
+  # 以下是支付相关，不需要支付功能的不用配置
+  # 微信支付商户号
+  wxPayMchId:
+  # 微信支付商户密钥
+  wxPayMchKey:
+  # 服务商模式下的子商户公众账号ID
+  wxPaySubAppId:
+  # 服务商模式下的子商户号
+  wxPaySubMchId:
+  # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）,退款用
+  wxPayKeyPath:

@@ -11,7 +11,7 @@
  Target Server Version : 50650
  File Encoding         : 65001
 
- Date: 02/07/2022 15:44:14
+ Date: 03/07/2022 22:06:50
 */
 
 SET NAMES utf8mb4;
@@ -394,6 +394,62 @@ CREATE TABLE `course_trial_record`  (
 
 -- ----------------------------
 -- Records of course_trial_record
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for credit_exchange
+-- ----------------------------
+DROP TABLE IF EXISTS `credit_exchange`;
+CREATE TABLE `credit_exchange`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `credit_mall_id` bigint(20) UNSIGNED NOT NULL COMMENT '积分商城礼品id',
+  `school_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '学校id',
+  `creator` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  `student_id` bigint(20) UNSIGNED NOT NULL COMMENT '学生id',
+  `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '学生账号id',
+  `num` int(11) NOT NULL COMMENT '兑换数量',
+  `credit` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '花费积分',
+  `verify_state` tinyint(4) NULL DEFAULT 1 COMMENT '审核状态',
+  `verify_staff` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '审核人',
+  `verify_time` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
+  `verify_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审核备注',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '积分商城兑换记录' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of credit_exchange
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for credit_mall
+-- ----------------------------
+DROP TABLE IF EXISTS `credit_mall`;
+CREATE TABLE `credit_mall`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `school_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '所属学校',
+  `material_id` bigint(20) UNSIGNED NOT NULL COMMENT '物料分类',
+  `category_id` bigint(20) UNSIGNED NOT NULL COMMENT '礼品分类ID',
+  `category_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分类名称',
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '礼品名称',
+  `credit` int(11) NULL DEFAULT NULL COMMENT '兑换积分',
+  `state` tinyint(1) NULL DEFAULT 1 COMMENT '是否可以兑换',
+  `sale_num` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '历史兑换数量',
+  `view_num` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '预览次数',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '详情内容',
+  `creator` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '积分商城礼品表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of credit_mall
 -- ----------------------------
 
 -- ----------------------------
@@ -1103,6 +1159,58 @@ CREATE TABLE `lesson_teacher`  (
 
 -- ----------------------------
 -- Records of lesson_teacher
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for material
+-- ----------------------------
+DROP TABLE IF EXISTS `material`;
+CREATE TABLE `material`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `school_id` bigint(20) UNSIGNED NOT NULL COMMENT '所属学校',
+  `category_id` bigint(20) UNSIGNED NOT NULL COMMENT '所属分类ID',
+  `category_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分类名',
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '物料名称',
+  `storage` int(11) NULL DEFAULT 0 COMMENT '库存量',
+  `info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '物料说明',
+  `cover` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '封面图',
+  `creator` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  `state` tinyint(1) NULL DEFAULT 1 COMMENT '启用状态',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '物料表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of material
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for material_record
+-- ----------------------------
+DROP TABLE IF EXISTS `material_record`;
+CREATE TABLE `material_record`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `material_id` bigint(20) UNSIGNED NOT NULL COMMENT '物料ID',
+  `amount` int(11) NULL DEFAULT NULL COMMENT '变动数量',
+  `reason` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '变动原因说明',
+  `change_type` tinyint(4) NULL DEFAULT NULL COMMENT '变动类型1入库2出库3积分商城出库 ',
+  `change_target_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '变动对象id如积分商城里的商品id',
+  `remark` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注信息',
+  `creator` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
+  `editor` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '编辑人',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '变动时间',
+  `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
+  `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
+  `student_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '涉及学生id',
+  `staff_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '涉及员工id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '物料出入库记录' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of material_record
 -- ----------------------------
 
 -- ----------------------------
@@ -5450,6 +5558,28 @@ CREATE TABLE `student_course`  (
 
 -- ----------------------------
 -- Records of student_course
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for student_credit_log
+-- ----------------------------
+DROP TABLE IF EXISTS `student_credit_log`;
+CREATE TABLE `student_credit_log`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `student_id` bigint(20) UNSIGNED NOT NULL COMMENT '学生id',
+  `user_id` bigint(20) NOT NULL COMMENT '学生账号id',
+  `credit` int(11) NOT NULL COMMENT '变动数量',
+  `current_credit` int(11) NULL DEFAULT NULL COMMENT '剩余积分数量',
+  `change_type` tinyint(4) NULL DEFAULT NULL COMMENT '变动类型',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '变动时间',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '其他说明',
+  `source_id` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '记录来源id',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `student_id`(`student_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '学生积分变动记录' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of student_credit_log
 -- ----------------------------
 
 -- ----------------------------
