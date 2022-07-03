@@ -4,7 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.CreditMall;
 import com.hzb.erp.common.enums.SwitchEnum;
-import com.hzb.erp.common.pojo.dto.CreditExchangeParamDTO;
+import com.hzb.erp.common.pojo.dto.AuditParamDTO;
+import com.hzb.erp.common.pojo.dto.CreditExchangeDTO;
 import com.hzb.erp.common.pojo.dto.CreditMallParamDTO;
 import com.hzb.erp.common.pojo.vo.CreditMallVO;
 
@@ -43,7 +44,7 @@ public interface CreditMallService extends IService<CreditMall> {
     /**
      * 兑换
      * */
-    boolean exchange(CreditExchangeParamDTO dto);
+    boolean exchange(CreditExchangeDTO dto);
 
     /**
     * 启用 停用

@@ -2,9 +2,8 @@ package com.hzb.erp.studentMobile.controller;
 
 import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.common.entity.Student;
-import com.hzb.erp.common.pojo.dto.CreditExchangeParamDTO;
+import com.hzb.erp.common.pojo.dto.CreditExchangeDTO;
 import com.hzb.erp.common.service.CreditMallService;
-import com.hzb.erp.studentMobile.pojo.dto.ChangePasswordFormDTO;
 import com.hzb.erp.studentMobile.service.StudentAuthService;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
@@ -44,7 +43,7 @@ public class SCreditMallController {
     @PostMapping("/exchange")
     @Log(description = "兑换礼品", type = "学生端", isStaff = false)
     @ResponseBody
-    public JsonResponse exchange(@Valid @RequestBody CreditExchangeParamDTO dto, BindingResult result) {
+    public JsonResponse exchange(@Valid @RequestBody CreditExchangeDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);
         Student student = StudentAuthService.getCurrentStudent();
         if(student == null) {

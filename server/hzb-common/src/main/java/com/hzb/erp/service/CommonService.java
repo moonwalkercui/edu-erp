@@ -44,7 +44,9 @@ public class CommonService {
                 DateRangeNameEnum.class,
                 OrderStateEnum.class,
                 OrderRefundStateEnum.class,
-                VerifyStateEnum.class
+                VerifyStateEnum.class,
+                StudentCreditChangeTypeEnum.class,
+                MaterialRecordTypeEnum.class
         );
         Map<String, Map<Object, String>> list = new HashMap<>();
         for (Class<? extends BaseEnum> item : enumList) {

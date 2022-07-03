@@ -7,8 +7,11 @@ import com.hzb.erp.common.entity.CreditMall;
 import com.hzb.erp.common.entity.Material;
 import com.hzb.erp.common.enums.SwitchEnum;
 import com.hzb.erp.common.pojo.dto.MaterialParamDTO;
+import com.hzb.erp.common.pojo.dto.MaterialRecordParamDTO;
 import com.hzb.erp.common.pojo.dto.MaterialStorageDTO;
+import com.hzb.erp.common.pojo.dto.StudentCreditLogParamDTO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
+import com.hzb.erp.common.service.MaterialRecordService;
 import com.hzb.erp.common.service.MaterialService;
 import com.hzb.erp.security.Util.JwtUserDetails;
 import com.hzb.erp.security.Util.UserAuthUtil;
@@ -38,6 +41,9 @@ public class MaterialController {
 
     @Autowired
     private MaterialService materialService;
+
+    @Autowired
+    private MaterialRecordService materialRecordService;
 
     @ApiOperation("物料列表")
     @GetMapping("/list")
@@ -116,4 +122,11 @@ public class MaterialController {
             return JsonResponseUtil.error("操作失败");
         }
     }
+
+    @ApiOperation("出入库记录")
+    @GetMapping("/storageRecord")
+    public PaginationVO creditLog(MaterialRecordParamDTO param) {
+        return JsonResponseUtil.paginate(materialRecordService.getList(param));
+    }
+
 }

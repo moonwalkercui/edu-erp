@@ -2,24 +2,19 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzb.erp.common.mapper.MaterialRecordMapper">
+<mapper namespace="com.hzb.erp.common.mapper.StudentCreditLogMapper">
 
-    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.MaterialRecordVO">
-        select t1.*, t2.name staff_name,
-        t3.name as student_name, t4.name as material_name
-        from material_record t1
-        left join material t4 on t4.id = t1.material_id
-        left join staff t2 on t2.id = t1.staff_id
-        left join student t3 on t3.id = t1.student_id
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.StudentCreditLogVO">
+        select t1.*
+        , t2.name student_name
+        from student_credit_log t1
+        left join student t2 on t1.student_id = t2.id
         <where>
-            <if test="param.materialId != null">
-                AND t1.material_id = #{param.materialId}
-            </if>
             <if test="param.studentId != null">
                 AND t1.student_id = #{param.studentId}
             </if>
-            <if test="param.staffId != null">
-                AND t1.staff_id = #{param.staffId}
+            <if test="param.mobile != null and param.mobile != ''">
+                AND t1.user_id = (select id from user where mobile = #{param.mobile})
             </if>
             <if test="param.changeType != null">
                 AND t1.change_type = #{param.changeType}

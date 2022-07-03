@@ -1,27 +1,23 @@
 package com.hzb.erp.common.service.impl;
 
-import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.EnumUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.*;
 import com.hzb.erp.common.enums.MaterialRecordTypeEnum;
+import com.hzb.erp.common.enums.StudentCreditChangeTypeEnum;
 import com.hzb.erp.common.enums.SwitchEnum;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.CreditExchangeMapper;
 import com.hzb.erp.common.mapper.CreditMallMapper;
 import com.hzb.erp.common.mapper.MaterialRecordMapper;
-import com.hzb.erp.common.pojo.dto.CreditExchangeParamDTO;
+import com.hzb.erp.common.pojo.dto.AuditParamDTO;
+import com.hzb.erp.common.pojo.dto.CreditExchangeDTO;
 import com.hzb.erp.common.pojo.dto.CreditMallParamDTO;
 import com.hzb.erp.common.pojo.vo.CreditMallVO;
-import com.hzb.erp.common.service.CreditMallService;
-import com.hzb.erp.common.service.DictItemService;
-import com.hzb.erp.common.service.DictService;
-import com.hzb.erp.common.service.MaterialService;
+import com.hzb.erp.common.service.*;
 import com.hzb.erp.service.enums.DictCodeEnum;
 import com.hzb.erp.utils.EnumTools;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +44,9 @@ public class CreditMallServiceImpl extends ServiceImpl<CreditMallMapper, CreditM
 
     @Autowired
     private MaterialService materialService;
+
+    @Autowired
+    private StudentService studentService;
 
     @Resource
     private CreditExchangeMapper creditExchangeMapper;
@@ -107,7 +106,7 @@ public class CreditMallServiceImpl extends ServiceImpl<CreditMallMapper, CreditM
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean exchange(CreditExchangeParamDTO dto) {
+    public boolean exchange(CreditExchangeDTO dto) {
 
         CreditMall creditMall = this.baseMapper.selectById(dto.getId());
         Material material = materialService.getByCreditMall(creditMall);
@@ -121,11 +120,29 @@ public class CreditMallServiceImpl extends ServiceImpl<CreditMallMapper, CreditM
             throw new BizException("库存不足");
         }
 
+        int credit = creditMall.getCredit() * dto.getNum();
+
+        Student student = studentService.getById(dto.getStudentId());
+        if(credit > student.getCredit()) {
+            throw new BizException("学生积分不足");
+        }
+
+        // 减少学生积分
+        StudentCreditLog creditLog = new StudentCreditLog();
+        creditLog.setStudentId(dto.getStudentId());
+        creditLog.setCredit(credit);
+        creditLog.setChangeType(StudentCreditChangeTypeEnum.CREDIT_EXCHANGE);
+        creditLog.setSourceId(dto.getId());
+        creditLog.setRemark("兑换礼品:"+creditMall.getName() + ",数量" + dto.getNum());
+        studentService.decCredit(creditLog);
+
         // 兑换记录
         CreditExchange exchangeData = new CreditExchange();
         exchangeData.setStudentId(dto.getStudentId());
         exchangeData.setUserId(dto.getUserId());
-        exchangeData.setAmount(dto.getNum());
+        exchangeData.setSchoolId(creditMall.getSchoolId());
+        exchangeData.setNum(dto.getNum());
+        exchangeData.setCredit(credit);
         int res = creditExchangeMapper.insert(exchangeData);
 
         // 减少库存

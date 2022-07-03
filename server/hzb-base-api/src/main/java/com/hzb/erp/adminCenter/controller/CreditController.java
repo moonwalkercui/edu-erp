@@ -1,15 +1,16 @@
 package com.hzb.erp.adminCenter.controller;
 
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.entity.CreditMall;
 import com.hzb.erp.common.enums.SwitchEnum;
-import com.hzb.erp.common.pojo.dto.ClassSaveDTO;
+import com.hzb.erp.common.pojo.dto.AuditParamDTO;
+import com.hzb.erp.common.pojo.dto.CreditExchangeParamDTO;
 import com.hzb.erp.common.pojo.dto.CreditMallParamDTO;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
-import com.hzb.erp.common.service.ClazzService;
+import com.hzb.erp.common.service.CreditExchangeService;
 import com.hzb.erp.common.service.CreditMallService;
-import com.hzb.erp.common.service.StudentService;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
@@ -38,7 +39,7 @@ public class CreditController {
     private CreditMallService creditMallService;
 
     @Autowired
-    private ClazzService clazzService;
+    private CreditExchangeService creditExchangeService;
 
     @ApiOperation("积分商城积分礼品列表")
     @GetMapping("/gifts")
@@ -89,6 +90,26 @@ public class CreditController {
             return JsonResponseUtil.success();
         } else {
             return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+    @ApiOperation("积分礼品兑换记录")
+    @GetMapping("/exchangeLog")
+    public PaginationVO exchangeLog(CreditExchangeParamDTO param) {
+        return JsonResponseUtil.paginate(creditExchangeService.getList(param));
+    }
+
+    @ApiOperation("积分兑换礼品审核")
+    @Log(description = "积分兑换礼品审核", type = "积分礼品管理")
+    @PostMapping("/exchangeAudit")
+    @PreventMultiSubmit
+    public JsonResponse exchangeAudit(@Valid @RequestBody AuditParamDTO auditDTO, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
+        auditDTO.setStaffId(UserAuthService.getCurrentUserId());
+        if (creditExchangeService.exchangeAudit(auditDTO)) {
+            return JsonResponseUtil.success();
+        } else {
+            return JsonResponseUtil.error("审核失败");
         }
     }
 }

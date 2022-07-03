@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.StaffOrginfo;
 import com.hzb.erp.common.entity.Student;
+import com.hzb.erp.common.entity.StudentCreditLog;
 import com.hzb.erp.common.entity.User;
 import com.hzb.erp.common.enums.StudentStageEnum;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.StaffOrginfoMapper;
+import com.hzb.erp.common.mapper.StudentCreditLogMapper;
 import com.hzb.erp.common.mapper.StudentMapper;
 import com.hzb.erp.common.pojo.dto.ParentInfoSaveDTO;
 import com.hzb.erp.common.pojo.dto.StudentBaseInfoDTO;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,6 +50,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Autowired
     private StaffOrginfoMapper staffOrginfoMapper;
+
+    @Resource
+    private StudentCreditLogMapper studentCreditLogMapper;
 
     @Autowired
     @Lazy
@@ -263,5 +269,41 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         student.setSchoolId(staffOrginfo.getComId());
 
         return updateById(student);
+    }
+
+    @Override
+    public boolean incCredit(StudentCreditLog creditLog) {
+        if(creditLog.getCredit() == null) {
+            throw new BizException("缺少变动积分参数");
+        }
+        if(creditLog.getCredit() < 1) {
+            throw new BizException("变动积分不能小于1");
+        }
+        this.handleChange(creditLog);
+        return true;
+    }
+
+    @Override
+    public boolean decCredit(StudentCreditLog creditLog) {
+        if(creditLog.getCredit() == null) {
+            throw new BizException("缺少变动积分参数");
+        }
+        if(creditLog.getCredit() < 1) {
+            throw new BizException("变动积分不能小于1");
+        }
+        creditLog.setCredit(creditLog.getCredit() * -1);
+        this.handleChange(creditLog);
+        return true;
+    }
+
+    private void handleChange(StudentCreditLog creditLog) {
+        Student student = this.baseMapper.selectById(creditLog.getStudentId());
+        student.setCredit(student.getCredit() + creditLog.getCredit());
+        this.baseMapper.updateById(student);
+        // 增加日志
+        creditLog.setCurrentCredit(student.getCredit());
+        creditLog.setUserId(student.getUserId());
+        creditLog.setAddTime(LocalDateTime.now());
+        studentCreditLogMapper.insert(creditLog);
     }
 }

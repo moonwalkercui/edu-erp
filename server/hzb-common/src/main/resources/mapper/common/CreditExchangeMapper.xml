@@ -3,22 +3,30 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzb.erp.common.mapper.CreditExchangeMapper">
-
-    <resultMap id="BaseResultMap" type="com.hzb.erp.common.entity.CreditExchange">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="creator" column="creator" jdbcType="BIGINT"/>
-            <result property="editor" column="editor" jdbcType="BIGINT"/>
-            <result property="add_time" column="add_time" jdbcType="TIMESTAMP"/>
-            <result property="edit_time" column="edit_time" jdbcType="TIMESTAMP"/>
-            <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
-            <result property="student_id" column="student_id" jdbcType="BIGINT"/>
-            <result property="user_id" column="user_id" jdbcType="BIGINT"/>
-            <result property="amount" column="amount" jdbcType="INTEGER"/>
-    </resultMap>
-
-    <sql id="Base_Column_List">
-        id,creator,editor,
-        add_time,edit_time,deleted,
-        student_id,user_id,amount
-    </sql>
+    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.CreditExchangeVO">
+        select t1.*, t4.name credit_mall_name,
+        t2.name as student_name, t3.mobile, t5.name verify_staff_name, t6.name school_name
+        from credit_exchange t1
+        left join student t2 on t2.id = t1.student_id
+        left join user t3 on t3.id = t1.user_id
+        left join credit_mall t4 on t4.id = t1.credit_mall_id
+        left join staff t5 on t5.id = t1.verify_staff
+        left join org t6 on t6.id = t1.school_id
+        <where>
+            t1.deleted = 0
+            <if test="param.giftName != null and param.giftName != ''">
+                AND t4.name like concat('%', #{param.giftName}, '%')
+            </if>
+            <if test="param.creditMallId != null">
+                AND t4.credit_mall_id = #{param.credit_mall_id}
+            </if>
+            <if test="param.verifyState != null">
+                AND t1.verify_state = #{param.verifyState}
+            </if>
+            <if test="param.startDate != null and param.endDate != null">
+                AND ( date(t1.add_time) &gt;= #{param.startDate} and  date(t1.add_time) &lt;= #{param.endDate} )
+            </if>
+        </where>
+        order by t1.id desc
+    </select>
 </mapper>
