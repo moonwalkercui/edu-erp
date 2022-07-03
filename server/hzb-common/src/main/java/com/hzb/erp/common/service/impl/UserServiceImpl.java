@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.constants.CommonConst;
 import com.hzb.erp.common.entity.User;
+import com.hzb.erp.common.entity.WxAccess;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.UserMapper;
 import com.hzb.erp.common.pojo.dto.StudentParamDTO;
 import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
+import com.hzb.erp.common.pojo.dto.WxAccessBindDTO;
 import com.hzb.erp.common.pojo.vo.UserVO;
 import com.hzb.erp.common.service.UserService;
 import com.hzb.erp.utils.RequestUtil;
@@ -95,6 +97,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public String getWxOpenid(Long id) {
         return baseMapper.getWxOpenid(id);
+    }
+
+    @Override
+    public boolean bindWeixin(WxAccessBindDTO dto) {
+        User bindedUser = getByWxAccessId(dto.getWxAccessId());
+        if(bindedUser!=null) {
+            throw new BizException("该微信已经被其他账号绑定："+bindedUser.getName());
+        }
+        User user = this.baseMapper.selectById(dto.getUserId());
+        if(user == null) {
+            throw new BizException("未知用户");
+        }
+        user.setWxAccessId(dto.getWxAccessId());
+        return this.baseMapper.updateById(user) > 0;
+    }
+
+    @Override
+    public boolean unbindWeixin(Long userId) {
+        User user = this.baseMapper.selectById(userId);
+        user.setWxAccessId(null);
+        return this.baseMapper.updateById(user) > 0;
     }
 
     @Override

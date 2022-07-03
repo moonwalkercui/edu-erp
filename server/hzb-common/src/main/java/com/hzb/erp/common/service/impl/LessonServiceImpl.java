@@ -575,6 +575,10 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
             return;
         }
         for (StudentCourse l : list) {
+            // 增加已提醒次数
+            l.setWarningTimes(l.getWarningTimes() == null ? 1 : l.getWarningTimes() + 1);
+            studentCourseService.updateById(l);
+
             Course course = courseService.getById(l.getCourseId());
             Student student = studentService.getById(l.getStudentId());
             if (student == null) {
@@ -600,10 +604,6 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
             bo.setStudentName(student.getName());
             bo.setContent(staff.getName() + "老师你好，学生" + student.getName() + "的课程《" + course.getName() + "》课时不足，请留意。");
             notificationService.sendToTeacher(NoticeCodeEnum.TEACHER_STUDENT_LESSONLESS, bo, staff);
-
-            // 增加已提醒次数
-            l.setWarningTimes(l.getWarningTimes() == null ? 1 : l.getWarningTimes() + 1);
-            studentCourseService.updateById(l);
         }
     }
 

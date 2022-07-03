@@ -44,4 +44,13 @@ public class DictItemServiceImpl extends ServiceImpl<DictItemMapper, DictItem> i
             save(p);
         }
     }
+
+    @Override
+    public String getNameById(Long id) {
+        DictItem item = this.baseMapper.selectById(id);
+        if(item == null) {
+            return "";
+        }
+        return item.getName();
+    }
 }

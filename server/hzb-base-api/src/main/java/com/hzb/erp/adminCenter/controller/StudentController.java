@@ -1,9 +1,9 @@
 package com.hzb.erp.adminCenter.controller;
 
 
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.base.annotation.PreventMultiSubmit;
-import com.hzb.erp.common.configuration.SystemConfig;
 import com.hzb.erp.common.entity.StaffOrginfo;
 import com.hzb.erp.common.entity.Student;
 import com.hzb.erp.common.entity.User;
@@ -11,21 +11,22 @@ import com.hzb.erp.common.enums.GenderEnum;
 import com.hzb.erp.common.enums.StudentStageEnum;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.StaffOrginfoMapper;
-import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
-import com.hzb.erp.common.pojo.dto.ParentInfoSaveDTO;
-import com.hzb.erp.common.pojo.dto.StudentBaseInfoDTO;
-import com.hzb.erp.common.pojo.dto.StudentParamDTO;
+import com.hzb.erp.common.pojo.dto.*;
 import com.hzb.erp.common.pojo.vo.PaginationVO;
 import com.hzb.erp.common.pojo.vo.StudentVO;
 import com.hzb.erp.common.service.SettingService;
+import com.hzb.erp.common.service.StudentCreditLogService;
 import com.hzb.erp.common.service.StudentService;
 import com.hzb.erp.common.service.UserService;
 import com.hzb.erp.security.Util.SecurityUtils;
 import com.hzb.erp.security.Util.UserAuthUtil;
 import com.hzb.erp.service.ImportExportService;
-import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.service.enums.SettingNameEnum;
-import com.hzb.erp.utils.*;
+import com.hzb.erp.utils.CommonUtil;
+import com.hzb.erp.utils.EnumTools;
+import com.hzb.erp.utils.JsonResponse;
+import com.hzb.erp.utils.JsonResponseUtil;
+import com.hzb.erp.wechat.service.WxAccessService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -72,7 +73,10 @@ public class StudentController {
     private SettingService settingService;
 
     @Autowired
-    private SystemConfig systemConfig;
+    private WxAccessService wxAccessService;
+
+    @Autowired
+    private StudentCreditLogService studentCreditLogService;
 
     @ApiOperation("学员信息")
     @GetMapping("/info")
@@ -280,10 +284,12 @@ public class StudentController {
     public PaginationVO userList(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+            @RequestParam(value = "nickname", defaultValue = "") String nickname,
             @RequestParam(value = "keyword", defaultValue = "") String keyword) {
         StudentParamDTO param = new StudentParamDTO();
         param.setPage(page);
         param.setPageSize(pageSize);
+        param.setNickname(nickname);
         param.setKeyword(keyword);
         return JsonResponseUtil.paginate(userService.getList(param));
     }
@@ -349,5 +355,47 @@ public class StudentController {
         } else {
             return JsonResponseUtil.error();
         }
+    }
+
+    @ApiOperation("微信用户列表")
+    @GetMapping("/wxAccessList")
+    public PaginationVO wxAccessList(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
+            @RequestParam(value = "nickname", defaultValue = "") String nickname) {
+        StudentParamDTO param = new StudentParamDTO();
+        param.setPage(page);
+        param.setPageSize(pageSize);
+        param.setNickname(nickname);
+        return JsonResponseUtil.paginate(wxAccessService.getList(param));
+    }
+
+    @ApiOperation("绑定微信")
+    @Log(description = "绑定微信", type = "学员管理")
+    @PostMapping("/bindWeixin")
+    public JsonResponse bindWeixin(@Valid @RequestBody WxAccessBindDTO dto, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
+        if (userService.bindWeixin(dto)) {
+            return JsonResponseUtil.success("绑定成功");
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+    @ApiOperation("绑定微信")
+    @Log(description = "绑定微信", type = "学员管理")
+    @PostMapping("/unbindWeixin/{userId}")
+    public JsonResponse unbindWeixin(@PathVariable Long userId) {
+        if (userService.unbindWeixin(userId)) {
+            return JsonResponseUtil.success("解绑成功");
+        } else {
+            return JsonResponseUtil.error("操作失败");
+        }
+    }
+
+    @ApiOperation("积分记录")
+    @GetMapping("/creditLog")
+    public PaginationVO creditLog(StudentCreditLogParamDTO param) {
+        return JsonResponseUtil.paginate(studentCreditLogService.getList(param));
     }
 }

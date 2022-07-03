@@ -4,14 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hzb.erp.common.entity.Lesson;
-import com.hzb.erp.common.entity.LessonStudent;
-import com.hzb.erp.common.entity.Student;
-import com.hzb.erp.common.entity.StudentCourse;
-import com.hzb.erp.common.enums.LessonCountChangeStageEnum;
-import com.hzb.erp.common.enums.MessageUserTypeEnum;
-import com.hzb.erp.common.enums.SignStateEnum;
-import com.hzb.erp.common.enums.SignTypeEnum;
+import com.hzb.erp.common.entity.*;
+import com.hzb.erp.common.enums.*;
 import com.hzb.erp.common.exception.BizException;
 import com.hzb.erp.common.mapper.LessonMapper;
 import com.hzb.erp.common.mapper.LessonStudentMapper;
@@ -23,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +40,8 @@ public class LessonStudentServiceImpl extends ServiceImpl<LessonStudentMapper, L
     private StudentLessonCountLogService studentLessonCountLogService;
     @Autowired
     private StudentService studentService;
-    @Autowired
+    @Resource
     private LessonMapper lessonMapper;
-    @Autowired
-    private MessageService messageService;
-    @Autowired
-    private AppointmentService appointmentService;
-
 
     @Override
     public IPage<LessonStudentVO> getList(LessonStudentParamDTO param) {
@@ -89,7 +79,17 @@ public class LessonStudentServiceImpl extends ServiceImpl<LessonStudentMapper, L
         ls.setEvaluation(dto.getEvaluation());
         ls.setEvaluateTime(LocalDateTime.now());
         ls.setEvaluateTeacher(teacherId);
-        return updateById(ls);
+        boolean res = updateById(ls);
+
+        StudentCreditLog creditLog = new StudentCreditLog();
+        creditLog.setStudentId(ls.getStudentId());
+        creditLog.setCredit(dto.getScore());
+        creditLog.setChangeType(StudentCreditChangeTypeEnum.LESSON_EVALUATE);
+        creditLog.setSourceId(ls.getId());
+        studentService.incCredit(creditLog);
+
+        return res;
+
     }
 
     @Override

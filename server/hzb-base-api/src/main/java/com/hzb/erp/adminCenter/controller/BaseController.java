@@ -1,11 +1,11 @@
 package com.hzb.erp.adminCenter.controller;
 
-import com.hzb.erp.service.CommonService;
 import com.hzb.erp.common.entity.Region;
 import com.hzb.erp.common.mapper.CommonMapper;
 import com.hzb.erp.common.mapper.RegionMapper;
 import com.hzb.erp.common.pojo.vo.AutocompleteBuilderVO;
 import com.hzb.erp.common.pojo.vo.SelectBuilderVO;
+import com.hzb.erp.service.CommonService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;

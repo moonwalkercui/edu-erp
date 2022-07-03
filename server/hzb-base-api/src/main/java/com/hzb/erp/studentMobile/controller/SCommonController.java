@@ -3,6 +3,7 @@ package com.hzb.erp.studentMobile.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.common.configuration.SystemConfig;
 import com.hzb.erp.common.entity.*;
 import com.hzb.erp.common.enums.AdvertisementTypeEnum;
@@ -144,7 +145,7 @@ public class SCommonController {
         return helpService.getById(id);
     }
 
-    @ApiOperation("获取当前登录学生信息")
+    @ApiOperation("获取当前登录账号信息")
     @GetMapping("/getCurrentUserInfo")
     @ResponseBody
     public UserVo getCurrentUserInfo() {
@@ -162,6 +163,7 @@ public class SCommonController {
         return currentUser;
     }
 
+    @Log(description = "更新当前登录学生信息", type = "学生端", isStaff = false)
     @ApiOperation("更新当前登录学生信息")
     @PostMapping("/updateUserInfo")
     @ResponseBody
@@ -181,6 +183,7 @@ public class SCommonController {
 
     @ApiOperation("修改密码")
     @PostMapping("/changePw")
+    @Log(description = "修改密码", type = "学生端", isStaff = false)
     @ResponseBody
     public JsonResponse changePw(@Valid @RequestBody ChangePasswordFormDTO dto, BindingResult result) {
         CommonUtil.handleValidMessage(result);

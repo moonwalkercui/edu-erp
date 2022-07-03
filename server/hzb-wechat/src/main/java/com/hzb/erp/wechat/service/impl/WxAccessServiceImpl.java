@@ -1,14 +1,19 @@
 package com.hzb.erp.wechat.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.WxAccess;
 import com.hzb.erp.common.enums.GenderEnum;
 import com.hzb.erp.common.mapper.WxAccessMapper;
+import com.hzb.erp.common.pojo.dto.StudentParamDTO;
+import com.hzb.erp.common.pojo.vo.UserVO;
 import com.hzb.erp.wechat.service.WxAccessService;
 import com.hzb.erp.utils.EnumTools;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -96,6 +101,16 @@ public class WxAccessServiceImpl extends ServiceImpl<WxAccessMapper, WxAccess> i
         user.setUnsubscribe(true);
         user.setUnsubTime(LocalDateTime.now());
         return updateById(user);
+    }
+
+    @Override
+    public IPage<WxAccess> getList(StudentParamDTO param) {
+        QueryWrapper<WxAccess> qw = new QueryWrapper<>();
+        if(StringUtils.isNotBlank(param.getNickname())) {
+            qw.likeRight("nickname", param.getNickname());
+        }
+        IPage<WxAccess> page = new Page<>(param.getPage(), param.getPageSize());
+        return this.baseMapper.selectPage(page, qw);
     }
 
 }

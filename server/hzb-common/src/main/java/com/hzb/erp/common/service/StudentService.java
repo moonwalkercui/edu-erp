@@ -3,6 +3,7 @@ package com.hzb.erp.common.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.Student;
+import com.hzb.erp.common.entity.StudentCreditLog;
 import com.hzb.erp.common.entity.User;
 import com.hzb.erp.common.enums.StudentStageEnum;
 import com.hzb.erp.common.pojo.dto.*;
@@ -71,4 +72,14 @@ public interface StudentService extends IService<Student> {
     boolean changeHeadImg(Long studentId, String img);
 
     boolean changeCounselor(Long studentId, Long staffId);
+
+    /**
+     * 增加积分
+     * */
+    boolean incCredit(StudentCreditLog creditLog);
+
+    /**
+     * 减少积分
+     * */
+    boolean decCredit(StudentCreditLog creditLog);
 }

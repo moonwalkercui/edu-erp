@@ -3,6 +3,7 @@ package com.hzb.erp.adminCenter.controller;
 
 import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.base.annotation.PreventMultiSubmit;
+import com.hzb.erp.common.enums.SwitchEnum;
 import com.hzb.erp.common.enums.VerifyStateEnum;
 import com.hzb.erp.common.mapper.CashoutMapper;
 import com.hzb.erp.common.pojo.dto.CashoutParamDTO;
@@ -93,12 +94,7 @@ public class CashoutController {
         param.setStartDate(startDate);
         param.setEndDate(endDate);
         param.setStaffId(UserAuthService.getCurrentUserId());
-        if (StringUtils.isNotBlank(state)) {
-            VerifyStateEnum stageEnum = EnumTools.getByDist(state, VerifyStateEnum.class);
-            if (stageEnum != null) {
-                param.setVerifyState(stageEnum.getCode());
-            }
-        }
+        param.setVerifyState(EnumTools.getCodeByDist(state, VerifyStateEnum.class));
         return JsonResponseUtil.paginate(cashoutService.getList(param));
     }
 

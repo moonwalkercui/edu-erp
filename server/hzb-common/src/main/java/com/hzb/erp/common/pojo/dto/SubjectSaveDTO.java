@@ -10,4 +10,5 @@ public class SubjectSaveDTO extends PaginateDTO {
     @NotBlank(message = "缺少名称")
     private String name;
     private String info;
+    private Integer sortNum;
 }

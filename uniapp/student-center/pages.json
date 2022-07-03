@@ -10,6 +10,24 @@
 			}
 		},
 		{
+			"path": "pages/credit/index",
+			"style": {
+				"navigationBarTitleText": "积分兑换"
+			}
+		},
+		{
+			"path": "pages/credit/detail",
+			"style": {
+				"navigationBarTitleText": "礼品兑换"
+			}
+		},
+		{
+			"path": "pages/credit/record",
+			"style": {
+				"navigationBarTitleText": "礼品兑换记录"
+			}
+		},
+		{
 			"path": "pages/advertisment/index",
 			"style": {
 				"navigationBarTitleText": "公告列表"

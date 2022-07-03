@@ -114,4 +114,6 @@ public class Student extends AutoFillEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate joinDate;
 
+    @ApiModelProperty(value = "当前积分")
+    private Integer credit;
 }

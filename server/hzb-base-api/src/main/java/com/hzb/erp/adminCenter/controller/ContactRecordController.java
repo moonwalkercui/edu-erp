@@ -1,6 +1,7 @@
 package com.hzb.erp.adminCenter.controller;
 
 
+import com.hzb.erp.adminCenter.service.UserAuthService;
 import com.hzb.erp.base.annotation.Log;
 import com.hzb.erp.base.annotation.PreventMultiSubmit;
 import com.hzb.erp.common.entity.ContactRecord;
@@ -8,12 +9,10 @@ import com.hzb.erp.common.enums.ContactStageEnum;
 import com.hzb.erp.common.pojo.dto.ContactRecordParamDTO;
 import com.hzb.erp.common.pojo.dto.ContactRecordSaveDTO;
 import com.hzb.erp.common.service.ContactRecordService;
-import com.hzb.erp.common.service.StudentService;
 import com.hzb.erp.utils.CommonUtil;
+import com.hzb.erp.utils.EnumTools;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
-import com.hzb.erp.adminCenter.service.UserAuthService;
-import com.hzb.erp.utils.EnumTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -39,8 +38,6 @@ public class ContactRecordController {
 
     @Autowired
     private ContactRecordService contactRecordService;
-    @Autowired
-    private StudentService studentService;
 
     @ApiOperation("联系记录")
     @GetMapping("/list")
