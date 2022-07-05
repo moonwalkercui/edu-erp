@@ -40,9 +40,6 @@
    - base-api-1.0.0.jar 服务端运行包
    - application.yml 服务端配置
    - sql文件
- - uniapp
-   - student-center 家长端  构建部署后用/s/index.html访问
-   - teacher-center 教师端  构建部署后用/t/index.html访问
  - ui
    - 静态前端运行包
    
