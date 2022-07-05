@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.api.pc.lesson.mapper.HomeworkRecordMapper">
+
+    <select id="getList" resultType="com.hzb.erp.api.pc.lesson.pojo.HomeworkRecordVO">
+        select
+        t1.*,
+        t2.name student_name,
+        t3.name comment_teacher_name
+        from homework_record t1
+        left join student t2 on t2.id = t1.student_id
+        left join staff t3 on t3.id = t1.comment_teacher
+        where t1.homework_id = #{param.homeworkId}
+    </select>
+</mapper>

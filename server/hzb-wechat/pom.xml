@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>hzb-wechat</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>hzb-wechat</name>
     <description>wechat service</description>
 
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.hzb.erp</groupId>
             <artifactId>hzb-security</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>

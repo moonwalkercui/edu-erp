@@ -1,8 +1,8 @@
 package com.hzb.erp.security.handler;
 
 import cn.hutool.json.JSONUtil;
-import com.hzb.erp.common.configuration.SystemConfig;
-import com.hzb.erp.common.constants.CommonConst;
+import com.hzb.erp.configuration.SystemConfig;
+import com.hzb.erp.constants.CommonConst;
 import com.hzb.erp.security.Util.JwtUserDetails;
 import com.hzb.erp.security.Util.SecurityUtils;
 import io.jsonwebtoken.Claims;

@@ -4,15 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hzb.erp.common.constants.CommonConst;
+import com.hzb.erp.common.pojo.UserParamDTO;
+import com.hzb.erp.constants.CommonConst;
 import com.hzb.erp.common.entity.User;
-import com.hzb.erp.common.entity.WxAccess;
-import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.exception.BizException;
 import com.hzb.erp.common.mapper.UserMapper;
-import com.hzb.erp.common.pojo.dto.StudentParamDTO;
-import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
-import com.hzb.erp.common.pojo.dto.WxAccessBindDTO;
-import com.hzb.erp.common.pojo.vo.UserVO;
+import com.hzb.erp.common.pojo.ChangePasswordDTO;
+import com.hzb.erp.common.pojo.WxAccessBindDTO;
+import com.hzb.erp.common.pojo.UserVO;
 import com.hzb.erp.common.service.UserService;
 import com.hzb.erp.utils.RequestUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -60,7 +59,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public IPage<UserVO> getList(StudentParamDTO param) {
+    public IPage<UserVO> getList(UserParamDTO param) {
         return baseMapper.getList(new Page<>(param.getPage(), param.getPageSize()), param);
     }
 

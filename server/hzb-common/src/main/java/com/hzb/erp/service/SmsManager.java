@@ -1,7 +1,7 @@
 package com.hzb.erp.service;
 
 
-import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.exception.BizException;
 import com.hzb.erp.service.dto.SmsSendDTO;
 
 /**

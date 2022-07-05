@@ -1,6 +1,6 @@
 package com.hzb.erp.security;
 
-import com.hzb.erp.common.configuration.SystemConfig;
+import com.hzb.erp.configuration.SystemConfig;
 import com.hzb.erp.security.handler.JwtTokenFilter;
 import com.hzb.erp.security.handler.MyLogoutSuccessHandler;
 import com.hzb.erp.security.provider.StaffAuthenticationProvider;
@@ -28,7 +28,6 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
  * description :  Spring Security 配置类

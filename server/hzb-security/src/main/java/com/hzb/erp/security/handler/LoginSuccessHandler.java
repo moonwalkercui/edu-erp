@@ -1,8 +1,8 @@
 package com.hzb.erp.security.handler;
 
 import cn.hutool.json.JSONUtil;
-import com.hzb.erp.common.configuration.SystemConfig;
-import com.hzb.erp.common.constants.CacheNames;
+import com.hzb.erp.configuration.SystemConfig;
+import com.hzb.erp.constants.CacheNames;
 import com.hzb.erp.common.entity.SysLog;
 import com.hzb.erp.common.service.SysLogService;
 import com.hzb.erp.security.Util.JwtUserDetails;

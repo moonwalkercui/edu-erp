@@ -14,7 +14,7 @@
         left join region t5 on t5.id = t1.district
     </sql>
 
-    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.OrgVO">
+    <select id="getList" resultType="com.hzb.erp.common.pojo.OrgVO">
         <include refid="Base_Column"/>
         <where>
             <if test="param.pid != null">
@@ -35,7 +35,7 @@
         order by t1.sort_num desc, t1.id asc
     </select>
 
-    <select id="getInfo" resultType="com.hzb.erp.common.pojo.vo.OrgVO">
+    <select id="getInfo" resultType="com.hzb.erp.common.pojo.OrgVO">
         <include refid="Base_Column"/>
         where t1.id = #{id}
         group by t1.id

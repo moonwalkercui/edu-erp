@@ -62,14 +62,14 @@ logging:
     path: ${system.logDir}
 
 mybatis-plus:
-  mapper-locations: classpath*:/mapper/**/*.xml
+  mapper-locations: classpath*:mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto
       logic-delete-value: 1
       logic-not-delete-value: 0
   #    banner: false
-  type-enums-package: com.hzb.erp.common.enums
+  #type-enums-package: com.hzb.erp.common.enums
   configuration:
     auto-mapping-behavior: partial
     map-underscore-to-camel-case: true

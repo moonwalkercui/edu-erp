@@ -2,7 +2,7 @@ package com.hzb.erp.common.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.DataPermission;
-import com.hzb.erp.common.pojo.dto.DataPermissionSaveDTO;
+import com.hzb.erp.common.pojo.DataPermissionSaveDTO;
 
 import java.util.List;
 

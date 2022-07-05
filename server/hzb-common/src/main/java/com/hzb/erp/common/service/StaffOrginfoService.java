@@ -2,8 +2,8 @@ package com.hzb.erp.common.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.StaffOrginfo;
-import com.hzb.erp.common.pojo.dto.OrgPutinStaffDTO;
-import com.hzb.erp.common.pojo.dto.PositionSetDTO;
+import com.hzb.erp.common.pojo.OrgPutinStaffDTO;
+import com.hzb.erp.common.pojo.PositionSetDTO;
 
 
 /**

@@ -2,6 +2,7 @@ package com.hzb.erp.common.mapper;
 
 import com.hzb.erp.common.entity.Dict;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -10,6 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  *
  * @author Ryan
  */
+@Mapper
 public interface DictMapper extends BaseMapper<Dict> {
 
 }

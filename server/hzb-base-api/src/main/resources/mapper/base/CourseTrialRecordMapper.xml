@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.api.pc.course.mapper.CourseTrialRecordMapper">
+
+    <select id="getList" resultType="com.hzb.erp.api.pc.course.pojo.CourseTrialRecordVO">
+        select t1.id, t1.trial_id,t1.student_id,t1.add_time,t1.lesson_count,t1.expired_date,t3.mobile,
+        t4.title trial_title,
+        t2.name student_name,
+        t5.name course_name
+        from course_trial_record t1
+        left join student t2 on t2.id = t1.student_id
+        left join `user` t3 on t3.id = t1.user_id
+        left join course_trial t4 on t4.id = t1.trial_id
+        left join course t5 on t5.id = t4.course_id
+        <where>
+            <if test="param.trialId != null">
+                AND t1.trial_id = #{param.trialId}
+            </if>
+            <if test="param.studentId != null">
+                AND t1.student_id = #{param.studentId}
+            </if>
+        </where>
+        order by t1.id desc
+    </select>
+
+</mapper>

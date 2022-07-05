@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>hzb-common</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>hzb-common</name>
     <description>common model</description>
     <packaging>jar</packaging>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.0</version>
+            <version>3.5.2</version>
         </dependency>
 
         <dependency>

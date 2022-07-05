@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzb.erp.common.mapper.OperationRecordMapper">
 
-    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.OperationRecordVO">
+    <select id="getList" resultType="com.hzb.erp.common.pojo.OperationRecordVO">
         select t1.*,
             t2.name creator_name,
             t4.name com_name,

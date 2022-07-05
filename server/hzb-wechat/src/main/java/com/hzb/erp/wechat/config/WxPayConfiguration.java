@@ -19,26 +19,26 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 @Slf4j
 public class WxPayConfiguration {
+  private final WechatService wechatService;
 
   @Bean
   @ConditionalOnMissingBean
-  public WxPayService wxService() {
+  public WxPayService wxPayService() {
+    WxPayService service = new WxPayServiceImpl();
+    WxPayConfig payConfig = wechatService.getPayConfig();
 
-    WxPayConfig payConfig = WechatService.getPayConfig();
-
-    log.info("=================微信支付服务参数==============");
+    log.info("微信支付服务参数：");
     log.info(String.valueOf(payConfig));
 
     if(payConfig == null) {
-      throw new RuntimeException("缺少微信支付配置,请检查");
+      // throw new RuntimeException("缺少微信支付配置,请检查");
+      log.warn("缺少微信公众号配置,请检查");
+      return service;
     }
-
     // 可以指定是否使用沙箱环境
     payConfig.setUseSandboxEnv(false);
-
-    WxPayService wxPayService = new WxPayServiceImpl();
-    wxPayService.setConfig(payConfig);
-    return wxPayService;
+    service.setConfig(payConfig);
+    return service;
   }
 
 }

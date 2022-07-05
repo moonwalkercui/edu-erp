@@ -1,7 +1,7 @@
 package com.hzb.erp.common.mapper.rbac;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.hzb.erp.common.constants.CacheNames;
+import com.hzb.erp.constants.CacheNames;
 import com.hzb.erp.common.entity.rbac.SysPermission;
 import com.hzb.erp.common.entity.rbac.SysPermissionDTO;
 import org.apache.ibatis.annotations.Mapper;

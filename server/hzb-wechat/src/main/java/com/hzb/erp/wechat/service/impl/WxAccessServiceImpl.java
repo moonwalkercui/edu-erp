@@ -7,10 +7,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.WxAccess;
 import com.hzb.erp.common.enums.GenderEnum;
 import com.hzb.erp.common.mapper.WxAccessMapper;
-import com.hzb.erp.common.pojo.dto.StudentParamDTO;
-import com.hzb.erp.common.pojo.vo.UserVO;
 import com.hzb.erp.wechat.service.WxAccessService;
 import com.hzb.erp.utils.EnumTools;
+import com.hzb.erp.wechat.service.pojo.WxAccessParamDTO;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.apache.commons.lang3.StringUtils;
@@ -104,7 +103,7 @@ public class WxAccessServiceImpl extends ServiceImpl<WxAccessMapper, WxAccess> i
     }
 
     @Override
-    public IPage<WxAccess> getList(StudentParamDTO param) {
+    public IPage<WxAccess> getList(WxAccessParamDTO param) {
         QueryWrapper<WxAccess> qw = new QueryWrapper<>();
         if(StringUtils.isNotBlank(param.getNickname())) {
             qw.likeRight("nickname", param.getNickname());

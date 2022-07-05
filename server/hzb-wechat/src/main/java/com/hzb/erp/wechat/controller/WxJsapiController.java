@@ -1,6 +1,6 @@
 package com.hzb.erp.wechat.controller;
 
-import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.exception.BizException;
 import com.hzb.erp.wechat.service.WechatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

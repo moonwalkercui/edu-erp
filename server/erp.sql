@@ -11,7 +11,7 @@
  Target Server Version : 50650
  File Encoding         : 65001
 
- Date: 03/07/2022 22:06:50
+ Date: 05/07/2022 23:06:18
 */
 
 SET NAMES utf8mb4;
@@ -417,7 +417,9 @@ CREATE TABLE `credit_exchange`  (
   `verify_staff` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '审核人',
   `verify_time` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
   `verify_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审核备注',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `student_id`(`student_id`) USING BTREE,
+  INDEX `credit_mall_id`(`credit_mall_id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '积分商城兑换记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -439,14 +441,16 @@ CREATE TABLE `credit_mall`  (
   `state` tinyint(1) NULL DEFAULT 1 COMMENT '是否可以兑换',
   `sale_num` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '历史兑换数量',
   `view_num` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '预览次数',
+  `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '详情内容',
   `creator` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '创建人',
   `editor` bigint(20) UNSIGNED NULL DEFAULT NULL COMMENT '编辑人',
   `add_time` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
   `edit_time` datetime(0) NULL DEFAULT NULL COMMENT '编辑时间',
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '删除标记',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '积分商城礼品表' ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `material_id`(`material_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '积分商城礼品表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of credit_mall
@@ -1377,10 +1381,6 @@ CREATE TABLE `quartz_job`  (
 -- ----------------------------
 -- Records of quartz_job
 -- ----------------------------
-INSERT INTO `quartz_job` VALUES (6, 'LESSON_COUNT_WARNING_JOB', NULL, 'com.hzb.erp.adminCenter.quartzJob.jobs.LessonCountWarningJob', 1, '0 0 7 * * ?');
-INSERT INTO `quartz_job` VALUES (5, 'LESSON_REMIND_JOB', NULL, 'com.hzb.erp.adminCenter.quartzJob.jobs.LessonRemindJob', 1, '0 0 19 * * ?');
-INSERT INTO `quartz_job` VALUES (4, 'LESSON_ENDING_JOB', NULL, 'com.hzb.erp.adminCenter.quartzJob.jobs.LessonEndingJob', 1, '0 */5 * * * ?');
-INSERT INTO `quartz_job` VALUES (7, 'ORDER_CANCEL_JOB', NULL, 'com.hzb.erp.adminCenter.quartzJob.jobs.OrderCancelJob', 1, '0 */1 * * * ?');
 
 -- ----------------------------
 -- Table structure for refund

@@ -1,7 +1,7 @@
 package com.hzb.erp.security;
 
-import com.hzb.erp.common.configuration.SystemConfig;
-import com.hzb.erp.common.constants.CommonConst;
+import com.hzb.erp.configuration.SystemConfig;
+import com.hzb.erp.constants.CommonConst;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;

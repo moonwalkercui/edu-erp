@@ -2,6 +2,7 @@ package com.hzb.erp.common.mapper;
 
 import com.hzb.erp.common.entity.DictItem;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  *
  * @author Ryan
  */
+@Mapper
 public interface DictItemMapper extends BaseMapper<DictItem> {
 
     List<DictItem> listItemByCode(String code);

@@ -1,6 +1,6 @@
 package com.hzb.erp.security.provider.user;
 
-import com.hzb.erp.common.constants.CommonConst;
+import com.hzb.erp.constants.CommonConst;
 import com.hzb.erp.utils.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationServiceException;

@@ -3,6 +3,7 @@ package com.hzb.erp.common.mapper;
 import com.hzb.erp.common.entity.Setting;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hzb.erp.common.entity.SettingOption;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * generator.domain.Setting
  */
+@Mapper
 public interface SettingMapper extends BaseMapper<Setting> {
 
     /**

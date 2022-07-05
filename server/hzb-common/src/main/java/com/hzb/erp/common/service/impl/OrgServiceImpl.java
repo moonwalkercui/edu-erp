@@ -7,12 +7,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.Org;
 import com.hzb.erp.common.entity.StaffOrginfo;
 import com.hzb.erp.common.enums.OrgLevelEnum;
-import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.exception.BizException;
 import com.hzb.erp.common.mapper.OrgMapper;
 import com.hzb.erp.common.mapper.StaffOrginfoMapper;
-import com.hzb.erp.common.pojo.dto.OrgParamDTO;
-import com.hzb.erp.common.pojo.dto.OrgSaveDTO;
-import com.hzb.erp.common.pojo.vo.OrgVO;
+import com.hzb.erp.common.pojo.OrgParamDTO;
+import com.hzb.erp.common.pojo.OrgSaveDTO;
+import com.hzb.erp.common.pojo.OrgVO;
 import com.hzb.erp.common.service.OrgService;
 import com.hzb.erp.service.TreeListBuilder;
 import com.hzb.erp.service.bo.TreeListBO;
@@ -26,8 +26,8 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.hzb.erp.common.constants.CommonConst.ORG_ID_PATH_SEPARATOR;
-import static com.hzb.erp.common.constants.CommonConst.ORG_NAME_PATH_SEPARATOR;
+import static com.hzb.erp.constants.CommonConst.ORG_ID_PATH_SEPARATOR;
+import static com.hzb.erp.constants.CommonConst.ORG_NAME_PATH_SEPARATOR;
 
 /**
  *

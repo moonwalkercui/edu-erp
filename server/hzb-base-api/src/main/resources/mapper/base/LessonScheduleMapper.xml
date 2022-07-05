@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.api.pc.lesson.mapper.LessonScheduleMapper">
+
+    <select id="getList" resultType="com.hzb.erp.api.pc.lesson.pojo.LessonScheduleVO">
+        select t1.*,
+        t2.name as class_name,
+        t3.name as course_name,
+        (select count(0) from lesson where schedule_id = t1.id and deleted = 0) as lesson_count,
+        (select group_concat(name) from staff where find_in_set(id, t1.teacher_ids)) teacher_names,
+        (select group_concat(name) from staff where find_in_set(id, t1.assistant_ids)) assistant_names
+
+        from lesson_schedule t1
+        left join class t2 on t2.id = t1.class_id
+        left join course t3 on t3.id = t2.course_id
+
+        <where>
+            t1.deleted != 1
+            <if test="param.classId != null">
+                AND t1.class_id = #{param.classId}
+            </if>
+
+            <if test="param.lessonType != null">
+                AND t1.course_id in (select id from course where lesson_type = #{param.lessonType})
+            </if>
+
+        </where>
+        order by id desc
+    </select>
+
+    <select id="checkConflict" resultType="java.lang.Long">
+        select t1.id
+        from lesson t1
+        left join lesson_teacher t2 on t2.lesson_id = t1.id
+        <where>
+            t1.date = #{date} and t1.deleted != 1 and t2.teacher_id = #{teacherId}
+            and (
+            (t1.start_time &lt;= #{startTime} and t1.end_time &gt;= #{startTime})
+            or
+            (t1.start_time &lt;= #{endTime} and t1.end_time &gt;= #{endTime})
+            )
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.api.pc.finance.mapper.CashoutMapper">
+
+    <select id="getList" resultType="com.hzb.erp.api.pc.finance.pojo.CashoutVO">
+        select t1.*, t2.name staff_name, t3.name type_name, t4.name verify_staff_name
+        from cashout t1
+        left join staff t2 on t1.creator = t2.id
+        left join dict_item t3 on t1.type = t3.id
+        left join staff t4 on t1.verify_staff = t4.id
+        <where>
+            <if test="param.startDate != null and param.endDate != null">
+                AND ( t1.add_time &gt;= #{param.startDate} and t1.add_time &lt;= #{param.endDate} )
+            </if>
+            <if test="param.payee != null and param.payee.trim != ''">
+                AND t1.payee_name like concat('%', #{param.payee}, '%')
+            </if>
+            <if test="param.staffId != null">
+                AND t1.creator = #{param.staffId}
+            </if>
+            <if test="param.verifyState != null">
+                AND t1.verify_state = #{param.verifyState}
+            </if>
+            <if test="param.type != null">
+                AND t1.type = #{param.type}
+            </if>
+            AND t1.deleted = 0
+        </where>
+        order by t1.id desc
+    </select>
+
+    <select id="getInfo" resultType="com.hzb.erp.api.pc.finance.pojo.CashoutVO">
+        select t1.*, t2.name staff_name, t3.name type_name, t4.name verify_staff_name
+        from cashout t1
+        left join staff t2 on t1.creator = t2.id
+        left join dict_item t3 on t1.type = t3.id
+        left join staff t4 on t1.verify_staff = t4.id
+        where t1.id = #{id}
+    </select>
+
+</mapper>

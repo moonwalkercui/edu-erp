@@ -7,6 +7,7 @@ import com.hzb.erp.service.enums.SettingNameEnum;
 import com.hzb.erp.utils.PropertyUtil;
 import com.hzb.erp.wechat.config.WxMpConfig;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
@@ -26,11 +27,12 @@ import java.util.stream.Collectors;
  */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class WechatService {
 
     private final SettingService settingService;
     private static SettingService stSettingService;
-    private final WxMpService wxService;
+    private final WxMpService wxMpService;
     private static WxMpConfig configFromYml;
     private static WxPayConfig payConfigFromYml;
 
@@ -54,7 +56,7 @@ public class WechatService {
             configFromYml.setToken(wxToken);
             configFromYml.setAesKey(wxAesKey);
 
-            // 以下是支付相关，不需要支付功能的不用配置
+            // 以下是支付相关，不需要支付功能的不用在yml里配置
             String wxPayMchId = PropertyUtil.getFromYml(ymlName, "wxPayMchId");
             String wxPayMchKey = PropertyUtil.getFromYml(ymlName, "wxPayMchKey");
             String wxPaySubAppId = PropertyUtil.getFromYml(ymlName, "wxPaySubAppId");
@@ -138,9 +140,9 @@ public class WechatService {
      * 使用自定义公众号配置发送模板消息
      */
     public void sendTemplateMsg(WxMpTemplateMessage templateMessage, String configName) throws WxErrorException {
-        setConfig(this.wxService);
+        setConfig(this.wxMpService);
         String appid = WechatService.getAppIdByConfName(configName);
-        String msgId = this.wxService.switchoverTo(appid).getTemplateMsgService().sendTemplateMsg(templateMessage);
+        String msgId = this.wxMpService.switchoverTo(appid).getTemplateMsgService().sendTemplateMsg(templateMessage);
         //System.out.println("========模板消息发送结果msgId：" + msgId);
     }
 
@@ -148,9 +150,9 @@ public class WechatService {
      * 使用默认公众号配置发送模板消息
      */
     public void sendTemplateMsg(WxMpTemplateMessage templateMessage) throws WxErrorException {
-        setConfig(this.wxService);
+        setConfig(this.wxMpService);
         String appid = WechatService.getAppIdByConfName(null);
-        String msgId = this.wxService.switchoverTo(appid).getTemplateMsgService().sendTemplateMsg(templateMessage);
+        String msgId = this.wxMpService.switchoverTo(appid).getTemplateMsgService().sendTemplateMsg(templateMessage);
         //System.out.println("========模板消息发送结果msgId：" + msgId);
     }
 
@@ -206,34 +208,34 @@ public class WechatService {
     /**
      * 从数据库加载配置信息
      */
-    public static WxPayConfig getPayConfig() {
-
+    public WxPayConfig getPayConfig() {
         // 从数据库获取公众号配置：
         Map<String, Object> settings = stSettingService.listOptionByCode(SettingCodeEnum.WX_MP_SETTING);
         if (settings == null) {
-            throw new RuntimeException("未找到微信公众号配置. Not Found Wechat Setting Named 'wx_mp_setting'.");
+            throw new RuntimeException("数据库中缺少微信支付参数定义");
         }
         if (configFromYml != null && StringUtils.isNotBlank(configFromYml.getAppId())) {
+            // 先尝试从配置文件里获取参数
             return payConfigFromYml;
         } else {
+            // 再尝试从数据库中获取参数
             try {
-                String wxAppId = settings.get(SettingNameEnum.WX_MP_APP_ID.getCode()).toString();
+                String wxAppId = (String) settings.get(SettingNameEnum.WX_MP_APP_ID.getCode());
                 if (!StringUtils.isBlank(wxAppId)) {
                     WxPayConfig conf = new WxPayConfig();
                     conf.setAppId(wxAppId);
-                    conf.setMchId(settings.get(SettingNameEnum.WX_PAY_MCHID.getCode()).toString());
-                    conf.setMchKey(settings.get(SettingNameEnum.WX_PAY_MCHKEY.getCode()).toString());
-                    conf.setSubAppId(settings.get(SettingNameEnum.WX_PAY_SUBAPPID.getCode()).toString());
-                    conf.setSubMchId(settings.get(SettingNameEnum.WX_PAY_SUBMCHID.getCode()).toString());
-                    conf.setKeyPath(settings.get(SettingNameEnum.WX_PAY_KEYPATH.getCode()).toString());
+                    conf.setMchId((String) settings.get(SettingNameEnum.WX_PAY_MCHID.getCode()));
+                    conf.setMchKey((String) settings.get(SettingNameEnum.WX_PAY_MCHKEY.getCode()));
+                    conf.setSubAppId((String) settings.get(SettingNameEnum.WX_PAY_SUBAPPID.getCode()));
+                    conf.setSubMchId((String) settings.get(SettingNameEnum.WX_PAY_SUBMCHID.getCode()));
+                    conf.setKeyPath((String) settings.get(SettingNameEnum.WX_PAY_KEYPATH.getCode()));
                     return conf;
                 } else {
                     return null;
                 }
             } catch (Exception e) {
-                throw new RuntimeException("请检查数据表 setting_option 的微信配置项是否完整. Missing Wechat Setting Option In Table:setting_option");
+                throw new RuntimeException("请检查数据表 setting_option 的微信支付配置项是否完整");
             }
         }
     }
-
 }

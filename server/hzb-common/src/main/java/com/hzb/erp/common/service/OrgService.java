@@ -3,9 +3,9 @@ package com.hzb.erp.common.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.Org;
-import com.hzb.erp.common.pojo.dto.OrgParamDTO;
-import com.hzb.erp.common.pojo.dto.OrgSaveDTO;
-import com.hzb.erp.common.pojo.vo.OrgVO;
+import com.hzb.erp.common.pojo.OrgParamDTO;
+import com.hzb.erp.common.pojo.OrgSaveDTO;
+import com.hzb.erp.common.pojo.OrgVO;
 
 import java.util.List;
 

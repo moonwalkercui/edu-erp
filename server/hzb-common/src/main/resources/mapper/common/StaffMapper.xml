@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzb.erp.common.mapper.StaffMapper">
 
-    <select id="getList" resultType="com.hzb.erp.common.pojo.vo.StaffVO">
+    <select id="getList" resultType="com.hzb.erp.common.pojo.StaffVO">
         SELECT t1.*,
         t3.name group_name,
         t4.name com_name,
@@ -50,13 +50,13 @@
         GROUP BY t1.id order by t1.id desc
     </select>
 
-    <select id="getInfo" resultType="com.hzb.erp.common.pojo.vo.StaffVO">
+    <select id="getInfo" resultType="com.hzb.erp.common.pojo.StaffVO">
         SELECT t1.*
         FROM staff t1
         where id = #{id}
     </select>
 
-    <select id="listByComId" resultType="com.hzb.erp.common.pojo.vo.StaffVO">
+    <select id="listByComId" resultType="com.hzb.erp.common.pojo.StaffVO">
         select t1.id, t1.name
         from staff t1
         where t1.id in (select staff_id from staff_orginfo where com_id = #{comId})

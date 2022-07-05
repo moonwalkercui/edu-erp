@@ -3,10 +3,10 @@ package com.hzb.erp.common.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.User;
-import com.hzb.erp.common.pojo.dto.StudentParamDTO;
-import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
-import com.hzb.erp.common.pojo.dto.WxAccessBindDTO;
-import com.hzb.erp.common.pojo.vo.UserVO;
+import com.hzb.erp.common.pojo.ChangePasswordDTO;
+import com.hzb.erp.common.pojo.UserParamDTO;
+import com.hzb.erp.common.pojo.WxAccessBindDTO;
+import com.hzb.erp.common.pojo.UserVO;
 
 /**
  * 家长用户服务类
@@ -25,7 +25,7 @@ public interface UserService extends IService<User> {
 
     User getByWxAccessId(Long id);
 
-    IPage<UserVO> getList(StudentParamDTO param);
+    IPage<UserVO> getList(UserParamDTO param);
 
     boolean changPassword(ChangePasswordDTO dto);
 

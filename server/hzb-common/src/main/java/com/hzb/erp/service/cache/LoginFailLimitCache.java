@@ -2,7 +2,7 @@ package com.hzb.erp.service.cache;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.exception.BizException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.concurrent.TimeUnit;

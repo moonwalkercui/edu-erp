@@ -1,6 +1,6 @@
 package com.hzb.erp.wechat.handler;
 
-import com.hzb.erp.common.configuration.SystemConfig;
+import com.hzb.erp.configuration.SystemConfig;
 import com.hzb.erp.wechat.service.WechatService;
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.common.session.WxSessionManager;

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.api.pc.lesson.mapper.HomeworkMapper">
+
+    <select id="getList" resultType="com.hzb.erp.api.pc.lesson.pojo.HomeworkVO">
+        select t1.*,
+        t2.name teacher_name,
+        t3.name class_name,
+        count(t4.id) complete_count
+        <if test="param.studentId != null">
+            ,count(t5.id) completed
+        </if>
+        from homework t1
+        left join class t3 on t3.id = t1.class_id
+        left join staff t2 on t2.id = t1.creator
+        left join homework_record t4 on t4.homework_id = t1.id
+        <if test="param.studentId != null">
+            left join homework_record t5 on t5.homework_id = t1.id and t5.student_id = #{param.studentId}
+        </if>
+        <where>
+            t1.deleted = 0
+            <if test="param.classId != null">
+                AND t1.class_id = #{param.classId}
+            </if>
+            <if test="param.teacherId != null">
+                AND t1.creator = #{param.teacherId}
+            </if>
+            <if test="param.title != null and param.title != ''">
+                AND t1.title like concat('%', #{param.title}, '%')
+            </if>
+            <if test="param.studentId != null">
+                AND t1.class_id in ( select class_id from class_student where student_id = #{param.studentId} and
+                deleted = 0)
+            </if>
+        </where>
+        group by t1.id
+        order by t1.id desc
+
+    </select>
+
+    <resultMap type="com.hzb.erp.api.pc.lesson.pojo.HomeworkVO" id="homework">
+        <id column="id" property="id"/>
+        <result column="class_name" property="className"/>
+        <result column="title" property="title"/>
+        <result column="teacher_Name" property="teacherName"/>
+        <result column="add_time" property="addTime"/>
+        <result column="content" property="content"/>
+        <result column="complete_count" property="completeCount"/>
+        <result column="completed" property="completed"/>
+        <collection property="recordList" ofType="com.hzb.erp.api.pc.lesson.pojo.HomeworkRecordVO">
+            <id column="rid" property="id"/>
+            <result column="homework_id" property="homeworkId"/>
+            <result column="student_id" property="studentId"/>
+            <result column="student_name" property="studentName"/>
+            <result column="add_time2" property="addTime"/>
+            <result column="content2" property="content"/>
+            <result column="score" property="score"/>
+            <result column="comment" property="comment"/>
+        </collection>
+    </resultMap>
+
+    <select id="getInfo" resultMap="homework">
+        select t1.*,
+        t2.name teacher_name,
+        t3.name class_name
+
+        <if test="studentId != null">
+            ,(select count(0) from homework_record where homework_id = t1.id and student_id = #{studentId}) &gt; 0
+            completed
+        </if>
+
+        ,(select count(0) from homework_record where homework_id = t1.id) complete_count,
+        t4.id rid,t4.homework_id,t4.student_id,t4.add_time add_time2, t4.content
+        content2,t4.score,t4.comment,t4.comment_time,
+        t5.name student_name,
+        t6.name comment_teacher_name
+
+        from homework t1
+        left join class t3 on t3.id = t1.class_id
+        left join staff t2 on t2.id = t1.creator
+
+        left join homework_record t4 on t4.homework_id = t1.id
+        <if test="studentId != null">
+            and t4.student_id = #{studentId}
+        </if>
+        left join student t5 on t5.id = t4.student_id
+        left join staff t6 on t6.id = t4.comment_teacher
+
+        where t1.id = #{id}
+    </select>
+</mapper>

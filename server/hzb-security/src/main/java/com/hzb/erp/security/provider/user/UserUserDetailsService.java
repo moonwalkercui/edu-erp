@@ -3,7 +3,7 @@ package com.hzb.erp.security.provider.user;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hzb.erp.common.entity.User;
 import com.hzb.erp.common.mapper.UserMapper;
-import com.hzb.erp.security.mapper.mapper.SecurityUserMapper;
+import com.hzb.erp.security.mapper.SecurityUserMapper;
 import com.hzb.erp.security.Util.JwtUserDetails;
 import com.hzb.erp.security.Enums.LoginUserIdentity;
 import org.springframework.beans.factory.annotation.Autowired;

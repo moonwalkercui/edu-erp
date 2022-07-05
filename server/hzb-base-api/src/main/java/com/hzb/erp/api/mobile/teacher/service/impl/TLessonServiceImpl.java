@@ -1,0 +1,33 @@
+package com.hzb.erp.api.mobile.teacher.service.impl;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hzb.erp.api.pc.lesson.entity.Lesson;
+import com.hzb.erp.api.pc.lesson.mapper.LessonMapper;
+import com.hzb.erp.api.pc.lesson.pojo.LessonParamDTO;
+import com.hzb.erp.api.base.service.UserAuthService;
+import com.hzb.erp.api.mobile.teacher.service.TLessonService;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * <p>
+ * 课次表 服务实现类
+ * </p>
+ *
+ * @author 541720500@qq.com
+ */
+@Service
+public class TLessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> implements TLessonService {
+
+    @Resource
+    private LessonMapper lessonMapper;
+
+    @Override
+    public List<Map<String, Object>> getLessonNumEveryDay(LessonParamDTO param) {
+        param.setTeacherId(UserAuthService.getCurrentUserId());
+        return lessonMapper.getLessonNumEveryDay(param);
+    }
+}

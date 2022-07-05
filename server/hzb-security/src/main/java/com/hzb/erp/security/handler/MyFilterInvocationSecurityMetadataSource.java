@@ -1,7 +1,7 @@
 package com.hzb.erp.security.handler;
 
 
-import com.hzb.erp.common.constants.CommonConst;
+import com.hzb.erp.constants.CommonConst;
 import com.hzb.erp.common.entity.rbac.SysPermissionDTO;
 import com.hzb.erp.common.entity.rbac.SysRole;
 import com.hzb.erp.common.mapper.rbac.SysPermissionMapper;

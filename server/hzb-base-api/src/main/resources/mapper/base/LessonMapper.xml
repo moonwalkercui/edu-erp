@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.api.pc.lesson.mapper.LessonMapper">
+
+    <sql id="getTeacherNames">
+        select group_concat(name) from staff where id in (select teacher_id from lesson_teacher where lesson_id = ${alias}.id and type_num=1)
+    </sql>
+    <sql id="getAssistantNames">
+        select group_concat(name) from staff where id in (select teacher_id from lesson_teacher where lesson_id = ${alias}.id and type_num=2)
+    </sql>
+
+    <update id="updateStateBatch">
+        update lesson
+        set state = #{state}
+        where id in
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="getList" resultType="com.hzb.erp.api.pc.lesson.pojo.LessonVO">
+        SELECT t1.*, t3.name classroom, t4.name class_name, t6.NAME course_name, t6.lesson_type,
+        (select group_concat(teacher_id) from lesson_teacher where lesson_id = t1.id and type_num=1) as teacher_ids,
+        (select group_concat(teacher_id) from lesson_teacher where lesson_id = t1.id and type_num=2) as assistant_ids,
+        (
+        <include refid="getTeacherNames">
+            <property name="alias" value="t1"/>
+        </include>
+        ) teacher_names,
+        (
+        <include refid="getAssistantNames">
+            <property name="alias" value="t1"/>
+        </include>
+        ) assistant_names,
+        count(t7.id) as student_num,
+        sum(case when t7.sign_state in (1,2) then 1 else 0 end) student_sign_num
+
+        <if test="param.studentId != null">
+            , (select sign_state from lesson_student where lesson_id = t1.id and student_id = #{param.studentId}) as student_sign_state
+            , (select dec_lesson_count from lesson_student where lesson_id = t1.id and student_id = #{param.studentId}) as student_dec_lesson_count
+        </if>
+
+        FROM lesson t1
+        left join classroom t3 on t1.room_id = t3.id
+        left join class t4 on t1.class_id = t4.id
+        left join course t6 ON t1.course_id = t6.id
+        left join lesson_student t7 ON t7.lesson_id = t1.id
+
+        <where>
+            t1.deleted = 0
+            <if test="param.courseId != null">
+                AND t1.course_id = #{param.courseId}
+            </if>
+            <if test="param.courseIds != null and param.courseIds.length > 0">
+                AND t1.course_id in
+                <foreach collection="param.courseIds" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="param.studentId != null and (param.bookable == null or !param.bookable)">
+                AND t1.id in ( select lesson_id from lesson_student where student_id = #{param.studentId} )
+            </if>
+            <if test="param.bookable != null and param.bookable and param.studentId != null">
+                AND t1.bookable = 1 and t1.state = 1 and t1.date > CURDATE() and t1.id not in (
+                    select lesson_id from lesson_student where student_id = #{param.studentId}
+                ) and t1.course_id in (
+                    select course_id from student_course where student_id = #{param.studentId} AND expire_date &gt;= CURDATE()
+                    group by course_id having sum(count_lesson_total - count_lesson_complete - count_lesson_refund) &gt; 0
+                ) and t1.id not in (
+                    select lesson_id from appointment where student_id = #{param.studentId}
+                )
+            </if>
+            <if test="param.classId != null">
+                AND t1.class_id = #{param.classId}
+            </if>
+            <if test="param.classIds != null and param.classIds.length > 0">
+                AND t1.class_id in
+                <foreach collection="param.classIds" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="param.teacherId != null">
+                AND t1.id in ( select lesson_id from lesson_teacher where teacher_id = #{param.teacherId})
+            </if>
+            <if test="param.teacherIds != null and param.teacherIds.length > 0">
+                AND t1.id in (
+                select lesson_id from lesson_teacher where teacher_id in
+                <foreach collection="param.teacherIds" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+                )
+            </if>
+            <if test="param.subjectId != null">
+                AND t1.course_id in ( select id from course where subject_id = #{param.subjectId} AND deleted != 1)
+            </if>
+            <if test="param.roomId != null">
+                AND t1.room_id = #{param.roomId}
+            </if>
+            <if test="param.date != null ">
+                AND date = #{param.date}
+            </if>
+            <if test="param.startDate != null and param.endDate != null">
+                AND ( date &gt;= #{param.startDate} and date &lt;= #{param.endDate} )
+            </if>
+            <if test="param.onTrail != null">
+                AND t1.on_trail = #{param.onTrail}
+            </if>
+            <if test="param.ids != null and param.ids.length>0">
+                AND t1.id in
+                <foreach collection="param.ids" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+
+        </where>
+        group by t1.id
+        order by t1.date desc,t1.start_time
+    </select>
+    <select id="getInfo" resultType="com.hzb.erp.api.pc.lesson.pojo.LessonVO">
+        SELECT t1.*, t3.name classroom, t4.name class_name, t6.NAME course_name, t6.lesson_type,
+        (
+        <include refid="getTeacherNames">
+            <property name="alias" value="t1"/>
+        </include>
+        ) teacher_names,
+        (
+        <include refid="getAssistantNames">
+            <property name="alias" value="t1"/>
+        </include>
+        ) assistant_names,
+        count(t7.id) as student_num,
+        sum(case when t7.sign_state in (1,2) then 1 else 0 end) student_sign_num
+        FROM lesson t1
+        left join classroom t3 on t1.room_id = t3.id
+        left join class t4 on t1.class_id = t4.id
+        left join course t6 ON t1.course_id = t6.id
+        left join lesson_student t7 on t7.lesson_id = t1.id
+        WHERE t1.id = #{id}
+        group by t1.id
+    </select>
+
+    <select id="statsByTeachers" resultType="com.hzb.erp.api.pc.lesson.pojo.LessonTeacherStatsVO">
+        SELECT t2.teacher_id, t3.name teacher_name, t3.class_fee, t3.assistant_fee,
+        sum( CASE t2.type_num WHEN 1 THEN 1 ELSE 0 END ) AS teacher_count,
+        sum( CASE t2.type_num WHEN 2 THEN 1 ELSE 0 END ) AS assistant_count,
+        sum( CASE t2.type_num WHEN 1 THEN 1 ELSE 0 END ) * t3.class_fee AS total_class_fee,
+        sum( CASE t2.type_num WHEN 2 THEN 1 ELSE 0 END ) * t3.assistant_fee AS total_assistant_fee,
+        YEAR ( t1.date ) AS year, MONTH ( t1.date ) AS month
+        FROM lesson t1
+        LEFT JOIN lesson_teacher t2 ON t2.lesson_id = t1.id
+        LEFT JOIN staff t3 ON t2.teacher_id= t3.id
+
+        <where>
+            t2.teacher_id IS NOT NULL AND t1.state = 2
+            <if test="param.teacherId != null ">
+                AND t2.teacher_id = #{param.teacherId}
+            </if>
+            <if test="param.startDate != null and param.endDate != null">
+                AND ( t1.date &gt;= #{param.startDate} and t1.date &lt;= #{param.endDate} )
+            </if>
+        </where>
+
+        GROUP BY t2.teacher_id, YEAR ( t1.date ), MONTH ( t1.date )
+    </select>
+
+    <select id="getLessonNumEveryDay" resultType="java.util.Map">
+        SELECT date_format(date, '%Y-%m-%d') date, count( 0 ) num
+        FROM lesson t1
+        WHERE t1.deleted != 1
+        <if test="param.teacherId != null">
+            AND t1.id in (select lesson_id from lesson_teacher where teacher_id = #{param.teacherId})
+        </if>
+        <if test="param.studentId != null">
+            AND t1.id in (select lesson_id from lesson_student where student_id = #{param.studentId})
+        </if>
+        AND t1.date &gt;= #{param.startDate}
+        AND t1.date &lt;= #{param.endDate}
+        GROUP BY t1.date
+    </select>
+
+    <select id="cronLessonToGenerateStudentRel" resultType="com.hzb.erp.api.pc.lesson.entity.Lesson">
+        SELECT * FROM lesson
+        WHERE
+            date = CURDATE()
+            AND start_time &gt; NOW()
+            AND start_time &lt;= DATE_ADD(NOW(), INTERVAL #{limitMinu} MINUTE)
+            AND deleted = 0
+    </select>
+
+    <select id="cronLessonToClose" resultType="com.hzb.erp.api.pc.lesson.entity.Lesson">
+        SELECT * FROM lesson
+        WHERE
+            date = CURDATE()
+            AND state = 1
+            AND end_time &lt; NOW()
+            AND deleted = 0
+    </select>
+
+</mapper>

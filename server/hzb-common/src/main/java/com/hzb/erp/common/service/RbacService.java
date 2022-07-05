@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzb.erp.common.entity.rbac.SysPermission;
 import com.hzb.erp.common.entity.rbac.SysRole;
-import com.hzb.erp.common.pojo.dto.BatchBindRoleToUserDTO;
-import com.hzb.erp.common.pojo.dto.PaginateDTO;
-import com.hzb.erp.common.pojo.vo.StaffVO;
+import com.hzb.erp.common.pojo.BatchBindRoleToUserDTO;
+import com.hzb.erp.common.pojo.PaginateDTO;
+import com.hzb.erp.common.pojo.StaffVO;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.hzb.erp.wechat.controller;
 
-import com.hzb.erp.common.configuration.SystemConfig;
-import com.hzb.erp.common.constants.CommonConst;
+import com.hzb.erp.configuration.SystemConfig;
+import com.hzb.erp.constants.CommonConst;
 import com.hzb.erp.common.entity.Staff;
 import com.hzb.erp.common.entity.User;
 import com.hzb.erp.common.entity.WxAccess;

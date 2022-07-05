@@ -1,27 +1,11 @@
 package com.hzb.erp.wechat.service;
 
-import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.exception.WxPayException;
-import com.github.binarywang.wxpay.service.WxPayService;
-import com.hzb.erp.common.entity.Order;
-import com.hzb.erp.common.entity.OrderRefund;
-import com.hzb.erp.common.mapper.CourseMapper;
-import com.hzb.erp.common.mapper.OrderItemMapper;
-import com.hzb.erp.common.mapper.OrderMapper;
-import com.hzb.erp.utils.IpUtil;
-import com.hzb.erp.utils.RequestUtil;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import com.hzb.erp.wechat.entiry.WxOrder;
+import com.hzb.erp.wechat.entiry.WxOrderRefund;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.net.URL;
 
 /**
  * 支付、退款相关服务
@@ -34,12 +18,12 @@ public interface WxPaymentService {
     /**
      * 拼接支付参数
      */
-    WxPayUnifiedOrderRequest buildPayParamByOrder(Order order, String openid, String tradeType);
+    WxPayUnifiedOrderRequest buildPayParamByOrder(WxOrder order, String openid, String tradeType);
 
     /**
      * 拼接退款参数
      */
-    WxPayRefundRequest buildRefundParamByOrderRefund(OrderRefund orderRefund);
+    WxPayRefundRequest buildRefundParamByOrderRefund(WxOrderRefund orderRefund);
 
     /**
     * 支付回调

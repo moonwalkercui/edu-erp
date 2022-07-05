@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.api.pc.student.mapper.ContactRecordMapper">
+
+    <select id="getList" resultType="com.hzb.erp.api.pc.student.pojo.ContactRecordVO">
+        select t1.*, t2.name as student_name, t3.name staff_name
+        from contact_record t1
+        left join student t2 on t1.student_id = t2.id
+        left join staff t3 on t1.creator = t3.id
+        <where>
+            <if test="param.studentId != null">
+                AND t1.student_id = #{param.studentId}
+            </if>
+            <if test="param.studentName != null and param.studentName.trim() != ''">
+                AND t1.student_id in (select id from student where name = #{param.studentName})
+            </if>
+            <if test="param.staffId != null">
+                AND t1.creator = #{param.staffId}
+            </if>
+            <if test="param.stage != null">
+                AND t1.stage = #{param.stage}
+            </if>
+            <if test="param.startDate != null and param.endDate != null">
+                <![CDATA[AND ( t1.contact_time >= #{param.startDate} and t1.contact_time <= #{param.endDate} ) ]]>
+            </if>
+            AND t1.deleted != 1
+        </where>
+        order by t1.id desc
+
+    </select>
+</mapper>

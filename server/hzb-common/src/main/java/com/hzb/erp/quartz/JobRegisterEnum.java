@@ -1,7 +1,5 @@
 package com.hzb.erp.quartz;
 
-import lombok.Getter;
-
 /**
  * <p> </p>
  *

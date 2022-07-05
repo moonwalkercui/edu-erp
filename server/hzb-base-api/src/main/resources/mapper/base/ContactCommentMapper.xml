@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.api.pc.course.mapper.CourseCommentMapper">
+
+    <select id="getList" resultType="com.hzb.erp.api.pc.course.pojo.CourseCommentVO">
+        select t1.id,t1.course_id, t1.content, t1.add_time, t1.score, t1.state,
+        t2.name as student_name, t2.head_img, t3.name course_name,
+        t4.sn order_sn
+        from course_comment t1
+        left join student t2 on t1.student_id = t2.id
+        left join course t3 on t3.id = t1.course_id
+        left join shop_order t4 on t4.id = t1.order_id
+        <where>
+            <if test="param.courseId != null">
+                t1.course_id = #{param.courseId}
+            </if>
+            <if test="param.studentId != null">
+                t1.student_id = #{param.studentId}
+            </if>
+            <if test="param.state != null">
+                AND t1.state = #{param.state}
+            </if>
+            <if test="param.orderSn != null and param.orderSn.trim != ''">
+                AND t4.sn like concat( #{param.orderSn}, '%')
+            </if>
+            AND t1.deleted != 1
+        </where>
+        order by t1.id desc
+        <if test="param.limit != null">
+            limit #{param.limit}
+        </if>
+    </select>
+    <select id="getFavRate" resultType="java.lang.Double" parameterType="java.lang.Long">
+        select avg(t2.score) * 20 from course_comment t2 where t2.course_id = #{courseId}
+    </select>
+</mapper>

@@ -2,7 +2,7 @@ package com.hzb.erp.security.provider.staff;
 
 import com.hzb.erp.common.entity.Staff;
 import com.hzb.erp.common.service.StaffService;
-import com.hzb.erp.security.mapper.mapper.SecurityUserMapper;
+import com.hzb.erp.security.mapper.SecurityUserMapper;
 import com.hzb.erp.security.Util.JwtUserDetails;
 import com.hzb.erp.security.Enums.LoginUserIdentity;
 import org.springframework.beans.factory.annotation.Autowired;

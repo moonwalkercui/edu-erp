@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzb.erp.api.pc.student.mapper.StudentCourseMapper">
+
+    <!-- 查询课时统计信息列表 -->
+    <select id="getList" resultType="com.hzb.erp.api.pc.student.pojo.StudentCourseVO">
+        <include refid="sqlStudentCourse"/>
+        <where>
+            <if test="param.studentId != null">
+                AND t1.student_id = #{param.studentId}
+            </if>
+            <if test="param.courseId != null">
+                AND t1.course_id = #{param.courseId}
+            </if>
+            <if test="param.keyword !=null and param.keyword != ''">
+                AND t1.student_id in ( select id from student where (
+                name = #{param.keyword} or user_id = (select id from user where mobile = #{param.keyword})
+                ) and deleted != 1)
+            </if>
+            <if test="param.startDate != null and param.endDate != null">
+                AND ( t1.start_date &gt;= #{param.startDate} and t1.start_date &lt;= #{param.endDate} )
+            </if>
+            <if test="param.expiredStart != null and param.expiredEnd != null">
+                AND ( t1.expire_date &gt;= #{param.expiredStart} and t1.expire_date &lt;= #{param.expiredEnd} )
+            </if>
+            <if test="param.studentName !=null and param.studentName != ''">
+                AND t1.student_id in ( select id from student where name = #{param.studentName} )
+            </if>
+            <if test="param.subjectName !=null and param.subjectName != ''">
+                AND t1.subject_id in ( select id from subject where name like concat('%', #{param.subjectName}, '%'))
+            </if>
+            <if test="param.verified != null and param.verified == true">
+                AND t1.verify_state = 2
+            </if>
+            <if test="param.operator !=null">
+                AND t1.operator = #{param.operator}
+            </if>
+            <if test="param.excludeExpired !=null and param.excludeExpired">
+                AND t1.expire_date &gt;= CURDATE()
+            </if>
+            AND t1.deleted != 1
+        </where>
+        order by
+        <if test="param.sortBy == 'countLessonTotal' and param.sortType != null and param.sortType != ''">
+            count_lesson_total
+            <if test="param.sortType == 'asc'">asc</if>
+            <if test="param.sortType == 'desc'">desc</if>
+            ,
+        </if>
+        <if test="param.sortBy == 'countLessonComplete' and param.sortType != null and param.sortType != ''">
+            count_lesson_complete
+            <if test="param.sortType == 'asc'">asc</if>
+            <if test="param.sortType == 'desc'">desc</if>
+            ,
+        </if>
+        <if test="param.sortBy == 'countLessonRemaining' and param.sortType != null and param.sortType != ''">
+            count_lesson_remaining
+            <if test="param.sortType == 'asc'">asc</if>
+            <if test="param.sortType == 'desc'">desc</if>
+            ,
+        </if>
+        <if test="param.sortBy == 'expireDate' and param.sortType != null and param.sortType != ''">
+            t1.expire_date
+            <if test="param.sortType == 'asc'">asc</if>
+            <if test="param.sortType == 'desc'">desc</if>
+            ,
+        </if>
+        <if test="param.sortBy == 'remainingAmount' and param.sortType != null and param.sortType != ''">
+            remaining_amount
+            <if test="param.sortType == 'asc'">asc</if>
+            <if test="param.sortType == 'desc'">desc</if>
+            ,
+        </if>
+        t1.id desc
+    </select>
+
+    <select id="getInfo" resultType="com.hzb.erp.api.pc.student.pojo.StudentCourseVO">
+        <include refid="sqlStudentCourse"/>
+        <where>
+            AND t1.id = #{id}
+        </where>
+    </select>
+    <select id="listLessonRemainingCountTotal" resultType="java.lang.Integer">
+        select sum(t1.count_lesson_total - t1.count_lesson_complete - t1.count_lesson_refund)
+        from student_course t1
+        where t1.student_id = #{studentId} and t1.course_id = #{courseId} and t1.expire_date &gt;= CURDATE() and t1.deleted = 0
+    </select>
+
+    <select id="getValidList" resultType="com.hzb.erp.api.pc.student.pojo.StudentCourseVO">
+        SELECT
+        t1.id, t1.course_id,
+        t2.NAME AS course_name,
+        t3.NAME AS subject_name,
+        t5.NAME AS student_name,
+        sum( t1.count_lesson_total ) AS count_lesson_total,
+        sum( t1.count_lesson_complete ) AS count_lesson_complete,
+        sum( t1.count_lesson_total - t1.count_lesson_complete - t1.count_lesson_refund ) AS count_lesson_remaining
+        FROM
+        student_course t1
+        LEFT JOIN course t2 ON t1.course_id = t2.id
+        LEFT JOIN `subject` t3 ON t1.subject_id = t3.id
+        LEFT JOIN student t5 ON t1.student_id = t5.id
+        <where>
+            <if test="param.studentId != null">
+                AND t1.student_id = #{param.studentId}
+            </if>
+            and t1.expire_date >= CURDATE() and t1.deleted = 0
+        </where>
+        GROUP BY
+        t1.student_id,
+        t1.course_id
+    </select>
+
+    <sql id="sqlStudentCourse">
+        SELECT
+            t1.*
+            , (t1.count_lesson_total - t1.count_lesson_complete - t1.count_lesson_refund ) as count_lesson_remaining
+            , (t1.count_lesson_total - t1.count_lesson_complete - t1.count_lesson_refund )*t1.unit_price as remaining_amount
+            , (t1.amount - t1.discount_amount - t1.paid_amount) as arrearage
+            , t2.NAME AS course_name
+            , t3.NAME AS subject_name
+            , t5.NAME AS student_name
+            , t4.refund_amount
+            , t4.refund_lesson_count
+            , t4.remark AS refund_remark
+            , t4.verify_state AS refund_state
+        FROM
+            student_course t1
+                LEFT JOIN course t2 ON t1.course_id = t2.id
+                LEFT JOIN subject t3 ON t1.subject_id = t3.id
+                LEFT JOIN student t5 ON t1.student_id = t5.id
+                LEFT JOIN
+                 (SELECT * FROM ( SELECT id, student_course_id, refund_amount, refund_lesson_count, remark, verify_state
+                 FROM refund ORDER BY id DESC ) r GROUP BY r.student_course_id ) t4 ON t1.id = t4.student_course_id
+
+    </sql>
+
+</mapper>

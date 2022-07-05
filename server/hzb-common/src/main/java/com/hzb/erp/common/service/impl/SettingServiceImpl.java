@@ -1,14 +1,14 @@
 package com.hzb.erp.common.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hzb.erp.common.constants.CacheNames;
+import com.hzb.erp.constants.CacheNames;
 import com.hzb.erp.common.entity.Setting;
 import com.hzb.erp.common.entity.SettingOption;
 import com.hzb.erp.common.enums.SettingCodeEnum;
 import com.hzb.erp.common.mapper.SettingMapper;
 import com.hzb.erp.common.service.SettingOptionService;
 import com.hzb.erp.common.service.SettingService;
-import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.exception.BizException;
 import com.hzb.erp.service.enums.SettingNameEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;

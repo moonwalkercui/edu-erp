@@ -1,6 +1,6 @@
 package com.hzb.erp.utils;
 
-import com.hzb.erp.common.constants.CommonConst;
+import com.hzb.erp.constants.CommonConst;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;

@@ -1,7 +1,7 @@
 package com.hzb.erp.security.Util;
 
 import cn.hutool.json.JSONUtil;
-import com.hzb.erp.common.constants.CommonConst;
+import com.hzb.erp.constants.CommonConst;
 import com.hzb.erp.common.entity.rbac.SysRole;
 import com.hzb.erp.utils.*;
 import io.jsonwebtoken.Claims;

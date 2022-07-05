@@ -3,11 +3,11 @@ package com.hzb.erp.common.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hzb.erp.common.entity.Staff;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hzb.erp.common.pojo.dto.ChangePasswordDTO;
-import com.hzb.erp.common.pojo.dto.StaffChangeStateParamDTO;
-import com.hzb.erp.common.pojo.dto.StaffParamDTO;
-import com.hzb.erp.common.pojo.dto.StaffSaveDTO;
-import com.hzb.erp.common.pojo.vo.StaffVO;
+import com.hzb.erp.common.pojo.ChangePasswordDTO;
+import com.hzb.erp.common.pojo.StaffChangeStateParamDTO;
+import com.hzb.erp.common.pojo.StaffParamDTO;
+import com.hzb.erp.common.pojo.StaffSaveDTO;
+import com.hzb.erp.common.pojo.StaffVO;
 
 import java.util.List;
 

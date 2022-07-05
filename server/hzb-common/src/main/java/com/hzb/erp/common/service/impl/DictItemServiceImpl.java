@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hzb.erp.common.entity.Dict;
 import com.hzb.erp.common.entity.DictItem;
-import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.exception.BizException;
 import com.hzb.erp.common.mapper.DictItemMapper;
 import com.hzb.erp.common.service.DictItemService;
 import com.hzb.erp.common.service.DictService;

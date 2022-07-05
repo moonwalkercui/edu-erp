@@ -1,25 +1,13 @@
 package com.hzb.erp.wechat.controller;
 
-import com.github.binarywang.wxpay.bean.coupon.*;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
-import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
-import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
-import com.github.binarywang.wxpay.bean.notify.WxScanPayNotifyResult;
-import com.github.binarywang.wxpay.bean.request.*;
-import com.github.binarywang.wxpay.bean.result.*;
 import com.github.binarywang.wxpay.exception.WxPayException;
-import com.github.binarywang.wxpay.service.WxPayService;
-import com.hzb.erp.common.service.OrderService;
 import com.hzb.erp.wechat.service.WxPaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.File;
-import java.util.Date;
 
 /**
 * 微信支付相关控制器
@@ -34,7 +22,7 @@ public class WxPayController {
   private final WxPaymentService wxPaymentService;
 
   /**
-  * 这个url地址需要改动，需要同时修改：com.hzb.erp.wechat.service.impl.WxPaymentServiceImpl#getPayNotifyUrl(javax.servlet.http.HttpServletRequest)
+  * 这个url地址需要改动，需要同时修改：com.hzb.erp.api.adminCenter.shop.service.impl.WxPaymentServiceImpl#getPayNotifyUrl(javax.servlet.http.HttpServletRequest)
   * */
   @ApiOperation(value = "支付回调通知处理")
   @PostMapping("/payNotify")
@@ -44,7 +32,7 @@ public class WxPayController {
   }
 
   /**
-   * 这个url地址需要改动，需要同时修改：com.hzb.erp.wechat.service.impl.WxPaymentServiceImpl#getRefundNotifyUrl(javax.servlet.http.HttpServletRequest)
+   * 这个url地址需要改动，需要同时修改：com.hzb.erp.api.adminCenter.shop.service.impl.WxPaymentServiceImpl#getRefundNotifyUrl(javax.servlet.http.HttpServletRequest)
    * */
   @ApiOperation(value = "退款回调通知处理")
   @PostMapping("/refundNotify")

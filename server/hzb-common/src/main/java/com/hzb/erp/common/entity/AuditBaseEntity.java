@@ -1,6 +1,6 @@
 package com.hzb.erp.common.entity;
 
-import com.hzb.erp.common.enums.FinanceStateEnum;
+import com.hzb.erp.common.enums.VerifyStateEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class AuditBaseEntity {
 
     @ApiModelProperty(value = "审核确认状态")
-    private FinanceStateEnum verifyState;
+    private VerifyStateEnum verifyState;
 
     @ApiModelProperty(value = "审核人")
     private Long verifyStaff;

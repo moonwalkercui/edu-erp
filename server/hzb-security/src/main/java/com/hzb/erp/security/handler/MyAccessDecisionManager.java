@@ -1,6 +1,6 @@
 package com.hzb.erp.security.handler;
 
-import com.hzb.erp.common.constants.CommonConst;
+import com.hzb.erp.constants.CommonConst;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;

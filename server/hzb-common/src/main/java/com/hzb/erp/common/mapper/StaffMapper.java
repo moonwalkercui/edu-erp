@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hzb.erp.annotation.DataScoped;
 import com.hzb.erp.common.entity.Staff;
-import com.hzb.erp.common.pojo.dto.StaffParamDTO;
-import com.hzb.erp.common.pojo.vo.StaffVO;
+import com.hzb.erp.common.pojo.StaffParamDTO;
+import com.hzb.erp.common.pojo.StaffVO;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
  *
  * @author Ryan
  */
+@Mapper
 public interface StaffMapper extends BaseMapper<Staff> {
     @DataScoped
     IPage<StaffVO> getList(Page<Object> page, StaffParamDTO param);

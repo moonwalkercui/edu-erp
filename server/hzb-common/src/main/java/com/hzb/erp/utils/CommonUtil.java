@@ -1,6 +1,6 @@
 package com.hzb.erp.utils;
 
-import com.hzb.erp.common.exception.BizException;
+import com.hzb.erp.exception.BizException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
