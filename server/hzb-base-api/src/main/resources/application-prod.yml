@@ -15,9 +15,9 @@ logging:
     root: warn
 
 system:
-  # 前端的站点网址
+  # 前端的站点网址,网址后无/
   domain: http://erp2.hzb-it.com
-  # 前端站点的存放目录,本目录用于图片等资源上传
+  # 前端站点的存放目录，本系统图片上传是通过前端目录直接获取的所以这里要写根目录绝对地址，后面别忘记加/
   staticDir: /www/wwwroot/com/
-  # 日志存放目录
+  # 日志存放目录绝对地址
   logDir: /eduerpdata/logs/

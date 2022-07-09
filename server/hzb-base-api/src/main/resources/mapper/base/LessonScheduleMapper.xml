@@ -19,11 +19,12 @@
             <if test="param.classId != null">
                 AND t1.class_id = #{param.classId}
             </if>
-
             <if test="param.lessonType != null">
                 AND t1.course_id in (select id from course where lesson_type = #{param.lessonType})
             </if>
-
+            <if test="param.courseName != null and param.courseName.trim() != ''">
+                AND t1.course_id in (select id from course where name like concat('%',#{param.courseName}, '%' ) )
+            </if>
         </where>
         order by id desc
     </select>

@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -339,10 +340,12 @@ public class LessonScheduleServiceImpl extends ServiceImpl<LessonScheduleMapper,
 
         List<Lesson> lessons = new ArrayList<>();
         Integer sn = 0;
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("MM-dd");
+        DateTimeFormatter tf = DateTimeFormatter.ofPattern("HH:mm");
         for (LessonDatetimeBO bo : lessonList) {
             sn++;
             Lesson newLesson = new Lesson();
-            newLesson.setTitle(course.getName() + " 第" + sn + "次课");
+            newLesson.setTitle(course.getName() + " " + bo.getDate().format(df) + " " + bo.getStartTime().format(tf));
             newLesson.setSn(sn);
             newLesson.setScheduleId(schedule.getId());
             newLesson.setCourseId(clazz.getCourseId());

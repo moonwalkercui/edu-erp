@@ -7,9 +7,12 @@
 
     <select id="getBaseInfo" resultType="com.hzb.erp.api.pc.student.pojo.StudentVO">
         SELECT t1.*, t8.mobile, t8.name parent_name, t9.name join_way_name
+        ,IFNULL(sum(t5.count_lesson_total - t5.count_lesson_complete - t5.count_lesson_refund), 0) count_lesson_remaining
+        , (select count(1) from course_trial_record where student_id = #{id} and t1.deleted = 0 and expired_date &gt;= CURDATE() ) count_course_trial
         from student t1
         LEFT JOIN user t8 on t8.id = t1.user_id
         LEFT JOIN dict_item t9 on t9.id = t1.join_way
+        LEFT JOIN student_course t5 on t5.student_id = t1.id AND t5.expire_date &gt;= CURDATE()
         where t1.id = #{id}
     </select>
 

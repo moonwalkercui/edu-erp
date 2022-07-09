@@ -3,6 +3,7 @@ package com.hzb.erp.api.pc.course.pojo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -36,6 +37,8 @@ public class CourseTrialSaveDTO {
     private Integer lessonCount;
 
     @ApiModelProperty(value="领取后有效天数")
+    @Min(value = 1, message = "有效天数最小为1")
+    @Max(value = 1000, message = "有效天数最大为1000")
     private Integer expireDays;
 
     @ApiModelProperty(value="结束发行日期")

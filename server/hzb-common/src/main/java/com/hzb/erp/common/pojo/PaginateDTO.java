@@ -21,4 +21,9 @@ public class PaginateDTO {
      * 排序类型
      */
     private String sortType;
+
+    /**
+     * 课程名称
+     */
+    private String courseName;
 }

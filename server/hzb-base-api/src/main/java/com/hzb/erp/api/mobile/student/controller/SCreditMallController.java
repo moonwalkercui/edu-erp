@@ -7,7 +7,9 @@ import com.hzb.erp.api.pc.student.entity.Student;
 import com.hzb.erp.api.pc.creditMall.pojo.CreditExchangeDTO;
 import com.hzb.erp.api.pc.creditMall.service.CreditMallService;
 import com.hzb.erp.api.mobile.student.service.StudentAuthService;
-import com.hzb.erp.common.pojo.PaginationVO;
+import com.hzb.erp.api.pc.student.entity.StudentCreditLog;
+import com.hzb.erp.api.pc.student.pojo.StudentCreditLogParamDTO;
+import com.hzb.erp.api.pc.student.service.StudentCreditLogService;
 import com.hzb.erp.utils.CommonUtil;
 import com.hzb.erp.utils.JsonResponse;
 import com.hzb.erp.utils.JsonResponseUtil;
@@ -31,6 +33,8 @@ public class SCreditMallController {
     private CreditMallService creditMallService;
     @Autowired
     private CreditExchangeService creditExchangeService;
+    @Autowired
+    private StudentCreditLogService studentCreditLogService;
 
     @ApiOperation("积分礼品列表")
     @GetMapping("/list")
@@ -72,5 +76,16 @@ public class SCreditMallController {
         }
         param.setStudentId(student.getId());
         return JsonResponseUtil.paginate(creditExchangeService.getList(param));
+    }
+
+    @ApiOperation("积分变更记录")
+    @GetMapping("/changeRecord")
+    public Object changeRecord(StudentCreditLogParamDTO param) {
+        Student student = StudentAuthService.getCurrentStudent();
+        if(student == null) {
+            return JsonResponseUtil.error("请登录");
+        }
+        param.setStudentId(student.getId());
+        return JsonResponseUtil.paginate(studentCreditLogService.getList(param));
     }
 }

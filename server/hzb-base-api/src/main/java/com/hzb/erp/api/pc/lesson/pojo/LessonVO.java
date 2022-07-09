@@ -90,8 +90,8 @@ public class LessonVO {
 
     private LessonStateEnum state;
 
-//    @ApiModelProperty(value = "点名状态")
-//    private Boolean rollcallState;
+    @ApiModelProperty(value = "学生是否可以请假")
+    private Boolean studentCanLeave;
 
     public WeekdaysEnum getWeek() {
         return EnumTools.getByCode(date.getDayOfWeek().getValue(), WeekdaysEnum.class);

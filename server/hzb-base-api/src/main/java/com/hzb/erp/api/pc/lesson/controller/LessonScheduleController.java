@@ -47,17 +47,17 @@ public class LessonScheduleController {
     public PaginationVO list(@RequestParam(value = "page", defaultValue = "1") Integer page, // 若为null则是查全部
                              @RequestParam(value = "pageSize", defaultValue = "30") Integer pageSize,
                              @RequestParam(value = "classId", defaultValue = "") Long classId,
+                             @RequestParam(value = "courseName", defaultValue = "") String courseName,
                              @RequestParam(value = "lessonType", defaultValue = "") String lessonType) {
         LessonScheduleParamDTO param = new LessonScheduleParamDTO();
         param.setPage(page);
         param.setPageSize(pageSize);
         param.setClassId(classId);
-
+        param.setCourseName(courseName);
         LessonTypeEnum type = EnumTools.getByDist(lessonType, LessonTypeEnum.class);
         if (type != null) {
             param.setLessonType(type.getCode());
         }
-
         return JsonResponseUtil.paginate(lessonScheduleService.getList(param));
     }
 

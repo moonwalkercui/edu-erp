@@ -1,12 +1,14 @@
 package com.hzb.erp.api.mobile.student.controller;
 
 import com.hzb.erp.api.base.annotation.Log;
+import com.hzb.erp.api.mobile.student.pojo.dto.StudentLeaveDTO;
 import com.hzb.erp.api.pc.student.entity.Student;
 import com.hzb.erp.api.pc.lesson.mapper.LessonMapper;
 import com.hzb.erp.api.pc.lesson.pojo.LessonParamDTO;
 import com.hzb.erp.api.pc.lesson.pojo.LessonStudentParamDTO;
 import com.hzb.erp.api.pc.lesson.pojo.TeachEvaluateDTO;
 import com.hzb.erp.api.pc.lesson.pojo.LessonVO;
+import com.hzb.erp.api.pc.student.service.StudentLeaveService;
 import com.hzb.erp.common.pojo.PaginationVO;
 import com.hzb.erp.api.pc.lesson.service.LessonService;
 import com.hzb.erp.api.pc.lesson.service.LessonStudentService;
@@ -50,6 +52,9 @@ public class SLessonController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private StudentLeaveService studentLeaveService;
 
     @ApiOperation("课次信息")
     @GetMapping("/info")
@@ -195,6 +200,23 @@ public class SLessonController {
             return JsonResponseUtil.success("预约完成");
         } else {
             return JsonResponseUtil.error("预约失败");
+        }
+    }
+
+    @ApiOperation("请假")
+    @Log(description = "请假", type = "学生端", isStaff = false)
+    @PostMapping("/leave")
+    public JsonResponse leave(@Valid @RequestBody StudentLeaveDTO dto, BindingResult result) {
+        CommonUtil.handleValidMessage(result);
+        Student student = StudentAuthService.getCurrentStudent();
+        if (student == null) {
+            return JsonResponseUtil.error("请先添加学生");
+        }
+        dto.setStudentId(student.getId());
+        if (studentLeaveService.handleLeave(dto)) {
+            return JsonResponseUtil.success("请假完成");
+        } else {
+            return JsonResponseUtil.error("请假失败");
         }
     }
 }

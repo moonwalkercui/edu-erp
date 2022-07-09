@@ -87,6 +87,9 @@ public class StudentVO {
     @ApiModelProperty(value = "当前积分")
     private Integer credit;
 
+    @ApiModelProperty(value = "体验卡数量")
+    private Integer countCourseTrial;
+
     public Boolean getWarning() {
         return countLessonRemaining == null ? null : countLessonRemaining <= 5;
     }

@@ -38,6 +38,7 @@
         <if test="param.studentId != null">
             , (select sign_state from lesson_student where lesson_id = t1.id and student_id = #{param.studentId}) as student_sign_state
             , (select dec_lesson_count from lesson_student where lesson_id = t1.id and student_id = #{param.studentId}) as student_dec_lesson_count
+            , concat(t1.date, ' ' ,t1.start_time) &gt; NOW() as student_can_leave
         </if>
 
         FROM lesson t1

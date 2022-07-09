@@ -94,6 +94,12 @@ public enum SettingNameEnum {
     LESSON_COUNT_WARNING_TIME("lesson_count_warning_time", "每天上课次数预警时间", "07:01", "time"),
 
     /**
+     * 学生端开启签到功能
+     */
+    STUDENT_CENTER_CAN_SIGN("student_center_can_sign", "学生端开启签到功能", "false", "bool"),
+
+
+    /**
      * 学员预约后自动加入到课时
      */
     AUTO_JOIN_LESSON_BY_APPOINTMENT("auto_join_lesson_by_appointment", "学员预约后自动加入到课时", "true", "bool"),
